@@ -433,6 +433,138 @@ body {
   #form-app { display: none !important; }
 }
 
+/* ─── HEADER ICON BUTTONS ─── */
+.header-actions { display: flex; gap: 6px; align-items: center; margin-left: 18px; }
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  width: 34px; height: 34px;
+  border-radius: 3px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.icon-btn:hover { border-color: var(--sage); color: var(--sage); }
+.icon-btn.indicator { position: relative; }
+.icon-btn.indicator::after {
+  content: ''; position: absolute; top: -2px; right: -2px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red); border: 2px solid var(--black);
+  display: none;
+}
+.icon-btn.indicator.show-dot::after { display: block; }
+
+/* ─── MODALS ─── */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 500;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 16px;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--sage);
+  border-radius: 4px;
+  max-width: 640px;
+  width: 100%;
+  padding: 28px;
+  position: relative;
+}
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: var(--sage);
+  margin-bottom: 14px;
+}
+.modal-close {
+  position: absolute; top: 14px; right: 16px;
+  background: none; border: none; color: var(--grey);
+  font-size: 22px; cursor: pointer; line-height: 1;
+}
+.modal-close:hover { color: var(--white); }
+.modal-body { font-size: 13px; color: var(--white); line-height: 1.5; }
+.modal-body p { margin-bottom: 10px; color: var(--grey); }
+.modal-body ol { margin: 10px 0 14px 20px; color: var(--grey); }
+.modal-body code { background: #2a2a2a; padding: 2px 6px; border-radius: 2px; font-size: 12px; color: var(--sage); }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+/* ─── SAVED EVENTS LIST ─── */
+.event-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-bottom: 8px;
+  background: #2a2a2a;
+}
+.event-row:hover { border-color: var(--sage); }
+.event-row .ev-name { font-weight: 700; color: var(--white); font-size: 14px; }
+.event-row .ev-meta { font-size: 11px; color: var(--grey); margin-top: 3px; }
+.event-row .ev-actions { display: flex; gap: 6px; }
+.event-row .ev-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  padding: 6px 12px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.event-row .ev-btn:hover { border-color: var(--sage); color: var(--sage); }
+.event-row .ev-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+/* ─── DOUBLE BOOKING BANNER ─── */
+.dbl-banner {
+  background: #3a2424;
+  border: 1px solid var(--red);
+  border-left: 4px solid var(--red);
+  border-radius: 3px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  color: #fff;
+}
+.dbl-banner .dbl-title {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #ff8c8c;
+  margin-bottom: 8px;
+}
+.dbl-banner ul { margin: 6px 0 0 18px; font-size: 12px; line-height: 1.5; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--sage);
+  color: #111;
+  padding: 12px 18px;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  max-width: 360px;
+}
+.toast.show { opacity: 1; }
+.toast.error { background: var(--red); color: #fff; }
+
 @media (max-width: 600px) {
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .span-2, .span-3 { grid-column: span 1; }
@@ -448,20 +580,66 @@ body {
 
 <header class="app-header">
   <div class="logo">O'<span>Brien</span> Event Catering</div>
-  <div class="step-indicator">
-    <div class="step-dot active" id="sd1">1</div>
-    <div class="step-line" id="sl1"></div>
-    <div class="step-dot" id="sd2">2</div>
-    <div class="step-line" id="sl2"></div>
-    <div class="step-dot" id="sd3">3</div>
-    <div class="step-line" id="sl3"></div>
-    <div class="step-dot" id="sd4">4</div>
-    <div class="step-line" id="sl4"></div>
-    <div class="step-dot" id="sd5">5</div>
-    <div class="step-line" id="sl5"></div>
-    <div class="step-dot" id="sd6">6</div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div class="step-indicator">
+      <div class="step-dot active" id="sd1">1</div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-dot" id="sd2">2</div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step-dot" id="sd3">3</div>
+      <div class="step-line" id="sl3"></div>
+      <div class="step-dot" id="sd4">4</div>
+      <div class="step-line" id="sl4"></div>
+      <div class="step-dot" id="sd5">5</div>
+      <div class="step-line" id="sl5"></div>
+      <div class="step-dot" id="sd6">6</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btnEvents" title="Saved Events" onclick="openEventsModal()">📁</button>
+      <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
+    </div>
   </div>
 </header>
+
+<!-- ─── SETTINGS MODAL ─── -->
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this) closeSettingsModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
+    <div class="modal-title">Settings</div>
+    <div class="modal-body">
+      <p><strong style="color:var(--white);">GitHub Personal Access Token</strong></p>
+      <p>Required to save events, list saved events and detect double-bookings. Stored only in this browser.</p>
+      <ol>
+        <li>Open <code>https://github.com/settings/personal-access-tokens/new</code></li>
+        <li>Token name: <code>O'Brien Event Brief</code>, expiration as you like</li>
+        <li>Repository access → Only select repositories → pick <code>thomasjnr-eng/eventbrief</code></li>
+        <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong></li>
+        <li>Generate token → copy → paste below</li>
+      </ol>
+      <div class="field" style="margin-top:14px;">
+        <label>Personal Access Token</label>
+        <input type="password" id="patInput" placeholder="github_pat_..." autocomplete="off">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btnClearPat" onclick="clearPATAndClose()" style="font-size:13px;padding:8px 16px;">Clear Token</button>
+        <button class="btn btn-primary" onclick="savePATAndClose()" style="font-size:13px;padding:8px 16px;">Save Token</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SAVED EVENTS MODAL ─── -->
+<div class="modal-overlay" id="eventsModal" onclick="if(event.target===this) closeEventsModal()">
+  <div class="modal-content" style="max-width:760px;">
+    <button class="modal-close" onclick="closeEventsModal()">&times;</button>
+    <div class="modal-title">Saved Events</div>
+    <div class="modal-body">
+      <div id="eventsList">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <div id="form-app">
 
@@ -580,6 +758,8 @@ body {
 <div class="container">
   <div class="step-title">Fleet &amp; Logistics</div>
   <div class="step-subtitle">Which units are going, pitch details and travel requirements</div>
+
+  <div id="doubleBookBanner" style="display:none;"></div>
 
   <div class="card">
     <div class="card-title">Units Deployed</div>
@@ -1060,7 +1240,10 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(5)">← Back</button>
-    <button class="btn btn-green" onclick="generateBrief()" style="font-size:18px;padding:14px 36px;">Generate Brief ✓</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 22px;">💾 Save Event</button>
+      <button class="btn btn-green" onclick="generateBrief()" style="font-size:18px;padding:14px 36px;">Generate Brief ✓</button>
+    </div>
   </div>
 </div>
 </div>
@@ -1226,6 +1409,7 @@ function toggleChip(el) {
 function toggleFleetChip(el) {
   el.classList.toggle('selected');
   updatePowerSummary();
+  if (typeof checkDoubleBooking === 'function') checkDoubleBooking();
 }
 
 function togglePower(el) {
@@ -1622,12 +1806,309 @@ function addToCalendar() {
   window.open(url, '_blank');
 }
 
+// ═══════════════════════════════════════════════════════════════
+// PERSISTENCE & DOUBLE-BOOKING (GitHub-backed)
+// ═══════════════════════════════════════════════════════════════
+
+const REPO_OWNER = 'thomasjnr-eng';
+const REPO_NAME = 'eventbrief';
+const PAT_KEY = 'obrien_brief_pat';
+
+const eventsCache = { filenames: null, byName: {} };
+
+function getPAT() { return localStorage.getItem(PAT_KEY) || ''; }
+function setPAT(t) { localStorage.setItem(PAT_KEY, t); refreshSettingsIndicator(); }
+function clearPAT() { localStorage.removeItem(PAT_KEY); refreshSettingsIndicator(); }
+function refreshSettingsIndicator() {
+  const b = document.getElementById('btnSettings');
+  if (!b) return;
+  if (getPAT()) b.classList.remove('show-dot'); else b.classList.add('show-dot');
+}
+
+function toast(msg, kind) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (kind === 'error' ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3200);
+}
+
+async function apiCall(path, options) {
+  options = options || {};
+  const pat = getPAT();
+  if (!pat) throw new Error('NO_PAT');
+  const res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + path, Object.assign({}, options, {
+    headers: Object.assign({
+      'Authorization': 'Bearer ' + pat,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }, options.headers || {})
+  }));
+  return res;
+}
+
+// ─── MODALS ────────────────────────────────────────────────────
+function openSettingsModal() {
+  document.getElementById('patInput').value = getPAT();
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
+function savePATAndClose() {
+  const v = document.getElementById('patInput').value.trim();
+  if (!v) { toast('Token cannot be empty', 'error'); return; }
+  setPAT(v);
+  closeSettingsModal();
+  toast('Token saved');
+  eventsCache.filenames = null;
+  eventsCache.byName = {};
+  checkDoubleBooking();
+}
+function clearPATAndClose() {
+  clearPAT();
+  document.getElementById('patInput').value = '';
+  toast('Token cleared');
+  closeSettingsModal();
+}
+
+async function openEventsModal() {
+  document.getElementById('eventsModal').classList.add('open');
+  const list = document.getElementById('eventsList');
+  if (!getPAT()) {
+    list.innerHTML = '<p style="color:var(--grey);">No GitHub token saved. <a href="#" onclick="closeEventsModal();openSettingsModal();return false;" style="color:var(--sage);">Add one in Settings</a> to enable saved events.</p>';
+    return;
+  }
+  list.innerHTML = 'Loading...';
+  try {
+    const filenames = await listEventFilenames(true);
+    if (!filenames.length) { list.innerHTML = '<p style="color:var(--grey);">No saved events yet.</p>'; return; }
+    const events = await Promise.all(filenames.map(getEventByFilename));
+    const sorted = events.filter(Boolean).sort((a, b) => (b.form.eventDate || '').localeCompare(a.form.eventDate || ''));
+    list.innerHTML = sorted.map(ev => {
+      const f = ev.form || {};
+      const escName = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+      const escClient = (f.clientName || '').replace(/</g, '&lt;');
+      const escVenue = (f.venueName || '').replace(/</g, '&lt;');
+      const units = (f._fleet || []).length;
+      return '<div class="event-row">' +
+        '<div><div class="ev-name">' + escName + '</div>' +
+        '<div class="ev-meta">' + formatDate(f.eventDate) + ' &middot; ' + escClient + ' &middot; ' + escVenue + ' &middot; ' + units + ' unit' + (units !== 1 ? 's' : '') + ' &middot; ' + (f.bookingStatus || '—') + '</div></div>' +
+        '<div class="ev-actions">' +
+          '<button class="ev-btn" onclick="loadEvent(\'' + ev._filename + '\')">Load</button>' +
+          '<button class="ev-btn danger" onclick="deleteEventConfirm(\'' + ev._filename + '\', \'' + escName.replace(/'/g, '\\\'') + '\')">Delete</button>' +
+        '</div></div>';
+    }).join('');
+  } catch (e) {
+    list.innerHTML = '<p style="color:var(--red);">Failed to load events: ' + e.message + '</p>';
+  }
+}
+function closeEventsModal() { document.getElementById('eventsModal').classList.remove('open'); }
+
+// ─── FORM (DE)SERIALIZATION ───────────────────────────────────
+function collectFormData() {
+  const data = {};
+  document.querySelectorAll('#form-app input, #form-app textarea, #form-app select').forEach(el => {
+    if (!el.id || el.type === 'button') return;
+    if (el.type === 'checkbox') return;
+    data[el.id] = el.value;
+  });
+  data._fleet = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
+  data._power = [...document.querySelectorAll('#powerChipGroup .chip.selected')].map(c => c.dataset.val);
+  data._revenue = [...document.querySelectorAll('#revenueChipGroup .chip.selected')].map(c => c.dataset.val);
+  data._pos = [...document.querySelectorAll('#posChipGroup .chip.selected')].map(c => c.dataset.val);
+  data._safety = [...document.querySelectorAll('input[name="safety"]:checked')].map(c => c.value);
+  return data;
+}
+
+function populateForm(data) {
+  document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('input[name="safety"]').forEach(c => c.checked = false);
+  Object.keys(data).forEach(k => {
+    if (k.startsWith('_')) return;
+    const el = document.getElementById(k);
+    if (el && typeof data[k] === 'string') el.value = data[k];
+  });
+  const restoreChip = (groupSel, val) => {
+    const escVal = val.replace(/"/g, '\\"');
+    const chip = document.querySelector(groupSel + '[data-val="' + escVal + '"]');
+    if (chip) chip.classList.add('selected');
+  };
+  (data._fleet || []).forEach(v => restoreChip('.fleet-chip', v));
+  (data._power || []).forEach(v => restoreChip('#powerChipGroup .chip', v));
+  (data._revenue || []).forEach(v => restoreChip('#revenueChipGroup .chip', v));
+  (data._pos || []).forEach(v => restoreChip('#posChipGroup .chip', v));
+  (data._safety || []).forEach(val => {
+    const cb = document.querySelector('input[name="safety"][value="' + val.replace(/"/g, '\\"') + '"]');
+    if (cb) cb.checked = true;
+  });
+  updateRevenueCards();
+  updatePowerSummary();
+  checkDoubleBooking();
+}
+
+function eventIdFor(data) {
+  const slug = (data.eventName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 50);
+  return (data.eventDate || 'undated') + '-' + (slug || 'unnamed');
+}
+
+// ─── SAVE / LOAD / DELETE ─────────────────────────────────────
+async function saveEvent() {
+  const data = collectFormData();
+  if (!data.eventName || !data.eventDate) {
+    toast('Event name and date are required to save', 'error');
+    goStep(1);
+    return;
+  }
+  if (!getPAT()) {
+    openSettingsModal();
+    toast('Add a GitHub token to save events', 'error');
+    return;
+  }
+  const id = eventIdFor(data);
+  const path = '/contents/events/' + id + '.json';
+  let sha = null;
+  try {
+    const existing = await apiCall(path);
+    if (existing.ok) sha = (await existing.json()).sha;
+  } catch (e) {
+    if (e.message === 'NO_PAT') { openSettingsModal(); return; }
+  }
+  const payload = { version: 1, id, savedAt: new Date().toISOString(), form: data };
+  const body = {
+    message: 'Save event: ' + data.eventName + ' (' + data.eventDate + ')',
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))))
+  };
+  if (sha) body.sha = sha;
+  try {
+    const res = await apiCall(path, { method: 'PUT', body: JSON.stringify(body) });
+    if (!res.ok) {
+      const err = await res.text();
+      toast('Save failed (' + res.status + ')', 'error');
+      console.error(err);
+      return;
+    }
+    eventsCache.filenames = null;
+    eventsCache.byName = {};
+    toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+async function listEventFilenames(force) {
+  if (!force && eventsCache.filenames !== null) return eventsCache.filenames;
+  try {
+    const res = await apiCall('/contents/events');
+    if (res.status === 404) { eventsCache.filenames = []; return []; }
+    if (!res.ok) throw new Error('list ' + res.status);
+    const items = await res.json();
+    eventsCache.filenames = items.filter(f => f.type === 'file' && f.name.endsWith('.json')).map(f => f.name);
+    return eventsCache.filenames;
+  } catch (e) {
+    if (e.message === 'NO_PAT') return [];
+    throw e;
+  }
+}
+
+async function getEventByFilename(name) {
+  if (eventsCache.byName[name]) return eventsCache.byName[name];
+  const res = await apiCall('/contents/events/' + encodeURIComponent(name));
+  if (!res.ok) return null;
+  const meta = await res.json();
+  try {
+    const json = decodeURIComponent(escape(atob(meta.content.replace(/\n/g, ''))));
+    const obj = JSON.parse(json);
+    obj._sha = meta.sha;
+    obj._filename = name;
+    eventsCache.byName[name] = obj;
+    return obj;
+  } catch (e) { return null; }
+}
+
+async function loadEvent(filename) {
+  try {
+    const ev = await getEventByFilename(filename);
+    if (!ev) { toast('Could not load event', 'error'); return; }
+    populateForm(ev.form);
+    closeEventsModal();
+    goStep(1);
+    toast('Loaded ' + (ev.form.eventName || filename));
+  } catch (e) {
+    toast('Load failed: ' + e.message, 'error');
+  }
+}
+
+async function deleteEventConfirm(filename, name) {
+  if (!confirm('Delete saved event "' + name + '"? This cannot be undone.')) return;
+  try {
+    const meta = await apiCall('/contents/events/' + encodeURIComponent(filename));
+    if (!meta.ok) { toast('Delete failed', 'error'); return; }
+    const sha = (await meta.json()).sha;
+    const res = await apiCall('/contents/events/' + encodeURIComponent(filename), {
+      method: 'DELETE',
+      body: JSON.stringify({
+        message: 'Delete event: ' + name,
+        sha
+      })
+    });
+    if (!res.ok) { toast('Delete failed', 'error'); return; }
+    eventsCache.filenames = null;
+    delete eventsCache.byName[filename];
+    openEventsModal();
+    toast('Deleted ' + name);
+  } catch (e) {
+    toast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+// ─── DOUBLE-BOOKING DETECTION ─────────────────────────────────
+let doubleBookingDebounce = null;
+function checkDoubleBooking() {
+  clearTimeout(doubleBookingDebounce);
+  doubleBookingDebounce = setTimeout(doCheckDoubleBooking, 250);
+}
+
+async function doCheckDoubleBooking() {
+  const banner = document.getElementById('doubleBookBanner');
+  if (!banner) return;
+  if (!getPAT()) { banner.style.display = 'none'; return; }
+  const date = val('eventDate');
+  const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
+  if (!date || !selected.length) { banner.style.display = 'none'; return; }
+  let filenames;
+  try { filenames = await listEventFilenames(); }
+  catch (e) { banner.style.display = 'none'; return; }
+  const sameDate = filenames.filter(fn => fn.startsWith(date + '-'));
+  if (!sameDate.length) { banner.style.display = 'none'; return; }
+  const myId = eventIdFor(collectFormData());
+  const conflicts = [];
+  for (const fn of sameDate) {
+    const ev = await getEventByFilename(fn);
+    if (!ev || ev.id === myId) continue;
+    const evUnits = ev.form._fleet || [];
+    const overlap = selected.filter(u => evUnits.includes(u));
+    if (overlap.length) conflicts.push({ event: ev, overlap });
+  }
+  if (!conflicts.length) { banner.style.display = 'none'; return; }
+  banner.style.display = 'block';
+  banner.innerHTML = '<div class="dbl-banner">' +
+    '<div class="dbl-title">⚠ Double-booking detected on ' + formatDate(date) + '</div>' +
+    conflicts.map(c =>
+      '<div style="margin-top:6px;"><strong>' + (c.event.form.eventName || '(unnamed)') + '</strong>' +
+      ' <span style="color:#bbb;font-size:11px;">(' + (c.event.form.clientName || 'unknown client') + ' @ ' + (c.event.form.venueName || 'unknown venue') + ')</span>' +
+      ' already has: <span style="color:#ffb0b0;">' + c.overlap.join(', ') + '</span></div>'
+    ).join('') +
+    '<div style="font-size:11px;color:#bbb;margin-top:10px;">Either swap units or amend the conflicting event.</div>' +
+    '</div>';
+}
+
 // ─── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
   renderFleet();
   const today = new Date().toISOString().split('T')[0];
   const bd = document.getElementById('briefDate');
   if (bd) bd.value = today;
+  refreshSettingsIndicator();
+  const dateInput = document.getElementById('eventDate');
+  if (dateInput) dateInput.addEventListener('change', checkDoubleBooking);
 });
 </script>
 
