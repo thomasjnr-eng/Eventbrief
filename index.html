@@ -981,6 +981,7 @@ body {
 
   <div class="card">
     <div class="card-title">Power Supply</div>
+    <div id="powerSupplyQuickRef" style="display:none;margin-bottom:14px;"></div>
     <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">How is power being provided at this event?</p>
     <div class="chip-group" id="powerChipGroup" style="margin-bottom:16px;">
       <div class="chip" data-val="We provide generator" onclick="togglePower(this)">⚡ We provide generator</div>
@@ -1824,8 +1825,31 @@ function breakerBreakdown(map) {
 function updatePowerSummary() {
   const card = document.getElementById('powerSummaryCard');
   const p = calculatePower();
-  if (!p.count) { card.style.display = 'none'; return; }
+  const quick = document.getElementById('powerSupplyQuickRef');
+  if (!p.count) {
+    card.style.display = 'none';
+    if (quick) quick.style.display = 'none';
+    return;
+  }
   card.style.display = 'block';
+  if (quick) {
+    quick.style.display = 'block';
+    quick.innerHTML =
+      '<div style="background:#f5f8f2;border:1px solid var(--sage);border-left:4px solid var(--sage);border-radius:3px;padding:12px 16px;">' +
+        '<div style="font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--sage-dark);font-weight:700;margin-bottom:6px;">⚡ Power Requirement &mdash; quick reference</div>' +
+        '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;color:#111;">' +
+          '<div><span style="font-size:11px;color:#666;">Single Ø</span> <strong style="font-size:18px;">' + p.singleTotal + 'A</strong> <span style="font-size:11px;color:#666;">~' + p.singleKVA.toFixed(1) + ' kVA</span></div>' +
+          '<div><span style="font-size:11px;color:#666;">Three Ø</span> <strong style="font-size:18px;">' + p.threeTotal + 'A</strong> <span style="font-size:11px;color:#666;">~' + p.threeKVA.toFixed(1) + ' kVA</span></div>' +
+          '<div><span style="font-size:11px;color:#666;">Combined</span> <strong style="font-size:18px;color:var(--sage-dark);">~' + p.totalKVA.toFixed(1) + ' kVA</strong></div>' +
+          '<div style="font-size:11px;color:#666;">' + p.count + ' unit' + (p.count !== 1 ? 's' : '') + (p.comboCount ? ' · ' + p.comboCount + ' combined' : '') + '</div>' +
+        '</div>' +
+        '<div style="font-size:10px;color:#666;margin-top:6px;">Breakers needed &mdash; ' +
+          (p.singleTotal ? '1Ø: ' + breakerBreakdown(p.singleBreakers) : '') +
+          (p.singleTotal && p.threeTotal ? ' &nbsp;|&nbsp; ' : '') +
+          (p.threeTotal ? '3Ø: ' + breakerBreakdown(p.threeBreakers) : '') +
+        '</div>' +
+      '</div>';
+  }
   const comboNote = p.comboCount
     ? ' <span style="font-size:12px;color:var(--white);background:#444;padding:2px 8px;border-radius:2px;margin-left:6px;">' + p.comboCount + ' combined unit' + (p.comboCount > 1 ? 's' : '') + ' need both supplies</span>'
     : '';
@@ -2509,8 +2533,9 @@ function eventIdFor(data) {
 // ─── SAVE / LOAD / DELETE ─────────────────────────────────────
 async function saveEvent() {
   const data = collectFormData();
-  if (!data.eventName || !data.eventDate) {
-    toast('Event name and date are required to save', 'error');
+  const eventDate = getEventDate(data);
+  if (!data.eventName || !eventDate) {
+    toast('Event name and a date (event start or first trading day) are required to save', 'error');
     goStep(1);
     return;
   }
@@ -2530,7 +2555,7 @@ async function saveEvent() {
   }
   const payload = { version: 1, id, savedAt: new Date().toISOString(), form: data };
   const body = {
-    message: 'Save event: ' + data.eventName + ' (' + data.eventDate + ')',
+    message: 'Save event: ' + data.eventName + ' (' + eventDate + ')',
     content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))))
   };
   if (sha) body.sha = sha;
@@ -2668,8 +2693,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const bd = document.getElementById('briefDate');
   if (bd) bd.value = today;
   refreshSettingsIndicator();
-  const dateInput = document.getElementById('eventDate');
-  if (dateInput) dateInput.addEventListener('change', checkDoubleBooking);
+  ['loadInDate', 'loadOutDate', 'eventStartDate', 'eventFinishDate'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', checkDoubleBooking);
+  });
 });
 </script>
 
