@@ -580,6 +580,38 @@ body {
   .trading-day-row .td-remove { grid-column: span 2; height: auto; padding: 6px; }
 }
 
+/* ─── STOCK ROWS ─── */
+.stock-row {
+  display: grid;
+  grid-template-columns: 1fr 160px 2fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.stock-row:last-child { border-bottom: none; }
+.stock-row .sr-name { font-size: 13px; color: var(--white); font-weight: 700; }
+.stock-row select, .stock-row input {
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  padding: 7px 10px;
+  outline: none;
+}
+.stock-row select:focus, .stock-row input:focus { border-color: var(--sage); }
+.stock-empty {
+  color: var(--grey);
+  font-size: 12px;
+  font-style: italic;
+  padding: 10px 0;
+}
+@media (max-width: 700px) {
+  .stock-row { grid-template-columns: 1fr; }
+}
+
 /* ─── TOAST ─── */
 .toast {
   position: fixed;
@@ -975,6 +1007,43 @@ body {
   <div class="step-subtitle">Revenue model, fees, minimums and payment conditions</div>
 
   <div class="card">
+    <div class="card-title">Client / Booking Account</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Who's the booker / paying account for this event?</p>
+    <div class="grid-2">
+      <div class="field">
+        <label>Client</label>
+        <select id="commercialClient">
+          <option value="">Select...</option>
+          <option>RDS</option>
+          <option>HRI</option>
+          <option>Levy</option>
+          <option>CMS</option>
+          <option>Verve</option>
+          <option>Punchestown</option>
+          <option>Madigans</option>
+          <option>Aiken Promotions</option>
+          <option>Festival Republic</option>
+          <option>FUEL</option>
+          <option>MCD Productions</option>
+          <option>Bord Bia</option>
+          <option>Leopardstown</option>
+          <option>Fairyhouse</option>
+          <option>Galway Races</option>
+          <option>Aviva Stadium</option>
+          <option>Iveagh Gardens</option>
+          <option>POD (All Together Now)</option>
+          <option>Bord Gais Energy Theatre</option>
+          <option>Other (specify in notes)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Booking Reference / Account Code</label>
+        <input type="text" id="commercialClientRef" placeholder="Internal ref or PO number">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Revenue &amp; Fee Model</div>
     <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Select all that apply to this event</p>
     <div class="chip-group" id="revenueChipGroup">
@@ -1129,7 +1198,13 @@ body {
   </div>
 
   <div class="card">
-    <div class="card-title">Cover Forecast &amp; Stock</div>
+    <div class="card-title">Stock Status (Per Truck)</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Order status for each selected truck. Suppliers + forecasted quantities will be added in a future iteration based on forecasted turnover.</p>
+    <div id="stockOrderContainer"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Stock — Other Details</div>
     <div class="grid-3">
       <div class="field">
         <label>Food Covers Forecast</label>
@@ -1142,14 +1217,6 @@ body {
       <div class="field">
         <label>Ice Cream Covers Forecast</label>
         <input type="number" id="icecreamCovers" placeholder="e.g. 120">
-      </div>
-      <div class="field">
-        <label>Stock Order Placed</label>
-        <select id="stockOrdered">
-          <option value="No">Not yet</option>
-          <option value="Partial">Partial order placed</option>
-          <option value="Yes">Fully ordered</option>
-        </select>
       </div>
       <div class="field">
         <label>Supplier Delivery Date</label>
@@ -1355,6 +1422,41 @@ function goStep(n) {
   document.getElementById('sd' + n).classList.add('active');
   document.getElementById('sd' + n).classList.remove('done');
   window.scrollTo(0,0);
+  if (n === 4) renderStockOrderRows();
+}
+
+// ─── STOCK ROWS (per-truck) ───────────────────────────────────
+function renderStockOrderRows(preserve) {
+  const container = document.getElementById('stockOrderContainer');
+  if (!container) return;
+  const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
+  if (!selected.length) {
+    container.innerHTML = '<div class="stock-empty">Select trucks in Step 2 first &mdash; order status will appear per truck here.</div>';
+    return;
+  }
+  const existing = (preserve && Array.isArray(preserve)) ? preserve : collectStockStatuses();
+  const byTruck = {};
+  existing.forEach(s => { if (s && s.truck) byTruck[s.truck] = s; });
+  container.innerHTML = selected.map(truck => {
+    const cur = byTruck[truck] || { truck, status: 'Not yet', notes: '' };
+    const escTruck = truck.replace(/"/g, '&quot;');
+    const escNotes = (cur.notes || '').replace(/"/g, '&quot;');
+    const opts = ['Not yet', 'Partial', 'Fully ordered', 'N/A'].map(o =>
+      '<option' + (cur.status === o ? ' selected' : '') + '>' + o + '</option>').join('');
+    return '<div class="stock-row" data-truck="' + escTruck + '">' +
+      '<div class="sr-name">' + truck + '</div>' +
+      '<select class="stock-status">' + opts + '</select>' +
+      '<input type="text" class="stock-notes" placeholder="Supplier / notes (optional)" value="' + escNotes + '">' +
+      '</div>';
+  }).join('');
+}
+
+function collectStockStatuses() {
+  return [...document.querySelectorAll('.stock-row')].map(row => ({
+    truck: row.dataset.truck,
+    status: row.querySelector('.stock-status').value,
+    notes: row.querySelector('.stock-notes').value
+  }));
 }
 
 // ─── FLEET DATA ───────────────────────────────────────────────
@@ -1863,9 +1965,11 @@ function generateBrief() {
     <!-- COMMERCIAL -->
     <div class="brief-section">
       <div class="brief-section-head">05 — COMMERCIAL TERMS</div>
-      <div class="brief-grid-2" style="margin-bottom:12px;">
-        <div class="bfield"><div class="bl">Revenue Model</div><div class="bv highlight">${revenue.length ? revenue.join(' + ') : '—'}</div></div>
-        <div class="bfield"><div class="bl">POS / Payment</div><div class="bv">${pos.length ? pos.join(', ') : '—'}</div></div>
+      <div class="brief-grid-3" style="margin-bottom:12px;">
+        <div class="bfield"><div class="bl">Booking Client</div><div class="bv big highlight">${fmt('commercialClient')}</div></div>
+        <div class="bfield"><div class="bl">Booking Ref</div><div class="bv">${fmt('commercialClientRef')}</div></div>
+        <div class="bfield"><div class="bl">Revenue Model</div><div class="bv">${revenue.length ? revenue.join(' + ') : '—'}</div></div>
+        <div class="bfield" style="grid-column:span 3;"><div class="bl">POS / Payment</div><div class="bv">${pos.length ? pos.join(', ') : '—'}</div></div>
       </div>
       ${val('pitchFeeAmount') ? '<div class="notice-box"><strong>Pitch Fee:</strong> £' + val('pitchFeeAmount') + ' — ' + fmt('pitchFeeType') + ' — ' + fmt('pitchFeePayableTo') + (val('pitchFeeNotes') ? '<br>' + val('pitchFeeNotes') : '') + '</div>' : ''}
       ${val('revSharePct') ? '<div class="notice-box"><strong>Revenue Share:</strong> ' + val('revSharePct') + '% of ' + fmt('revShareBasis') + '. Settlement: ' + fmt('revShareSettlement') + (val('revShareNotes') ? '<br>' + val('revShareNotes') : '') + '</div>' : ''}
@@ -1881,10 +1985,24 @@ function generateBrief() {
         <div class="bfield"><div class="bl">Food Covers Forecast</div><div class="bv big">${fmt('foodCovers')}</div></div>
         <div class="bfield"><div class="bl">Coffee Covers Forecast</div><div class="bv big">${fmt('coffeeCovers')}</div></div>
         <div class="bfield"><div class="bl">Ice Cream Covers Forecast</div><div class="bv big">${fmt('icecreamCovers')}</div></div>
-        <div class="bfield"><div class="bl">Stock Ordered</div><div class="bv">${fmt('stockOrdered')}</div></div>
         <div class="bfield"><div class="bl">Supplier Delivery</div><div class="bv">${formatDate(val('deliveryDate'))}</div></div>
         <div class="bfield"><div class="bl">Cold Chain</div><div class="bv">${fmt('coldChain')}</div></div>
       </div>
+      ${(() => {
+        const ss = collectStockStatuses();
+        if (!ss.length) return '';
+        return '<div style="margin-bottom:12px;">' +
+          '<div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Stock Status (per truck)</div>' +
+          '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+          '<thead><tr><th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Truck</th><th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Status</th><th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Supplier / Notes</th></tr></thead>' +
+          '<tbody>' + ss.map(s => {
+            const colour = s.status === 'Fully ordered' ? '#2d7a49' : (s.status === 'Partial' ? '#b07a10' : (s.status === 'N/A' ? '#888' : '#c0392b'));
+            return '<tr>' +
+              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;"><strong>' + s.truck + '</strong></td>' +
+              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:' + colour + ';font-weight:700;">' + s.status + '</td>' +
+              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#555;">' + (s.notes || '—') + '</td></tr>';
+          }).join('') + '</tbody></table></div>';
+      })()}
       ${val('menuNotes') ? '<div class="notice-box"><strong>Menu Notes (variations from standard):</strong><br>' + val('menuNotes').replace(/\n/g,'<br>') + '</div>' : '<div style="font-size:12px;color:#666;margin-bottom:8px;"><em>Standard menu assumed — no variations noted.</em></div>'}
       ${val('stockNotes') ? '<div class="notice-box">' + val('stockNotes') + '</div>' : ''}
     </div>
@@ -2108,6 +2226,7 @@ function collectFormData() {
   const scatteredCb = document.getElementById('isScattered');
   data._isScattered = scatteredCb ? scatteredCb.checked : false;
   data._tradingDays = getTradingDays();
+  data._stockStatuses = collectStockStatuses();
   return data;
 }
 
@@ -2150,6 +2269,7 @@ function populateForm(data) {
   });
   updateRevenueCards();
   updatePowerSummary();
+  renderStockOrderRows(data._stockStatuses);
   checkDoubleBooking();
 }
 
