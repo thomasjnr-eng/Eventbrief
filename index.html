@@ -546,6 +546,40 @@ body {
 }
 .dbl-banner ul { margin: 6px 0 0 18px; font-size: 12px; line-height: 1.5; }
 
+/* ─── TRADING DAY ROWS ─── */
+.trading-day-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.trading-day-row input {
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  padding: 8px 10px;
+  outline: none;
+}
+.trading-day-row input:focus { border-color: var(--sage); }
+.trading-day-row .td-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  width: 32px; height: 32px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.trading-day-row .td-remove:hover { border-color: var(--red); color: var(--red); }
+@media (max-width: 700px) {
+  .trading-day-row { grid-template-columns: 1fr 1fr; }
+  .trading-day-row .td-remove { grid-column: span 2; height: auto; padding: 6px; }
+}
+
 /* ─── TOAST ─── */
 .toast {
   position: fixed;
@@ -700,34 +734,73 @@ body {
   </div>
 
   <div class="card">
-    <div class="card-title">Date, Time &amp; Venue</div>
-    <div class="grid-3">
+    <div class="card-title">Schedule</div>
+    <label class="check-item" style="margin-bottom:14px;">
+      <input type="checkbox" id="isScattered" onchange="toggleScattered()">
+      <span>Multi-day / scattered event &mdash; trucks on site across multiple days, trading only on selected dates (e.g. concert series)</span>
+    </label>
+
+    <div class="grid-2" style="margin-bottom:14px;">
       <div class="field">
-        <label>Event Date</label>
-        <input type="date" id="eventDate">
+        <label>Load-In Date</label>
+        <input type="date" id="loadInDate" onchange="checkDoubleBooking()">
       </div>
       <div class="field">
-        <label>Setup / Arrival Time</label>
-        <input type="time" id="setupTime">
+        <label>Load-In Time</label>
+        <input type="time" id="loadInTime">
+      </div>
+    </div>
+
+    <div id="singleSchedule">
+      <div class="grid-2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Event Start Date</label>
+          <input type="date" id="eventStartDate" onchange="checkDoubleBooking()">
+        </div>
+        <div class="field">
+          <label>Event Start Time</label>
+          <input type="time" id="eventStartTime">
+        </div>
+        <div class="field">
+          <label>Event Finish Date</label>
+          <input type="date" id="eventFinishDate" onchange="checkDoubleBooking()">
+        </div>
+        <div class="field">
+          <label>Event Finish Time</label>
+          <input type="time" id="eventFinishTime">
+        </div>
+      </div>
+    </div>
+
+    <div id="scatteredSchedule" style="display:none;margin-bottom:14px;">
+      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--grey);font-weight:700;margin-bottom:8px;">Trading Days</div>
+      <div id="tradingDaysList"></div>
+      <button type="button" class="btn btn-secondary" onclick="addTradingDay()" style="margin-top:6px;font-size:12px;padding:8px 14px;">+ Add Trading Day</button>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Load-Out Date</label>
+        <input type="date" id="loadOutDate" onchange="checkDoubleBooking()">
       </div>
       <div class="field">
-        <label>Trading Start Time</label>
-        <input type="time" id="startTime">
+        <label>Load-Out Time</label>
+        <input type="time" id="loadOutTime">
       </div>
+    </div>
+
+    <div class="grid-1" style="margin-bottom:14px;">
       <div class="field">
-        <label>Trading End Time</label>
-        <input type="time" id="endTime">
-      </div>
-      <div class="field">
-        <label>Breakdown / Departure</label>
-        <input type="time" id="breakdownTime">
+        <label>Load-In / Load-Out Notes</label>
+        <textarea id="loadNotes" placeholder="e.g. Site curfew 22:00 — load-out delayed to morning. Trucks remain on site overnight. Crew rotation between trading nights..."></textarea>
       </div>
       <div class="field">
         <label>Expected Attendance</label>
-        <input type="number" id="attendance" placeholder="No. of guests">
+        <input type="number" id="attendance" placeholder="No. of guests (peak / per trading night)">
       </div>
     </div>
-    <div class="grid-1" style="margin-top:14px;">
+
+    <div class="grid-1">
       <div class="field">
         <label>Venue / Location Name</label>
         <input type="text" id="venueName" placeholder="Venue or site name">
@@ -1527,12 +1600,95 @@ function formatTime(t) {
   return t;
 }
 
+// ─── SCHEDULE HELPERS ─────────────────────────────────────────
+let tradingDayCounter = 0;
+function addTradingDay(date, start, end, notes) {
+  tradingDayCounter++;
+  const idx = tradingDayCounter;
+  const list = document.getElementById('tradingDaysList');
+  if (!list) return;
+  const row = document.createElement('div');
+  row.className = 'trading-day-row';
+  row.dataset.idx = idx;
+  row.innerHTML =
+    '<input type="date" data-field="date" value="' + (date || '') + '" onchange="checkDoubleBooking()">' +
+    '<input type="time" data-field="startTime" value="' + (start || '') + '" placeholder="Start">' +
+    '<input type="time" data-field="endTime" value="' + (end || '') + '" placeholder="End">' +
+    '<input type="text" data-field="notes" value="' + (notes ? notes.replace(/"/g, '&quot;') : '') + '" placeholder="Notes (optional)">' +
+    '<button type="button" class="td-remove" onclick="removeTradingDay(' + idx + ')" title="Remove">&times;</button>';
+  list.appendChild(row);
+}
+function removeTradingDay(idx) {
+  const r = document.querySelector('.trading-day-row[data-idx="' + idx + '"]');
+  if (r) r.remove();
+  checkDoubleBooking();
+}
+function getTradingDays() {
+  return [...document.querySelectorAll('.trading-day-row')].map(row => {
+    const d = {};
+    row.querySelectorAll('[data-field]').forEach(el => d[el.dataset.field] = el.value);
+    return d;
+  }).filter(d => d.date);
+}
+function setTradingDays(days) {
+  const list = document.getElementById('tradingDaysList');
+  if (!list) return;
+  list.innerHTML = '';
+  if (Array.isArray(days)) days.forEach(d => addTradingDay(d.date, d.startTime, d.endTime, d.notes));
+}
+function toggleScattered() {
+  const isS = document.getElementById('isScattered').checked;
+  document.getElementById('singleSchedule').style.display = isS ? 'none' : 'block';
+  document.getElementById('scatteredSchedule').style.display = isS ? 'block' : 'none';
+  if (isS && !document.querySelector('.trading-day-row')) addTradingDay();
+  checkDoubleBooking();
+}
+
+function getEventDate(formData) {
+  if (formData._isScattered && Array.isArray(formData._tradingDays) && formData._tradingDays.length) {
+    const sorted = formData._tradingDays.map(d => d.date).filter(Boolean).sort();
+    if (sorted.length) return sorted[0];
+  }
+  return formData.eventStartDate || formData.loadInDate || '';
+}
+
+function getEventWindow(formData) {
+  const start = formData.loadInDate || formData.eventStartDate || (formData._tradingDays && formData._tradingDays[0] && formData._tradingDays[0].date) || '';
+  let end = formData.loadOutDate;
+  if (!end) {
+    if (formData._isScattered && Array.isArray(formData._tradingDays) && formData._tradingDays.length) {
+      const sorted = formData._tradingDays.map(d => d.date).filter(Boolean).sort();
+      end = sorted.length ? sorted[sorted.length - 1] : start;
+    } else {
+      end = formData.eventFinishDate || formData.eventStartDate || start;
+    }
+  }
+  return [start, end];
+}
+
+function rangesOverlap(aStart, aEnd, bStart, bEnd) {
+  if (!aStart || !aEnd || !bStart || !bEnd) return false;
+  return aStart <= bEnd && bStart <= aEnd;
+}
+
 function genRef() {
-  const d = val('eventDate');
+  const d = getEventDate(collectFormDataLight());
   const n = val('eventName');
   const prefix = n ? n.replace(/[^a-zA-Z0-9]/g,'').substring(0,6).toUpperCase() : 'EVT';
   const date = d ? d.replace(/-/g,'').substring(2) : '000000';
   return 'OBE-' + prefix + '-' + date;
+}
+
+// Lightweight collector for ref/date derivation (avoids querying chips on every keystroke)
+function collectFormDataLight() {
+  return {
+    eventStartDate: val('eventStartDate'),
+    eventFinishDate: val('eventFinishDate'),
+    loadInDate: val('loadInDate'),
+    loadOutDate: val('loadOutDate'),
+    _isScattered: document.getElementById('isScattered') ? document.getElementById('isScattered').checked : false,
+    _tradingDays: getTradingDays()
+  };
 }
 
 function statusBadge(s) {
@@ -1551,6 +1707,10 @@ function generateBrief() {
   const pos = getChipValues('posChipGroup');
   const power = getChipValues('powerChipGroup');
   const safetyChecked = checks('safety');
+  const isScattered = document.getElementById('isScattered') && document.getElementById('isScattered').checked;
+  const tradingDays = getTradingDays();
+  const formData = collectFormDataLight();
+  const [windowStart, windowEnd] = getEventWindow(Object.assign({}, formData, { _isScattered: isScattered, _tradingDays: tradingDays }));
 
   const allSafetyItems = [
     'CO2 extinguisher (per truck)', 'Wet chemical extinguisher (cooking)', 'Fire blanket',
@@ -1582,12 +1742,12 @@ function generateBrief() {
 
     <div class="brief-meta-strip">
       <div class="meta-cell">
-        <div class="mc-label">Date</div>
-        <div class="mc-val">${formatDate(val('eventDate'))}</div>
+        <div class="mc-label">${isScattered ? 'Trading Days' : 'Event Date'}</div>
+        <div class="mc-val">${isScattered ? tradingDays.length + ' day' + (tradingDays.length !== 1 ? 's' : '') : formatDate(val('eventStartDate'))}</div>
       </div>
       <div class="meta-cell">
-        <div class="mc-label">Trading Hours</div>
-        <div class="mc-val">${formatTime(val('startTime'))} – ${formatTime(val('endTime'))}</div>
+        <div class="mc-label">${isScattered ? 'Span' : 'Trading Hours'}</div>
+        <div class="mc-val">${isScattered ? formatDate(windowStart) + ' – ' + formatDate(windowEnd) : (formatTime(val('eventStartTime')) + ' – ' + formatTime(val('eventFinishTime')))}</div>
       </div>
       <div class="meta-cell">
         <div class="mc-label">Attendance</div>
@@ -1620,14 +1780,29 @@ function generateBrief() {
         <div class="bfield"><div class="bl">Venue</div><div class="bv big">${fmt('venueName')}</div></div>
         <div class="bfield"><div class="bl">Address</div><div class="bv">${fmt('venueAddress')}</div></div>
       </div>
-      <div class="brief-grid-3">
-        <div class="bfield"><div class="bl">Setup / Arrival</div><div class="bv">${formatTime(val('setupTime'))}</div></div>
-        <div class="bfield"><div class="bl">Trading Start</div><div class="bv highlight">${formatTime(val('startTime'))}</div></div>
-        <div class="bfield"><div class="bl">Trading End</div><div class="bv highlight">${formatTime(val('endTime'))}</div></div>
-        <div class="bfield"><div class="bl">Breakdown / Depart</div><div class="bv">${formatTime(val('breakdownTime'))}</div></div>
+      <div class="brief-grid-3" style="margin-bottom:12px;">
+        <div class="bfield"><div class="bl">Load-In</div><div class="bv">${formatDate(val('loadInDate'))} ${formatTime(val('loadInTime'))}</div></div>
+        ${isScattered ? `
+          <div class="bfield"><div class="bl">Trading Window</div><div class="bv highlight">${formatDate(windowStart)} – ${formatDate(windowEnd)}</div></div>
+          <div class="bfield"><div class="bl">Trading Days</div><div class="bv">${tradingDays.length}</div></div>
+        ` : `
+          <div class="bfield"><div class="bl">Event Start</div><div class="bv highlight">${formatDate(val('eventStartDate'))} ${formatTime(val('eventStartTime'))}</div></div>
+          <div class="bfield"><div class="bl">Event Finish</div><div class="bv highlight">${formatDate(val('eventFinishDate'))} ${formatTime(val('eventFinishTime'))}</div></div>
+        `}
+        <div class="bfield"><div class="bl">Load-Out</div><div class="bv">${formatDate(val('loadOutDate'))} ${formatTime(val('loadOutTime'))}</div></div>
         <div class="bfield"><div class="bl">Expected Attendance</div><div class="bv">${fmt('attendance')}</div></div>
       </div>
-      ${val('accessNotes') ? '<div class="notice-box" style="margin-top:12px;"><strong>Access:</strong> ' + val('accessNotes') + '</div>' : ''}
+      ${isScattered && tradingDays.length ? `
+        <div style="background:#f0ece6;padding:10px 14px;border-radius:3px;margin-bottom:12px;">
+          <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#888;margin-bottom:6px;">Trading Schedule</div>
+          <table style="width:100%;border-collapse:collapse;font-size:12px;">
+            <thead><tr><th style="text-align:left;padding:4px 8px;color:#666;font-size:10px;">Date</th><th style="text-align:left;padding:4px 8px;color:#666;font-size:10px;">Hours</th><th style="text-align:left;padding:4px 8px;color:#666;font-size:10px;">Notes</th></tr></thead>
+            <tbody>${tradingDays.map(d => '<tr><td style="padding:4px 8px;border-top:1px solid #ddd;"><strong>' + formatDate(d.date) + '</strong></td><td style="padding:4px 8px;border-top:1px solid #ddd;">' + (d.startTime || '—') + ' – ' + (d.endTime || '—') + '</td><td style="padding:4px 8px;border-top:1px solid #ddd;color:#555;">' + (d.notes || '') + '</td></tr>').join('')}</tbody>
+          </table>
+        </div>
+      ` : ''}
+      ${val('loadNotes') ? '<div class="notice-box"><strong>Load-In/Out:</strong> ' + val('loadNotes').replace(/\n/g,'<br>') + '</div>' : ''}
+      ${val('accessNotes') ? '<div class="notice-box"><strong>Access:</strong> ' + val('accessNotes') + '</div>' : ''}
     </div>
 
     <!-- FLEET -->
@@ -1765,22 +1940,30 @@ function backToForm() {
 // ─── CALENDAR ─────────────────────────────────────────────────
 function addToCalendar() {
   const name = val('eventName') || 'O\'Brien Event';
-  const date = val('eventDate');
-  const start = val('startTime');
-  const end = val('endTime');
-
-  if (!date) {
-    alert('Please enter an event date first.');
-    return;
+  const isScattered = document.getElementById('isScattered') && document.getElementById('isScattered').checked;
+  let startDate, startT, endDate, endT;
+  if (isScattered) {
+    const days = getTradingDays();
+    if (!days.length) { alert('Add at least one trading day first.'); return; }
+    const sorted = days.slice().sort((a, b) => a.date.localeCompare(b.date));
+    startDate = sorted[0].date;
+    startT = sorted[0].startTime;
+    endDate = sorted[sorted.length - 1].date;
+    endT = sorted[sorted.length - 1].endTime;
+  } else {
+    startDate = val('eventStartDate');
+    startT = val('eventStartTime');
+    endDate = val('eventFinishDate') || startDate;
+    endT = val('eventFinishTime');
   }
+  if (!startDate) { alert('Please enter an event start date first.'); return; }
 
   function gcalTime(d, t) {
     if (!t) return d.replace(/-/g,'');
     return d.replace(/-/g,'') + 'T' + t.replace(':','') + '00';
   }
-
-  const startStr = gcalTime(date, start);
-  const endStr = end ? gcalTime(date, end) : gcalTime(date, start);
+  const startStr = gcalTime(startDate, startT);
+  const endStr = endT ? gcalTime(endDate, endT) : gcalTime(endDate, startT);
 
   const details = [
     'O\'Brien Event Catering — Event Brief',
@@ -1881,16 +2064,22 @@ async function openEventsModal() {
     const filenames = await listEventFilenames(true);
     if (!filenames.length) { list.innerHTML = '<p style="color:var(--grey);">No saved events yet.</p>'; return; }
     const events = await Promise.all(filenames.map(getEventByFilename));
-    const sorted = events.filter(Boolean).sort((a, b) => (b.form.eventDate || '').localeCompare(a.form.eventDate || ''));
-    list.innerHTML = sorted.map(ev => {
+    const sortedByStart = events.filter(Boolean).sort((a, b) => {
+      const da = getEventDate(a.form) || ''; const db = getEventDate(b.form) || '';
+      return db.localeCompare(da);
+    });
+    list.innerHTML = sortedByStart.map(ev => {
       const f = ev.form || {};
       const escName = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
       const escClient = (f.clientName || '').replace(/</g, '&lt;');
       const escVenue = (f.venueName || '').replace(/</g, '&lt;');
       const units = (f._fleet || []).length;
+      const [winStart, winEnd] = getEventWindow(f);
+      const dateLabel = (winStart && winEnd && winStart !== winEnd) ? formatDate(winStart) + ' – ' + formatDate(winEnd) : formatDate(winStart || winEnd || f.eventDate || '');
+      const scatteredTag = f._isScattered ? ' <span style="background:#3a3a3a;color:#bbb;padding:1px 6px;border-radius:2px;font-size:10px;margin-left:4px;">SCATTERED</span>' : '';
       return '<div class="event-row">' +
-        '<div><div class="ev-name">' + escName + '</div>' +
-        '<div class="ev-meta">' + formatDate(f.eventDate) + ' &middot; ' + escClient + ' &middot; ' + escVenue + ' &middot; ' + units + ' unit' + (units !== 1 ? 's' : '') + ' &middot; ' + (f.bookingStatus || '—') + '</div></div>' +
+        '<div><div class="ev-name">' + escName + scatteredTag + '</div>' +
+        '<div class="ev-meta">' + dateLabel + ' &middot; ' + escClient + ' &middot; ' + escVenue + ' &middot; ' + units + ' unit' + (units !== 1 ? 's' : '') + ' &middot; ' + (f.bookingStatus || '—') + '</div></div>' +
         '<div class="ev-actions">' +
           '<button class="ev-btn" onclick="loadEvent(\'' + ev._filename + '\')">Load</button>' +
           '<button class="ev-btn danger" onclick="deleteEventConfirm(\'' + ev._filename + '\', \'' + escName.replace(/'/g, '\\\'') + '\')">Delete</button>' +
@@ -1908,6 +2097,7 @@ function collectFormData() {
   document.querySelectorAll('#form-app input, #form-app textarea, #form-app select').forEach(el => {
     if (!el.id || el.type === 'button') return;
     if (el.type === 'checkbox') return;
+    // Skip trading-day row inputs (no id); they're collected separately
     data[el.id] = el.value;
   });
   data._fleet = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
@@ -1915,10 +2105,23 @@ function collectFormData() {
   data._revenue = [...document.querySelectorAll('#revenueChipGroup .chip.selected')].map(c => c.dataset.val);
   data._pos = [...document.querySelectorAll('#posChipGroup .chip.selected')].map(c => c.dataset.val);
   data._safety = [...document.querySelectorAll('input[name="safety"]:checked')].map(c => c.value);
+  const scatteredCb = document.getElementById('isScattered');
+  data._isScattered = scatteredCb ? scatteredCb.checked : false;
+  data._tradingDays = getTradingDays();
   return data;
 }
 
 function populateForm(data) {
+  // Backwards-compat: pre-2026-05-12 schema used flat date + setup/start/end/breakdown times.
+  if (data.eventDate && !data.eventStartDate) data.eventStartDate = data.eventDate;
+  if (data.eventDate && !data.loadInDate) data.loadInDate = data.eventDate;
+  if (data.eventDate && !data.loadOutDate) data.loadOutDate = data.eventDate;
+  if (data.eventDate && !data.eventFinishDate) data.eventFinishDate = data.eventDate;
+  if (data.setupTime && !data.loadInTime) data.loadInTime = data.setupTime;
+  if (data.startTime && !data.eventStartTime) data.eventStartTime = data.startTime;
+  if (data.endTime && !data.eventFinishTime) data.eventFinishTime = data.endTime;
+  if (data.breakdownTime && !data.loadOutTime) data.loadOutTime = data.breakdownTime;
+
   document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
   document.querySelectorAll('input[name="safety"]').forEach(c => c.checked = false);
   Object.keys(data).forEach(k => {
@@ -1926,6 +2129,12 @@ function populateForm(data) {
     const el = document.getElementById(k);
     if (el && typeof data[k] === 'string') el.value = data[k];
   });
+  const scatteredCb = document.getElementById('isScattered');
+  if (scatteredCb) {
+    scatteredCb.checked = !!data._isScattered;
+    toggleScattered();
+  }
+  setTradingDays(data._tradingDays);
   const restoreChip = (groupSel, val) => {
     const escVal = val.replace(/"/g, '\\"');
     const chip = document.querySelector(groupSel + '[data-val="' + escVal + '"]');
@@ -1946,7 +2155,8 @@ function populateForm(data) {
 
 function eventIdFor(data) {
   const slug = (data.eventName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 50);
-  return (data.eventDate || 'undated') + '-' + (slug || 'unnamed');
+  const date = getEventDate(data) || 'undated';
+  return date + '-' + (slug || 'unnamed');
 }
 
 // ─── SAVE / LOAD / DELETE ─────────────────────────────────────
@@ -2070,32 +2280,36 @@ async function doCheckDoubleBooking() {
   const banner = document.getElementById('doubleBookBanner');
   if (!banner) return;
   if (!getPAT()) { banner.style.display = 'none'; return; }
-  const date = val('eventDate');
   const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
-  if (!date || !selected.length) { banner.style.display = 'none'; return; }
+  const myData = collectFormData();
+  const [myStart, myEnd] = getEventWindow(myData);
+  if (!myStart || !myEnd || !selected.length) { banner.style.display = 'none'; return; }
   let filenames;
   try { filenames = await listEventFilenames(); }
   catch (e) { banner.style.display = 'none'; return; }
-  const sameDate = filenames.filter(fn => fn.startsWith(date + '-'));
-  if (!sameDate.length) { banner.style.display = 'none'; return; }
-  const myId = eventIdFor(collectFormData());
+  if (!filenames.length) { banner.style.display = 'none'; return; }
+  const myId = eventIdFor(myData);
   const conflicts = [];
-  for (const fn of sameDate) {
+  for (const fn of filenames) {
     const ev = await getEventByFilename(fn);
     if (!ev || ev.id === myId) continue;
+    const [evStart, evEnd] = getEventWindow(ev.form);
+    if (!rangesOverlap(myStart, myEnd, evStart, evEnd)) continue;
     const evUnits = ev.form._fleet || [];
     const overlap = selected.filter(u => evUnits.includes(u));
-    if (overlap.length) conflicts.push({ event: ev, overlap });
+    if (overlap.length) conflicts.push({ event: ev, overlap, evStart, evEnd });
   }
   if (!conflicts.length) { banner.style.display = 'none'; return; }
   banner.style.display = 'block';
+  const windowLabel = myStart === myEnd ? formatDate(myStart) : formatDate(myStart) + ' – ' + formatDate(myEnd);
   banner.innerHTML = '<div class="dbl-banner">' +
-    '<div class="dbl-title">⚠ Double-booking detected on ' + formatDate(date) + '</div>' +
-    conflicts.map(c =>
-      '<div style="margin-top:6px;"><strong>' + (c.event.form.eventName || '(unnamed)') + '</strong>' +
-      ' <span style="color:#bbb;font-size:11px;">(' + (c.event.form.clientName || 'unknown client') + ' @ ' + (c.event.form.venueName || 'unknown venue') + ')</span>' +
-      ' already has: <span style="color:#ffb0b0;">' + c.overlap.join(', ') + '</span></div>'
-    ).join('') +
+    '<div class="dbl-title">⚠ Double-booking detected (' + windowLabel + ')</div>' +
+    conflicts.map(c => {
+      const evWin = c.evStart === c.evEnd ? formatDate(c.evStart) : formatDate(c.evStart) + ' – ' + formatDate(c.evEnd);
+      return '<div style="margin-top:6px;"><strong>' + (c.event.form.eventName || '(unnamed)') + '</strong>' +
+        ' <span style="color:#bbb;font-size:11px;">' + evWin + ' &middot; ' + (c.event.form.clientName || 'unknown client') + ' @ ' + (c.event.form.venueName || 'unknown venue') + '</span>' +
+        '<br><span style="color:#ffb0b0;">' + c.overlap.join(', ') + '</span></div>';
+    }).join('') +
     '<div style="font-size:11px;color:#bbb;margin-top:10px;">Either swap units or amend the conflicting event.</div>' +
     '</div>';
 }
