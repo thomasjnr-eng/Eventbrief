@@ -865,23 +865,12 @@ body {
   <div class="step-subtitle">What we're serving, forecasting and stock management</div>
 
   <div class="card">
-    <div class="card-title">Menu Plan</div>
+    <div class="card-title">Menu Notes</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Standard menu is assumed for all units. Use the box below only if anything deviates.</p>
     <div class="grid-1">
       <div class="field">
-        <label>Food Truck Menu (agreed items)</label>
-        <textarea id="menuFood" rows="3" placeholder="e.g. Classic Burger, Veggie Burger, Hot Dog, Loaded Fries, Pulled Pork Bun..."></textarea>
-      </div>
-      <div class="field">
-        <label>Coffee Truck Menu</label>
-        <textarea id="menuCoffee" rows="2" placeholder="e.g. Full espresso bar, cold brew, pastries..."></textarea>
-      </div>
-      <div class="field">
-        <label>Ice Cream Menu</label>
-        <textarea id="menuIcecream" rows="2" placeholder="e.g. Soft serve cones, 6 ice cream flavours, sundaes..."></textarea>
-      </div>
-      <div class="field">
-        <label>Dietary / Allergen Requirements Flagged</label>
-        <textarea id="dietaryNotes" placeholder="e.g. Gluten-free buns required for 10% of covers. Vegan confirmed. Nut-free site. Full allergen matrix to be available on truck..."></textarea>
+        <label>Variations / Special Requirements</label>
+        <textarea id="menuNotes" rows="5" placeholder="e.g. Dietary requirements — gluten-free buns for 10% of covers; vegan option confirmed.&#10;Remove side dishes — main item only.&#10;Halal option required for 30 covers.&#10;Smaller portions for school event.&#10;Nut-free site."></textarea>
       </div>
     </div>
   </div>
@@ -1113,74 +1102,89 @@ function goStep(n) {
 }
 
 // ─── FLEET DATA ───────────────────────────────────────────────
-// Phase determined by colour-fill of Power Req. cell in 2026 deadsheet:
+// Power Req. parsed from 2026 deadsheet by Power-cell fill colour.
 //   blue (FF8EAADB) = single phase, red (FFFF7E79/FFEA9999) = three phase.
-// Lucky Bao Buns had no fill colour in source — flagged with `phaseGuess: true`.
+// Compound spec "X + Y": X = primary-phase breaker (per colour),
+//   Y = opposite-phase breaker. "X x N" = N copies on primary phase.
+// singleBreakers/threeBreakers list the per-circuit amperage requirements.
 const FLEET = [
-  { name: "O'Briens Chipper 1", eho: '76575', dim: '6M x 3M', power: '125A + 32A', phase: 'three', category: 'Burger/Chipper Units' },
-  { name: "O'Briens Chipper 2", eho: '76967', dim: '4M x 3M', power: '63A', phase: 'three', category: 'Burger/Chipper Units' },
-  { name: 'Smash Burger 1', eho: '76972', dim: '5M x 3M', power: '125A', phase: 'three', category: 'Burger/Chipper Units' },
-  { name: 'Smash Burger 2', eho: '', dim: '5M x 3M', power: '125A', phase: 'three', category: 'Burger/Chipper Units' },
-  { name: 'Loaded Burger', eho: '88122', dim: '5.5M x 3M', power: '125A', phase: 'three', category: 'Burger/Chipper Units' },
-  { name: 'Flex Use Airstream', eho: '', dim: '5M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: "Angelo's Pizza", eho: '76968', dim: '4M x 3M', power: '32A', phase: 'single', category: 'Misc. Food Units' },
-  { name: "Angelo's Pizza & Pasta", eho: '88124', dim: '9M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Fried Chicken Truck', eho: '30923', dim: '6M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Thindi', eho: '16535', dim: '5M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Toasted', eho: '76963', dim: '4M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Bun Club Hot Dogs', eho: '76966', dim: '5M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Zambrero', eho: '113714', dim: '6M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Pitt Bros BBQ', eho: '81939', dim: '5M x 3M', power: '63A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Lucky Bao Buns', eho: '100979', dim: '6M x 3M', power: '32A', phase: 'single', category: 'Misc. Food Units' },
-  { name: 'Camile Thai 2.0', eho: '100979', dim: '6M x 3M', power: '125A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Camile Thai', eho: '91759', dim: '6M x 3M', power: '125A', phase: 'three', category: 'Misc. Food Units' },
-  { name: 'Caffe Duomo 1', eho: '88120', dim: '5M x 3M', power: '32A', phase: 'three', category: 'Coffee/Beverages' },
-  { name: 'Caffe Duomo 2', eho: '76961', dim: '3M x 3M', power: '32A x2', phase: 'single', category: 'Coffee/Beverages' },
-  { name: 'Caffe Duomo 3', eho: '', dim: '3M x 3M', power: '32A x2', phase: 'single', category: 'Coffee/Beverages' },
-  { name: 'Caffe Duomo Van', eho: '', dim: '5M x 3M', power: '32A', phase: 'three', category: 'Coffee/Beverages' },
-  { name: 'Caffe Duomo/Torelli', eho: '76962', dim: '4M x 3M', power: '32A x2', phase: 'single', category: 'Coffee/Beverages' },
-  { name: 'Freshly Ground Coffee 1', eho: '', dim: '3M x 3M', power: '32A x2', phase: 'single', category: 'Coffee/Beverages' },
-  { name: 'Freshly Ground Coffee 2', eho: '', dim: '4M x 3M', power: '32A x2', phase: 'single', category: 'Coffee/Beverages' },
-  { name: 'Smoothies & Shakes 1', eho: '76965', dim: '5M x 3M', power: '32A', phase: 'single', category: 'Coffee/Beverages' },
-  { name: 'Nobo/Citroen', eho: '', dim: '4M x 3M', power: '32A', phase: 'single', category: 'Coffee/Beverages' },
-  { name: 'Off Beat Donuts 2', eho: '', dim: '5M x 3M', power: '32A + 16A', phase: 'single', category: 'Confectionery' },
-  { name: 'Off Beat Donuts', eho: '76964', dim: '5M x 3M', power: '32A x2', phase: 'single', category: 'Confectionery' },
-  { name: 'Chocolate Fountain', eho: '76971', dim: '4M x 3M', power: '32A x2', phase: 'single', category: 'Confectionery' },
-  { name: "Pick'n'Mix", eho: '', dim: '5M x 3M', power: '32A', phase: 'single', category: 'Confectionery' },
-  { name: 'The Village Kiosk 1', eho: '76970', dim: '4M x 3M', power: '32A', phase: 'single', category: 'Confectionery' },
-  { name: 'The Village Kiosk 2', eho: '81824', dim: '4M x 3M', power: '16A', phase: 'single', category: 'Confectionery' },
-  { name: 'Sprinkles Churros', eho: '', dim: '5M x 3M', power: '32A', phase: 'three', category: 'Confectionery' },
-  { name: 'Sprinkles Desserts', eho: '98859', dim: '4M x 3M', power: '63A + 32A', phase: 'single', category: 'Confectionery' },
-  { name: '231-D', eho: '118984', dim: '5M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '201-D', eho: '118985', dim: '5M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '152-D', eho: '81822', dim: '5M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '142-D', eho: '75724', dim: '5M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '09-D', eho: '76925', dim: '5M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '07-D', eho: '76926', dim: '4M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '07-RN', eho: '76924', dim: '5M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '05-D', eho: '76922', dim: '5M x 3M', power: '13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '05-WH', eho: '81936', dim: '5M x 3M', power: '13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '04-D', eho: '76927', dim: '4M x 3M', power: '13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '03-D', eho: '76957', dim: '4M x 3M', power: '13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '02-WW', eho: '76956', dim: '5M x 3M', power: '13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '02-C', eho: '76959', dim: '5M x 3M', power: '13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '01-D', eho: '76960', dim: '5M x 3M', power: '13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: 'BMC', eho: '76973', dim: '6M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: 'LD', eho: '78576', dim: '4M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: 'Pink Bedford', eho: '81823', dim: '4M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: 'Yellow Transit', eho: '81935', dim: '4M x 3M', power: '32A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: '88-WX', eho: '', dim: '6M x 3M', power: '16A + 13A', phase: 'single', category: 'Ice Cream Vans' },
-  { name: 'Camile Cart', eho: '', dim: '2M x 3M', power: '16A', phase: 'single', category: 'Carts & Trikes' },
-  { name: 'Zambrero Cart', eho: '', dim: '2M x 3M', power: '16A', phase: 'single', category: 'Carts & Trikes' },
-  { name: 'Vespa Cart #1', eho: '', dim: '2M x 3M', power: '13A', phase: 'single', category: 'Carts & Trikes' },
-  { name: 'Vespa Cart #2', eho: '', dim: '2M x 3M', power: '13A', phase: 'single', category: 'Carts & Trikes' },
-  { name: 'Sweet Cart', eho: '', dim: '2M x 3M', power: '13A', phase: 'single', category: 'Carts & Trikes' }
+  { name: "O'Briens Chipper 1", eho: '76575', dim: '6M x 3M', power: '125A + 32A', singleBreakers: [32], threeBreakers: [125], category: 'Burger/Chipper Units' },
+  { name: "O'Briens Chipper 2", eho: '76967', dim: '4M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Burger/Chipper Units' },
+  { name: 'Smash Burger 1', eho: '76972', dim: '5M x 3M', power: '125A', singleBreakers: [], threeBreakers: [125], category: 'Burger/Chipper Units' },
+  { name: 'Smash Burger 2', eho: '', dim: '5M x 3M', power: '125A', singleBreakers: [], threeBreakers: [125], category: 'Burger/Chipper Units' },
+  { name: 'Loaded Burger', eho: '88122', dim: '5.5M x 3M', power: '125A', singleBreakers: [], threeBreakers: [125], category: 'Burger/Chipper Units' },
+  { name: 'Flex Use Airstream', eho: '', dim: '5M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: "Angelo's Pizza", eho: '76968', dim: '4M x 3M', power: '32A', singleBreakers: [32], threeBreakers: [], category: 'Misc. Food Units' },
+  { name: "Angelo's Pizza & Pasta", eho: '88124', dim: '9M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: 'Fried Chicken Truck', eho: '30923', dim: '6M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: 'Thindi', eho: '16535', dim: '5M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: 'Toasted', eho: '76963', dim: '4M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: 'Bun Club Hot Dogs', eho: '76966', dim: '5M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: 'Zambrero', eho: '113714', dim: '6M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: 'Pitt Bros BBQ', eho: '81939', dim: '5M x 3M', power: '63A', singleBreakers: [], threeBreakers: [63], category: 'Misc. Food Units' },
+  { name: 'Lucky Bao Buns', eho: '100979', dim: '6M x 3M', power: '32A', singleBreakers: [32], threeBreakers: [], category: 'Misc. Food Units' },
+  { name: 'Camile Thai 2.0', eho: '100979', dim: '6M x 3M', power: '125A', singleBreakers: [], threeBreakers: [125], category: 'Misc. Food Units' },
+  { name: 'Camile Thai', eho: '91759', dim: '6M x 3M', power: '125A', singleBreakers: [], threeBreakers: [125], category: 'Misc. Food Units' },
+  { name: 'Caffe Duomo 1', eho: '88120', dim: '5M x 3M', power: '32A', singleBreakers: [], threeBreakers: [32], category: 'Coffee/Beverages' },
+  { name: 'Caffe Duomo 2', eho: '76961', dim: '3M x 3M', power: '32A x2', singleBreakers: [32, 32], threeBreakers: [], category: 'Coffee/Beverages' },
+  { name: 'Caffe Duomo 3', eho: '', dim: '3M x 3M', power: '32A x2', singleBreakers: [32, 32], threeBreakers: [], category: 'Coffee/Beverages' },
+  { name: 'Caffe Duomo Van', eho: '', dim: '5M x 3M', power: '32A', singleBreakers: [], threeBreakers: [32], category: 'Coffee/Beverages' },
+  { name: 'Caffe Duomo/Torelli', eho: '76962', dim: '4M x 3M', power: '32A x2', singleBreakers: [32, 32], threeBreakers: [], category: 'Coffee/Beverages' },
+  { name: 'Freshly Ground Coffee 1', eho: '', dim: '3M x 3M', power: '32A x2', singleBreakers: [32, 32], threeBreakers: [], category: 'Coffee/Beverages' },
+  { name: 'Freshly Ground Coffee 2', eho: '', dim: '4M x 3M', power: '32A x2', singleBreakers: [32, 32], threeBreakers: [], category: 'Coffee/Beverages' },
+  { name: 'Smoothies & Shakes 1', eho: '76965', dim: '5M x 3M', power: '32A', singleBreakers: [32], threeBreakers: [], category: 'Coffee/Beverages' },
+  { name: 'Nobo/Citroen', eho: '', dim: '4M x 3M', power: '32A', singleBreakers: [32], threeBreakers: [], category: 'Coffee/Beverages' },
+  { name: 'Off Beat Donuts 2', eho: '', dim: '5M x 3M', power: '32A + 16A', singleBreakers: [32], threeBreakers: [16], category: 'Confectionery' },
+  { name: 'Off Beat Donuts', eho: '76964', dim: '5M x 3M', power: '32A x2', singleBreakers: [32, 32], threeBreakers: [], category: 'Confectionery' },
+  { name: 'Chocolate Fountain', eho: '76971', dim: '4M x 3M', power: '32A x2', singleBreakers: [32, 32], threeBreakers: [], category: 'Confectionery' },
+  { name: "Pick'n'Mix", eho: '', dim: '5M x 3M', power: '32A', singleBreakers: [32], threeBreakers: [], category: 'Confectionery' },
+  { name: 'The Village Kiosk 1', eho: '76970', dim: '4M x 3M', power: '32A', singleBreakers: [32], threeBreakers: [], category: 'Confectionery' },
+  { name: 'The Village Kiosk 2', eho: '81824', dim: '4M x 3M', power: '16A', singleBreakers: [16], threeBreakers: [], category: 'Confectionery' },
+  { name: 'Sprinkles Churros', eho: '', dim: '5M x 3M', power: '32A', singleBreakers: [], threeBreakers: [32], category: 'Confectionery' },
+  { name: 'Sprinkles Desserts', eho: '98859', dim: '4M x 3M', power: '63A + 32A', singleBreakers: [63], threeBreakers: [32], category: 'Confectionery' },
+  { name: '231-D', eho: '118984', dim: '5M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '201-D', eho: '118985', dim: '5M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '152-D', eho: '81822', dim: '5M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '142-D', eho: '75724', dim: '5M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '09-D', eho: '76925', dim: '5M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '07-D', eho: '76926', dim: '4M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '07-RN', eho: '76924', dim: '5M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '05-D', eho: '76922', dim: '5M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Ice Cream Vans' },
+  { name: '05-WH', eho: '81936', dim: '5M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Ice Cream Vans' },
+  { name: '04-D', eho: '76927', dim: '4M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Ice Cream Vans' },
+  { name: '03-D', eho: '76957', dim: '4M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Ice Cream Vans' },
+  { name: '02-WW', eho: '76956', dim: '5M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Ice Cream Vans' },
+  { name: '02-C', eho: '76959', dim: '5M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Ice Cream Vans' },
+  { name: '01-D', eho: '76960', dim: '5M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Ice Cream Vans' },
+  { name: 'BMC', eho: '76973', dim: '6M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: 'LD', eho: '78576', dim: '4M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: 'Pink Bedford', eho: '81823', dim: '4M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: 'Yellow Transit', eho: '81935', dim: '4M x 3M', power: '32A + 13A', singleBreakers: [32], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: '88-WX', eho: '', dim: '6M x 3M', power: '16A + 13A', singleBreakers: [16], threeBreakers: [13], category: 'Ice Cream Vans' },
+  { name: 'Camile Cart', eho: '', dim: '2M x 3M', power: '16A', singleBreakers: [16], threeBreakers: [], category: 'Carts & Trikes' },
+  { name: 'Zambrero Cart', eho: '', dim: '2M x 3M', power: '16A', singleBreakers: [16], threeBreakers: [], category: 'Carts & Trikes' },
+  { name: 'Vespa Cart #1', eho: '', dim: '2M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Carts & Trikes' },
+  { name: 'Vespa Cart #2', eho: '', dim: '2M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Carts & Trikes' },
+  { name: 'Sweet Cart', eho: '', dim: '2M x 3M', power: '13A', singleBreakers: [13], threeBreakers: [], category: 'Carts & Trikes' }
 ];
+
+function unitPhase(u) {
+  const s = u.singleBreakers && u.singleBreakers.length > 0;
+  const t = u.threeBreakers && u.threeBreakers.length > 0;
+  if (s && t) return 'combo';
+  if (t) return 'three';
+  return 'single';
+}
+
+function phaseSwatch(phase) {
+  if (phase === 'three') return 'border-left:4px solid #FF7E79;';
+  if (phase === 'combo') return 'border-left:4px solid #FF7E79;border-right:4px solid #8EAADB;';
+  return 'border-left:4px solid #8EAADB;';
+}
 
 function renderFleet() {
   const container = document.getElementById('unitsContainer');
   if (!container) return;
-  // Preserve category order from the FLEET array.
   const categories = [];
   const grouped = {};
   FLEET.forEach(u => {
@@ -1188,20 +1192,24 @@ function renderFleet() {
     grouped[u.category].push(u);
   });
   let html = '<div style="display:flex;gap:14px;font-size:11px;color:var(--grey);margin-bottom:14px;align-items:center;flex-wrap:wrap;">' +
-    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;background:#8EAADB;border-radius:2px;"></span> Single Phase</span>' +
-    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;background:#FF7E79;border-radius:2px;"></span> Three Phase</span>' +
-    '<span style="opacity:0.7;">Tap to select. Phase mirrors 2026 deadsheet colour coding.</span>' +
+    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;background:#8EAADB;border-radius:2px;"></span> Single</span>' +
+    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;background:#FF7E79;border-radius:2px;"></span> Three</span>' +
+    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;background:linear-gradient(90deg,#FF7E79 50%,#8EAADB 50%);border-radius:2px;"></span> Combined (both phases)</span>' +
+    '<span style="opacity:0.7;">Tap to select. Combined units need both single &amp; three phase supplies.</span>' +
     '</div>';
   categories.forEach(cat => {
     html += '<div style="margin-bottom:14px;">';
     html += '<div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px;">' + cat + '</div>';
     html += '<div class="chip-group">';
     grouped[cat].forEach(u => {
-      const phaseColor = u.phase === 'three' ? '#FF7E79' : '#8EAADB';
-      const guess = u.phaseGuess ? ' *' : '';
-      const guessTip = u.phaseGuess ? ' | Phase: ASSUMED single (no colour in source)' : '';
-      const title = 'EHO: ' + (u.eho || 'N/A') + ' | Dim: ' + u.dim + ' | Power: ' + u.power + ' | Phase: ' + u.phase + guessTip;
-      html += '<div class="chip fleet-chip" style="border-left:4px solid ' + phaseColor + ';" data-val="' + u.name + '" data-eho="' + u.eho + '" data-dim="' + u.dim + '" data-power="' + u.power + '" data-phase="' + u.phase + '" data-category="' + u.category + '" onclick="toggleFleetChip(this)" title="' + title + '">' + u.name + guess + ' <span style="opacity:0.7;font-size:9px;margin-left:4px;">(' + u.power + ')</span></div>';
+      const phase = unitPhase(u);
+      const sList = u.singleBreakers.length ? u.singleBreakers.join('+') + 'A 1Ø' : '';
+      const tList = u.threeBreakers.length ? u.threeBreakers.join('+') + 'A 3Ø' : '';
+      const breakdown = [sList, tList].filter(Boolean).join(' • ');
+      const title = 'EHO: ' + (u.eho || 'N/A') + ' | Dim: ' + u.dim + ' | Spec: ' + u.power + ' (' + breakdown + ')';
+      const sB64 = btoa(JSON.stringify(u.singleBreakers));
+      const tB64 = btoa(JSON.stringify(u.threeBreakers));
+      html += '<div class="chip fleet-chip" style="' + phaseSwatch(phase) + '" data-val="' + u.name + '" data-eho="' + u.eho + '" data-dim="' + u.dim + '" data-power="' + u.power + '" data-phase="' + phase + '" data-singlebreakers="' + sB64 + '" data-threebreakers="' + tB64 + '" data-category="' + u.category + '" onclick="toggleFleetChip(this)" title="' + title + '">' + u.name + ' <span style="opacity:0.7;font-size:9px;margin-left:4px;">(' + u.power + ')</span></div>';
     });
     html += '</div>';
     html += '</div>';
@@ -1236,44 +1244,33 @@ function getSelectedFleet() {
     dim: c.dataset.dim,
     power: c.dataset.power,
     phase: c.dataset.phase,
+    singleBreakers: JSON.parse(atob(c.dataset.singlebreakers || 'W10=')),
+    threeBreakers: JSON.parse(atob(c.dataset.threebreakers || 'W10=')),
     category: c.dataset.category
   }));
-}
-
-function parsePower(str) {
-  if (!str) return [];
-  const tokens = str.split(/\s*\+\s*/);
-  const amps = [];
-  tokens.forEach(t => {
-    const m = t.trim().match(/(\d+)\s*A(?:\s*x\s*(\d+))?/i);
-    if (m) {
-      const a = parseInt(m[1]);
-      const count = m[2] ? parseInt(m[2]) : 1;
-      for (let i = 0; i < count; i++) amps.push(a);
-    }
-  });
-  return amps;
 }
 
 function calculatePower() {
   const selected = getSelectedFleet();
   let singleTotal = 0, threeTotal = 0;
   const singleBreakers = {}, threeBreakers = {};
+  let comboCount = 0;
   selected.forEach(u => {
-    parsePower(u.power).forEach(a => {
-      if (u.phase === 'single') {
-        singleTotal += a;
-        singleBreakers[a] = (singleBreakers[a] || 0) + 1;
-      } else {
-        threeTotal += a;
-        threeBreakers[a] = (threeBreakers[a] || 0) + 1;
-      }
+    if (u.phase === 'combo') comboCount++;
+    u.singleBreakers.forEach(a => {
+      singleTotal += a;
+      singleBreakers[a] = (singleBreakers[a] || 0) + 1;
+    });
+    u.threeBreakers.forEach(a => {
+      threeTotal += a;
+      threeBreakers[a] = (threeBreakers[a] || 0) + 1;
     });
   });
   const singleKVA = singleTotal * 0.23;
   const threeKVA = threeTotal * 0.4 * Math.sqrt(3);
   return {
     count: selected.length,
+    comboCount,
     singleTotal, threeTotal,
     singleBreakers, threeBreakers,
     singleKVA, threeKVA,
@@ -1292,22 +1289,25 @@ function updatePowerSummary() {
   const p = calculatePower();
   if (!p.count) { card.style.display = 'none'; return; }
   card.style.display = 'block';
+  const comboNote = p.comboCount
+    ? ' <span style="font-size:12px;color:var(--white);background:#444;padding:2px 8px;border-radius:2px;margin-left:6px;">' + p.comboCount + ' combined unit' + (p.comboCount > 1 ? 's' : '') + ' need both supplies</span>'
+    : '';
   document.getElementById('powerSummary').innerHTML =
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">' +
-      '<div style="background:#2a2a2a;border-left:3px solid var(--sage);padding:14px;">' +
+      '<div style="background:#2a2a2a;border-left:3px solid #8EAADB;padding:14px;">' +
         '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey);margin-bottom:6px;">Single Phase Total</div>' +
         '<div style="font-size:22px;font-weight:700;color:var(--white);">' + p.singleTotal + 'A <span style="font-size:13px;color:var(--grey);font-weight:400;">~' + p.singleKVA.toFixed(1) + ' kVA</span></div>' +
         '<div style="font-size:11px;color:var(--grey);margin-top:8px;">Breakers: ' + breakerBreakdown(p.singleBreakers) + '</div>' +
       '</div>' +
-      '<div style="background:#2a2a2a;border-left:3px solid var(--sage);padding:14px;">' +
+      '<div style="background:#2a2a2a;border-left:3px solid #FF7E79;padding:14px;">' +
         '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey);margin-bottom:6px;">Three Phase Total</div>' +
         '<div style="font-size:22px;font-weight:700;color:var(--white);">' + p.threeTotal + 'A <span style="font-size:13px;color:var(--grey);font-weight:400;">~' + p.threeKVA.toFixed(1) + ' kVA</span></div>' +
         '<div style="font-size:11px;color:var(--grey);margin-top:8px;">Breakers: ' + breakerBreakdown(p.threeBreakers) + '</div>' +
       '</div>' +
     '</div>' +
-    '<div style="background:var(--sage);color:#fff;padding:12px 16px;border-radius:3px;font-size:13px;line-height:1.5;">' +
-      '<strong>Combined estimate: ~' + p.totalKVA.toFixed(1) + ' kVA</strong> across ' + p.count + ' unit' + (p.count > 1 ? 's' : '') + '. ' +
-      'Assumes 230V single-phase / 400V three-phase at PF 1.0 (worst-case). Sense-check before final generator/distro spec.' +
+    '<div style="background:var(--sage);color:#111;padding:12px 16px;border-radius:3px;font-size:13px;line-height:1.5;">' +
+      '<strong>Combined estimate: ~' + p.totalKVA.toFixed(1) + ' kVA</strong> across ' + p.count + ' unit' + (p.count > 1 ? 's' : '') + '.' + comboNote +
+      '<br><span style="font-size:11px;">Assumes 230V single-phase / 400V three-phase at PF 1.0 (worst-case). Sense-check before final generator/distro spec.</span>' +
     '</div>';
 }
 
@@ -1454,11 +1454,16 @@ function generateBrief() {
         <div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:8px;">Units Deployed (${fleet.length})</div>
         <table class="fleet-table">
           <thead>
-            <tr><th>Unit</th><th>EHO</th><th>Dimensions</th><th>Phase</th><th>Power</th></tr>
+            <tr><th>Unit</th><th>EHO</th><th>Dimensions</th><th>Phase</th><th>Single Ø</th><th>Three Ø</th></tr>
           </thead>
           <tbody>
-            ${fleet.map(u => '<tr><td><strong>' + u.name + '</strong></td><td>' + (u.eho || '—') + '</td><td>' + u.dim + '</td><td>' + (u.phase === 'single' ? 'Single' : 'Three') + '</td><td>' + u.power + '</td></tr>').join('')}
-            ${val('otherUnits') ? '<tr><td colspan="5"><em>Plus: ' + val('otherUnits') + '</em></td></tr>' : ''}
+            ${fleet.map(u => {
+              const phaseLabel = u.phase === 'combo' ? '<span style="color:#b8590e;font-weight:700;">Combined</span>' : (u.phase === 'three' ? 'Three' : 'Single');
+              const sCol = u.singleBreakers.length ? u.singleBreakers.join(' + ') + 'A' : '—';
+              const tCol = u.threeBreakers.length ? u.threeBreakers.join(' + ') + 'A' : '—';
+              return '<tr><td><strong>' + u.name + '</strong></td><td>' + (u.eho || '—') + '</td><td>' + u.dim + '</td><td>' + phaseLabel + '</td><td>' + sCol + '</td><td>' + tCol + '</td></tr>';
+            }).join('')}
+            ${val('otherUnits') ? '<tr><td colspan="6"><em>Plus: ' + val('otherUnits') + '</em></td></tr>' : ''}
           </tbody>
         </table>
       </div>
@@ -1468,7 +1473,7 @@ function generateBrief() {
           <div><strong>Single Phase:</strong> ${powerCalc.singleTotal}A (~${powerCalc.singleKVA.toFixed(1)} kVA)<br><span style="color:#666;font-size:11px;">Breakers: ${breakerBreakdown(powerCalc.singleBreakers)}</span></div>
           <div><strong>Three Phase:</strong> ${powerCalc.threeTotal}A (~${powerCalc.threeKVA.toFixed(1)} kVA)<br><span style="color:#666;font-size:11px;">Breakers: ${breakerBreakdown(powerCalc.threeBreakers)}</span></div>
         </div>
-        <div style="margin-top:8px;font-size:13px;color:#111;font-weight:700;">Combined: ~${powerCalc.totalKVA.toFixed(1)} kVA total estimate</div>
+        <div style="margin-top:8px;font-size:13px;color:#111;font-weight:700;">Combined: ~${powerCalc.totalKVA.toFixed(1)} kVA total estimate${powerCalc.comboCount ? ' &nbsp;·&nbsp; <span style="font-weight:400;color:#b8590e;">' + powerCalc.comboCount + ' combined-phase unit' + (powerCalc.comboCount > 1 ? 's' : '') + '</span>' : ''}</div>
       </div>
       ` : '<div style="color:#999;font-size:12px;margin-bottom:14px;">No units selected</div>'}
       <div class="brief-grid-3">
@@ -1521,10 +1526,7 @@ function generateBrief() {
         <div class="bfield"><div class="bl">Supplier Delivery</div><div class="bv">${formatDate(val('deliveryDate'))}</div></div>
         <div class="bfield"><div class="bl">Cold Chain</div><div class="bv">${fmt('coldChain')}</div></div>
       </div>
-      ${val('menuFood') ? '<div class="notice-box"><strong>Food Menu:</strong> ' + val('menuFood') + '</div>' : ''}
-      ${val('menuCoffee') ? '<div class="notice-box"><strong>Coffee Menu:</strong> ' + val('menuCoffee') + '</div>' : ''}
-      ${val('menuIcecream') ? '<div class="notice-box"><strong>Ice Cream Menu:</strong> ' + val('menuIcecream') + '</div>' : ''}
-      ${val('dietaryNotes') ? '<div class="notice-box" style="border-color:#c0392b;background:#fff5f5;"><strong>⚠ Dietary/Allergens:</strong> ' + val('dietaryNotes') + '</div>' : ''}
+      ${val('menuNotes') ? '<div class="notice-box"><strong>Menu Notes (variations from standard):</strong><br>' + val('menuNotes').replace(/\n/g,'<br>') + '</div>' : '<div style="font-size:12px;color:#666;margin-bottom:8px;"><em>Standard menu assumed — no variations noted.</em></div>'}
       ${val('stockNotes') ? '<div class="notice-box">' + val('stockNotes') + '</div>' : ''}
     </div>
 
