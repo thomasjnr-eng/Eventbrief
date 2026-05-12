@@ -580,6 +580,63 @@ body {
   .trading-day-row .td-remove { grid-column: span 2; height: auto; padding: 6px; }
 }
 
+/* ─── STAFF ROWS ─── */
+.staff-row {
+  display: grid;
+  grid-template-columns: 1.6fr 90px 90px 2fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.staff-row:last-child { border-bottom: none; }
+.staff-row .sr-name { font-size: 13px; color: var(--white); font-weight: 700; }
+.staff-row .sr-cat { font-size: 10px; color: var(--grey); margin-top: 2px; }
+.staff-row .sr-min { font-size: 11px; color: var(--grey); }
+.staff-row .sr-min strong { color: var(--sage); font-size: 14px; }
+.staff-row select, .staff-row input {
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  padding: 7px 10px;
+  outline: none;
+}
+.staff-row select:focus, .staff-row input:focus { border-color: var(--sage); }
+.staff-row.under-min input.staff-count { border-color: var(--red); }
+@media (max-width: 700px) {
+  .staff-row { grid-template-columns: 1fr; }
+}
+
+/* ─── SIGNATURE TRAIL ─── */
+.sig-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--sage);
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+.sig-info { font-size: 13px; color: var(--white); line-height: 1.4; }
+.sig-info .sig-role { color: var(--sage); }
+.sig-info .sig-when { color: var(--grey); font-size: 11px; }
+.sig-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  width: 28px; height: 28px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.sig-remove:hover { border-color: var(--red); color: var(--red); }
+
 /* ─── STOCK ROWS ─── */
 .stock-row {
   display: grid;
@@ -1256,35 +1313,36 @@ body {
   <div class="step-subtitle">Team allocation and mandatory compliance checks</div>
 
   <div class="card">
-    <div class="card-title">Staff Allocation</div>
+    <div class="card-title">Leads</div>
     <div class="grid-3">
       <div class="field">
-        <label>Event Manager / Lead</label>
-        <input type="text" id="eventManager" placeholder="Name">
+        <label>Event Lead</label>
+        <input type="text" id="eventManager" placeholder="Name" onchange="updateStaffTotal()">
       </div>
       <div class="field">
-        <label>Lead Chef / Kitchen</label>
-        <input type="text" id="leadChef" placeholder="Name">
+        <label>Ops Lead</label>
+        <input type="text" id="opsLead" placeholder="Name" onchange="updateStaffTotal()">
       </div>
       <div class="field">
-        <label>Total Staff Required</label>
-        <input type="number" id="totalStaff" placeholder="Headcount">
-      </div>
-      <div class="field">
-        <label>Food Truck Staff (per truck)</label>
-        <input type="text" id="foodStaff" placeholder="e.g. 2 per truck">
-      </div>
-      <div class="field">
-        <label>Coffee Truck Staff</label>
-        <input type="text" id="coffeeStaff" placeholder="e.g. 1 barista + 1 support">
-      </div>
-      <div class="field">
-        <label>Ice Cream Staff</label>
-        <input type="text" id="icecreamStaff" placeholder="e.g. 1 per van">
+        <label>Food Lead</label>
+        <input type="text" id="leadChef" placeholder="Name" onchange="updateStaffTotal()">
       </div>
     </div>
-    <div class="field" style="margin-top:14px;">
-      <label>Staff Briefing Notes / Special Instructions</label>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Staff Per Truck</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Suggested minimums &mdash; coffee 2, hot/cold food 4, dessert/confectionery 2, ice cream / carts 1. Override per truck below.</p>
+    <div id="staffContainer"></div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;color:var(--white);">
+      <strong>Total staff:</strong> <span id="totalStaffCalc" style="color:var(--sage);font-weight:700;">&mdash;</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Staff Briefing Notes</div>
+    <div class="field">
+      <label>Briefing Notes / Special Instructions</label>
       <textarea id="staffNotes" placeholder="Uniform requirements, reporting time, specific briefing points, agency staff details..."></textarea>
     </div>
   </div>
@@ -1365,15 +1423,31 @@ body {
   </div>
 
   <div class="card">
-    <div class="card-title">Brief Reference</div>
-    <div class="grid-2">
-      <div class="field">
-        <label>Brief Prepared By</label>
-        <input type="text" id="preparedBy" placeholder="Your name">
-      </div>
-      <div class="field">
-        <label>Brief Date</label>
-        <input type="date" id="briefDate">
+    <div class="card-title">Brief Sign-Off Trail</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Each time the brief is updated or reviewed by a different stakeholder, add a signature here. Creates a chronological accountability trail surfaced in the final brief.</p>
+    <div id="signaturesList" style="margin-bottom:16px;"></div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;">
+      <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey);font-weight:700;margin-bottom:10px;">Add Signature</div>
+      <div class="grid-3">
+        <div class="field">
+          <label>Name</label>
+          <input type="text" id="newSignerName" placeholder="Your name">
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <select id="newSignerRole">
+            <option>Event Lead</option>
+            <option>Ops Lead</option>
+            <option>Food Lead</option>
+            <option>Director</option>
+            <option>Reviewer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button type="button" class="btn btn-primary" onclick="addSignature()" style="font-size:14px;padding:10px 18px;">+ Sign Brief</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1423,6 +1497,110 @@ function goStep(n) {
   document.getElementById('sd' + n).classList.remove('done');
   window.scrollTo(0,0);
   if (n === 4) renderStockOrderRows();
+  if (n === 5) renderStaffRows();
+}
+
+// ─── STAFF PER TRUCK ──────────────────────────────────────────
+const STAFF_MIN = {
+  'Burger/Chipper Units': 4,
+  'Misc. Food Units': 4,
+  'Coffee/Beverages': 2,
+  'Confectionery': 2,
+  'Ice Cream Vans': 1,
+  'Carts & Trikes': 1
+};
+function staffMinFor(cat) { return STAFF_MIN[cat] || 1; }
+
+function renderStaffRows(preserve) {
+  const container = document.getElementById('staffContainer');
+  if (!container) return;
+  const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => ({
+    name: c.dataset.val, category: c.dataset.category
+  }));
+  if (!selected.length) {
+    container.innerHTML = '<div class="stock-empty">Select trucks in Step 2 first &mdash; staffing rows will appear per truck here.</div>';
+    updateStaffTotal();
+    return;
+  }
+  const existing = (preserve && Array.isArray(preserve)) ? preserve : collectStaffAllocations();
+  const byTruck = {};
+  existing.forEach(s => { if (s && s.truck) byTruck[s.truck] = s; });
+  container.innerHTML = selected.map(u => {
+    const min = staffMinFor(u.category);
+    const cur = byTruck[u.name] || { truck: u.name, count: min, notes: '' };
+    const escTruck = u.name.replace(/"/g, '&quot;');
+    const escNotes = (cur.notes || '').replace(/"/g, '&quot;');
+    return '<div class="staff-row" data-truck="' + escTruck + '" data-min="' + min + '">' +
+      '<div><div class="sr-name">' + u.name + '</div><div class="sr-cat">' + u.category + '</div></div>' +
+      '<div class="sr-min">Min <strong>' + min + '</strong></div>' +
+      '<input type="number" class="staff-count" value="' + cur.count + '" min="0" onchange="updateStaffTotal()" oninput="updateStaffTotal()">' +
+      '<input type="text" class="staff-notes" placeholder="Names / agency / notes" value="' + escNotes + '">' +
+      '</div>';
+  }).join('');
+  updateStaffTotal();
+}
+
+function collectStaffAllocations() {
+  return [...document.querySelectorAll('.staff-row')].map(row => ({
+    truck: row.dataset.truck,
+    minimum: parseInt(row.dataset.min) || 1,
+    count: parseInt(row.querySelector('.staff-count').value) || 0,
+    notes: row.querySelector('.staff-notes').value
+  }));
+}
+
+function updateStaffTotal() {
+  const allocs = collectStaffAllocations();
+  let truckSum = 0;
+  allocs.forEach(s => {
+    truckSum += s.count;
+    const row = document.querySelector('.staff-row[data-truck="' + s.truck.replace(/"/g, '\\"') + '"]');
+    if (row) row.classList.toggle('under-min', s.count < s.minimum);
+  });
+  const leadCount = ['eventManager', 'opsLead', 'leadChef'].filter(id => val(id)).length;
+  const total = truckSum + leadCount;
+  const el = document.getElementById('totalStaffCalc');
+  if (el) el.textContent = total + '  (' + leadCount + ' lead' + (leadCount !== 1 ? 's' : '') + ' + ' + truckSum + ' on trucks)';
+}
+
+// ─── SIGN-OFF TRAIL ───────────────────────────────────────────
+let SIGNATURES = [];
+function getSignatures() { return SIGNATURES.slice(); }
+function setSignatures(arr) { SIGNATURES = Array.isArray(arr) ? arr : []; renderSignaturesList(); }
+function renderSignaturesList() {
+  const list = document.getElementById('signaturesList');
+  if (!list) return;
+  if (!SIGNATURES.length) {
+    list.innerHTML = '<div style="color:var(--grey);font-size:12px;font-style:italic;padding:10px 0;">No signatures yet. Add one below to start the trail.</div>';
+    return;
+  }
+  list.innerHTML = SIGNATURES.map((s, idx) => {
+    let dateStr = '—', timeStr = '';
+    try {
+      const dt = new Date(s.signedAt);
+      dateStr = dt.toLocaleDateString('en-IE', { day: '2-digit', month: 'short', year: 'numeric' });
+      timeStr = dt.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+    } catch (e) {}
+    return '<div class="sig-row">' +
+      '<div class="sig-info"><strong>' + (s.name || '—').replace(/</g, '&lt;') + '</strong> &middot; <span class="sig-role">' + (s.role || 'Other').replace(/</g, '&lt;') + '</span><br>' +
+      '<span class="sig-when">' + dateStr + ' &middot; ' + timeStr + '</span></div>' +
+      '<button class="sig-remove" onclick="removeSignature(' + idx + ')" title="Remove">&times;</button>' +
+      '</div>';
+  }).join('');
+}
+function addSignature() {
+  const name = val('newSignerName');
+  if (!name) { toast('Enter a name first', 'error'); return; }
+  const role = val('newSignerRole') || 'Other';
+  SIGNATURES.push({ name, role, signedAt: new Date().toISOString() });
+  document.getElementById('newSignerName').value = '';
+  renderSignaturesList();
+  toast('Signature added');
+}
+function removeSignature(idx) {
+  if (!confirm('Remove this signature from the trail?')) return;
+  SIGNATURES.splice(idx, 1);
+  renderSignaturesList();
 }
 
 // ─── STOCK ROWS (per-truck) ───────────────────────────────────
@@ -2010,15 +2188,35 @@ function generateBrief() {
     <!-- STAFF -->
     <div class="brief-section">
       <div class="brief-section-head">07 — STAFF</div>
-      <div class="brief-grid-3">
-        <div class="bfield"><div class="bl">Event Manager</div><div class="bv big">${fmt('eventManager')}</div></div>
-        <div class="bfield"><div class="bl">Lead Chef</div><div class="bv">${fmt('leadChef')}</div></div>
-        <div class="bfield"><div class="bl">Total Staff</div><div class="bv big">${fmt('totalStaff')}</div></div>
-        <div class="bfield"><div class="bl">Food Truck Staff</div><div class="bv">${fmt('foodStaff')}</div></div>
-        <div class="bfield"><div class="bl">Coffee Staff</div><div class="bv">${fmt('coffeeStaff')}</div></div>
-        <div class="bfield"><div class="bl">Ice Cream Staff</div><div class="bv">${fmt('icecreamStaff')}</div></div>
+      <div class="brief-grid-3" style="margin-bottom:14px;">
+        <div class="bfield"><div class="bl">Event Lead</div><div class="bv big">${fmt('eventManager')}</div></div>
+        <div class="bfield"><div class="bl">Ops Lead</div><div class="bv big">${fmt('opsLead')}</div></div>
+        <div class="bfield"><div class="bl">Food Lead</div><div class="bv big">${fmt('leadChef')}</div></div>
       </div>
-      ${val('staffNotes') ? '<div class="notice-box" style="margin-top:10px;">' + val('staffNotes') + '</div>' : ''}
+      ${(() => {
+        const allocs = collectStaffAllocations();
+        if (!allocs.length) return '';
+        const truckSum = allocs.reduce((a, s) => a + s.count, 0);
+        const leadCount = ['eventManager', 'opsLead', 'leadChef'].filter(id => val(id)).length;
+        const total = truckSum + leadCount;
+        return '<div style="margin-bottom:12px;">' +
+          '<div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Staff Per Truck (' + truckSum + ' on trucks + ' + leadCount + ' lead' + (leadCount !== 1 ? 's' : '') + ' = <strong>' + total + ' total</strong>)</div>' +
+          '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+          '<thead><tr>' +
+          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Truck</th>' +
+          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Min</th>' +
+          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Allocated</th>' +
+          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Names / Notes</th>' +
+          '</tr></thead><tbody>' + allocs.map(s => {
+            const under = s.count < s.minimum;
+            return '<tr>' +
+              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;"><strong>' + s.truck + '</strong></td>' +
+              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#666;">' + s.minimum + '</td>' +
+              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;font-weight:700;color:' + (under ? '#c0392b' : '#111') + ';">' + s.count + (under ? ' &nbsp;⚠' : '') + '</td>' +
+              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#555;">' + (s.notes || '—') + '</td></tr>';
+          }).join('') + '</tbody></table></div>';
+      })()}
+      ${val('staffNotes') ? '<div class="notice-box"><strong>Briefing Notes:</strong> ' + val('staffNotes').replace(/\n/g,'<br>') + '</div>' : ''}
     </div>
 
     <!-- SAFETY -->
@@ -2036,9 +2234,34 @@ function generateBrief() {
       ${val('postEventNotes') ? '<div class="notice-box"><strong>Post-Event Actions:</strong> ' + val('postEventNotes') + '</div>' : ''}
     </div>` : ''}
 
+    <!-- SIGN-OFF TRAIL -->
+    ${(() => {
+      const sigs = getSignatures();
+      if (!sigs.length) return '';
+      return '<div class="brief-section" style="margin-top:24px;">' +
+        '<div class="brief-section-head">10 — SIGN-OFF TRAIL</div>' +
+        '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+        '<thead><tr>' +
+        '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">When</th>' +
+        '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Name</th>' +
+        '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Role</th>' +
+        '</tr></thead><tbody>' +
+        sigs.slice().sort((a,b) => (a.signedAt || '').localeCompare(b.signedAt || '')).map(s => {
+          let dateStr = '—';
+          try {
+            const dt = new Date(s.signedAt);
+            dateStr = dt.toLocaleDateString('en-IE', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + dt.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+          } catch (e) {}
+          return '<tr><td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:#555;">' + dateStr + '</td>' +
+            '<td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:#111;font-weight:700;">' + (s.name || '—').replace(/</g, '&lt;') + '</td>' +
+            '<td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:var(--sage);">' + (s.role || 'Other').replace(/</g, '&lt;') + '</td></tr>';
+        }).join('') +
+        '</tbody></table></div>';
+    })()}
+
     <!-- FOOTER -->
     <div style="margin-top:36px;padding-top:16px;border-top:2px solid #111;display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:11px;color:#888;">Prepared by: <strong>${fmt('preparedBy')}</strong> &nbsp;|&nbsp; Date: <strong>${formatDate(val('briefDate'))}</strong></div>
+      <div style="font-size:11px;color:#888;">${getSignatures().length ? getSignatures().length + ' signature' + (getSignatures().length !== 1 ? 's' : '') + ' on this brief' : 'No sign-offs recorded'}</div>
       <div style="font-size:11px;color:#888;">Ref: ${ref}</div>
     </div>
   `;
@@ -2227,6 +2450,8 @@ function collectFormData() {
   data._isScattered = scatteredCb ? scatteredCb.checked : false;
   data._tradingDays = getTradingDays();
   data._stockStatuses = collectStockStatuses();
+  data._staffAllocations = collectStaffAllocations();
+  data._signatures = getSignatures();
   return data;
 }
 
@@ -2270,6 +2495,8 @@ function populateForm(data) {
   updateRevenueCards();
   updatePowerSummary();
   renderStockOrderRows(data._stockStatuses);
+  renderStaffRows(data._staffAllocations);
+  setSignatures(data._signatures);
   checkDoubleBooking();
 }
 
