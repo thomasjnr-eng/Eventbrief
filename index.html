@@ -65,8 +65,9 @@ body {
   border: 2px solid var(--border);
   color: var(--grey);
   transition: all 0.2s;
-  cursor: default;
+  cursor: pointer;
 }
+.step-dot:hover { border-color: var(--sage); color: var(--sage); }
 .step-dot.done { background: var(--sage); border-color: var(--sage); color: #fff; }
 .step-dot.active { border-color: var(--sage); color: var(--sage); }
 .step-line { width: 20px; height: 2px; background: var(--border); }
@@ -433,6 +434,16 @@ body {
   #form-app { display: none !important; }
 }
 
+/* ─── DRAFT INDICATOR ─── */
+.draft-indicator {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--grey);
+  margin-right: 8px;
+  text-transform: uppercase;
+}
+.draft-indicator.active { color: var(--sage); }
+
 /* ─── HEADER ICON BUTTONS ─── */
 .header-actions { display: flex; gap: 6px; align-items: center; margin-left: 18px; }
 .icon-btn {
@@ -705,19 +716,20 @@ body {
   <div class="logo">O'<span>Brien</span> Event Catering</div>
   <div style="display:flex;align-items:center;gap:14px;">
     <div class="step-indicator">
-      <div class="step-dot active" id="sd1">1</div>
+      <div class="step-dot active" id="sd1" onclick="goStep(1)" title="Step 1 — Event Overview">1</div>
       <div class="step-line" id="sl1"></div>
-      <div class="step-dot" id="sd2">2</div>
+      <div class="step-dot" id="sd2" onclick="goStep(2)" title="Step 2 — Fleet &amp; Logistics">2</div>
       <div class="step-line" id="sl2"></div>
-      <div class="step-dot" id="sd3">3</div>
+      <div class="step-dot" id="sd3" onclick="goStep(3)" title="Step 3 — Commercial Terms">3</div>
       <div class="step-line" id="sl3"></div>
-      <div class="step-dot" id="sd4">4</div>
+      <div class="step-dot" id="sd4" onclick="goStep(4)" title="Step 4 — Menu &amp; Stock">4</div>
       <div class="step-line" id="sl4"></div>
-      <div class="step-dot" id="sd5">5</div>
+      <div class="step-dot" id="sd5" onclick="goStep(5)" title="Step 5 — Staff &amp; Safety">5</div>
       <div class="step-line" id="sl5"></div>
-      <div class="step-dot" id="sd6">6</div>
+      <div class="step-dot" id="sd6" onclick="goStep(6)" title="Step 6 — Notes &amp; Generate">6</div>
     </div>
     <div class="header-actions">
+      <span class="draft-indicator" id="draftIndicator"></span>
       <button class="icon-btn" id="btnEvents" title="Saved Events" onclick="openEventsModal()">📁</button>
       <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
@@ -765,6 +777,8 @@ body {
 <div class="toast" id="toast"></div>
 
 <div id="form-app">
+
+<div id="draftBanner" style="display:none;"></div>
 
 <!-- ══════════════════════════════════════════
      STEP 1 — EVENT OVERVIEW
@@ -1596,12 +1610,14 @@ function addSignature() {
   SIGNATURES.push({ name, role, signedAt: new Date().toISOString() });
   document.getElementById('newSignerName').value = '';
   renderSignaturesList();
+  autoSaveDraft();
   toast('Signature added');
 }
 function removeSignature(idx) {
   if (!confirm('Remove this signature from the trail?')) return;
   SIGNATURES.splice(idx, 1);
   renderSignaturesList();
+  autoSaveDraft();
 }
 
 // ─── STOCK ROWS (per-truck) ───────────────────────────────────
@@ -1758,17 +1774,20 @@ function renderFleet() {
 function toggleChip(el) {
   el.classList.toggle('selected');
   if (el.closest('#revenueChipGroup')) updateRevenueCards();
+  if (typeof autoSaveDraft === 'function') autoSaveDraft();
 }
 
 function toggleFleetChip(el) {
   el.classList.toggle('selected');
   updatePowerSummary();
   if (typeof checkDoubleBooking === 'function') checkDoubleBooking();
+  if (typeof autoSaveDraft === 'function') autoSaveDraft();
 }
 
 function togglePower(el) {
   el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
+  if (typeof autoSaveDraft === 'function') autoSaveDraft();
 }
 
 function getChipValues(groupId) {
@@ -2361,6 +2380,84 @@ function addToCalendar() {
 const REPO_OWNER = 'thomasjnr-eng';
 const REPO_NAME = 'eventbrief';
 const PAT_KEY = 'obrien_brief_pat';
+const DRAFT_KEY = 'obrien_brief_draft';
+
+// ─── AUTO-SAVE DRAFT (localStorage) ──────────────────────────
+let draftSaveTimer = null;
+let autoSavePaused = false;
+
+function isDraftMeaningful(data) {
+  if (!data) return false;
+  return !!(data.eventName || data.clientName || data.venueName || (data._fleet && data._fleet.length));
+}
+
+function autoSaveDraft() {
+  if (autoSavePaused) return;
+  clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(() => {
+    try {
+      const data = collectFormData();
+      if (!isDraftMeaningful(data)) return;
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ savedAt: new Date().toISOString(), form: data }));
+      updateDraftIndicator();
+    } catch (e) { /* quota or unavailable */ }
+  }, 500);
+}
+
+function getDraft() {
+  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return null; }
+}
+function clearDraft() { localStorage.removeItem(DRAFT_KEY); updateDraftIndicator(); }
+
+function updateDraftIndicator() {
+  const el = document.getElementById('draftIndicator');
+  if (!el) return;
+  const d = getDraft();
+  if (!d) { el.textContent = ''; el.classList.remove('active'); return; }
+  try {
+    const dt = new Date(d.savedAt);
+    const t = dt.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+    el.textContent = 'Draft ' + t;
+    el.classList.add('active');
+  } catch (e) {}
+}
+
+function offerDraftRestore() {
+  const banner = document.getElementById('draftBanner');
+  if (!banner) return;
+  const d = getDraft();
+  if (!d || !isDraftMeaningful(d.form)) { banner.style.display = 'none'; return; }
+  let when = '—';
+  try {
+    const dt = new Date(d.savedAt);
+    when = dt.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) + ' ' + dt.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {}
+  const eventName = (d.form.eventName || '(unnamed)').replace(/</g, '&lt;');
+  banner.innerHTML = '<div style="background:#332b1a;border-bottom:2px solid var(--sage);padding:12px 24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;color:var(--white);">' +
+    '<span style="font-size:13px;"><strong>Unsaved draft:</strong> ' + eventName + ' &mdash; last edit ' + when + '.</span>' +
+    '<button onclick="restoreDraft()" class="btn btn-primary" style="font-size:13px;padding:8px 16px;">Restore</button>' +
+    '<button onclick="discardDraft()" class="btn btn-secondary" style="font-size:13px;padding:8px 16px;">Discard</button>' +
+    '</div>';
+  banner.style.display = 'block';
+  updateDraftIndicator();
+}
+
+function restoreDraft() {
+  const d = getDraft();
+  if (!d) { document.getElementById('draftBanner').style.display = 'none'; return; }
+  autoSavePaused = true;
+  populateForm(d.form);
+  document.getElementById('draftBanner').style.display = 'none';
+  setTimeout(() => { autoSavePaused = false; updateDraftIndicator(); }, 200);
+  toast('Draft restored');
+}
+
+function discardDraft() {
+  if (!confirm('Discard the unsaved draft? This cannot be undone.')) return;
+  clearDraft();
+  document.getElementById('draftBanner').style.display = 'none';
+  toast('Draft discarded');
+}
 
 const eventsCache = { filenames: null, byName: {} };
 
@@ -2480,6 +2577,7 @@ function collectFormData() {
 }
 
 function populateForm(data) {
+  autoSavePaused = true;
   // Backwards-compat: pre-2026-05-12 schema used flat date + setup/start/end/breakdown times.
   if (data.eventDate && !data.eventStartDate) data.eventStartDate = data.eventDate;
   if (data.eventDate && !data.loadInDate) data.loadInDate = data.eventDate;
@@ -2522,6 +2620,7 @@ function populateForm(data) {
   renderStaffRows(data._staffAllocations);
   setSignatures(data._signatures);
   checkDoubleBooking();
+  setTimeout(() => { autoSavePaused = false; }, 200);
 }
 
 function eventIdFor(data) {
@@ -2569,6 +2668,7 @@ async function saveEvent() {
     }
     eventsCache.filenames = null;
     eventsCache.byName = {};
+    clearDraft();
     toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
   } catch (e) {
     toast('Save failed: ' + e.message, 'error');
@@ -2610,6 +2710,7 @@ async function loadEvent(filename) {
     const ev = await getEventByFilename(filename);
     if (!ev) { toast('Could not load event', 'error'); return; }
     populateForm(ev.form);
+    clearDraft();
     closeEventsModal();
     goStep(1);
     toast('Loaded ' + (ev.form.eventName || filename));
@@ -2697,6 +2798,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', checkDoubleBooking);
   });
+  // Auto-save on any input or change inside the form
+  const formApp = document.getElementById('form-app');
+  if (formApp) {
+    formApp.addEventListener('input', autoSaveDraft);
+    formApp.addEventListener('change', autoSaveDraft);
+  }
+  // Offer to restore unsaved draft from a previous session
+  offerDraftRestore();
 });
 </script>
 
