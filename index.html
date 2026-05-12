@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O'Brien Event Catering — Event Brief Builder</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@300;400;700&display=swap');
+
+:root {
+  --black: #111111;
+  --white: #f8f5f0;
+  --orange: #e05a1a;
+  --orange-dark: #b84712;
+  --grey: #888;
+  --light: #e8e4de;
+  --card: #1e1e1e;
+  --border: #333;
+  --green: #3a9a5c;
+  --red: #c0392b;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--black);
+  color: var(--white);
+  min-height: 100vh;
+}
+
+/* ─── HEADER ─── */
+.app-header {
+  background: var(--black);
+  border-bottom: 3px solid var(--orange);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: var(--white);
+}
+.logo span { color: var(--orange); }
+.step-indicator {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.step-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--border);
+  color: var(--grey);
+  transition: all 0.2s;
+  cursor: default;
+}
+.step-dot.done { background: var(--orange); border-color: var(--orange); color: #fff; }
+.step-dot.active { border-color: var(--orange); color: var(--orange); }
+.step-line { width: 20px; height: 2px; background: var(--border); }
+.step-line.done { background: var(--orange); }
+
+/* ─── FORM SHELL ─── */
+#form-app { display: block; }
+#brief-output { display: none; }
+
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 36px 24px 80px;
+}
+
+.step-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.step-subtitle {
+  font-size: 13px;
+  color: var(--grey);
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: var(--orange);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── FIELDS ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px 20px; }
+.grid-1 { display: grid; gap: 14px; }
+.span-2 { grid-column: span 2; }
+.span-3 { grid-column: span 3; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey);
+  font-weight: 700;
+}
+.field input,
+.field textarea,
+.field select {
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  resize: vertical;
+}
+.field input:focus,
+.field textarea:focus,
+.field select:focus { border-color: var(--orange); }
+.field select option { background: #2a2a2a; }
+.field textarea { min-height: 64px; line-height: 1.5; }
+
+/* ─── TOGGLE CHIPS ─── */
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 6px 14px;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--grey);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  background: #2a2a2a;
+}
+.chip:hover { border-color: var(--orange); color: var(--orange); }
+.chip.selected { background: var(--orange); border-color: var(--orange); color: #fff; font-weight: 700; }
+
+/* ─── TRUCK ROWS ─── */
+.truck-row {
+  display: grid;
+  grid-template-columns: 180px 80px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.truck-row:last-child { border-bottom: none; }
+.truck-label { font-size: 13px; color: var(--white); }
+.truck-type-tag {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  text-align: center;
+}
+.tag-food { background: #2d4a2d; color: #6fcf6f; }
+.tag-coffee { background: #3a2d1a; color: #d4a55a; }
+.tag-icecream { background: #2d2040; color: #b09fdf; }
+
+/* ─── CHECKLIST ─── */
+.checklist { display: flex; flex-direction: column; gap: 8px; }
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.check-item:hover { border-color: var(--orange); }
+.check-item input[type="checkbox"] { accent-color: var(--orange); width: 15px; height: 15px; cursor: pointer; }
+.check-item span { font-size: 13px; color: var(--white); flex: 1; }
+.check-item .check-note { font-size: 11px; color: var(--grey); }
+
+/* ─── NAV BUTTONS ─── */
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.btn {
+  padding: 11px 28px;
+  border-radius: 3px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--orange); color: #fff; }
+.btn-primary:hover { background: var(--orange-dark); }
+.btn-secondary { background: transparent; color: var(--grey); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--white); color: var(--white); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { background: #2d7a49; }
+
+/* ─── CONDITIONAL SECTIONS ─── */
+.cond { display: none; }
+.cond.show { display: block; }
+
+/* ─── BRIEF OUTPUT ─── */
+#brief-output {
+  background: #f8f5f0;
+  color: #111;
+  min-height: 100vh;
+}
+
+.brief-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 48px 80px;
+}
+
+.brief-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 4px solid #111;
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+}
+.brief-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.08em;
+  color: #111;
+}
+.brief-logo span { color: var(--orange); }
+.brief-event-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 0.04em;
+  color: #111;
+  line-height: 1;
+  text-align: right;
+}
+.brief-ref {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.1em;
+  text-align: right;
+  margin-top: 4px;
+}
+
+.brief-meta-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #111;
+  color: #f8f5f0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.meta-cell {
+  padding: 14px 16px;
+  border-right: 1px solid #333;
+}
+.meta-cell:last-child { border-right: none; }
+.meta-cell .mc-label {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 4px;
+}
+.meta-cell .mc-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8f5f0;
+}
+
+.brief-section {
+  margin-bottom: 24px;
+  break-inside: avoid;
+}
+.brief-section-head {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  color: var(--orange);
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 14px;
+}
+.brief-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+.brief-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px 20px; }
+
+.bfield { display: flex; flex-direction: column; }
+.bfield .bl {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 2px;
+}
+.bfield .bv {
+  font-size: 13px;
+  color: #111;
+  font-weight: 400;
+  min-height: 18px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ddd;
+}
+.bfield .bv.big { font-size: 15px; font-weight: 700; }
+.bfield .bv.highlight { color: var(--orange); font-weight: 700; }
+
+.fleet-table, .staff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.fleet-table th, .staff-table th {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #999;
+  text-align: left;
+  padding: 5px 8px;
+  border-bottom: 2px solid #111;
+  background: #f0ece6;
+}
+.fleet-table td, .staff-table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid #e0ddd8;
+  color: #111;
+}
+.fleet-table tr:last-child td, .staff-table tr:last-child td { border-bottom: none; }
+
+.ops-checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.ops-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #333;
+  padding: 5px 0;
+}
+.ops-item::before {
+  content: '\25A1';
+  font-size: 14px;
+  color: #bbb;
+  flex-shrink: 0;
+}
+.ops-item.checked::before { content: '\2611'; color: var(--orange); }
+
+.notice-box {
+  background: #fff8f4;
+  border-left: 3px solid var(--orange);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #333;
+  margin: 8px 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 2px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.status-confirmed { background: #e8f5ee; color: #2d7a49; }
+.status-provisional { background: #fff4e0; color: #b07a10; }
+.status-enquiry { background: #f0f0f0; color: #666; }
+
+/* ─── BRIEF ACTIONS ─── */
+.brief-actions {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #111;
+  border-top: 2px solid var(--orange);
+  padding: 14px 32px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  z-index: 200;
+}
+
+@media print {
+  .brief-actions { display: none; }
+  .app-header { display: none; }
+  body { background: #fff; }
+  #brief-output { display: block !important; }
+  #form-app { display: none !important; }
+}
+
+@media (max-width: 600px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .span-2, .span-3 { grid-column: span 1; }
+  .brief-meta-strip { grid-template-columns: 1fr 1fr; }
+  .ops-checklist { grid-template-columns: 1fr; }
+  .brief-grid-2, .brief-grid-3 { grid-template-columns: 1fr; }
+  .brief-event-name { font-size: 28px; }
+  .truck-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">O'<span>Brien</span> Event Catering</div>
+  <div class="step-indicator">
+    <div class="step-dot active" id="sd1">1</div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step-dot" id="sd2">2</div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step-dot" id="sd3">3</div>
+    <div class="step-line" id="sl3"></div>
+    <div class="step-dot" id="sd4">4</div>
+    <div class="step-line" id="sl4"></div>
+    <div class="step-dot" id="sd5">5</div>
+    <div class="step-line" id="sl5"></div>
+    <div class="step-dot" id="sd6">6</div>
+  </div>
+</header>
+
+<div id="form-app">
+
+<!-- ══════════════════════════════════════════
+     STEP 1 — EVENT OVERVIEW
+══════════════════════════════════════════ -->
+
+<div class="step-panel active" id="step1">
+<div class="container">
+  <div class="step-title">Event Overview</div>
+  <div class="step-subtitle">Core event details and client information</div>
+
+  <div class="card">
+    <div class="card-title">Client &amp; Booking</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Event Name / Reference</label>
+        <input type="text" id="eventName" placeholder="e.g. KPMG Summer Party 2026">
+      </div>
+      <div class="field">
+        <label>Booking Status</label>
+        <select id="bookingStatus">
+          <option value="Confirmed">Confirmed</option>
+          <option value="Provisional">Provisional</option>
+          <option value="Enquiry">Enquiry</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Client / Organisation Name</label>
+        <input type="text" id="clientName" placeholder="Client or organisation">
+      </div>
+      <div class="field">
+        <label>Client Type</label>
+        <select id="clientType">
+          <option value="Corporate">Corporate Client</option>
+          <option value="Contracted Venue">Contracted Venue</option>
+          <option value="Organisation">Organisation</option>
+          <option value="Private">Private Client</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Primary Contact Name</label>
+        <input type="text" id="contactName" placeholder="Full name">
+      </div>
+      <div class="field">
+        <label>Contact Phone</label>
+        <input type="tel" id="contactPhone" placeholder="+44...">
+      </div>
+      <div class="field">
+        <label>Contact Email</label>
+        <input type="email" id="contactEmail" placeholder="email@client.com">
+      </div>
+      <div class="field">
+        <label>On-Site Contact (if different)</label>
+        <input type="text" id="onsiteContact" placeholder="Name &amp; number day of event">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Date, Time &amp; Venue</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Event Date</label>
+        <input type="date" id="eventDate">
+      </div>
+      <div class="field">
+        <label>Setup / Arrival Time</label>
+        <input type="time" id="setupTime">
+      </div>
+      <div class="field">
+        <label>Trading Start Time</label>
+        <input type="time" id="startTime">
+      </div>
+      <div class="field">
+        <label>Trading End Time</label>
+        <input type="time" id="endTime">
+      </div>
+      <div class="field">
+        <label>Breakdown / Departure</label>
+        <input type="time" id="breakdownTime">
+      </div>
+      <div class="field">
+        <label>Expected Attendance</label>
+        <input type="number" id="attendance" placeholder="No. of guests">
+      </div>
+    </div>
+    <div class="grid-1" style="margin-top:14px;">
+      <div class="field">
+        <label>Venue / Location Name</label>
+        <input type="text" id="venueName" placeholder="Venue or site name">
+      </div>
+      <div class="field">
+        <label>Full Address</label>
+        <textarea id="venueAddress" rows="2" placeholder="Street, town, postcode"></textarea>
+      </div>
+      <div class="field">
+        <label>Access / Parking Notes</label>
+        <textarea id="accessNotes" placeholder="Loading bay, height restrictions, parking for crew vans..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div></div>
+    <button class="btn btn-primary" onclick="goStep(2)">Fleet &amp; Logistics →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 2 — FLEET & LOGISTICS
+══════════════════════════════════════════ -->
+
+<div class="step-panel" id="step2">
+<div class="container">
+  <div class="step-title">Fleet &amp; Logistics</div>
+  <div class="step-subtitle">Which units are going, pitch details and travel requirements</div>
+
+  <div class="card">
+    <div class="card-title">Units Deployed</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:16px;">Select all units attending this event</p>
+    <div class="chip-group" id="unitsChipGroup">
+      <div class="chip" data-val="Food Truck 1" onclick="toggleChip(this)">🚚 Food Truck 1</div>
+      <div class="chip" data-val="Food Truck 2" onclick="toggleChip(this)">🚚 Food Truck 2</div>
+      <div class="chip" data-val="Food Truck 3" onclick="toggleChip(this)">🚚 Food Truck 3</div>
+      <div class="chip" data-val="Coffee Truck 1" onclick="toggleChip(this)">☕ Coffee Truck 1</div>
+      <div class="chip" data-val="Coffee Truck 2" onclick="toggleChip(this)">☕ Coffee Truck 2</div>
+      <div class="chip" data-val="Ice Cream Van 1" onclick="toggleChip(this)">🍦 Ice Cream Van 1</div>
+      <div class="chip" data-val="Ice Cream Van 2" onclick="toggleChip(this)">🍦 Ice Cream Van 2</div>
+      <div class="chip" data-val="Stock Storage Van" onclick="toggleChip(this)">📦 Stock Storage Van</div>
+    </div>
+    <div style="margin-top:14px;" class="field">
+      <label>Other / Additional Units</label>
+      <input type="text" id="otherUnits" placeholder="Any other vehicles or equipment trailers">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Pitch &amp; Site Details</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Pitch / Pitch Reference</label>
+        <input type="text" id="pitchRef" placeholder="Pitch name, zone or map ref">
+      </div>
+      <div class="field">
+        <label>Pitch Size / Space Available</label>
+        <input type="text" id="pitchSize" placeholder="e.g. 6m x 10m per truck">
+      </div>
+      <div class="field">
+        <label>Ground Surface</label>
+        <select id="groundSurface">
+          <option value="">Select...</option>
+          <option>Tarmac</option>
+          <option>Concrete</option>
+          <option>Grass</option>
+          <option>Gravel</option>
+          <option>Mixed</option>
+          <option>Indoor</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Vehicles Side-by-Side or Separate Locations?</label>
+        <select id="vehicleLayout">
+          <option value="Side by Side">Side by Side</option>
+          <option value="Separate Zones">Separate Zones</option>
+          <option value="Single Unit">Single Unit Only</option>
+          <option value="TBC">TBC</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-1" style="margin-top:14px;">
+      <div class="field">
+        <label>Pitch / Site Notes</label>
+        <textarea id="pitchNotes" placeholder="Restrictions, neighbour units, load-in route, specific instructions from venue..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Power Supply</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">How is power being provided at this event?</p>
+    <div class="chip-group" id="powerChipGroup" style="margin-bottom:16px;">
+      <div class="chip" data-val="We provide generator" onclick="togglePower(this)">⚡ We provide generator</div>
+      <div class="chip" data-val="Client/venue provides power" onclick="togglePower(this)">🔌 Client/venue provides power</div>
+      <div class="chip" data-val="We rent power from venue" onclick="togglePower(this)">💰 We rent power from venue</div>
+      <div class="chip" data-val="No mains — generator only" onclick="togglePower(this)">🔋 Generator only (off-grid)</div>
+    </div>
+    <div class="grid-2" id="powerDetails">
+      <div class="field">
+        <label>Generator / Power Spec Required</label>
+        <input type="text" id="powerSpec" placeholder="e.g. 32A 3-phase, 2× 16A single">
+      </div>
+      <div class="field">
+        <label>Cable Run Distance (approx)</label>
+        <input type="text" id="cableRun" placeholder="e.g. 30m from source to truck">
+      </div>
+      <div class="field span-2">
+        <label>Power Notes / Conditions</label>
+        <textarea id="powerNotes" placeholder="e.g. Power rented at £X, pre-agreed with venue. Cable route through fire exit must be matted..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Water &amp; Waste</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Fresh Water Source</label>
+        <select id="waterSource">
+          <option value="">Select...</option>
+          <option>Mains connection on site</option>
+          <option>We bring our own tanks</option>
+          <option>Client/venue provides IBC</option>
+          <option>Mixed — site + our tanks</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fresh Water Volume Required (litres)</label>
+        <input type="number" id="waterVolume" placeholder="Estimated litres needed">
+      </div>
+      <div class="field">
+        <label>Grey Water / Waste Disposal</label>
+        <select id="wasteDisposal">
+          <option value="">Select...</option>
+          <option>On-site drain available</option>
+          <option>We remove waste in tanks</option>
+          <option>Waste pump-out arranged</option>
+          <option>TBC with venue</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Solid Waste / Bins</label>
+        <select id="solidWaste">
+          <option value="">Select...</option>
+          <option>Venue provides bins</option>
+          <option>We provide + remove bags</option>
+          <option>Shared bins on site</option>
+        </select>
+      </div>
+      <div class="field span-2">
+        <label>Water &amp; Waste Notes</label>
+        <textarea id="waterNotes" placeholder="Any specific conditions, distances from supply, etc."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(3)">Commercial Terms →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 3 — COMMERCIAL TERMS
+══════════════════════════════════════════ -->
+
+<div class="step-panel" id="step3">
+<div class="container">
+  <div class="step-title">Commercial Terms</div>
+  <div class="step-subtitle">Revenue model, fees, minimums and payment conditions</div>
+
+  <div class="card">
+    <div class="card-title">Revenue &amp; Fee Model</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Select all that apply to this event</p>
+    <div class="chip-group" id="revenueChipGroup">
+      <div class="chip" data-val="Pitch fee / rent" onclick="toggleChip(this)">Pitch Fee / Rent</div>
+      <div class="chip" data-val="Revenue share / percentage" onclick="toggleChip(this)">Revenue Share %</div>
+      <div class="chip" data-val="Pre-paid meals / meal deal" onclick="toggleChip(this)">Pre-Paid Meals</div>
+      <div class="chip" data-val="Minimum spend" onclick="toggleChip(this)">Minimum Spend</div>
+      <div class="chip" data-val="Free at point of sale" onclick="toggleChip(this)">Free at Point of Sale</div>
+      <div class="chip" data-val="Cash / card trading" onclick="toggleChip(this)">Open Cash/Card Trading</div>
+    </div>
+  </div>
+
+  <div class="card" id="pitchFeeCard" style="display:none;">
+    <div class="card-title">Pitch Fee / Rent</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Fee Amount (£)</label>
+        <input type="number" id="pitchFeeAmount" placeholder="0.00">
+      </div>
+      <div class="field">
+        <label>Fee Type</label>
+        <select id="pitchFeeType">
+          <option>Fixed fee per event</option>
+          <option>Per truck / per unit</option>
+          <option>Daily rate</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Payable To</label>
+        <select id="pitchFeePayableTo">
+          <option>We pay the venue/client</option>
+          <option>Client pays us</option>
+        </select>
+      </div>
+      <div class="field span-3">
+        <label>Payment Terms / Notes</label>
+        <textarea id="pitchFeeNotes" placeholder="e.g. Invoice 30 days prior, card on day, etc."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="revShareCard" style="display:none;">
+    <div class="card-title">Revenue Share</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Revenue Share % (we pay)</label>
+        <input type="number" id="revSharePct" placeholder="e.g. 15">
+      </div>
+      <div class="field">
+        <label>Applies To</label>
+        <select id="revShareBasis">
+          <option>Gross takings</option>
+          <option>Net takings</option>
+          <option>Specific menu items only</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Settlement Timing</label>
+        <select id="revShareSettlement">
+          <option>Post-event invoice</option>
+          <option>Cash on day</option>
+          <option>Bank transfer within 7 days</option>
+          <option>Bank transfer within 30 days</option>
+        </select>
+      </div>
+      <div class="field span-3">
+        <label>Revenue Share Notes</label>
+        <textarea id="revShareNotes" placeholder="e.g. Organiser audits Z-report end of event, reconciled within 5 days..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="prePaidCard" style="display:none;">
+    <div class="card-title">Pre-Paid Meals / Meal Deals</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Number of Pre-Paid Covers</label>
+        <input type="number" id="prePaidCovers" placeholder="e.g. 200">
+      </div>
+      <div class="field">
+        <label>Price Per Cover (£)</label>
+        <input type="number" id="prePaidPrice" placeholder="e.g. 12.50">
+      </div>
+      <div class="field">
+        <label>Total Pre-Paid Value (£)</label>
+        <input type="number" id="prePaidTotal" placeholder="Auto or enter manually">
+      </div>
+      <div class="field">
+        <label>Minimum Spend (£)</label>
+        <input type="number" id="minSpend" placeholder="e.g. 2500">
+      </div>
+      <div class="field span-2">
+        <label>Menu / Package Included</label>
+        <textarea id="prePaidMenu" placeholder="e.g. Street food burger + side + soft drink. Any dietary variants agreed..."></textarea>
+      </div>
+      <div class="field span-2">
+        <label>Pre-Paid Terms / Notes</label>
+        <textarea id="prePaidNotes" placeholder="Invoice date, deposit, what happens if under-utilised, overspend policy..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">POS &amp; Payment Method</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">How is payment taken at this event?</p>
+    <div class="chip-group" id="posChipGroup">
+      <div class="chip" data-val="Our own POS system" onclick="toggleChip(this)">Our Own POS</div>
+      <div class="chip" data-val="Client / venue POS system" onclick="toggleChip(this)">Client/Venue POS</div>
+      <div class="chip" data-val="Client vouchers accepted" onclick="toggleChip(this)">Client Vouchers</div>
+      <div class="chip" data-val="Cash only" onclick="toggleChip(this)">Cash Only</div>
+      <div class="chip" data-val="Card only" onclick="toggleChip(this)">Card Only</div>
+      <div class="chip" data-val="Cash & card" onclick="toggleChip(this)">Cash &amp; Card</div>
+      <div class="chip" data-val="App / QR" onclick="toggleChip(this)">App / QR</div>
+    </div>
+    <div class="grid-1" style="margin-top:14px;">
+      <div class="field">
+        <label>Voucher / Invoice Details (if applicable)</label>
+        <textarea id="voucherDetails" placeholder="e.g. Client issues pre-printed vouchers, value £X each. We invoice client post-event for vouchers redeemed. Vouchers valid for [items]. Unredeemed vouchers — client absorbs..."></textarea>
+      </div>
+      <div class="field">
+        <label>POS / Payment Notes</label>
+        <textarea id="posNotes" placeholder="e.g. Venue POS login provided by site manager on arrival. Their system, our menus pre-loaded..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(4)">Menu &amp; Stock →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 4 — MENU & STOCK
+══════════════════════════════════════════ -->
+
+<div class="step-panel" id="step4">
+<div class="container">
+  <div class="step-title">Menu &amp; Stock</div>
+  <div class="step-subtitle">What we're serving, forecasting and stock management</div>
+
+  <div class="card">
+    <div class="card-title">Menu Plan</div>
+    <div class="grid-1">
+      <div class="field">
+        <label>Food Truck Menu (agreed items)</label>
+        <textarea id="menuFood" rows="3" placeholder="e.g. Classic Burger, Veggie Burger, Hot Dog, Loaded Fries, Pulled Pork Bun..."></textarea>
+      </div>
+      <div class="field">
+        <label>Coffee Truck Menu</label>
+        <textarea id="menuCoffee" rows="2" placeholder="e.g. Full espresso bar, cold brew, pastries..."></textarea>
+      </div>
+      <div class="field">
+        <label>Ice Cream Menu</label>
+        <textarea id="menuIcecream" rows="2" placeholder="e.g. Soft serve cones, 6 ice cream flavours, sundaes..."></textarea>
+      </div>
+      <div class="field">
+        <label>Dietary / Allergen Requirements Flagged</label>
+        <textarea id="dietaryNotes" placeholder="e.g. Gluten-free buns required for 10% of covers. Vegan confirmed. Nut-free site. Full allergen matrix to be available on truck..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Cover Forecast &amp; Stock</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Food Covers Forecast</label>
+        <input type="number" id="foodCovers" placeholder="e.g. 300">
+      </div>
+      <div class="field">
+        <label>Coffee Covers Forecast</label>
+        <input type="number" id="coffeeCovers" placeholder="e.g. 150">
+      </div>
+      <div class="field">
+        <label>Ice Cream Covers Forecast</label>
+        <input type="number" id="icecreamCovers" placeholder="e.g. 120">
+      </div>
+      <div class="field">
+        <label>Stock Order Placed</label>
+        <select id="stockOrdered">
+          <option value="No">Not yet</option>
+          <option value="Partial">Partial order placed</option>
+          <option value="Yes">Fully ordered</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Supplier Delivery Date</label>
+        <input type="date" id="deliveryDate">
+      </div>
+      <div class="field">
+        <label>Cold Chain / Refrigeration</label>
+        <select id="coldChain">
+          <option value="">Select...</option>
+          <option>Truck fridges sufficient</option>
+          <option>Stock storage van required</option>
+          <option>Venue cold store available</option>
+          <option>External hire required</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label>Stock / Forecasting Notes</label>
+      <textarea id="stockNotes" placeholder="Buffer stock %, wastage plan, specific quantities, last-minute top-up plan..."></textarea>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(5)">Staff &amp; Safety →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 5 — STAFF & SAFETY
+══════════════════════════════════════════ -->
+
+<div class="step-panel" id="step5">
+<div class="container">
+  <div class="step-title">Staff &amp; Safety</div>
+  <div class="step-subtitle">Team allocation and mandatory compliance checks</div>
+
+  <div class="card">
+    <div class="card-title">Staff Allocation</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Event Manager / Lead</label>
+        <input type="text" id="eventManager" placeholder="Name">
+      </div>
+      <div class="field">
+        <label>Lead Chef / Kitchen</label>
+        <input type="text" id="leadChef" placeholder="Name">
+      </div>
+      <div class="field">
+        <label>Total Staff Required</label>
+        <input type="number" id="totalStaff" placeholder="Headcount">
+      </div>
+      <div class="field">
+        <label>Food Truck Staff (per truck)</label>
+        <input type="text" id="foodStaff" placeholder="e.g. 2 per truck">
+      </div>
+      <div class="field">
+        <label>Coffee Truck Staff</label>
+        <input type="text" id="coffeeStaff" placeholder="e.g. 1 barista + 1 support">
+      </div>
+      <div class="field">
+        <label>Ice Cream Staff</label>
+        <input type="text" id="icecreamStaff" placeholder="e.g. 1 per van">
+      </div>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label>Staff Briefing Notes / Special Instructions</label>
+      <textarea id="staffNotes" placeholder="Uniform requirements, reporting time, specific briefing points, agency staff details..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔥 Fire Safety — Mandatory Checklist</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" name="safety" value="CO2 extinguisher (per truck)"> <span>CO₂ extinguisher — per truck</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Wet chemical extinguisher (cooking)"> <span>Wet chemical extinguisher — cooking area</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Fire blanket"> <span>Fire blanket — per truck</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Fire extinguisher service date in date"> <span>All extinguishers service date in-date</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Gas safety check completed"> <span>Gas safety check completed (pre-event)</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Gas isolation valves accessible"> <span>Gas isolation valves accessible &amp; labelled</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Fire risk assessment completed"> <span>Fire risk assessment completed</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Evacuation point confirmed with venue"> <span>Evacuation point confirmed with venue</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Deep clean / grease trap cleared"> <span>Deep clean / grease trap cleared (pre-event)</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Electrical Safety</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" name="safety" value="PAT testing current for all appliances"> <span>PAT testing current for all appliances</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="RCD protection on all circuits"> <span>RCD protection on all circuits</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Cable matting / cable ramp for walkways"> <span>Cable matting / ramps for all walkway crossings</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Correct cable spec for load"> <span>Correct cable spec confirmed for load requirement</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Generator PAT / service current"> <span>Generator PAT / service certificate current</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="No overloaded sockets / trailing leads"> <span>No overloaded sockets or daisy-chain leads</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🛡️ Other Compliance</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" name="safety" value="Food hygiene certs (all staff) valid"> <span>Food hygiene certificates — all staff valid</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Food safety management plan in vehicle"> <span>Food safety management plan on board</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Allergen matrix available"> <span>Allergen matrix available &amp; visible</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Public liability insurance confirmed"> <span>Public liability insurance confirmed for event</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Vehicle MOT & insurance in date"> <span>Vehicle MOT &amp; insurance in date</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="First aid kit stocked & accessible"> <span>First aid kit stocked &amp; accessible</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Risk assessment submitted to venue if required"> <span>Risk assessment submitted to venue (if required)</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Hand washing station set up"> <span>Hand washing station set up (separate from food prep)</span></label>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="goStep(4)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(6)">Notes &amp; Finalise →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 6 — NOTES & GENERATE
+══════════════════════════════════════════ -->
+
+<div class="step-panel" id="step6">
+<div class="container">
+  <div class="step-title">Notes &amp; Generate</div>
+  <div class="step-subtitle">Final notes, then generate your event brief</div>
+
+  <div class="card">
+    <div class="card-title">Additional Notes</div>
+    <div class="grid-1">
+      <div class="field">
+        <label>Client Special Instructions / Requests</label>
+        <textarea id="clientInstructions" rows="3" placeholder="Any specific client requirements, branding requests, menu restrictions from client side..."></textarea>
+      </div>
+      <div class="field">
+        <label>Internal Ops Notes</label>
+        <textarea id="opsNotes" rows="3" placeholder="Notes for the team — anything unusual, key risks, priority actions before event day..."></textarea>
+      </div>
+      <div class="field">
+        <label>Post-Event Actions</label>
+        <textarea id="postEventNotes" placeholder="e.g. Invoice to be raised within 48hrs, voucher reconciliation with client, Z-report to send to organiser..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Brief Reference</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Brief Prepared By</label>
+        <input type="text" id="preparedBy" placeholder="Your name">
+      </div>
+      <div class="field">
+        <label>Brief Date</label>
+        <input type="date" id="briefDate">
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="goStep(5)">← Back</button>
+    <button class="btn btn-green" onclick="generateBrief()" style="font-size:18px;padding:14px 36px;">Generate Brief ✓</button>
+  </div>
+</div>
+</div>
+
+</div><!-- /form-app -->
+
+<!-- ══════════════════════════════════════════
+     BRIEF OUTPUT
+══════════════════════════════════════════ -->
+
+<div id="brief-output">
+  <div class="brief-page" id="brief-content">
+    <!-- Dynamically populated -->
+  </div>
+
+  <div class="brief-actions">
+    <button class="btn btn-secondary" onclick="backToForm()">← Edit Brief</button>
+    <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
+    <button class="btn btn-green" id="calendarBtn" onclick="addToCalendar()">📅 Add to Calendar</button>
+  </div>
+</div>
+
+<script>
+// ─── NAVIGATION ───────────────────────────────────────────────
+let currentStep = 1;
+const TOTAL_STEPS = 6;
+
+function goStep(n) {
+  document.getElementById('step' + currentStep).classList.remove('active');
+  document.getElementById('sd' + currentStep).classList.remove('active');
+  document.getElementById('sd' + currentStep).classList.add('done');
+  if (currentStep > 1) document.getElementById('sl' + (currentStep-1)).classList.add('done');
+
+  currentStep = n;
+  document.getElementById('step' + n).classList.add('active');
+  document.getElementById('sd' + n).classList.add('active');
+  document.getElementById('sd' + n).classList.remove('done');
+  window.scrollTo(0,0);
+}
+
+// ─── CHIPS ────────────────────────────────────────────────────
+function toggleChip(el) {
+  el.classList.toggle('selected');
+  if (el.closest('#revenueChipGroup')) updateRevenueCards();
+}
+
+function togglePower(el) {
+  el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function getChipValues(groupId) {
+  return [...document.querySelectorAll('#' + groupId + ' .chip.selected')].map(c => c.dataset.val);
+}
+
+function updateRevenueCards() {
+  const vals = getChipValues('revenueChipGroup');
+  document.getElementById('pitchFeeCard').style.display = vals.includes('Pitch fee / rent') ? 'block' : 'none';
+  document.getElementById('revShareCard').style.display = vals.includes('Revenue share / percentage') ? 'block' : 'none';
+  document.getElementById('prePaidCard').style.display = vals.includes('Pre-paid meals / meal deal') ? 'block' : 'none';
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function checks(name) {
+  return [...document.querySelectorAll('input[name="' + name + '"]:checked')].map(c => c.value);
+}
+
+function fmt(id) { return val(id) || '—'; }
+
+function formatDate(d) {
+  if (!d) return '—';
+  const parts = d.split('-');
+  if (parts.length !== 3) return d;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return parts[2] + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+}
+
+function formatTime(t) {
+  if (!t) return '—';
+  return t;
+}
+
+function genRef() {
+  const d = val('eventDate');
+  const n = val('eventName');
+  const prefix = n ? n.replace(/[^a-zA-Z0-9]/g,'').substring(0,6).toUpperCase() : 'EVT';
+  const date = d ? d.replace(/-/g,'').substring(2) : '000000';
+  return 'OBE-' + prefix + '-' + date;
+}
+
+function statusBadge(s) {
+  const cls = s === 'Confirmed' ? 'status-confirmed' : s === 'Provisional' ? 'status-provisional' : 'status-enquiry';
+  return '<span class="status-badge ' + cls + '">' + s + '</span>';
+}
+
+// ─── GENERATE BRIEF ───────────────────────────────────────────
+function generateBrief() {
+  const ref = genRef();
+  const units = getChipValues('unitsChipGroup');
+  if (val('otherUnits')) units.push(val('otherUnits'));
+  const revenue = getChipValues('revenueChipGroup');
+  const pos = getChipValues('posChipGroup');
+  const power = getChipValues('powerChipGroup');
+  const safetyChecked = checks('safety');
+
+  const allSafetyItems = [
+    'CO2 extinguisher (per truck)', 'Wet chemical extinguisher (cooking)', 'Fire blanket',
+    'Fire extinguisher service date in date', 'Gas safety check completed', 'Gas isolation valves accessible',
+    'Fire risk assessment completed', 'Evacuation point confirmed with venue', 'Deep clean / grease trap cleared',
+    'PAT testing current for all appliances', 'RCD protection on all circuits', 'Cable matting / cable ramp for walkways',
+    'Correct cable spec for load', 'Generator PAT / service current', 'No overloaded sockets / trailing leads',
+    'Food hygiene certs (all staff) valid', 'Food safety management plan in vehicle', 'Allergen matrix available',
+    'Public liability insurance confirmed', 'Vehicle MOT & insurance in date', 'First aid kit stocked & accessible',
+    'Risk assessment submitted to venue if required', 'Hand washing station set up'
+  ];
+
+  const safetyRows = allSafetyItems.map(item => {
+    const done = safetyChecked.includes(item);
+    return '<div class="ops-item' + (done ? ' checked' : '') + '">' + item + '</div>';
+  }).join('');
+
+  const html = `
+    <div class="brief-header">
+      <div>
+        <div class="brief-logo">O'<span>Brien</span> Event Catering</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;letter-spacing:0.06em;">Event Operations Brief</div>
+      </div>
+      <div>
+        <div class="brief-event-name">${val('eventName') || 'Unnamed Event'}</div>
+        <div class="brief-ref">Ref: ${ref} &nbsp;|&nbsp; ${statusBadge(val('bookingStatus') || 'Confirmed')}</div>
+      </div>
+    </div>
+
+    <div class="brief-meta-strip">
+      <div class="meta-cell">
+        <div class="mc-label">Date</div>
+        <div class="mc-val">${formatDate(val('eventDate'))}</div>
+      </div>
+      <div class="meta-cell">
+        <div class="mc-label">Trading Hours</div>
+        <div class="mc-val">${formatTime(val('startTime'))} – ${formatTime(val('endTime'))}</div>
+      </div>
+      <div class="meta-cell">
+        <div class="mc-label">Attendance</div>
+        <div class="mc-val">${fmt('attendance')}</div>
+      </div>
+      <div class="meta-cell">
+        <div class="mc-label">Units Deployed</div>
+        <div class="mc-val">${units.length || '—'}</div>
+      </div>
+    </div>
+
+    <!-- CLIENT -->
+    <div class="brief-section">
+      <div class="brief-section-head">01 — CLIENT & CONTACT</div>
+      <div class="brief-grid-3">
+        <div class="bfield"><div class="bl">Client Name</div><div class="bv big">${fmt('clientName')}</div></div>
+        <div class="bfield"><div class="bl">Client Type</div><div class="bv">${fmt('clientType')}</div></div>
+        <div class="bfield"><div class="bl">Booking Status</div><div class="bv highlight">${fmt('bookingStatus')}</div></div>
+        <div class="bfield"><div class="bl">Primary Contact</div><div class="bv">${fmt('contactName')}</div></div>
+        <div class="bfield"><div class="bl">Phone</div><div class="bv">${fmt('contactPhone')}</div></div>
+        <div class="bfield"><div class="bl">Email</div><div class="bv">${fmt('contactEmail')}</div></div>
+        ${val('onsiteContact') ? '<div class="bfield" style="grid-column:span 3"><div class="bl">On-Site Contact (Day Of)</div><div class="bv">' + val('onsiteContact') + '</div></div>' : ''}
+      </div>
+    </div>
+
+    <!-- VENUE -->
+    <div class="brief-section">
+      <div class="brief-section-head">02 — VENUE & SCHEDULE</div>
+      <div class="brief-grid-2" style="margin-bottom:14px;">
+        <div class="bfield"><div class="bl">Venue</div><div class="bv big">${fmt('venueName')}</div></div>
+        <div class="bfield"><div class="bl">Address</div><div class="bv">${fmt('venueAddress')}</div></div>
+      </div>
+      <div class="brief-grid-3">
+        <div class="bfield"><div class="bl">Setup / Arrival</div><div class="bv">${formatTime(val('setupTime'))}</div></div>
+        <div class="bfield"><div class="bl">Trading Start</div><div class="bv highlight">${formatTime(val('startTime'))}</div></div>
+        <div class="bfield"><div class="bl">Trading End</div><div class="bv highlight">${formatTime(val('endTime'))}</div></div>
+        <div class="bfield"><div class="bl">Breakdown / Depart</div><div class="bv">${formatTime(val('breakdownTime'))}</div></div>
+        <div class="bfield"><div class="bl">Expected Attendance</div><div class="bv">${fmt('attendance')}</div></div>
+      </div>
+      ${val('accessNotes') ? '<div class="notice-box" style="margin-top:12px;"><strong>Access:</strong> ' + val('accessNotes') + '</div>' : ''}
+    </div>
+
+    <!-- FLEET -->
+    <div class="brief-section">
+      <div class="brief-section-head">03 — FLEET & LOGISTICS</div>
+      <div style="margin-bottom:12px;">
+        <div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:8px;">Units Deployed</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${units.length ? units.map(u => '<span style="background:#f0ece6;padding:4px 12px;border-radius:2px;font-size:12px;font-weight:700;">' + u + '</span>').join('') : '<span style="color:#999;font-size:12px;">No units selected</span>'}
+        </div>
+      </div>
+      <div class="brief-grid-3">
+        <div class="bfield"><div class="bl">Pitch / Ref</div><div class="bv">${fmt('pitchRef')}</div></div>
+        <div class="bfield"><div class="bl">Pitch Size</div><div class="bv">${fmt('pitchSize')}</div></div>
+        <div class="bfield"><div class="bl">Ground Surface</div><div class="bv">${fmt('groundSurface')}</div></div>
+        <div class="bfield"><div class="bl">Vehicle Layout</div><div class="bv">${fmt('vehicleLayout')}</div></div>
+      </div>
+      ${val('pitchNotes') ? '<div class="notice-box" style="margin-top:12px;">' + val('pitchNotes') + '</div>' : ''}
+    </div>
+
+    <!-- POWER, WATER, WASTE -->
+    <div class="brief-section">
+      <div class="brief-section-head">04 — POWER, WATER & WASTE</div>
+      <div class="brief-grid-3">
+        <div class="bfield"><div class="bl">Power Arrangement</div><div class="bv highlight">${power.length ? power.join(', ') : '—'}</div></div>
+        <div class="bfield"><div class="bl">Power Spec Required</div><div class="bv">${fmt('powerSpec')}</div></div>
+        <div class="bfield"><div class="bl">Cable Run</div><div class="bv">${fmt('cableRun')}</div></div>
+        <div class="bfield"><div class="bl">Fresh Water Source</div><div class="bv">${fmt('waterSource')}</div></div>
+        <div class="bfield"><div class="bl">Water Volume (L)</div><div class="bv">${fmt('waterVolume')}</div></div>
+        <div class="bfield"><div class="bl">Grey Water Disposal</div><div class="bv">${fmt('wasteDisposal')}</div></div>
+        <div class="bfield"><div class="bl">Solid Waste / Bins</div><div class="bv">${fmt('solidWaste')}</div></div>
+      </div>
+      ${val('powerNotes') ? '<div class="notice-box" style="margin-top:10px;"><strong>Power:</strong> ' + val('powerNotes') + '</div>' : ''}
+      ${val('waterNotes') ? '<div class="notice-box" style="margin-top:6px;"><strong>Water/Waste:</strong> ' + val('waterNotes') + '</div>' : ''}
+    </div>
+
+    <!-- COMMERCIAL -->
+    <div class="brief-section">
+      <div class="brief-section-head">05 — COMMERCIAL TERMS</div>
+      <div class="brief-grid-2" style="margin-bottom:12px;">
+        <div class="bfield"><div class="bl">Revenue Model</div><div class="bv highlight">${revenue.length ? revenue.join(' + ') : '—'}</div></div>
+        <div class="bfield"><div class="bl">POS / Payment</div><div class="bv">${pos.length ? pos.join(', ') : '—'}</div></div>
+      </div>
+      ${val('pitchFeeAmount') ? '<div class="notice-box"><strong>Pitch Fee:</strong> £' + val('pitchFeeAmount') + ' — ' + fmt('pitchFeeType') + ' — ' + fmt('pitchFeePayableTo') + (val('pitchFeeNotes') ? '<br>' + val('pitchFeeNotes') : '') + '</div>' : ''}
+      ${val('revSharePct') ? '<div class="notice-box"><strong>Revenue Share:</strong> ' + val('revSharePct') + '% of ' + fmt('revShareBasis') + '. Settlement: ' + fmt('revShareSettlement') + (val('revShareNotes') ? '<br>' + val('revShareNotes') : '') + '</div>' : ''}
+      ${val('prePaidCovers') ? '<div class="notice-box"><strong>Pre-Paid:</strong> ' + val('prePaidCovers') + ' covers @ £' + (val('prePaidPrice') || '?') + ' = £' + (val('prePaidTotal') || (parseInt(val('prePaidCovers'))*parseFloat(val('prePaidPrice'))||'?')) + ' total. Minimum spend: £' + (val('minSpend') || '—') + (val('prePaidMenu') ? '<br><em>Menu: ' + val('prePaidMenu') + '</em>' : '') + (val('prePaidNotes') ? '<br>' + val('prePaidNotes') : '') + '</div>' : ''}
+      ${val('voucherDetails') ? '<div class="notice-box"><strong>Vouchers/Invoicing:</strong> ' + val('voucherDetails') + '</div>' : ''}
+      ${val('posNotes') ? '<div class="notice-box"><strong>POS Notes:</strong> ' + val('posNotes') + '</div>' : ''}
+    </div>
+
+    <!-- MENU & STOCK -->
+    <div class="brief-section">
+      <div class="brief-section-head">06 — MENU & STOCK</div>
+      <div class="brief-grid-3" style="margin-bottom:12px;">
+        <div class="bfield"><div class="bl">Food Covers Forecast</div><div class="bv big">${fmt('foodCovers')}</div></div>
+        <div class="bfield"><div class="bl">Coffee Covers Forecast</div><div class="bv big">${fmt('coffeeCovers')}</div></div>
+        <div class="bfield"><div class="bl">Ice Cream Covers Forecast</div><div class="bv big">${fmt('icecreamCovers')}</div></div>
+        <div class="bfield"><div class="bl">Stock Ordered</div><div class="bv">${fmt('stockOrdered')}</div></div>
+        <div class="bfield"><div class="bl">Supplier Delivery</div><div class="bv">${formatDate(val('deliveryDate'))}</div></div>
+        <div class="bfield"><div class="bl">Cold Chain</div><div class="bv">${fmt('coldChain')}</div></div>
+      </div>
+      ${val('menuFood') ? '<div class="notice-box"><strong>Food Menu:</strong> ' + val('menuFood') + '</div>' : ''}
+      ${val('menuCoffee') ? '<div class="notice-box"><strong>Coffee Menu:</strong> ' + val('menuCoffee') + '</div>' : ''}
+      ${val('menuIcecream') ? '<div class="notice-box"><strong>Ice Cream Menu:</strong> ' + val('menuIcecream') + '</div>' : ''}
+      ${val('dietaryNotes') ? '<div class="notice-box" style="border-color:#c0392b;background:#fff5f5;"><strong>⚠ Dietary/Allergens:</strong> ' + val('dietaryNotes') + '</div>' : ''}
+      ${val('stockNotes') ? '<div class="notice-box">' + val('stockNotes') + '</div>' : ''}
+    </div>
+
+    <!-- STAFF -->
+    <div class="brief-section">
+      <div class="brief-section-head">07 — STAFF</div>
+      <div class="brief-grid-3">
+        <div class="bfield"><div class="bl">Event Manager</div><div class="bv big">${fmt('eventManager')}</div></div>
+        <div class="bfield"><div class="bl">Lead Chef</div><div class="bv">${fmt('leadChef')}</div></div>
+        <div class="bfield"><div class="bl">Total Staff</div><div class="bv big">${fmt('totalStaff')}</div></div>
+        <div class="bfield"><div class="bl">Food Truck Staff</div><div class="bv">${fmt('foodStaff')}</div></div>
+        <div class="bfield"><div class="bl">Coffee Staff</div><div class="bv">${fmt('coffeeStaff')}</div></div>
+        <div class="bfield"><div class="bl">Ice Cream Staff</div><div class="bv">${fmt('icecreamStaff')}</div></div>
+      </div>
+      ${val('staffNotes') ? '<div class="notice-box" style="margin-top:10px;">' + val('staffNotes') + '</div>' : ''}
+    </div>
+
+    <!-- SAFETY -->
+    <div class="brief-section">
+      <div class="brief-section-head">08 — SAFETY & COMPLIANCE CHECKLIST</div>
+      <div class="ops-checklist">${safetyRows}</div>
+    </div>
+
+    <!-- NOTES -->
+    ${(val('clientInstructions') || val('opsNotes') || val('postEventNotes')) ? `
+    <div class="brief-section">
+      <div class="brief-section-head">09 — NOTES & ACTIONS</div>
+      ${val('clientInstructions') ? '<div class="notice-box"><strong>Client Instructions:</strong> ' + val('clientInstructions') + '</div>' : ''}
+      ${val('opsNotes') ? '<div class="notice-box" style="border-color:#2d7a49;background:#f5fbf7;"><strong>Ops Notes:</strong> ' + val('opsNotes') + '</div>' : ''}
+      ${val('postEventNotes') ? '<div class="notice-box"><strong>Post-Event Actions:</strong> ' + val('postEventNotes') + '</div>' : ''}
+    </div>` : ''}
+
+    <!-- FOOTER -->
+    <div style="margin-top:36px;padding-top:16px;border-top:2px solid #111;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:11px;color:#888;">Prepared by: <strong>${fmt('preparedBy')}</strong> &nbsp;|&nbsp; Date: <strong>${formatDate(val('briefDate'))}</strong></div>
+      <div style="font-size:11px;color:#888;">Ref: ${ref}</div>
+    </div>
+  `;
+
+  document.getElementById('brief-content').innerHTML = html;
+  document.getElementById('form-app').style.display = 'none';
+  document.getElementById('brief-output').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+function backToForm() {
+  document.getElementById('brief-output').style.display = 'none';
+  document.getElementById('form-app').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+// ─── CALENDAR ─────────────────────────────────────────────────
+function addToCalendar() {
+  const name = val('eventName') || 'O\'Brien Event';
+  const date = val('eventDate');
+  const start = val('startTime');
+  const end = val('endTime');
+
+  if (!date) {
+    alert('Please enter an event date first.');
+    return;
+  }
+
+  function gcalTime(d, t) {
+    if (!t) return d.replace(/-/g,'');
+    return d.replace(/-/g,'') + 'T' + t.replace(':','') + '00';
+  }
+
+  const startStr = gcalTime(date, start);
+  const endStr = end ? gcalTime(date, end) : gcalTime(date, start);
+
+  const details = [
+    'O\'Brien Event Catering — Event Brief',
+    'Ref: ' + genRef(),
+    'Client: ' + (val('clientName') || '—'),
+    'Venue: ' + (val('venueName') || '—'),
+    'Units: ' + (getChipValues('unitsChipGroup').join(', ') || '—'),
+    'Event Manager: ' + (val('eventManager') || '—'),
+    'Staff: ' + (val('totalStaff') || '—'),
+    'Revenue: ' + (getChipValues('revenueChipGroup').join(', ') || '—'),
+  ].join('\n');
+
+  const location = encodeURIComponent((val('venueName') || '') + ' ' + (val('venueAddress') || ''));
+  const title = encodeURIComponent('🚚 ' + name + ' — O\'Brien');
+  const det = encodeURIComponent(details);
+
+  const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + title
+    + '&dates=' + startStr + '/' + endStr
+    + '&details=' + det
+    + '&location=' + location;
+
+  window.open(url, '_blank');
+}
+
+// ─── INIT ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  const today = new Date().toISOString().split('T')[0];
+  const bd = document.getElementById('briefDate');
+  if (bd) bd.value = today;
+});
+</script>
+
+</body>
+</html>
