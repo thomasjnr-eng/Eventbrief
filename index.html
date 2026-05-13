@@ -2418,8 +2418,9 @@ function addToCalendar() {
     'Revenue: ' + (getChipValues('revenueChipGroup').join(', ') || '—'),
   ].join('\n');
 
+  const venueLabel = val('venueName');
   const location = encodeURIComponent((val('venueName') || '') + ' ' + (val('venueAddress') || ''));
-  const title = encodeURIComponent('🚚 ' + name + ' — O\'Brien');
+  const title = encodeURIComponent('🚚 ' + name + (venueLabel ? ' — ' + venueLabel : ''));
   const det = encodeURIComponent(details);
 
   const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
