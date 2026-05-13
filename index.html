@@ -467,19 +467,37 @@ body {
 .draft-indicator.active { color: var(--sage); }
 
 /* ─── HEADER ICON BUTTONS ─── */
-.header-actions { display: flex; gap: 6px; align-items: center; margin-left: 18px; }
+.header-actions { display: flex; gap: 8px; align-items: center; margin-left: 18px; flex-wrap: wrap; }
+.header-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--white);
+  padding: 7px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.header-btn:hover { border-color: var(--sage); color: var(--sage); }
+.header-btn.primary { background: var(--sage); color: #111; border-color: var(--sage); }
+.header-btn.primary:hover { background: var(--sage-dark); border-color: var(--sage-dark); }
 .icon-btn {
   background: transparent;
   border: 1px solid var(--border);
   color: var(--grey);
-  width: 34px; height: 34px;
+  width: 32px; height: 32px;
   border-radius: 3px;
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.15s;
+  opacity: 0.55;
 }
-.icon-btn:hover { border-color: var(--sage); color: var(--sage); }
+.icon-btn:hover { border-color: var(--sage); color: var(--sage); opacity: 1; }
 .icon-btn.indicator { position: relative; }
 .icon-btn.indicator::after {
   content: ''; position: absolute; top: -2px; right: -2px;
@@ -645,73 +663,43 @@ body {
 .welcome-skip a { color: var(--sage); text-decoration: none; }
 .welcome-skip a:hover { text-decoration: underline; }
 
-/* ─── DASHBOARD ─── */
+/* ─── DASHBOARD (compact pill strip) ─── */
 .dashboard {
   display: none;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 24px 24px 0;
+  padding: 14px 24px 0;
 }
-.dashboard.show { display: grid; }
-.dash-card {
+.dashboard.show { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.dash-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-top: 3px solid var(--border);
-  border-radius: 4px;
-  padding: 14px 16px;
-}
-.dash-card.urgent { border-top-color: var(--red); }
-.dash-card.all-good { border-top-color: #4a9a5c; }
-.dash-card.amber { border-top-color: #c89a4a; }
-.dash-card-header {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  color: var(--sage);
-  margin-bottom: 4px;
-}
-.dash-count {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 10px;
-}
-.dash-count .dash-note { font-size: 11px; font-weight: 400; margin-left: 6px; }
-.dash-count .dash-note.alert { color: #ff8c8c; }
-.dash-count .dash-note.ok { color: #6fcf6f; }
-.dash-list { display: flex; flex-direction: column; gap: 4px; }
-.dash-event {
-  display: grid;
-  grid-template-columns: 12px 1fr auto;
-  gap: 8px;
-  align-items: center;
+  border-radius: 16px;
   font-size: 12px;
-  padding: 6px 10px;
-  background: #2a2a2a;
-  border-radius: 3px;
+  color: var(--white);
   cursor: pointer;
-  border-left: 3px solid var(--border);
-  transition: background 0.15s;
+  transition: border-color 0.15s, background 0.15s;
+  white-space: nowrap;
 }
-.dash-event:hover { background: #333; }
-.dash-event.green { border-left-color: #4a9a5c; }
-.dash-event.amber { border-left-color: #c89a4a; }
-.dash-event.red { border-left-color: var(--red); }
-.dash-event .dot { width: 8px; height: 8px; border-radius: 50%; }
-.dash-event.green .dot { background: #6fcf6f; }
-.dash-event.amber .dot { background: #e0b370; }
-.dash-event.red .dot { background: #ff8c8c; }
-.dash-event .ev-title { color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dash-event .ev-when { color: var(--grey); font-size: 11px; white-space: nowrap; }
-.dash-empty { font-size: 12px; color: var(--grey); font-style: italic; padding: 6px 0; }
-.dash-more { font-size: 11px; color: var(--grey); margin-top: 6px; text-align: center; cursor: pointer; }
-.dash-more:hover { color: var(--sage); }
-
-@media (max-width: 800px) {
-  .dashboard.show { grid-template-columns: 1fr; }
+.dash-pill:hover { border-color: var(--sage); }
+.dash-pill .dash-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; flex-shrink: 0; }
+.dash-pill.urgent { border-color: var(--red); }
+.dash-pill.urgent .dash-dot { background: #ff6b6b; }
+.dash-pill.amber { border-color: #c89a4a; }
+.dash-pill.amber .dash-dot { background: #e0b370; }
+.dash-pill.good .dash-dot { background: #6fcf6f; }
+.dash-pill .dash-count { font-weight: 700; }
+.dash-pill .dash-label {
+  color: var(--grey);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
+.dash-pill .dash-alert { color: #ff8c8c; font-size: 11px; font-weight: 700; }
 
 /* ─── PROGRESS BADGE + BAR ─── */
 .ev-progress { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 62px; }
@@ -939,7 +927,8 @@ body {
     </div>
     <div class="header-actions">
       <span class="draft-indicator" id="draftIndicator"></span>
-      <button class="icon-btn" id="btnEvents" title="Saved Events" onclick="openEventsModal()">📁</button>
+      <button class="header-btn primary" onclick="newBrief()">+ New Brief</button>
+      <button class="header-btn" id="btnEvents" onclick="openEventsModal()">Load Brief</button>
       <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
   </div>
@@ -989,7 +978,7 @@ body {
 
 <div class="step-panel active" id="step1">
 <div class="container">
-  <div class="step-title">Event Overview</div>
+  <div class="step-title" id="step1Title">New Brief — Event Overview</div>
   <div class="step-subtitle">Core event details and client information</div>
 
   <div class="card">
@@ -2630,6 +2619,49 @@ const WORKER_URL = 'https://obrien-brief-api.thomasjnr.workers.dev';
 const PASSCODE_KEY = 'obrien_brief_passcode';
 const DRAFT_KEY = 'obrien_brief_draft';
 
+// ─── BRIEF STATE (new vs continued) ──────────────────────────
+let briefState = 'new';
+function setBriefState(state) {
+  briefState = (state === 'continued') ? 'continued' : 'new';
+  const el = document.getElementById('step1Title');
+  if (el) el.textContent = (briefState === 'continued' ? 'Continued' : 'New Brief') + ' — Event Overview';
+}
+
+function newBrief() {
+  const cur = collectFormData();
+  const hasContent = !!(cur.eventName || cur.clientName || cur.venueName || (cur._fleet || []).length || (cur._signatures || []).length);
+  if (hasContent && !confirm('Discard the current brief and start a new one? Any unsaved changes will be lost.')) return;
+  // Clear form inputs
+  document.querySelectorAll('#form-app input, #form-app textarea, #form-app select').forEach(el => {
+    if (!el.id || el.type === 'button') return;
+    if (el.type === 'checkbox') el.checked = false;
+    else el.value = '';
+  });
+  // Clear chips
+  document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
+  // Clear safety checkboxes
+  document.querySelectorAll('input[name="safety"]').forEach(c => c.checked = false);
+  // Reset signatures + trading days
+  SIGNATURES = [];
+  setTradingDays([]);
+  renderSignaturesList();
+  // Reset scattered toggle
+  const sc = document.getElementById('isScattered');
+  if (sc) { sc.checked = false; toggleScattered(); }
+  // Reset dependent UI panels
+  renderStockOrderRows();
+  renderStaffRows();
+  updateRevenueCards();
+  updatePowerSummary();
+  const psCard = document.getElementById('powerSummaryCard');
+  if (psCard) psCard.style.display = 'none';
+  // Clear draft + reset state
+  clearDraft();
+  setBriefState('new');
+  goStep(1);
+  toast('Started a new brief');
+}
+
 // ─── AUTO-SAVE DRAFT (localStorage) ──────────────────────────
 let draftSaveTimer = null;
 let autoSavePaused = false;
@@ -2934,7 +2966,7 @@ function populateForm(data) {
   setTimeout(() => { autoSavePaused = false; }, 200);
 }
 
-// ─── DASHBOARD ──────────────────────────────────────────────
+// ─── DASHBOARD (compact pill strip) ───────────────────────────
 async function renderDashboard() {
   const container = document.getElementById('dashboard');
   if (!container) return;
@@ -2965,53 +2997,29 @@ async function renderDashboard() {
     else if (d <= monthStr) buckets.month.push(item);
     else buckets.beyond.push(item);
   });
-  ['week', 'month', 'beyond'].forEach(b => buckets[b].sort((a, c) => a.date.localeCompare(c.date)));
 
   container.innerHTML =
-    renderDashBucket(buckets.week, 'This Week', 'week') +
-    renderDashBucket(buckets.month, 'Next 30 Days', 'month') +
-    renderDashBucket(buckets.beyond, 'Beyond 30 Days', 'beyond');
+    renderDashPill(buckets.week, 'This Week', 'week') +
+    renderDashPill(buckets.month, 'Next 30 Days', 'month') +
+    renderDashPill(buckets.beyond, 'Beyond', 'beyond');
   container.classList.add('show');
 }
 
-function renderDashBucket(items, label, bucket) {
+function renderDashPill(items, label, bucket) {
   const total = items.length;
   const complete = items.filter(i => i.comp.percent === 100).length;
   const incomplete = total - complete;
-  let cardClass = '';
-  if (bucket === 'week' && incomplete > 0) cardClass = 'urgent';
-  else if (bucket === 'month' && incomplete > 0) cardClass = 'amber';
-  else if (total > 0 && complete === total) cardClass = 'all-good';
-
-  const eventsHtml = items.slice(0, 5).map(i => {
-    const f = i.ev.form;
-    let cls = 'green';
-    if (i.comp.percent < 100) cls = (bucket === 'week') ? 'red' : 'amber';
-    const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
-    const tip = i.comp.percent + '% complete' + (i.comp.missing.length ? ' — missing: ' + i.comp.missing.join(', ') : ' — all checks passed');
-    const filename = i.ev._filename.replace(/'/g, "\\'");
-    return '<div class="dash-event ' + cls + '" onclick="loadEvent(\'' + filename + '\')" title="' + tip.replace(/"/g, '&quot;') + '">' +
-      '<div class="dot"></div>' +
-      '<div class="ev-title">' + name + '</div>' +
-      '<div class="ev-when">' + formatDate(i.date) + '</div>' +
-      '</div>';
-  }).join('');
-
-  const moreNote = items.length > 5
-    ? '<div class="dash-more" onclick="openEventsModal()">+ ' + (items.length - 5) + ' more · view all</div>'
-    : '';
-
-  const note = (total === 0)
-    ? ''
-    : (incomplete > 0
-        ? '<span class="dash-note alert"> · ' + incomplete + ' need' + (incomplete === 1 ? 's' : '') + ' attention</span>'
-        : '<span class="dash-note ok"> · all complete</span>');
-
-  return '<div class="dash-card ' + cardClass + '">' +
-    '<div class="dash-card-header">' + label + '</div>' +
-    '<div class="dash-count">' + total + ' event' + (total !== 1 ? 's' : '') + note + '</div>' +
-    (eventsHtml || '<div class="dash-empty">No events in this window</div>') +
-    moreNote +
+  let cls = '';
+  if (bucket === 'week' && incomplete > 0) cls = 'urgent';
+  else if (bucket === 'month' && incomplete > 0) cls = 'amber';
+  else if (total > 0 && complete === total) cls = 'good';
+  const tip = total === 0 ? 'No events' : (incomplete > 0 ? incomplete + ' need attention' : 'All complete');
+  const alert = incomplete > 0 ? '<span class="dash-alert">' + incomplete + '⚠</span>' : '';
+  return '<div class="dash-pill ' + cls + '" onclick="openEventsModal()" title="' + tip.replace(/"/g, '&quot;') + '">' +
+    '<span class="dash-dot"></span>' +
+    '<span class="dash-count">' + total + '</span>' +
+    '<span class="dash-label">' + label + '</span>' +
+    alert +
     '</div>';
 }
 
@@ -3101,6 +3109,7 @@ async function saveEvent() {
     eventsCache.filenames = null;
     eventsCache.byName = {};
     clearDraft();
+    setBriefState('continued');
     renderDashboard();
     toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
   } catch (e) {
@@ -3143,6 +3152,7 @@ async function loadEvent(filename) {
     if (!ev) { toast('Could not load event', 'error'); return; }
     populateForm(ev.form);
     clearDraft();
+    setBriefState('continued');
     closeEventsModal();
     goStep(1);
     toast('Loaded ' + (ev.form.eventName || filename));
