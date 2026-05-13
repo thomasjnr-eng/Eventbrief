@@ -557,6 +557,74 @@ body {
 .event-row .ev-btn:hover { border-color: var(--sage); color: var(--sage); }
 .event-row .ev-btn.danger:hover { border-color: var(--red); color: var(--red); }
 
+/* ─── DASHBOARD ─── */
+.dashboard {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 24px 0;
+}
+.dashboard.show { display: grid; }
+.dash-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+}
+.dash-card.urgent { border-top-color: var(--red); }
+.dash-card.all-good { border-top-color: #4a9a5c; }
+.dash-card.amber { border-top-color: #c89a4a; }
+.dash-card-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--sage);
+  margin-bottom: 4px;
+}
+.dash-count {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.dash-count .dash-note { font-size: 11px; font-weight: 400; margin-left: 6px; }
+.dash-count .dash-note.alert { color: #ff8c8c; }
+.dash-count .dash-note.ok { color: #6fcf6f; }
+.dash-list { display: flex; flex-direction: column; gap: 4px; }
+.dash-event {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  padding: 6px 10px;
+  background: #2a2a2a;
+  border-radius: 3px;
+  cursor: pointer;
+  border-left: 3px solid var(--border);
+  transition: background 0.15s;
+}
+.dash-event:hover { background: #333; }
+.dash-event.green { border-left-color: #4a9a5c; }
+.dash-event.amber { border-left-color: #c89a4a; }
+.dash-event.red { border-left-color: var(--red); }
+.dash-event .dot { width: 8px; height: 8px; border-radius: 50%; }
+.dash-event.green .dot { background: #6fcf6f; }
+.dash-event.amber .dot { background: #e0b370; }
+.dash-event.red .dot { background: #ff8c8c; }
+.dash-event .ev-title { color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dash-event .ev-when { color: var(--grey); font-size: 11px; white-space: nowrap; }
+.dash-empty { font-size: 12px; color: var(--grey); font-style: italic; padding: 6px 0; }
+.dash-more { font-size: 11px; color: var(--grey); margin-top: 6px; text-align: center; cursor: pointer; }
+.dash-more:hover { color: var(--sage); }
+
+@media (max-width: 800px) {
+  .dashboard.show { grid-template-columns: 1fr; }
+}
+
 /* ─── PROGRESS BADGE + BAR ─── */
 .ev-progress { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 62px; }
 .ev-progress .pct {
@@ -810,6 +878,7 @@ body {
 <div id="form-app">
 
 <div id="draftBanner" style="display:none;"></div>
+<div id="dashboard" class="dashboard"></div>
 
 <!-- ══════════════════════════════════════════
      STEP 1 — EVENT OVERVIEW
@@ -2582,6 +2651,7 @@ function savePasscodeAndClose() {
   eventsCache.filenames = null;
   eventsCache.byName = {};
   checkDoubleBooking();
+  renderDashboard();
 }
 function clearPasscodeAndClose() {
   clearPasscode();
@@ -2706,6 +2776,87 @@ function populateForm(data) {
   setTimeout(() => { autoSavePaused = false; }, 200);
 }
 
+// ─── DASHBOARD ──────────────────────────────────────────────
+async function renderDashboard() {
+  const container = document.getElementById('dashboard');
+  if (!container) return;
+  if (!getPasscode()) { container.classList.remove('show'); return; }
+  let filenames;
+  try { filenames = await listEventFilenames(); }
+  catch (e) { container.classList.remove('show'); return; }
+  if (!filenames.length) { container.classList.remove('show'); return; }
+
+  const events = await Promise.all(filenames.map(getEventByFilename));
+  const valid = events.filter(Boolean);
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const fmtIso = (d) => d.toISOString().slice(0, 10);
+  const todayStr = fmtIso(today);
+  const weekDate = new Date(today); weekDate.setDate(weekDate.getDate() + 7);
+  const weekStr = fmtIso(weekDate);
+  const monthDate = new Date(today); monthDate.setDate(monthDate.getDate() + 30);
+  const monthStr = fmtIso(monthDate);
+
+  const buckets = { week: [], month: [], beyond: [] };
+  valid.forEach(ev => {
+    const d = getEventDate(ev.form);
+    if (!d || d < todayStr) return;
+    const comp = computeEventCompleteness(ev.form);
+    const item = { ev, date: d, comp };
+    if (d <= weekStr) buckets.week.push(item);
+    else if (d <= monthStr) buckets.month.push(item);
+    else buckets.beyond.push(item);
+  });
+  ['week', 'month', 'beyond'].forEach(b => buckets[b].sort((a, c) => a.date.localeCompare(c.date)));
+
+  container.innerHTML =
+    renderDashBucket(buckets.week, 'This Week', 'week') +
+    renderDashBucket(buckets.month, 'Next 30 Days', 'month') +
+    renderDashBucket(buckets.beyond, 'Beyond 30 Days', 'beyond');
+  container.classList.add('show');
+}
+
+function renderDashBucket(items, label, bucket) {
+  const total = items.length;
+  const complete = items.filter(i => i.comp.percent === 100).length;
+  const incomplete = total - complete;
+  let cardClass = '';
+  if (bucket === 'week' && incomplete > 0) cardClass = 'urgent';
+  else if (bucket === 'month' && incomplete > 0) cardClass = 'amber';
+  else if (total > 0 && complete === total) cardClass = 'all-good';
+
+  const eventsHtml = items.slice(0, 5).map(i => {
+    const f = i.ev.form;
+    let cls = 'green';
+    if (i.comp.percent < 100) cls = (bucket === 'week') ? 'red' : 'amber';
+    const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+    const tip = i.comp.percent + '% complete' + (i.comp.missing.length ? ' — missing: ' + i.comp.missing.join(', ') : ' — all checks passed');
+    const filename = i.ev._filename.replace(/'/g, "\\'");
+    return '<div class="dash-event ' + cls + '" onclick="loadEvent(\'' + filename + '\')" title="' + tip.replace(/"/g, '&quot;') + '">' +
+      '<div class="dot"></div>' +
+      '<div class="ev-title">' + name + '</div>' +
+      '<div class="ev-when">' + formatDate(i.date) + '</div>' +
+      '</div>';
+  }).join('');
+
+  const moreNote = items.length > 5
+    ? '<div class="dash-more" onclick="openEventsModal()">+ ' + (items.length - 5) + ' more · view all</div>'
+    : '';
+
+  const note = (total === 0)
+    ? ''
+    : (incomplete > 0
+        ? '<span class="dash-note alert"> · ' + incomplete + ' need' + (incomplete === 1 ? 's' : '') + ' attention</span>'
+        : '<span class="dash-note ok"> · all complete</span>');
+
+  return '<div class="dash-card ' + cardClass + '">' +
+    '<div class="dash-card-header">' + label + '</div>' +
+    '<div class="dash-count">' + total + ' event' + (total !== 1 ? 's' : '') + note + '</div>' +
+    (eventsHtml || '<div class="dash-empty">No events in this window</div>') +
+    moreNote +
+    '</div>';
+}
+
 function computeEventCompleteness(form) {
   const checks = [];
   const hasDate = !!(form.eventStartDate || (form._isScattered && (form._tradingDays || []).some(d => d.date)));
@@ -2792,6 +2943,7 @@ async function saveEvent() {
     eventsCache.filenames = null;
     eventsCache.byName = {};
     clearDraft();
+    renderDashboard();
     toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
   } catch (e) {
     if (e.message === 'BAD_PASSCODE') { toast('Passcode rejected — re-enter it', 'error'); openSettingsModal(); return; }
@@ -2849,6 +3001,7 @@ async function deleteEventConfirm(filename, name) {
     eventsCache.filenames = null;
     delete eventsCache.byName[filename];
     openEventsModal();
+    renderDashboard();
     toast('Deleted ' + name);
   } catch (e) {
     toast('Delete failed: ' + e.message, 'error');
@@ -2919,6 +3072,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // Offer to restore unsaved draft from a previous session
   offerDraftRestore();
+  // Mini dashboard at top of form-app
+  renderDashboard();
 });
 </script>
 
