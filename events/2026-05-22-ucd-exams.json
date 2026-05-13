@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "id": "2026-05-22-ucd-exams",
+  "savedAt": "2026-05-13T23:02:48.097Z",
+  "form": {
+    "eventName": "UCD Exams",
+    "bookingStatus": "Confirmed",
+    "clientName": "RDS/UCD SU",
+    "clientType": "Contracted Venue",
+    "contactName": "Gary Brenner",
+    "contactPhone": "123445678",
+    "contactEmail": "gb@rds.com",
+    "onsiteContact": "John Hynes",
+    "loadInDate": "2026-05-21",
+    "loadInTime": "15:49",
+    "eventStartDate": "2026-05-22",
+    "eventStartTime": "09:49",
+    "eventFinishDate": "2026-05-27",
+    "eventFinishTime": "16:49",
+    "loadOutDate": "2026-05-28",
+    "loadOutTime": "09:49",
+    "loadNotes": "No drills before 6am, fridge motors all off",
+    "attendance": "800",
+    "venueName": "RDS Simmonscourt",
+    "venueAddress": "Simmonscourt Rd",
+    "accessNotes": "Use gate 7, park against bushes ",
+    "otherUnits": "",
+    "pitchRef": "Outside Main Door",
+    "pitchSize": "15m x 20m",
+    "groundSurface": "Tarmac",
+    "vehicleLayout": "Side by Side",
+    "pitchNotes": "",
+    "powerSpec": "",
+    "cableRun": "",
+    "powerNotes": "",
+    "waterSource": "",
+    "waterVolume": "0",
+    "wasteDisposal": "",
+    "solidWaste": "",
+    "waterNotes": "",
+    "commercialClient": "RDS",
+    "commercialClientRef": "",
+    "pitchFeeAmount": "",
+    "pitchFeeType": "Fixed fee per event",
+    "pitchFeePayableTo": "We pay the venue/client",
+    "pitchFeeNotes": "",
+    "revSharePct": "",
+    "revShareBasis": "Gross takings",
+    "revShareSettlement": "Post-event invoice",
+    "revShareNotes": "",
+    "prePaidCovers": "",
+    "prePaidPrice": "",
+    "prePaidTotal": "",
+    "minSpend": "",
+    "prePaidMenu": "",
+    "prePaidNotes": "",
+    "voucherDetails": "We invoice straught after, 14 day terms ",
+    "posNotes": "",
+    "menuNotes": "",
+    "foodCovers": "",
+    "coffeeCovers": "",
+    "icecreamCovers": "",
+    "deliveryDate": "2026-05-14",
+    "coldChain": "External hire required",
+    "stockNotes": "",
+    "eventManager": "Thomas",
+    "opsLead": "robo",
+    "leadChef": "simon",
+    "staffNotes": "",
+    "clientInstructions": "",
+    "opsNotes": "",
+    "postEventNotes": "",
+    "newSignerName": "",
+    "newSignerRole": "Ops Lead",
+    "_fleet": [
+      "O'Briens Chipper 1",
+      "Angelo's Pizza",
+      "Bun Club Hot Dogs",
+      "Freshly Ground Coffee 1"
+    ],
+    "_power": [],
+    "_revenue": [
+      "Cash / card trading"
+    ],
+    "_pos": [
+      "Client / venue POS system"
+    ],
+    "_safety": [],
+    "_isScattered": false,
+    "_tradingDays": [],
+    "_stockStatuses": [
+      {
+        "truck": "O'Briens Chipper 1",
+        "status": "Partial",
+        "notes": ""
+      },
+      {
+        "truck": "Angelo's Pizza",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Bun Club Hot Dogs",
+        "status": "Fully ordered",
+        "notes": ""
+      },
+      {
+        "truck": "Freshly Ground Coffee 1",
+        "status": "Fully ordered",
+        "notes": ""
+      }
+    ],
+    "_staffAllocations": [
+      {
+        "truck": "O'Briens Chipper 1",
+        "minimum": 4,
+        "count": 4,
+        "notes": ""
+      },
+      {
+        "truck": "Angelo's Pizza",
+        "minimum": 4,
+        "count": 4,
+        "notes": ""
+      },
+      {
+        "truck": "Bun Club Hot Dogs",
+        "minimum": 4,
+        "count": 4,
+        "notes": ""
+      },
+      {
+        "truck": "Freshly Ground Coffee 1",
+        "minimum": 2,
+        "count": 2,
+        "notes": ""
+      }
+    ],
+    "_signatures": [
+      {
+        "name": "Thomas O'Brien",
+        "role": "Event Lead",
+        "signedAt": "2026-05-13T23:02:24.646Z"
+      },
+      {
+        "name": "Robo",
+        "role": "Ops Lead",
+        "signedAt": "2026-05-13T23:02:41.460Z"
+      }
+    ]
+  }
+}
