@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-22-ucd-exams",
-  "savedAt": "2026-05-13T23:02:48.097Z",
+  "savedAt": "2026-05-13T23:28:15.893Z",
   "form": {
     "eventName": "UCD Exams",
     "bookingStatus": "Confirmed",
@@ -27,15 +27,15 @@
     "otherUnits": "",
     "pitchRef": "Outside Main Door",
     "pitchSize": "15m x 20m",
-    "groundSurface": "Tarmac",
+    "groundSurface": "Concrete",
     "vehicleLayout": "Side by Side",
     "pitchNotes": "",
     "powerSpec": "",
     "cableRun": "",
     "powerNotes": "",
-    "waterSource": "",
-    "waterVolume": "0",
-    "wasteDisposal": "",
+    "waterSource": "We bring our own tanks",
+    "waterVolume": "200",
+    "wasteDisposal": "On-site drain available",
     "solidWaste": "",
     "waterNotes": "",
     "commercialClient": "RDS",
@@ -73,29 +73,49 @@
     "newSignerName": "",
     "newSignerRole": "Ops Lead",
     "_fleet": [
-      "O'Briens Chipper 1",
+      "Smash Burger 1",
+      "Smash Burger 2",
       "Angelo's Pizza",
+      "Fried Chicken Truck",
       "Bun Club Hot Dogs",
-      "Freshly Ground Coffee 1"
+      "Freshly Ground Coffee 1",
+      "Nobo/Citroen",
+      "Off Beat Donuts 2",
+      "09-D",
+      "05-D"
     ],
-    "_power": [],
+    "_power": [
+      "Client/venue provides power"
+    ],
     "_revenue": [
       "Cash / card trading"
     ],
     "_pos": [
-      "Client / venue POS system"
+      "Client / venue POS system",
+      "Client vouchers accepted",
+      "Cash & card"
     ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
     "_stockStatuses": [
       {
-        "truck": "O'Briens Chipper 1",
-        "status": "Partial",
+        "truck": "Smash Burger 1",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Smash Burger 2",
+        "status": "Not yet",
         "notes": ""
       },
       {
         "truck": "Angelo's Pizza",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Fried Chicken Truck",
         "status": "Not yet",
         "notes": ""
       },
@@ -108,17 +128,49 @@
         "truck": "Freshly Ground Coffee 1",
         "status": "Fully ordered",
         "notes": ""
+      },
+      {
+        "truck": "Nobo/Citroen",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts 2",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "09-D",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "05-D",
+        "status": "Not yet",
+        "notes": ""
       }
     ],
     "_staffAllocations": [
       {
-        "truck": "O'Briens Chipper 1",
+        "truck": "Smash Burger 1",
+        "minimum": 4,
+        "count": 4,
+        "notes": ""
+      },
+      {
+        "truck": "Smash Burger 2",
         "minimum": 4,
         "count": 4,
         "notes": ""
       },
       {
         "truck": "Angelo's Pizza",
+        "minimum": 4,
+        "count": 4,
+        "notes": ""
+      },
+      {
+        "truck": "Fried Chicken Truck",
         "minimum": 4,
         "count": 4,
         "notes": ""
@@ -133,6 +185,30 @@
         "truck": "Freshly Ground Coffee 1",
         "minimum": 2,
         "count": 2,
+        "notes": ""
+      },
+      {
+        "truck": "Nobo/Citroen",
+        "minimum": 2,
+        "count": 2,
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts 2",
+        "minimum": 2,
+        "count": 2,
+        "notes": ""
+      },
+      {
+        "truck": "09-D",
+        "minimum": 1,
+        "count": 1,
+        "notes": ""
+      },
+      {
+        "truck": "05-D",
+        "minimum": 1,
+        "count": 1,
         "notes": ""
       }
     ],
