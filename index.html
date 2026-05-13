@@ -70,10 +70,16 @@ body {
   cursor: pointer;
 }
 .step-dot:hover { border-color: var(--sage); color: var(--sage); }
+.step-dot.partial { background: #c89a4a; border-color: #c89a4a; color: #fff; }
+.step-dot.complete { background: #4a9a5c; border-color: #4a9a5c; color: #fff; }
 .step-dot.done { background: var(--sage); border-color: var(--sage); color: #fff; }
 .step-dot.active { border-color: var(--sage); color: var(--sage); }
+.step-dot.active.partial,
+.step-dot.active.complete { color: #fff; box-shadow: 0 0 0 2px rgba(168, 196, 154, 0.55); }
 .step-line { width: 20px; height: 2px; background: var(--border); }
 .step-line.done { background: var(--sage); }
+.step-line.partial { background: #c89a4a; }
+.step-line.complete { background: #4a9a5c; }
 
 /* ─── FORM SHELL ─── */
 #form-app { display: block; }
@@ -1942,6 +1948,7 @@ function toggleChip(el) {
   if (el.closest('#revenueChipGroup')) updateRevenueCards();
   if (typeof recordChange === 'function') recordChange();
   if (typeof autoSaveDraft === 'function') autoSaveDraft();
+  if (typeof updateStepColors === 'function') updateStepColors();
 }
 
 function toggleFleetChip(el) {
@@ -1950,6 +1957,7 @@ function toggleFleetChip(el) {
   if (typeof checkDoubleBooking === 'function') checkDoubleBooking();
   if (typeof recordChange === 'function') recordChange();
   if (typeof autoSaveDraft === 'function') autoSaveDraft();
+  if (typeof updateStepColors === 'function') updateStepColors();
 }
 
 function togglePower(el) {
@@ -1957,6 +1965,7 @@ function togglePower(el) {
   el.classList.add('selected');
   if (typeof recordChange === 'function') recordChange();
   if (typeof autoSaveDraft === 'function') autoSaveDraft();
+  if (typeof updateStepColors === 'function') updateStepColors();
 }
 
 function getChipValues(groupId) {
@@ -2725,6 +2734,7 @@ function newBrief() {
   clearDraft();
   setBriefState('new');
   goStep(1);
+  updateStepColors();
   toast('Started a new brief');
 }
 
@@ -2743,6 +2753,7 @@ function autoSaveDraft() {
   draftSaveTimer = setTimeout(() => {
     try {
       const data = collectFormData();
+      updateStepColors(data);
       if (!isDraftMeaningful(data)) return;
       localStorage.setItem(DRAFT_KEY, JSON.stringify({ savedAt: new Date().toISOString(), form: data }));
       updateDraftIndicator();
@@ -3037,6 +3048,7 @@ function populateForm(data) {
   setSignatures(data._signatures);
   setChangeLog(data._changeLog);
   checkDoubleBooking();
+  updateStepColors(data);
   setTimeout(() => { autoSavePaused = false; }, 200);
 }
 
@@ -3095,6 +3107,100 @@ function renderDashPill(items, label, bucket) {
     '<span class="dash-label">' + label + '</span>' +
     alert +
     '</div>';
+}
+
+function getStepStatus(stepNum, form) {
+  let required = [];
+  switch (stepNum) {
+    case 1: {
+      const hasDate = !!form.eventStartDate || (form._isScattered && (form._tradingDays || []).some(d => d.date));
+      required = [
+        !!form.eventName,
+        hasDate,
+        !!form.venueName,
+        !!form.clientName,
+        !!(form.contactName || form.contactPhone),
+        !!form.loadInDate
+      ];
+      break;
+    }
+    case 2: {
+      required = [
+        (form._fleet || []).length > 0,
+        (form._power || []).length > 0,
+        !!form.waterSource
+      ];
+      break;
+    }
+    case 3: {
+      required = [
+        !!form.commercialClient,
+        (form._revenue || []).length > 0,
+        (form._pos || []).length > 0
+      ];
+      break;
+    }
+    case 4: {
+      const fleet = form._fleet || [];
+      if (!fleet.length) return 'empty';
+      const stocked = (form._stockStatuses || []).filter(s => s.status && s.status !== 'Not yet').map(s => s.truck);
+      const partialStock = stocked.length > 0 && stocked.length < fleet.length;
+      const allStock = fleet.every(t => stocked.includes(t));
+      if (allStock && form.coldChain) return 'complete';
+      if (stocked.length > 0 || form.coldChain) return 'partial';
+      return 'empty';
+    }
+    case 5: {
+      const hasLead = !!(form.eventManager || form.opsLead || form.leadChef);
+      const fleet = form._fleet || [];
+      const allocs = form._staffAllocations || [];
+      let staffOk = true;
+      if (fleet.length) {
+        const byTruck = {};
+        allocs.forEach(a => { byTruck[a.truck] = a; });
+        staffOk = fleet.every(t => {
+          const a = byTruck[t];
+          return a && a.count >= (a.minimum || 1);
+        });
+      }
+      const safetyMin = (form._safety || []).length >= 12;
+      required = [hasLead, staffOk, safetyMin];
+      break;
+    }
+    case 6: {
+      required = [
+        !!(form.clientInstructions || form.opsNotes || form.postEventNotes)
+      ];
+      break;
+    }
+  }
+  const filled = required.filter(Boolean).length;
+  if (filled === 0) return 'empty';
+  if (filled === required.length) return 'complete';
+  return 'partial';
+}
+
+function updateStepColors(form) {
+  if (!form) {
+    try { form = collectFormData(); } catch (e) { return; }
+  }
+  for (let i = 1; i <= 6; i++) {
+    const dot = document.getElementById('sd' + i);
+    if (!dot) continue;
+    dot.classList.remove('partial', 'complete');
+    const status = getStepStatus(i, form);
+    if (status === 'partial') dot.classList.add('partial');
+    if (status === 'complete') dot.classList.add('complete');
+    // Connecting line takes the colour of the step it leaves
+    if (i < 6) {
+      const line = document.getElementById('sl' + i);
+      if (line) {
+        line.classList.remove('partial', 'complete');
+        if (status === 'partial') line.classList.add('partial');
+        if (status === 'complete') line.classList.add('complete');
+      }
+    }
+  }
 }
 
 function computeEventCompleteness(form) {
@@ -3317,6 +3423,7 @@ document.addEventListener('DOMContentLoaded', function() {
   refreshSettingsIndicator();
   refreshUserIndicator();
   updateStepEditorIndicators();
+  updateStepColors();
   ['loadInDate', 'loadOutDate', 'eventStartDate', 'eventFinishDate'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', checkDoubleBooking);
