@@ -1697,6 +1697,10 @@ let currentStep = 1;
 const TOTAL_STEPS = 6;
 
 function goStep(n) {
+  // Fire-and-forget silent save on step navigation (no-op until signed + valid)
+  if (currentStep !== n && typeof autoSave === 'function') {
+    autoSave();
+  }
   document.getElementById('step' + currentStep).classList.remove('active');
   document.getElementById('sd' + currentStep).classList.remove('active');
   document.getElementById('sd' + currentStep).classList.add('done');
@@ -1807,6 +1811,7 @@ function addSignature() {
   document.getElementById('newSignerName').value = '';
   renderSignaturesList();
   autoSaveDraft();
+  autoSave(); // committed sign-off → push to cloud
   toast('Signature added');
 }
 function removeSignature(idx) {
@@ -2549,12 +2554,17 @@ function generateBrief() {
   document.getElementById('brief-content').innerHTML = html;
   document.getElementById('form-app').style.display = 'none';
   document.getElementById('brief-output').style.display = 'block';
+  // Document title becomes the PDF filename suggestion when user prints.
+  const venueLabel = val('venueName');
+  const eventName = val('eventName') || 'Event';
+  document.title = '🚚 ' + eventName + (venueLabel ? ' — ' + venueLabel : '');
   window.scrollTo(0,0);
 }
 
 function backToForm() {
   document.getElementById('brief-output').style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
+  document.title = 'Event Briefs - OBEC';
   window.scrollTo(0,0);
 }
 
@@ -3065,15 +3075,35 @@ function eventIdFor(data) {
 }
 
 // ─── SAVE / LOAD / DELETE ─────────────────────────────────────
-async function saveEvent() {
+let autoSaveInFlight = false;
+async function autoSave() {
+  if (autoSaveInFlight) return;
+  autoSaveInFlight = true;
+  try { await saveEvent({ silent: true }); }
+  catch (e) { /* swallow */ }
+  finally { autoSaveInFlight = false; }
+}
+
+async function saveEvent(opts) {
+  opts = opts || {};
+  const silent = opts.silent === true;
   const data = collectFormData();
   const eventDate = getEventDate(data);
   if (!data.eventName || !eventDate) {
+    if (silent) return;
     toast('Event name and a date (event start or first trading day) are required to save', 'error');
     goStep(1);
     return;
   }
+  if ((data._signatures || []).length === 0) {
+    if (silent) return;
+    toast('Add at least one signature to the trail before saving', 'error');
+    goStep(6);
+    setTimeout(() => { const n = document.getElementById('newSignerName'); if (n) n.focus(); }, 250);
+    return;
+  }
   if (!getPasscode()) {
+    if (silent) return;
     openSettingsModal();
     toast('Add the team passcode to save events', 'error');
     return;
@@ -3102,8 +3132,7 @@ async function saveEvent() {
     });
     if (!res.ok) {
       const err = await res.text();
-      toast('Save failed (' + res.status + ')', 'error');
-      console.error(err);
+      if (!silent) { toast('Save failed (' + res.status + ')', 'error'); console.error(err); }
       return;
     }
     eventsCache.filenames = null;
@@ -3111,8 +3140,9 @@ async function saveEvent() {
     clearDraft();
     setBriefState('continued');
     renderDashboard();
-    toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
+    if (!silent) toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
   } catch (e) {
+    if (silent) return;
     if (e.message === 'BAD_PASSCODE') { toast('Passcode rejected — re-enter it', 'error'); openSettingsModal(); return; }
     toast('Save failed: ' + e.message, 'error');
   }
