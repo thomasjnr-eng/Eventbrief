@@ -423,8 +423,28 @@ body {
   display: flex;
   gap: 12px;
   justify-content: center;
+  align-items: center;
   z-index: 200;
+  flex-wrap: wrap;
 }
+.brief-actions .btn-secondary.mode-active {
+  background: var(--sage);
+  color: #111;
+  border-color: var(--sage);
+}
+
+/* ─── BRIEF MODE BANNER ─── */
+.brief-mode-banner {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  text-align: center;
+  padding: 6px 12px;
+  margin-bottom: 18px;
+  border-radius: 2px;
+}
+.brief-mode-banner.full { background: #111; color: var(--sage); border: 1px solid var(--sage); }
+.brief-mode-banner.crew { background: var(--sage); color: #111; }
 
 @media print {
   .brief-actions { display: none; }
@@ -1483,6 +1503,10 @@ body {
 
   <div class="brief-actions">
     <button class="btn btn-secondary" onclick="backToForm()">← Edit Brief</button>
+    <div style="display:flex;gap:6px;align-items:center;background:#222;padding:4px;border-radius:3px;">
+      <button class="btn btn-secondary" id="modeFullBtn" onclick="setBriefMode('full')" style="font-size:12px;padding:7px 14px;">Full</button>
+      <button class="btn btn-secondary" id="modeCrewBtn" onclick="setBriefMode('crew')" style="font-size:12px;padding:7px 14px;">Crew</button>
+    </div>
     <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
     <button class="btn btn-green" id="calendarBtn" onclick="addToCalendar()">📅 Add to Calendar</button>
   </div>
@@ -2013,7 +2037,18 @@ function statusBadge(s) {
 }
 
 // ─── GENERATE BRIEF ───────────────────────────────────────────
+let currentBriefMode = 'full';
+function setBriefMode(mode) {
+  currentBriefMode = (mode === 'crew') ? 'crew' : 'full';
+  const fullBtn = document.getElementById('modeFullBtn');
+  const crewBtn = document.getElementById('modeCrewBtn');
+  if (fullBtn) fullBtn.classList.toggle('mode-active', currentBriefMode === 'full');
+  if (crewBtn) crewBtn.classList.toggle('mode-active', currentBriefMode === 'crew');
+  generateBrief();
+}
+
 function generateBrief() {
+  const isCrew = currentBriefMode === 'crew';
   const ref = genRef();
   const fleet = getSelectedFleet();
   const units = fleet.map(u => u.name);
@@ -2027,6 +2062,11 @@ function generateBrief() {
   const tradingDays = getTradingDays();
   const formData = collectFormDataLight();
   const [windowStart, windowEnd] = getEventWindow(Object.assign({}, formData, { _isScattered: isScattered, _tradingDays: tradingDays }));
+  // Reflect mode on toggle buttons (covers the very first render too)
+  const fullBtn = document.getElementById('modeFullBtn');
+  const crewBtn = document.getElementById('modeCrewBtn');
+  if (fullBtn) fullBtn.classList.toggle('mode-active', !isCrew);
+  if (crewBtn) crewBtn.classList.toggle('mode-active', isCrew);
 
   const allSafetyItems = [
     'CO2 extinguisher (per truck)', 'Wet chemical extinguisher (cooking)', 'Fire blanket',
@@ -2045,14 +2085,15 @@ function generateBrief() {
   }).join('');
 
   const html = `
+    <div class="brief-mode-banner ${isCrew ? 'crew' : 'full'}">${isCrew ? 'CREW BRIEF — OPERATIONAL DETAILS ONLY' : 'FULL BRIEF — INCLUDES COMMERCIAL & INTERNAL NOTES'}</div>
     <div class="brief-header">
       <div>
         <div class="brief-logo">O'<span>Brien</span> Event Catering</div>
-        <div style="font-size:11px;color:#888;margin-top:4px;letter-spacing:0.06em;">Event Operations Brief</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;letter-spacing:0.06em;">${isCrew ? 'Crew Brief' : 'Event Operations Brief'}</div>
       </div>
       <div>
         <div class="brief-event-name">${val('eventName') || 'Unnamed Event'}</div>
-        <div class="brief-ref">Ref: ${ref} &nbsp;|&nbsp; ${statusBadge(val('bookingStatus') || 'Confirmed')}</div>
+        <div class="brief-ref">Ref: ${ref}${isCrew ? '' : ' &nbsp;|&nbsp; ' + statusBadge(val('bookingStatus') || 'Confirmed')}</div>
       </div>
     </div>
 
@@ -2078,15 +2119,24 @@ function generateBrief() {
     <!-- CLIENT -->
     <div class="brief-section">
       <div class="brief-section-head">01 — CLIENT & CONTACT</div>
-      <div class="brief-grid-3">
-        <div class="bfield"><div class="bl">Client Name</div><div class="bv big">${fmt('clientName')}</div></div>
-        <div class="bfield"><div class="bl">Client Type</div><div class="bv">${fmt('clientType')}</div></div>
-        <div class="bfield"><div class="bl">Booking Status</div><div class="bv highlight">${fmt('bookingStatus')}</div></div>
-        <div class="bfield"><div class="bl">Primary Contact</div><div class="bv">${fmt('contactName')}</div></div>
-        <div class="bfield"><div class="bl">Phone</div><div class="bv">${fmt('contactPhone')}</div></div>
-        <div class="bfield"><div class="bl">Email</div><div class="bv">${fmt('contactEmail')}</div></div>
-        ${val('onsiteContact') ? '<div class="bfield" style="grid-column:span 3"><div class="bl">On-Site Contact (Day Of)</div><div class="bv">' + val('onsiteContact') + '</div></div>' : ''}
-      </div>
+      ${isCrew ? `
+        <div class="brief-grid-3">
+          <div class="bfield"><div class="bl">Client</div><div class="bv big">${fmt('clientName')}</div></div>
+          <div class="bfield"><div class="bl">Primary Contact</div><div class="bv">${fmt('contactName')}</div></div>
+          <div class="bfield"><div class="bl">Phone</div><div class="bv">${fmt('contactPhone')}</div></div>
+          ${val('onsiteContact') ? '<div class="bfield" style="grid-column:span 3"><div class="bl">On-Site Contact (Day Of)</div><div class="bv highlight">' + val('onsiteContact') + '</div></div>' : ''}
+        </div>
+      ` : `
+        <div class="brief-grid-3">
+          <div class="bfield"><div class="bl">Client Name</div><div class="bv big">${fmt('clientName')}</div></div>
+          <div class="bfield"><div class="bl">Client Type</div><div class="bv">${fmt('clientType')}</div></div>
+          <div class="bfield"><div class="bl">Booking Status</div><div class="bv highlight">${fmt('bookingStatus')}</div></div>
+          <div class="bfield"><div class="bl">Primary Contact</div><div class="bv">${fmt('contactName')}</div></div>
+          <div class="bfield"><div class="bl">Phone</div><div class="bv">${fmt('contactPhone')}</div></div>
+          <div class="bfield"><div class="bl">Email</div><div class="bv">${fmt('contactEmail')}</div></div>
+          ${val('onsiteContact') ? '<div class="bfield" style="grid-column:span 3"><div class="bl">On-Site Contact (Day Of)</div><div class="bv">' + val('onsiteContact') + '</div></div>' : ''}
+        </div>
+      `}
     </div>
 
     <!-- VENUE -->
@@ -2176,6 +2226,14 @@ function generateBrief() {
       ${val('waterNotes') ? '<div class="notice-box" style="margin-top:6px;"><strong>Water/Waste:</strong> ' + val('waterNotes') + '</div>' : ''}
     </div>
 
+    ${isCrew ? (pos.length ? `
+      <!-- CREW: POS only -->
+      <div class="brief-section">
+        <div class="brief-section-head">05 — PAYMENT METHOD</div>
+        <div class="bfield"><div class="bl">How customers pay</div><div class="bv big highlight">${pos.join(', ')}</div></div>
+        ${val('posNotes') ? '<div class="notice-box" style="margin-top:10px;"><strong>POS Notes:</strong> ' + val('posNotes') + '</div>' : ''}
+      </div>
+    ` : '') : `
     <!-- COMMERCIAL -->
     <div class="brief-section">
       <div class="brief-section-head">05 — COMMERCIAL TERMS</div>
@@ -2191,6 +2249,7 @@ function generateBrief() {
       ${val('voucherDetails') ? '<div class="notice-box"><strong>Vouchers/Invoicing:</strong> ' + val('voucherDetails') + '</div>' : ''}
       ${val('posNotes') ? '<div class="notice-box"><strong>POS Notes:</strong> ' + val('posNotes') + '</div>' : ''}
     </div>
+    `}
 
     <!-- MENU & STOCK -->
     <div class="brief-section">
@@ -2262,13 +2321,19 @@ function generateBrief() {
     </div>
 
     <!-- NOTES -->
-    ${(val('clientInstructions') || val('opsNotes') || val('postEventNotes')) ? `
-    <div class="brief-section">
-      <div class="brief-section-head">09 — NOTES & ACTIONS</div>
-      ${val('clientInstructions') ? '<div class="notice-box"><strong>Client Instructions:</strong> ' + val('clientInstructions') + '</div>' : ''}
-      ${val('opsNotes') ? '<div class="notice-box" style="border-color:#2d7a49;background:#f5fbf7;"><strong>Ops Notes:</strong> ' + val('opsNotes') + '</div>' : ''}
-      ${val('postEventNotes') ? '<div class="notice-box"><strong>Post-Event Actions:</strong> ' + val('postEventNotes') + '</div>' : ''}
-    </div>` : ''}
+    ${(() => {
+      const showClient = !!val('clientInstructions');
+      const showOps = !isCrew && !!val('opsNotes');
+      const showPost = !isCrew && !!val('postEventNotes');
+      if (!showClient && !showOps && !showPost) return '';
+      return `
+        <div class="brief-section">
+          <div class="brief-section-head">09 — NOTES &amp; ACTIONS</div>
+          ${showClient ? '<div class="notice-box"><strong>Client Instructions:</strong> ' + val('clientInstructions').replace(/\n/g,'<br>') + '</div>' : ''}
+          ${showOps ? '<div class="notice-box" style="border-color:#2d7a49;background:#f5fbf7;"><strong>Ops Notes:</strong> ' + val('opsNotes').replace(/\n/g,'<br>') + '</div>' : ''}
+          ${showPost ? '<div class="notice-box"><strong>Post-Event Actions:</strong> ' + val('postEventNotes').replace(/\n/g,'<br>') + '</div>' : ''}
+        </div>`;
+    })()}
 
     <!-- SIGN-OFF TRAIL -->
     ${(() => {
