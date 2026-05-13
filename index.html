@@ -1230,14 +1230,10 @@ body {
     </div>
     <div class="grid-2" id="powerDetails">
       <div class="field">
-        <label>Generator / Power Spec Required</label>
-        <input type="text" id="powerSpec" placeholder="e.g. 32A 3-phase, 2× 16A single">
-      </div>
-      <div class="field">
         <label>Cable Run Distance (approx)</label>
         <input type="text" id="cableRun" placeholder="e.g. 30m from source to truck">
       </div>
-      <div class="field span-2">
+      <div class="field">
         <label>Power Notes / Conditions</label>
         <textarea id="powerNotes" placeholder="e.g. Power rented at £X, pre-agreed with venue. Cable route through fire exit must be matted..."></textarea>
       </div>
@@ -2375,14 +2371,14 @@ function generateBrief() {
     <div class="brief-section">
       <div class="brief-section-head">04 — POWER, WATER & WASTE</div>
       <div class="brief-grid-3">
-        <div class="bfield"><div class="bl">Power Arrangement</div><div class="bv highlight">${power.length ? power.join(', ') : '—'}</div></div>
-        <div class="bfield"><div class="bl">Power Spec Required</div><div class="bv">${fmt('powerSpec')}</div></div>
+        <div class="bfield" style="grid-column:span 2;"><div class="bl">Power Arrangement</div><div class="bv highlight">${power.length ? power.join(', ') : '—'}</div></div>
         <div class="bfield"><div class="bl">Cable Run</div><div class="bv">${fmt('cableRun')}</div></div>
         <div class="bfield"><div class="bl">Fresh Water Source</div><div class="bv">${fmt('waterSource')}</div></div>
         <div class="bfield"><div class="bl">Water Volume (L)</div><div class="bv">${fmt('waterVolume')}</div></div>
         <div class="bfield"><div class="bl">Grey Water Disposal</div><div class="bv">${fmt('wasteDisposal')}</div></div>
         <div class="bfield"><div class="bl">Solid Waste / Bins</div><div class="bv">${fmt('solidWaste')}</div></div>
       </div>
+      <div style="font-size:11px;color:#666;margin-top:8px;font-style:italic;">Calculated requirement is in Section 03 — Fleet &amp; Logistics.</div>
       ${val('powerNotes') ? '<div class="notice-box" style="margin-top:10px;"><strong>Power:</strong> ' + val('powerNotes') + '</div>' : ''}
       ${val('waterNotes') ? '<div class="notice-box" style="margin-top:6px;"><strong>Water/Waste:</strong> ' + val('waterNotes') + '</div>' : ''}
     </div>
