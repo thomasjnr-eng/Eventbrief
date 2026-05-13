@@ -559,6 +559,92 @@ body {
 .event-row .ev-btn:hover { border-color: var(--sage); color: var(--sage); }
 .event-row .ev-btn.danger:hover { border-color: var(--red); color: var(--red); }
 
+/* ─── WELCOME OVERLAY ─── */
+.welcome-overlay {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+  z-index: 700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.welcome-overlay.open { display: flex; }
+.welcome-card {
+  max-width: 460px;
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--sage);
+  border-radius: 6px;
+  padding: 36px 32px;
+  text-align: center;
+}
+.welcome-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.welcome-logo span { color: var(--sage); }
+.welcome-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 38px;
+  letter-spacing: 0.06em;
+  color: var(--sage);
+  margin: 12px 0 6px;
+}
+.welcome-sub {
+  font-size: 13px;
+  color: var(--grey);
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+.welcome-input {
+  width: 100%;
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 15px;
+  padding: 12px 14px;
+  outline: none;
+  text-align: center;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+.welcome-input:focus { border-color: var(--sage); }
+.welcome-error {
+  display: none;
+  font-size: 12px;
+  color: #ff8c8c;
+  margin-bottom: 10px;
+}
+.welcome-error.show { display: block; }
+.welcome-submit {
+  width: 100%;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  padding: 12px;
+  background: var(--sage);
+  color: #111;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.welcome-submit:hover { background: var(--sage-dark); }
+.welcome-submit:disabled { opacity: 0.5; cursor: wait; }
+.welcome-skip {
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--grey);
+}
+.welcome-skip a { color: var(--sage); text-decoration: none; }
+.welcome-skip a:hover { text-decoration: underline; }
+
 /* ─── DASHBOARD ─── */
 .dashboard {
   display: none;
@@ -819,6 +905,21 @@ body {
 </style>
 </head>
 <body>
+
+<!-- ─── WELCOME OVERLAY (passcode prompt on first load) ─── -->
+<div class="welcome-overlay" id="welcomeOverlay">
+  <div class="welcome-card">
+    <div class="welcome-logo">O'<span>Brien</span> Event Catering</div>
+    <div class="welcome-title">Event Briefs</div>
+    <div class="welcome-sub">Enter the team passcode to access saved events, double-booking checks and the live dashboard. Get it from your ops lead.</div>
+    <input type="password" class="welcome-input" id="welcomePasscode" placeholder="Team passcode" autocomplete="off" onkeydown="if(event.key==='Enter') submitWelcomePasscode()">
+    <div class="welcome-error" id="welcomeError"></div>
+    <button class="welcome-submit" id="welcomeSubmit" onclick="submitWelcomePasscode()">Continue</button>
+    <div class="welcome-skip">
+      <a href="#" onclick="skipWelcome();return false;">Skip — just filling a brief without saving</a>
+    </div>
+  </div>
+</div>
 
 <header class="app-header">
   <div class="logo">O'<span>Brien</span> Event Catering</div>
@@ -2639,6 +2740,61 @@ async function apiCall(path, options) {
 }
 
 // ─── MODALS ────────────────────────────────────────────────────
+// ─── WELCOME PASSCODE OVERLAY ────────────────────────────────
+function openWelcomeOverlay() {
+  document.getElementById('welcomeOverlay').classList.add('open');
+  setTimeout(() => { const i = document.getElementById('welcomePasscode'); if (i) i.focus(); }, 50);
+}
+function closeWelcomeOverlay() {
+  document.getElementById('welcomeOverlay').classList.remove('open');
+}
+function showWelcomeError(msg) {
+  const e = document.getElementById('welcomeError');
+  if (!e) return;
+  e.textContent = msg;
+  e.classList.add('show');
+}
+function hideWelcomeError() {
+  const e = document.getElementById('welcomeError');
+  if (e) e.classList.remove('show');
+}
+async function submitWelcomePasscode() {
+  const inp = document.getElementById('welcomePasscode');
+  const v = inp.value.trim();
+  if (!v) { showWelcomeError('Enter the passcode to continue.'); return; }
+  const btn = document.getElementById('welcomeSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+  hideWelcomeError();
+  try {
+    const res = await fetch(WORKER_URL + '/events', { headers: { 'X-Auth-Passcode': v } });
+    if (res.status === 401) {
+      showWelcomeError("That passcode doesn't match. Try again or check with your ops lead.");
+      btn.disabled = false; btn.textContent = 'Continue';
+      return;
+    }
+    if (!res.ok) {
+      showWelcomeError('Server unreachable (' + res.status + '). Try again in a moment.');
+      btn.disabled = false; btn.textContent = 'Continue';
+      return;
+    }
+    setPasscode(v);
+    closeWelcomeOverlay();
+    btn.disabled = false; btn.textContent = 'Continue';
+    inp.value = '';
+    renderDashboard();
+    checkDoubleBooking();
+    toast('Welcome');
+  } catch (e) {
+    showWelcomeError('Network error — try again. (' + e.message + ')');
+    btn.disabled = false; btn.textContent = 'Continue';
+  }
+}
+function skipWelcome() {
+  closeWelcomeOverlay();
+  toast('Saved events disabled — use Settings (⚙) anytime to enable');
+}
+
 function openSettingsModal() {
   document.getElementById('patInput').value = getPasscode();
   document.getElementById('settingsModal').classList.add('open');
@@ -3076,6 +3232,8 @@ document.addEventListener('DOMContentLoaded', function() {
   offerDraftRestore();
   // Mini dashboard at top of form-app
   renderDashboard();
+  // First-load passcode prompt
+  if (!getPasscode()) openWelcomeOverlay();
 });
 </script>
 
