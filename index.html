@@ -531,8 +531,8 @@ body {
 /* ─── SAVED EVENTS LIST ─── */
 .event-row {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+  grid-template-columns: 1fr auto auto;
+  gap: 14px;
   align-items: center;
   padding: 12px;
   border: 1px solid var(--border);
@@ -556,6 +556,24 @@ body {
 }
 .event-row .ev-btn:hover { border-color: var(--sage); color: var(--sage); }
 .event-row .ev-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+/* ─── PROGRESS BADGE + BAR ─── */
+.ev-progress { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 62px; }
+.ev-progress .pct {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 12px;
+}
+.ev-progress.good .pct  { background: #1f3a23; color: #6fcf6f; }
+.ev-progress.mid .pct   { background: #3a2d1a; color: #e0b370; }
+.ev-progress.low .pct   { background: #3a1a1a; color: #ff8c8c; }
+.ev-progress .bar { width: 56px; height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.ev-progress .bar-fill { height: 100%; transition: width 0.3s; }
+.ev-progress.good .bar-fill { background: #4a9a5c; }
+.ev-progress.mid .bar-fill  { background: #c89a4a; }
+.ev-progress.low .bar-fill  { background: var(--red); }
 
 /* ─── DOUBLE BOOKING BANNER ─── */
 .dbl-banner {
@@ -2597,9 +2615,16 @@ async function openEventsModal() {
       const [winStart, winEnd] = getEventWindow(f);
       const dateLabel = (winStart && winEnd && winStart !== winEnd) ? formatDate(winStart) + ' – ' + formatDate(winEnd) : formatDate(winStart || winEnd || f.eventDate || '');
       const scatteredTag = f._isScattered ? ' <span style="background:#3a3a3a;color:#bbb;padding:1px 6px;border-radius:2px;font-size:10px;margin-left:4px;">SCATTERED</span>' : '';
+      const comp = computeEventCompleteness(f);
+      const band = progressBand(comp.percent);
+      const tip = comp.missing.length ? 'Missing: ' + comp.missing.join(', ') : 'All checks passed';
       return '<div class="event-row">' +
         '<div><div class="ev-name">' + escName + scatteredTag + '</div>' +
         '<div class="ev-meta">' + dateLabel + ' &middot; ' + escClient + ' &middot; ' + escVenue + ' &middot; ' + units + ' unit' + (units !== 1 ? 's' : '') + ' &middot; ' + (f.bookingStatus || '—') + '</div></div>' +
+        '<div class="ev-progress ' + band + '" title="' + tip.replace(/"/g, '&quot;') + '">' +
+          '<div class="pct">' + comp.percent + '%</div>' +
+          '<div class="bar"><div class="bar-fill" style="width:' + comp.percent + '%;"></div></div>' +
+        '</div>' +
         '<div class="ev-actions">' +
           '<button class="ev-btn" onclick="loadEvent(\'' + ev._filename + '\')">Load</button>' +
           '<button class="ev-btn danger" onclick="deleteEventConfirm(\'' + ev._filename + '\', \'' + escName.replace(/'/g, '\\\'') + '\')">Delete</button>' +
@@ -2679,6 +2704,41 @@ function populateForm(data) {
   setSignatures(data._signatures);
   checkDoubleBooking();
   setTimeout(() => { autoSavePaused = false; }, 200);
+}
+
+function computeEventCompleteness(form) {
+  const checks = [];
+  const hasDate = !!(form.eventStartDate || (form._isScattered && (form._tradingDays || []).some(d => d.date)));
+  checks.push({ label: 'Event name', ok: !!form.eventName });
+  checks.push({ label: 'Event date', ok: hasDate });
+  checks.push({ label: 'Venue name', ok: !!form.venueName });
+  checks.push({ label: 'Client name', ok: !!form.clientName });
+  checks.push({ label: 'Contact phone', ok: !!form.contactPhone });
+  checks.push({ label: 'Load-in date', ok: !!form.loadInDate });
+  checks.push({ label: 'Load-out date', ok: !!form.loadOutDate });
+  checks.push({ label: 'Fleet selected', ok: (form._fleet || []).length > 0 });
+  checks.push({ label: 'Power source', ok: (form._power || []).length > 0 });
+  checks.push({ label: 'Water source', ok: !!form.waterSource });
+  checks.push({ label: 'Commercial client', ok: !!form.commercialClient });
+  checks.push({ label: 'POS method', ok: (form._pos || []).length > 0 });
+  const fleetSel = form._fleet || [];
+  if (fleetSel.length) {
+    const statuses = form._stockStatuses || [];
+    const stockedTrucks = statuses.filter(s => s.status && s.status !== 'Not yet').map(s => s.truck);
+    const allStocked = fleetSel.every(t => stockedTrucks.includes(t));
+    checks.push({ label: 'Stock status set for all trucks', ok: allStocked });
+  }
+  checks.push({ label: 'At least one lead named', ok: !!(form.eventManager || form.opsLead || form.leadChef) });
+  checks.push({ label: 'Safety checks (≥50%)', ok: (form._safety || []).length >= 12 });
+  checks.push({ label: 'Sign-off trail (≥1 signature)', ok: (form._signatures || []).length > 0 });
+  const passed = checks.filter(c => c.ok).length;
+  const percent = Math.round((passed / checks.length) * 100);
+  return { percent, passed, total: checks.length, missing: checks.filter(c => !c.ok).map(c => c.label) };
+}
+function progressBand(p) {
+  if (p >= 85) return 'good';
+  if (p >= 60) return 'mid';
+  return 'low';
 }
 
 function eventIdFor(data) {
