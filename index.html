@@ -456,7 +456,7 @@ body {
   #form-app { display: none !important; }
 }
 
-/* ─── DRAFT INDICATOR ─── */
+/* ─── HEADER STATUS INDICATORS ─── */
 .draft-indicator {
   font-size: 10px;
   letter-spacing: 0.06em;
@@ -465,6 +465,24 @@ body {
   text-transform: uppercase;
 }
 .draft-indicator.active { color: var(--sage); }
+.user-indicator {
+  font-size: 11px;
+  color: var(--sage);
+  margin-right: 10px;
+  letter-spacing: 0.04em;
+}
+.user-indicator::before { content: '• '; color: var(--grey); }
+
+/* ─── STEP EDITOR ATTRIBUTION ─── */
+.step-editor {
+  font-size: 11px;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+  margin-top: -16px;
+  margin-bottom: 22px;
+  display: none;
+}
+.step-editor.show { display: block; }
 
 /* ─── HEADER ICON BUTTONS ─── */
 .header-actions { display: flex; gap: 8px; align-items: center; margin-left: 18px; flex-wrap: wrap; }
@@ -899,7 +917,8 @@ body {
   <div class="welcome-card">
     <div class="welcome-logo">O'<span>Brien</span> Event Catering</div>
     <div class="welcome-title">Event Briefs</div>
-    <div class="welcome-sub">Enter the team passcode to access saved events, double-booking checks and the live dashboard. Get it from your ops lead.</div>
+    <div class="welcome-sub">Enter your name and the team passcode. Your name is used to attribute changes per section.</div>
+    <input type="text" class="welcome-input" id="welcomeName" placeholder="Your name (e.g. Tom O'Brien)" autocomplete="off">
     <input type="password" class="welcome-input" id="welcomePasscode" placeholder="Team passcode" autocomplete="off" onkeydown="if(event.key==='Enter') submitWelcomePasscode()">
     <div class="welcome-error" id="welcomeError"></div>
     <button class="welcome-submit" id="welcomeSubmit" onclick="submitWelcomePasscode()">Continue</button>
@@ -926,6 +945,7 @@ body {
       <div class="step-dot" id="sd6" onclick="goStep(6)" title="Step 6 — Notes &amp; Generate">6</div>
     </div>
     <div class="header-actions">
+      <span class="user-indicator" id="userIndicator" style="display:none;"></span>
       <span class="draft-indicator" id="draftIndicator"></span>
       <button class="header-btn primary" onclick="newBrief()">+ New Brief</button>
       <button class="header-btn" id="btnEvents" onclick="openEventsModal()">Load Brief</button>
@@ -940,8 +960,13 @@ body {
     <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
     <div class="modal-title">Settings</div>
     <div class="modal-body">
+      <p><strong style="color:var(--white);">Signed in as</strong> <span id="settingsUser" style="color:var(--sage);">—</span></p>
+      <div class="modal-actions" style="justify-content:flex-start;margin-top:6px;margin-bottom:18px;">
+        <button class="btn btn-secondary" onclick="signOut()" style="font-size:13px;padding:8px 16px;">Sign out / switch user</button>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
       <p><strong style="color:var(--white);">Team Passcode</strong></p>
-      <p>Enter the shared O'Brien team passcode once on this device. It's stored only in this browser and used to save / load / check events. Get the passcode from your event ops lead.</p>
+      <p>Stored only in this browser. Used to save / load / check events.</p>
       <div class="field" style="margin-top:14px;">
         <label>Team Passcode</label>
         <input type="password" id="patInput" placeholder="Enter the shared passcode" autocomplete="off">
@@ -980,6 +1005,7 @@ body {
 <div class="container">
   <div class="step-title" id="step1Title">New Brief — Event Overview</div>
   <div class="step-subtitle">Core event details and client information</div>
+  <div class="step-editor" id="stepEditor1"></div>
 
   <div class="card">
     <div class="card-title">Client &amp; Booking</div>
@@ -1126,6 +1152,7 @@ body {
 <div class="container">
   <div class="step-title">Fleet &amp; Logistics</div>
   <div class="step-subtitle">Which units are going, pitch details and travel requirements</div>
+  <div class="step-editor" id="stepEditor2"></div>
 
   <div id="doubleBookBanner" style="display:none;"></div>
 
@@ -1269,6 +1296,7 @@ body {
 <div class="container">
   <div class="step-title">Commercial Terms</div>
   <div class="step-subtitle">Revenue model, fees, minimums and payment conditions</div>
+  <div class="step-editor" id="stepEditor3"></div>
 
   <div class="card">
     <div class="card-title">Client / Booking Account</div>
@@ -1449,6 +1477,7 @@ body {
 <div class="container">
   <div class="step-title">Menu &amp; Stock</div>
   <div class="step-subtitle">What we're serving, forecasting and stock management</div>
+  <div class="step-editor" id="stepEditor4"></div>
 
   <div class="card">
     <div class="card-title">Menu Notes</div>
@@ -1518,6 +1547,7 @@ body {
 <div class="container">
   <div class="step-title">Staff &amp; Safety</div>
   <div class="step-subtitle">Team allocation and mandatory compliance checks</div>
+  <div class="step-editor" id="stepEditor5"></div>
 
   <div class="card">
     <div class="card-title">Leads</div>
@@ -1610,6 +1640,7 @@ body {
 <div class="container">
   <div class="step-title">Notes &amp; Generate</div>
   <div class="step-subtitle">Final notes, then generate your event brief</div>
+  <div class="step-editor" id="stepEditor6"></div>
 
   <div class="card">
     <div class="card-title">Additional Notes</div>
@@ -1630,33 +1661,9 @@ body {
   </div>
 
   <div class="card">
-    <div class="card-title">Brief Sign-Off Trail</div>
-    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Each time the brief is updated or reviewed by a different stakeholder, add a signature here. Creates a chronological accountability trail surfaced in the final brief.</p>
-    <div id="signaturesList" style="margin-bottom:16px;"></div>
-    <div style="border-top:1px solid var(--border);padding-top:14px;">
-      <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey);font-weight:700;margin-bottom:10px;">Add Signature</div>
-      <div class="grid-3">
-        <div class="field">
-          <label>Name</label>
-          <input type="text" id="newSignerName" placeholder="Your name">
-        </div>
-        <div class="field">
-          <label>Role</label>
-          <select id="newSignerRole">
-            <option>Event Lead</option>
-            <option>Ops Lead</option>
-            <option>Food Lead</option>
-            <option>Director</option>
-            <option>Reviewer</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>&nbsp;</label>
-          <button type="button" class="btn btn-primary" onclick="addSignature()" style="font-size:14px;padding:10px 18px;">+ Sign Brief</button>
-        </div>
-      </div>
-    </div>
+    <div class="card-title">Change Log</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Edits are tracked automatically per section, attributed to the user signed in on each device. Visible on the generated brief so anyone reading knows who last touched each section.</p>
+    <div id="changeLogPreview"></div>
   </div>
 
   <div class="nav-bar">
@@ -1779,48 +1786,6 @@ function updateStaffTotal() {
 }
 
 // ─── SIGN-OFF TRAIL ───────────────────────────────────────────
-let SIGNATURES = [];
-function getSignatures() { return SIGNATURES.slice(); }
-function setSignatures(arr) { SIGNATURES = Array.isArray(arr) ? arr : []; renderSignaturesList(); }
-function renderSignaturesList() {
-  const list = document.getElementById('signaturesList');
-  if (!list) return;
-  if (!SIGNATURES.length) {
-    list.innerHTML = '<div style="color:var(--grey);font-size:12px;font-style:italic;padding:10px 0;">No signatures yet. Add one below to start the trail.</div>';
-    return;
-  }
-  list.innerHTML = SIGNATURES.map((s, idx) => {
-    let dateStr = '—', timeStr = '';
-    try {
-      const dt = new Date(s.signedAt);
-      dateStr = dt.toLocaleDateString('en-IE', { day: '2-digit', month: 'short', year: 'numeric' });
-      timeStr = dt.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
-    } catch (e) {}
-    return '<div class="sig-row">' +
-      '<div class="sig-info"><strong>' + (s.name || '—').replace(/</g, '&lt;') + '</strong> &middot; <span class="sig-role">' + (s.role || 'Other').replace(/</g, '&lt;') + '</span><br>' +
-      '<span class="sig-when">' + dateStr + ' &middot; ' + timeStr + '</span></div>' +
-      '<button class="sig-remove" onclick="removeSignature(' + idx + ')" title="Remove">&times;</button>' +
-      '</div>';
-  }).join('');
-}
-function addSignature() {
-  const name = val('newSignerName');
-  if (!name) { toast('Enter a name first', 'error'); return; }
-  const role = val('newSignerRole') || 'Other';
-  SIGNATURES.push({ name, role, signedAt: new Date().toISOString() });
-  document.getElementById('newSignerName').value = '';
-  renderSignaturesList();
-  autoSaveDraft();
-  autoSave(); // committed sign-off → push to cloud
-  toast('Signature added');
-}
-function removeSignature(idx) {
-  if (!confirm('Remove this signature from the trail?')) return;
-  SIGNATURES.splice(idx, 1);
-  renderSignaturesList();
-  autoSaveDraft();
-}
-
 // ─── STOCK ROWS (per-truck) ───────────────────────────────────
 function renderStockOrderRows(preserve) {
   const container = document.getElementById('stockOrderContainer');
@@ -1975,6 +1940,7 @@ function renderFleet() {
 function toggleChip(el) {
   el.classList.toggle('selected');
   if (el.closest('#revenueChipGroup')) updateRevenueCards();
+  if (typeof recordChange === 'function') recordChange();
   if (typeof autoSaveDraft === 'function') autoSaveDraft();
 }
 
@@ -1982,12 +1948,14 @@ function toggleFleetChip(el) {
   el.classList.toggle('selected');
   updatePowerSummary();
   if (typeof checkDoubleBooking === 'function') checkDoubleBooking();
+  if (typeof recordChange === 'function') recordChange();
   if (typeof autoSaveDraft === 'function') autoSaveDraft();
 }
 
 function togglePower(el) {
   el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
+  if (typeof recordChange === 'function') recordChange();
   if (typeof autoSaveDraft === 'function') autoSaveDraft();
 }
 
@@ -2519,34 +2487,41 @@ function generateBrief() {
         </div>`;
     })()}
 
-    <!-- SIGN-OFF TRAIL -->
+    <!-- CHANGE LOG -->
     ${(() => {
-      const sigs = getSignatures();
-      if (!sigs.length) return '';
+      const labels = ['Event Overview', 'Fleet & Logistics', 'Commercial Terms', 'Menu & Stock', 'Staff & Safety', 'Notes & Generate'];
+      const entries = [];
+      for (let i = 1; i <= 6; i++) {
+        const e = CHANGE_LOG['step' + i];
+        if (e) entries.push({ step: i, label: labels[i-1], user: e.user, at: e.at });
+      }
+      if (!entries.length) return '';
       return '<div class="brief-section" style="margin-top:24px;">' +
-        '<div class="brief-section-head">10 — SIGN-OFF TRAIL</div>' +
+        '<div class="brief-section-head">10 — CHANGE LOG (PER SECTION)</div>' +
         '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
         '<thead><tr>' +
+        '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Section</th>' +
+        '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Last Edited By</th>' +
         '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">When</th>' +
-        '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Name</th>' +
-        '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Role</th>' +
         '</tr></thead><tbody>' +
-        sigs.slice().sort((a,b) => (a.signedAt || '').localeCompare(b.signedAt || '')).map(s => {
+        entries.sort((a,b) => a.step - b.step).map(e => {
           let dateStr = '—';
           try {
-            const dt = new Date(s.signedAt);
+            const dt = new Date(e.at);
             dateStr = dt.toLocaleDateString('en-IE', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + dt.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
-          } catch (e) {}
-          return '<tr><td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:#555;">' + dateStr + '</td>' +
-            '<td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:#111;font-weight:700;">' + (s.name || '—').replace(/</g, '&lt;') + '</td>' +
-            '<td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:var(--sage);">' + (s.role || 'Other').replace(/</g, '&lt;') + '</td></tr>';
+          } catch (er) {}
+          return '<tr>' +
+            '<td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:#111;"><strong>Step ' + e.step + ': ' + e.label + '</strong></td>' +
+            '<td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:#2d7a49;font-weight:700;">' + e.user.replace(/</g, '&lt;') + '</td>' +
+            '<td style="padding:8px 10px;border-bottom:1px solid #e0ddd8;color:#555;">' + dateStr + '</td>' +
+            '</tr>';
         }).join('') +
         '</tbody></table></div>';
     })()}
 
     <!-- FOOTER -->
     <div style="margin-top:36px;padding-top:16px;border-top:2px solid #111;display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:11px;color:#888;">${getSignatures().length ? getSignatures().length + ' signature' + (getSignatures().length !== 1 ? 's' : '') + ' on this brief' : 'No sign-offs recorded'}</div>
+      <div style="font-size:11px;color:#888;">${(() => { const n = Object.keys(CHANGE_LOG).length; return n ? n + ' section' + (n !== 1 ? 's' : '') + ' edited' : 'No edits recorded'; })()}</div>
       <div style="font-size:11px;color:#888;">Ref: ${ref}</div>
     </div>
   `;
@@ -2627,7 +2602,88 @@ function addToCalendar() {
 
 const WORKER_URL = 'https://obrien-brief-api.thomasjnr.workers.dev';
 const PASSCODE_KEY = 'obrien_brief_passcode';
+const USER_KEY = 'obrien_brief_user';
 const DRAFT_KEY = 'obrien_brief_draft';
+
+// ─── USER IDENTITY ────────────────────────────────────────────
+function getUser() { return localStorage.getItem(USER_KEY) || ''; }
+function setUser(n) { localStorage.setItem(USER_KEY, n.trim()); refreshUserIndicator(); }
+function clearUser() { localStorage.removeItem(USER_KEY); refreshUserIndicator(); }
+function refreshUserIndicator() {
+  const el = document.getElementById('userIndicator');
+  if (!el) return;
+  const u = getUser();
+  if (u) { el.textContent = u; el.style.display = 'inline'; }
+  else { el.textContent = ''; el.style.display = 'none'; }
+}
+
+// ─── CHANGE LOG (per-step attribution) ────────────────────────
+let CHANGE_LOG = {};
+function recordChange(stepKey) {
+  const user = getUser();
+  if (!user) return;
+  const key = stepKey || ('step' + currentStep);
+  CHANGE_LOG[key] = { user, at: new Date().toISOString() };
+  updateStepEditorIndicators();
+}
+function setChangeLog(log) {
+  CHANGE_LOG = log && typeof log === 'object' ? Object.assign({}, log) : {};
+  updateStepEditorIndicators();
+}
+function formatRelativeTime(iso) {
+  try {
+    const then = new Date(iso);
+    const diffMs = new Date() - then;
+    const min = Math.floor(diffMs / 60000);
+    if (min < 1) return 'just now';
+    if (min < 60) return min + ' min ago';
+    const hrs = Math.floor(min / 60);
+    if (hrs < 24) return hrs + ' hr ago';
+    const days = Math.floor(hrs / 24);
+    if (days < 7) return days + ' day' + (days > 1 ? 's' : '') + ' ago';
+    return then.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' });
+  } catch (e) { return ''; }
+}
+function updateStepEditorIndicators() {
+  for (let i = 1; i <= 6; i++) {
+    const el = document.getElementById('stepEditor' + i);
+    if (!el) continue;
+    const entry = CHANGE_LOG['step' + i];
+    if (!entry) { el.textContent = ''; el.classList.remove('show'); continue; }
+    el.textContent = 'Last edited by ' + entry.user + ' · ' + formatRelativeTime(entry.at);
+    el.classList.add('show');
+  }
+  const preview = document.getElementById('changeLogPreview');
+  if (preview) preview.innerHTML = renderChangeLogTable();
+}
+function renderChangeLogTable() {
+  const labels = ['Event Overview', 'Fleet & Logistics', 'Commercial Terms', 'Menu & Stock', 'Staff & Safety', 'Notes & Generate'];
+  let rows = '';
+  let anyEntry = false;
+  for (let i = 1; i <= 6; i++) {
+    const entry = CHANGE_LOG['step' + i];
+    if (entry) anyEntry = true;
+    rows += '<div style="display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center;">' +
+      '<div><strong style="color:var(--white);">Step ' + i + ': ' + labels[i-1] + '</strong></div>' +
+      '<div style="color:' + (entry ? 'var(--sage)' : 'var(--grey)') + ';">' + (entry ? entry.user : 'not edited yet') + '</div>' +
+      '<div style="color:var(--grey);font-size:11px;min-width:90px;text-align:right;">' + (entry ? formatRelativeTime(entry.at) : '—') + '</div>' +
+      '</div>';
+  }
+  return rows + (anyEntry ? '' : '<div style="color:var(--grey);font-size:12px;font-style:italic;padding:10px 0;text-align:center;">No edits recorded yet. Start filling in any step.</div>');
+}
+
+// Stub kept for backwards compatibility with saved events that contain _signatures.
+let SIGNATURES = [];
+function getSignatures() { return SIGNATURES.slice(); }
+function setSignatures(arr) { SIGNATURES = Array.isArray(arr) ? arr : []; }
+
+function signOut() {
+  if (!confirm('Sign out? You will need to re-enter your name and the team passcode on next visit.')) return;
+  clearUser();
+  clearPasscode();
+  closeSettingsModal();
+  openWelcomeOverlay();
+}
 
 // ─── BRIEF STATE (new vs continued) ──────────────────────────
 let briefState = 'new';
@@ -2651,10 +2707,10 @@ function newBrief() {
   document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
   // Clear safety checkboxes
   document.querySelectorAll('input[name="safety"]').forEach(c => c.checked = false);
-  // Reset signatures + trading days
+  // Reset signatures (legacy), trading days, change log
   SIGNATURES = [];
   setTradingDays([]);
-  renderSignaturesList();
+  setChangeLog({});
   // Reset scattered toggle
   const sc = document.getElementById('isScattered');
   if (sc) { sc.checked = false; toggleScattered(); }
@@ -2801,15 +2857,18 @@ function hideWelcomeError() {
   if (e) e.classList.remove('show');
 }
 async function submitWelcomePasscode() {
-  const inp = document.getElementById('welcomePasscode');
-  const v = inp.value.trim();
-  if (!v) { showWelcomeError('Enter the passcode to continue.'); return; }
+  const nameInp = document.getElementById('welcomeName');
+  const codeInp = document.getElementById('welcomePasscode');
+  const name = nameInp.value.trim();
+  const code = codeInp.value.trim();
+  if (!name) { showWelcomeError('Enter your name to continue.'); nameInp.focus(); return; }
+  if (!code) { showWelcomeError('Enter the team passcode.'); codeInp.focus(); return; }
   const btn = document.getElementById('welcomeSubmit');
   btn.disabled = true;
   btn.textContent = 'Checking...';
   hideWelcomeError();
   try {
-    const res = await fetch(WORKER_URL + '/events', { headers: { 'X-Auth-Passcode': v } });
+    const res = await fetch(WORKER_URL + '/events', { headers: { 'X-Auth-Passcode': code } });
     if (res.status === 401) {
       showWelcomeError("That passcode doesn't match. Try again or check with your ops lead.");
       btn.disabled = false; btn.textContent = 'Continue';
@@ -2820,13 +2879,14 @@ async function submitWelcomePasscode() {
       btn.disabled = false; btn.textContent = 'Continue';
       return;
     }
-    setPasscode(v);
+    setUser(name);
+    setPasscode(code);
     closeWelcomeOverlay();
     btn.disabled = false; btn.textContent = 'Continue';
-    inp.value = '';
+    nameInp.value = ''; codeInp.value = '';
     renderDashboard();
     checkDoubleBooking();
-    toast('Welcome');
+    toast('Welcome, ' + name);
   } catch (e) {
     showWelcomeError('Network error — try again. (' + e.message + ')');
     btn.disabled = false; btn.textContent = 'Continue';
@@ -2839,6 +2899,8 @@ function skipWelcome() {
 
 function openSettingsModal() {
   document.getElementById('patInput').value = getPasscode();
+  const u = document.getElementById('settingsUser');
+  if (u) u.textContent = getUser() || '— (not signed in)';
   document.getElementById('settingsModal').classList.add('open');
 }
 function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
@@ -2926,6 +2988,7 @@ function collectFormData() {
   data._stockStatuses = collectStockStatuses();
   data._staffAllocations = collectStaffAllocations();
   data._signatures = getSignatures();
+  data._changeLog = CHANGE_LOG;
   return data;
 }
 
@@ -2972,6 +3035,7 @@ function populateForm(data) {
   renderStockOrderRows(data._stockStatuses);
   renderStaffRows(data._staffAllocations);
   setSignatures(data._signatures);
+  setChangeLog(data._changeLog);
   checkDoubleBooking();
   setTimeout(() => { autoSavePaused = false; }, 200);
 }
@@ -3093,13 +3157,6 @@ async function saveEvent(opts) {
     if (silent) return;
     toast('Event name and a date (event start or first trading day) are required to save', 'error');
     goStep(1);
-    return;
-  }
-  if ((data._signatures || []).length === 0) {
-    if (silent) return;
-    toast('Add at least one signature to the trail before saving', 'error');
-    goStep(6);
-    setTimeout(() => { const n = document.getElementById('newSignerName'); if (n) n.focus(); }, 250);
     return;
   }
   if (!getPasscode()) {
@@ -3258,22 +3315,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const bd = document.getElementById('briefDate');
   if (bd) bd.value = today;
   refreshSettingsIndicator();
+  refreshUserIndicator();
+  updateStepEditorIndicators();
   ['loadInDate', 'loadOutDate', 'eventStartDate', 'eventFinishDate'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', checkDoubleBooking);
   });
-  // Auto-save on any input or change inside the form
+  // Auto-save on any input or change inside the form (also records change attribution)
   const formApp = document.getElementById('form-app');
   if (formApp) {
-    formApp.addEventListener('input', autoSaveDraft);
-    formApp.addEventListener('change', autoSaveDraft);
+    const onFormChange = () => { recordChange(); autoSaveDraft(); };
+    formApp.addEventListener('input', onFormChange);
+    formApp.addEventListener('change', onFormChange);
   }
   // Offer to restore unsaved draft from a previous session
   offerDraftRestore();
   // Mini dashboard at top of form-app
   renderDashboard();
-  // First-load passcode prompt
-  if (!getPasscode()) openWelcomeOverlay();
+  // First-load welcome prompt — show if either name or passcode is missing
+  if (!getPasscode() || !getUser()) openWelcomeOverlay();
 });
 </script>
 
