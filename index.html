@@ -797,6 +797,50 @@ body {
   .trading-day-row .td-remove { grid-column: span 2; height: auto; padding: 6px; }
 }
 
+/* ─── TRUCK SAFETY ROWS ─── */
+.truck-safety-row {
+  padding: 12px;
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+.truck-safety-row .ts-name {
+  font-size: 13px;
+  color: var(--white);
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.truck-safety-row .ts-fryer {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #e0b370;
+  background: #3a2d1a;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.truck-safety-row .ts-checks { display: flex; flex-wrap: wrap; gap: 6px; }
+.truck-safety-row .ts-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--white);
+  background: #1e1e1e;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  user-select: none;
+}
+.truck-safety-row .ts-check:hover { border-color: var(--sage); }
+.truck-safety-row .ts-check input { accent-color: var(--sage); cursor: pointer; }
+.truck-safety-row .ts-check.checked { background: #1f3a23; border-color: #4a9a5c; }
+
 /* ─── STAFF ROWS ─── */
 .staff-row {
   display: grid;
@@ -1587,41 +1631,25 @@ body {
   </div>
 
   <div class="card">
-    <div class="card-title">🔥 Fire Safety — Mandatory Checklist</div>
+    <div class="card-title">🔥 Per-Truck Fire Equipment</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Auto-listed from selected fleet. Rule: every unit needs CO₂ + Powder; fryer units also need Wet Chemical + Fire Blanket. Tick once verified present and in service date.</p>
+    <div id="truckSafetyContainer"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🛡️ Event-Wide Safety &amp; Compliance</div>
     <div class="checklist">
-      <label class="check-item"><input type="checkbox" name="safety" value="CO2 extinguisher (per truck)"> <span>CO₂ extinguisher — per truck</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Wet chemical extinguisher (cooking)"> <span>Wet chemical extinguisher — cooking area</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Fire blanket"> <span>Fire blanket — per truck</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Fire extinguisher service date in date"> <span>All extinguishers service date in-date</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Gas safety check completed"> <span>Gas safety check completed (pre-event)</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Gas isolation valves accessible"> <span>Gas isolation valves accessible &amp; labelled</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Fire risk assessment completed"> <span>Fire risk assessment completed</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Evacuation point confirmed with venue"> <span>Evacuation point confirmed with venue</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Deep clean / grease trap cleared"> <span>Deep clean / grease trap cleared (pre-event)</span></label>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">⚡ Electrical Safety</div>
-    <div class="checklist">
-      <label class="check-item"><input type="checkbox" name="safety" value="PAT testing current for all appliances"> <span>PAT testing current for all appliances</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="RCD protection on all circuits"> <span>RCD protection on all circuits</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Cable matting / cable ramp for walkways"> <span>Cable matting / ramps for all walkway crossings</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Correct cable spec for load"> <span>Correct cable spec confirmed for load requirement</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Generator PAT / service current"> <span>Generator PAT / service certificate current</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Generator PAT / service current"> <span>Generator PAT / service certificate current (if we provide)</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="No overloaded sockets / trailing leads"> <span>No overloaded sockets or daisy-chain leads</span></label>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">🛡️ Other Compliance</div>
-    <div class="checklist">
+      <label class="check-item"><input type="checkbox" name="safety" value="RCD protection on all circuits"> <span>RCD protection on all circuits</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Food hygiene certs (all staff) valid"> <span>Food hygiene certificates — all staff valid</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Food safety management plan in vehicle"> <span>Food safety management plan on board</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Allergen matrix available"> <span>Allergen matrix available &amp; visible</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Public liability insurance confirmed"> <span>Public liability insurance confirmed for event</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="Vehicle MOT & insurance in date"> <span>Vehicle MOT &amp; insurance in date</span></label>
-      <label class="check-item"><input type="checkbox" name="safety" value="First aid kit stocked & accessible"> <span>First aid kit stocked &amp; accessible</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="First aid kit stocked & accessible"> <span>First aid kit on site (stocked &amp; accessible)</span></label>
+      <label class="check-item"><input type="checkbox" name="safety" value="Vehicle MOT & insurance in date"> <span>All vehicles MOT &amp; insurance in date</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Risk assessment submitted to venue if required"> <span>Risk assessment submitted to venue (if required)</span></label>
       <label class="check-item"><input type="checkbox" name="safety" value="Hand washing station set up"> <span>Hand washing station set up (separate from food prep)</span></label>
     </div>
@@ -1721,7 +1749,51 @@ function goStep(n) {
   document.getElementById('sd' + n).classList.remove('done');
   window.scrollTo(0,0);
   if (n === 4) renderStockOrderRows();
-  if (n === 5) renderStaffRows();
+  if (n === 5) { renderStaffRows(); renderTruckSafetyRows(); }
+}
+
+// ─── PER-TRUCK FIRE EQUIPMENT (Step 5) ────────────────────────
+function renderTruckSafetyRows(preserve) {
+  const container = document.getElementById('truckSafetyContainer');
+  if (!container) return;
+  const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => ({
+    name: c.dataset.val, category: c.dataset.category
+  }));
+  if (!selected.length) {
+    container.innerHTML = '<div class="stock-empty">Select trucks in Step 2 first &mdash; per-truck fire equipment rows will appear here.</div>';
+    return;
+  }
+  const existing = (preserve && typeof preserve === 'object') ? preserve : collectTruckSafety();
+  container.innerHTML = selected.map(u => {
+    const items = ffEquipmentFor(u);
+    const checkedSet = new Set(existing[u.name] || []);
+    const escTruck = u.name.replace(/"/g, '&quot;');
+    const fryerTag = unitHasFryer(u) ? '<span class="ts-fryer">FRYER</span>' : '';
+    const checks = items.map(item => {
+      const isChecked = checkedSet.has(item);
+      return '<label class="ts-check' + (isChecked ? ' checked' : '') + '">' +
+        '<input type="checkbox" data-item="' + item + '" ' + (isChecked ? 'checked' : '') + ' onchange="onTruckSafetyToggle(this)"> ' + item +
+        '</label>';
+    }).join('');
+    return '<div class="truck-safety-row" data-truck="' + escTruck + '">' +
+      '<div class="ts-name">' + u.name + fryerTag + '</div>' +
+      '<div class="ts-checks">' + checks + '</div>' +
+      '</div>';
+  }).join('');
+}
+function onTruckSafetyToggle(cb) {
+  const label = cb.closest('.ts-check');
+  if (label) label.classList.toggle('checked', cb.checked);
+}
+function collectTruckSafety() {
+  const out = {};
+  document.querySelectorAll('.truck-safety-row').forEach(row => {
+    const truck = row.dataset.truck;
+    const checked = [];
+    row.querySelectorAll('input[type=checkbox]:checked').forEach(c => checked.push(c.dataset.item));
+    out[truck] = checked;
+  });
+  return out;
 }
 
 // ─── STAFF PER TRUCK ──────────────────────────────────────────
@@ -1895,6 +1967,30 @@ function unitPhase(u) {
   if (s && t) return 'combo';
   if (t) return 'three';
   return 'single';
+}
+
+// ─── PER-TRUCK FIRE EQUIPMENT ─────────────────────────────────
+// Rule: every unit has CO2 + Powder. Fryer-using units also need
+// Wet Chemical + Fire Blanket.
+const NON_FRYER_CONFECTIONERY = new Set(['Chocolate Fountain', "Pick'n'Mix", 'The Village Kiosk 1', 'The Village Kiosk 2', 'Sprinkles Desserts']);
+function unitHasFryer(unit) {
+  if (!unit || !unit.category) return false;
+  if (unit.category === 'Burger/Chipper Units') return true;
+  if (unit.category === 'Misc. Food Units') return true;
+  if (unit.category === 'Coffee/Beverages') return false;
+  if (unit.category === 'Ice Cream Vans') return false;
+  if (unit.category === 'Carts & Trikes') return false;
+  if (unit.category === 'Confectionery') return !NON_FRYER_CONFECTIONERY.has(unit.name);
+  return false;
+}
+function ffEquipmentFor(unit) {
+  const base = ['CO2', 'Powder'];
+  return unitHasFryer(unit) ? base.concat(['Wet Chemical', 'Fire Blanket']) : base;
+}
+function fleetByName() {
+  const m = {};
+  FLEET.forEach(u => { m[u.name] = u; });
+  return m;
 }
 
 function phaseSwatch(phase) {
@@ -2226,20 +2322,50 @@ function generateBrief() {
   if (crewBtn) crewBtn.classList.toggle('mode-active', isCrew);
 
   const allSafetyItems = [
-    'CO2 extinguisher (per truck)', 'Wet chemical extinguisher (cooking)', 'Fire blanket',
-    'Fire extinguisher service date in date', 'Gas safety check completed', 'Gas isolation valves accessible',
-    'Fire risk assessment completed', 'Evacuation point confirmed with venue', 'Deep clean / grease trap cleared',
-    'PAT testing current for all appliances', 'RCD protection on all circuits', 'Cable matting / cable ramp for walkways',
-    'Correct cable spec for load', 'Generator PAT / service current', 'No overloaded sockets / trailing leads',
-    'Food hygiene certs (all staff) valid', 'Food safety management plan in vehicle', 'Allergen matrix available',
-    'Public liability insurance confirmed', 'Vehicle MOT & insurance in date', 'First aid kit stocked & accessible',
-    'Risk assessment submitted to venue if required', 'Hand washing station set up'
+    'Fire risk assessment completed', 'Evacuation point confirmed with venue',
+    'Cable matting / cable ramp for walkways', 'Generator PAT / service current',
+    'No overloaded sockets / trailing leads', 'RCD protection on all circuits',
+    'Food hygiene certs (all staff) valid', 'Allergen matrix available',
+    'Public liability insurance confirmed', 'First aid kit stocked & accessible',
+    'Vehicle MOT & insurance in date', 'Risk assessment submitted to venue if required',
+    'Hand washing station set up'
   ];
 
   const safetyRows = allSafetyItems.map(item => {
     const done = safetyChecked.includes(item);
     return '<div class="ops-item' + (done ? ' checked' : '') + '">' + item + '</div>';
   }).join('');
+
+  // Per-truck FF table for the brief
+  const truckSafety = collectTruckSafety();
+  const fleetMap = fleetByName();
+  const truckSafetyTable = (() => {
+    if (!fleet.length) return '';
+    const rows = fleet.map(f => {
+      const u = fleetMap[f.name];
+      if (!u) return '';
+      const required = ffEquipmentFor(u);
+      const ticked = new Set(truckSafety[f.name] || []);
+      const cells = ['CO2', 'Powder', 'Wet Chemical', 'Fire Blanket'].map(item => {
+        if (!required.includes(item)) return '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;text-align:center;color:#bbb;">—</td>';
+        const ok = ticked.has(item);
+        const sym = ok ? '☑' : '☐';
+        const col = ok ? '#2d7a49' : '#c0392b';
+        return '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;text-align:center;color:' + col + ';font-size:14px;">' + sym + '</td>';
+      }).join('');
+      return '<tr><td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;"><strong>' + f.name + '</strong>' + (unitHasFryer(u) ? ' <span style="font-size:9px;color:#b8590e;letter-spacing:0.08em;">FRYER</span>' : '') + '</td>' + cells + '</tr>';
+    }).join('');
+    return '<div style="margin-bottom:14px;">' +
+      '<div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Per-Truck Fire Equipment</div>' +
+      '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+      '<thead><tr>' +
+      '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Truck</th>' +
+      '<th style="padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">CO₂</th>' +
+      '<th style="padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Powder</th>' +
+      '<th style="padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Wet&nbsp;Chem</th>' +
+      '<th style="padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Blanket</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+  })();
 
   const html = `
     <div class="brief-mode-banner ${isCrew ? 'crew' : 'full'}">${isCrew ? 'CREW BRIEF — OPERATIONAL DETAILS ONLY' : 'FULL BRIEF — INCLUDES COMMERCIAL & INTERNAL NOTES'}</div>
@@ -2473,7 +2599,9 @@ function generateBrief() {
 
     <!-- SAFETY -->
     <div class="brief-section">
-      <div class="brief-section-head">08 — SAFETY & COMPLIANCE CHECKLIST</div>
+      <div class="brief-section-head">08 — SAFETY & COMPLIANCE</div>
+      ${truckSafetyTable}
+      <div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Event-Wide Checks</div>
       <div class="ops-checklist">${safetyRows}</div>
     </div>
 
@@ -2994,6 +3122,7 @@ function collectFormData() {
   data._tradingDays = getTradingDays();
   data._stockStatuses = collectStockStatuses();
   data._staffAllocations = collectStaffAllocations();
+  data._truckSafetyChecks = collectTruckSafety();
   data._signatures = getSignatures();
   data._changeLog = CHANGE_LOG;
   return data;
@@ -3041,6 +3170,7 @@ function populateForm(data) {
   updatePowerSummary();
   renderStockOrderRows(data._stockStatuses);
   renderStaffRows(data._staffAllocations);
+  renderTruckSafetyRows(data._truckSafetyChecks);
   setSignatures(data._signatures);
   setChangeLog(data._changeLog);
   checkDoubleBooking();
@@ -3159,8 +3289,18 @@ function getStepStatus(stepNum, form) {
           return a && a.count >= (a.minimum || 1);
         });
       }
-      const safetyMin = (form._safety || []).length >= 12;
-      required = [hasLead, staffOk, safetyMin];
+      // Per-truck FF: every selected truck has all its required items ticked
+      const fleetMap = fleetByName();
+      const truckSafety = form._truckSafetyChecks || {};
+      const ffOk = fleet.length === 0 || fleet.every(t => {
+        const u = fleetMap[t];
+        if (!u) return true;
+        const required = ffEquipmentFor(u);
+        const ticked = truckSafety[t] || [];
+        return required.every(item => ticked.includes(item));
+      });
+      const safetyMin = (form._safety || []).length >= 6;
+      required = [hasLead, staffOk, ffOk, safetyMin];
       break;
     }
     case 6: {
