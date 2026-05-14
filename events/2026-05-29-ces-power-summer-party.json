@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-ces-power-summer-party",
-  "savedAt": "2026-05-14T21:40:57.196Z",
+  "savedAt": "2026-05-14T21:42:05.521Z",
   "form": {
     "eventName": "CES Power Summer Party",
     "bookingStatus": "Confirmed",
@@ -37,7 +37,7 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "Venue provides bins",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Other (specify in notes)",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "Fixed fee per event",
@@ -53,7 +53,7 @@
     "minSpend": "",
     "prePaidMenu": "",
     "prePaidNotes": "",
-    "voucherDetails": "",
+    "voucherDetails": "Food & Dessert vouchers",
     "posNotes": "",
     "menuNotes": "",
     "foodCovers": "",
@@ -77,7 +77,9 @@
     "_power": [
       "We provide generator"
     ],
-    "_revenue": [],
+    "_revenue": [
+      "Free at point of sale"
+    ],
     "_pos": [],
     "_safety": [],
     "_isScattered": false,
@@ -95,6 +97,10 @@
       "step2": {
         "user": "Colm Dunne",
         "at": "2026-05-14T21:40:54.359Z"
+      },
+      "step3": {
+        "user": "Colm Dunne",
+        "at": "2026-05-14T21:42:05.316Z"
       }
     },
     "_crewChecklists": {
