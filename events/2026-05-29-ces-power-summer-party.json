@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-ces-power-summer-party",
-  "savedAt": "2026-05-14T21:42:57.761Z",
+  "savedAt": "2026-05-14T21:44:47.856Z",
   "form": {
     "eventName": "CES Power Summer Party",
     "bookingStatus": "Confirmed",
@@ -62,10 +62,10 @@
     "deliveryDate": "2026-05-31",
     "coldChain": "Truck fridges sufficient",
     "stockNotes": "",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
-    "staffNotes": "",
+    "eventManager": "Colm",
+    "opsLead": "Tom",
+    "leadChef": "Simon",
+    "staffNotes": "All black uniform. ",
     "clientInstructions": "",
     "opsNotes": "",
     "postEventNotes": "",
@@ -81,7 +81,16 @@
       "Free at point of sale"
     ],
     "_pos": [],
-    "_safety": [],
+    "_safety": [
+      "Fire risk assessment completed",
+      "Evacuation point confirmed with venue",
+      "RCD protection on all circuits",
+      "Food hygiene certs (all staff) valid",
+      "Allergen matrix available",
+      "Public liability insurance confirmed",
+      "Vehicle MOT & insurance in date",
+      "Risk assessment submitted to venue if required"
+    ],
     "_isScattered": false,
     "_tradingDays": [],
     "_iceVansNeedPower": true,
@@ -102,8 +111,42 @@
         "notes": ""
       }
     ],
-    "_staffAllocations": [],
-    "_truckSafetyChecks": {},
+    "_staffAllocations": [
+      {
+        "truck": "O'Briens Chipper 1",
+        "minimum": 4,
+        "count": 4,
+        "notes": ""
+      },
+      {
+        "truck": "Angelo's Pizza",
+        "minimum": 4,
+        "count": 4,
+        "notes": ""
+      },
+      {
+        "truck": "BMC",
+        "minimum": 1,
+        "count": 1,
+        "notes": ""
+      }
+    ],
+    "_truckSafetyChecks": {
+      "O'Briens Chipper 1": [
+        "CO2",
+        "Powder",
+        "Wet Chemical",
+        "Fire Blanket"
+      ],
+      "Angelo's Pizza": [
+        "CO2",
+        "Powder"
+      ],
+      "BMC": [
+        "CO2",
+        "Powder"
+      ]
+    },
     "_signatures": [],
     "_changeLog": {
       "step1": {
@@ -121,6 +164,10 @@
       "step4": {
         "user": "Colm Dunne",
         "at": "2026-05-14T21:42:53.796Z"
+      },
+      "step5": {
+        "user": "Colm Dunne",
+        "at": "2026-05-14T21:44:42.459Z"
       }
     },
     "_crewChecklists": {
