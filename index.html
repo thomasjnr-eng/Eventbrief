@@ -797,6 +797,55 @@ body {
   .trading-day-row .td-remove { grid-column: span 2; height: auto; padding: 6px; }
 }
 
+/* ─── BULK IMPORT ─── */
+.bulk-drop {
+  border: 2px dashed var(--border);
+  border-radius: 6px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  margin: 14px 0;
+  transition: all 0.15s;
+}
+.bulk-drop:hover { border-color: var(--sage); background: #1a1a1a; }
+.bulk-drop.drag-over { border-color: var(--sage); background: rgba(168,196,154,0.1); }
+.bulk-row {
+  display: grid;
+  grid-template-columns: 2fr 130px 2fr 1.5fr 30px;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.bulk-row:last-child { border-bottom: none; }
+.bulk-row input {
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  padding: 6px 8px;
+  outline: none;
+  width: 100%;
+}
+.bulk-row input:focus { border-color: var(--sage); }
+.bulk-row input.invalid { border-color: var(--red); }
+.bulk-row .bulk-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  width: 26px; height: 26px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.bulk-row .bulk-remove:hover { border-color: var(--red); color: var(--red); }
+@media (max-width: 700px) {
+  .bulk-row { grid-template-columns: 1fr 30px; }
+  .bulk-row > input:nth-child(n+2):nth-child(-n+4) { grid-column: 1 / 2; }
+}
+
 /* ─── TRUCK SAFETY ROWS ─── */
 .truck-safety-row {
   padding: 12px;
@@ -999,6 +1048,7 @@ body {
       <span class="draft-indicator" id="draftIndicator"></span>
       <button class="header-btn primary" onclick="newBrief()">+ New Brief</button>
       <button class="header-btn" id="btnEvents" onclick="openEventsModal()">Load Brief</button>
+      <button class="header-btn" id="btnBulk" onclick="openBulkModal()">Bulk Add</button>
       <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
   </div>
@@ -1024,6 +1074,45 @@ body {
       <div class="modal-actions">
         <button class="btn btn-secondary" id="btnClearPat" onclick="clearPasscodeAndClose()" style="font-size:13px;padding:8px 16px;">Clear Passcode</button>
         <button class="btn btn-primary" onclick="savePasscodeAndClose()" style="font-size:13px;padding:8px 16px;">Save Passcode</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── BULK ADD MODAL ─── -->
+<div class="modal-overlay" id="bulkModal" onclick="if(event.target===this) closeBulkModal()">
+  <div class="modal-content" style="max-width:820px;">
+    <button class="modal-close" onclick="closeBulkModal()">&times;</button>
+    <div class="modal-title">Bulk Add Events</div>
+    <div class="modal-body">
+      <div id="bulkChoose">
+        <p>Drop a file or paste below to import multiple events at once. Each becomes a skeleton brief (name + date + venue + client populated, everything else blank). You complete the rest from <strong>Load Brief</strong>.</p>
+        <p style="font-size:11px;color:var(--grey);">Supported: CSV / TSV files, Excel paste (tabs), <code>.ics</code> calendar exports, or one event per line.</p>
+        <div id="bulkDrop" class="bulk-drop">
+          <div style="font-size:14px;color:var(--white);margin-bottom:6px;">Drop file here</div>
+          <div style="font-size:11px;color:var(--grey);">or tap to choose</div>
+          <input type="file" id="bulkFile" accept=".csv,.tsv,.ics,text/*" style="display:none;">
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--grey);margin:14px 0;">— or —</div>
+        <textarea id="bulkPaste" rows="6" placeholder="Paste here. Excel rows (tab-separated): &#10;Aviva Stadium  &#9;  2026-07-15&#10;Bord Gais Theatre  &#9;  2026-08-02"></textarea>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeBulkModal()" style="font-size:13px;padding:8px 16px;">Cancel</button>
+          <button class="btn btn-primary" onclick="bulkParseInput()" style="font-size:13px;padding:8px 16px;">Parse</button>
+        </div>
+      </div>
+      <div id="bulkPreview" style="display:none;">
+        <p style="margin-bottom:8px;">Found <strong id="bulkCount" style="color:var(--sage);">0</strong> events. Edit any row before importing. Rows missing a name or date will be skipped.</p>
+        <div id="bulkRows" style="max-height:340px;overflow-y:auto;margin:14px 0;"></div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="bulkBackToChoose()" style="font-size:13px;padding:8px 16px;">Back</button>
+          <button class="btn btn-primary" id="bulkImportBtn" onclick="bulkImport()" style="font-size:13px;padding:8px 16px;">Import</button>
+        </div>
+      </div>
+      <div id="bulkProgress" style="display:none;text-align:center;padding:30px 0;">
+        <div id="bulkProgressText" style="font-size:14px;color:var(--white);margin-bottom:10px;">Importing...</div>
+        <div style="width:100%;height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;">
+          <div id="bulkProgressBar" style="width:0%;height:100%;background:var(--sage);transition:width 0.2s;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1750,6 +1839,292 @@ function goStep(n) {
   window.scrollTo(0,0);
   if (n === 4) renderStockOrderRows();
   if (n === 5) { renderStaffRows(); renderTruckSafetyRows(); }
+}
+
+// ─── BULK IMPORT ──────────────────────────────────────────────
+let BULK_PARSED = [];
+
+function openBulkModal() {
+  if (!getPasscode()) { openSettingsModal(); toast('Add the team passcode first', 'error'); return; }
+  document.getElementById('bulkModal').classList.add('open');
+  bulkBackToChoose();
+  // Wire drag/drop + file input
+  const drop = document.getElementById('bulkDrop');
+  const fileInput = document.getElementById('bulkFile');
+  drop.onclick = () => fileInput.click();
+  drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('drag-over'); };
+  drop.ondragleave = () => drop.classList.remove('drag-over');
+  drop.ondrop = (e) => {
+    e.preventDefault();
+    drop.classList.remove('drag-over');
+    if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; bulkParseInput(); }
+  };
+}
+function closeBulkModal() { document.getElementById('bulkModal').classList.remove('open'); }
+function bulkBackToChoose() {
+  document.getElementById('bulkChoose').style.display = 'block';
+  document.getElementById('bulkPreview').style.display = 'none';
+  document.getElementById('bulkProgress').style.display = 'none';
+}
+function bulkParseInput() {
+  const file = document.getElementById('bulkFile').files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => bulkParseText(e.target.result, file.name);
+    reader.readAsText(file);
+  } else {
+    const paste = document.getElementById('bulkPaste').value;
+    if (paste.trim()) bulkParseText(paste, null);
+    else toast('Drop a file or paste content first', 'error');
+  }
+}
+
+function bulkParseText(text, filename) {
+  const lower = (filename || '').toLowerCase();
+  let parsed = [];
+  if (lower.endsWith('.ics') || /BEGIN:VCALENDAR/i.test(text)) {
+    parsed = bulkParseICS(text);
+  } else {
+    parsed = bulkParseTabular(text);
+  }
+  if (!parsed.length) { toast('Could not parse any events', 'error'); return; }
+  BULK_PARSED = parsed;
+  bulkShowPreview();
+}
+
+function bulkParseICS(text) {
+  const events = [];
+  const blocks = text.split(/BEGIN:VEVENT/i);
+  for (let i = 1; i < blocks.length; i++) {
+    const block = blocks[i].split(/END:VEVENT/i)[0];
+    // Unfold continuation lines (RFC 5545: lines starting with whitespace continue the previous)
+    const unfolded = block.replace(/\r?\n[ \t]/g, '');
+    const lines = unfolded.split(/\r?\n/);
+    const ev = {};
+    lines.forEach(line => {
+      if (/^SUMMARY[;:]/i.test(line)) ev.eventName = line.replace(/^SUMMARY[^:]*:/i, '').trim();
+      else if (/^DTSTART/i.test(line)) {
+        const m = line.match(/(\d{8})/);
+        if (m) ev.eventStartDate = m[1].substring(0,4) + '-' + m[1].substring(4,6) + '-' + m[1].substring(6,8);
+      }
+      else if (/^LOCATION[;:]/i.test(line)) ev.venueName = line.replace(/^LOCATION[^:]*:/i, '').trim();
+      else if (/^ORGANIZER/i.test(line)) {
+        const m = line.match(/CN=([^:;]+)/i);
+        if (m) ev.clientName = m[1].trim();
+      }
+    });
+    if (ev.eventName || ev.eventStartDate) events.push(ev);
+  }
+  return events;
+}
+
+function bulkParseTabular(text) {
+  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+  if (!lines.length) return [];
+  // Detect delimiter from first non-empty line
+  const first = lines[0];
+  const tabCount = (first.match(/\t/g) || []).length;
+  const commaCount = (first.match(/,/g) || []).length;
+  const semiCount = (first.match(/;/g) || []).length;
+  let delim = '\t';
+  if (commaCount > tabCount && commaCount >= semiCount) delim = ',';
+  else if (semiCount > tabCount && semiCount > commaCount) delim = ';';
+
+  const rows = lines.map(l => bulkParseDelimitedLine(l, delim));
+  const maxCols = Math.max(...rows.map(r => r.length));
+
+  // Single-column free text? Try date-extraction
+  if (maxCols === 1) return bulkParseFreeText(lines);
+
+  // Try header row detection
+  const firstRow = rows[0].map(c => (c || '').toLowerCase().trim());
+  const hasHeaders = firstRow.some(h => /event|name|title|date|venue|location|client/i.test(h));
+  let headers = [], dataRows = rows;
+  if (hasHeaders) { headers = firstRow; dataRows = rows.slice(1); }
+
+  // Map columns
+  let nameCol = -1, dateCol = -1, venueCol = -1, clientCol = -1;
+  if (headers.length) {
+    headers.forEach((h, i) => {
+      if (nameCol < 0 && /(event|name|title|description)/.test(h)) nameCol = i;
+      else if (dateCol < 0 && /(date|when|start)/.test(h)) dateCol = i;
+      else if (venueCol < 0 && /(venue|location|where|site)/.test(h)) venueCol = i;
+      else if (clientCol < 0 && /(client|account|booker|organi[sz]er|customer)/.test(h)) clientCol = i;
+    });
+  }
+  // Fallback positional: name | date | venue | client
+  if (nameCol < 0) nameCol = 0;
+  if (dateCol < 0) dateCol = 1 < maxCols ? 1 : -1;
+  if (venueCol < 0) venueCol = 2 < maxCols ? 2 : -1;
+  if (clientCol < 0) clientCol = 3 < maxCols ? 3 : -1;
+
+  return dataRows.map(r => {
+    const ev = {};
+    if (nameCol >= 0 && r[nameCol]) ev.eventName = r[nameCol].trim();
+    if (dateCol >= 0 && r[dateCol]) ev.eventStartDate = bulkParseDate(r[dateCol].trim());
+    if (venueCol >= 0 && r[venueCol]) ev.venueName = r[venueCol].trim();
+    if (clientCol >= 0 && r[clientCol]) ev.clientName = r[clientCol].trim();
+    return ev;
+  }).filter(ev => ev.eventName || ev.eventStartDate);
+}
+
+function bulkParseDelimitedLine(line, delim) {
+  const out = [];
+  let cur = '';
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (inQ) {
+      if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+      else if (c === '"') inQ = false;
+      else cur += c;
+    } else {
+      if (c === '"') inQ = true;
+      else if (c === delim) { out.push(cur); cur = ''; }
+      else cur += c;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+function bulkParseFreeText(lines) {
+  // One event per line. Try to extract a date from each line; rest of the line = name.
+  const dateRe = /(\d{4}-\d{2}-\d{2}|\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/;
+  return lines.map(line => {
+    const m = line.match(dateRe);
+    const ev = {};
+    if (m) {
+      ev.eventStartDate = bulkParseDate(m[1]);
+      ev.eventName = line.replace(m[0], '').replace(/[-—:|,]/g, ' ').replace(/\s+/g, ' ').trim();
+    } else {
+      ev.eventName = line.trim();
+    }
+    return ev;
+  }).filter(ev => ev.eventName);
+}
+
+function bulkParseDate(str) {
+  if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.substring(0,10);
+  let m = str.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/);
+  if (m) {
+    const dd = m[1].padStart(2, '0');
+    const mm = m[2].padStart(2, '0');
+    let yy = m[3]; if (yy.length === 2) yy = (parseInt(yy) > 70 ? '19' : '20') + yy;
+    return yy + '-' + mm + '-' + dd;
+  }
+  const d = new Date(str);
+  if (!isNaN(d)) return d.toISOString().substring(0, 10);
+  return '';
+}
+
+function bulkShowPreview() {
+  document.getElementById('bulkChoose').style.display = 'none';
+  document.getElementById('bulkPreview').style.display = 'block';
+  document.getElementById('bulkProgress').style.display = 'none';
+  document.getElementById('bulkCount').textContent = BULK_PARSED.length;
+  bulkRenderRows();
+}
+function bulkRenderRows() {
+  const validCount = BULK_PARSED.filter(r => r.eventName && r.eventStartDate).length;
+  document.getElementById('bulkImportBtn').textContent = 'Import ' + validCount + ' event' + (validCount !== 1 ? 's' : '');
+  document.getElementById('bulkRows').innerHTML = BULK_PARSED.map((ev, idx) => {
+    const valid = !!(ev.eventName && ev.eventStartDate);
+    return '<div class="bulk-row" data-idx="' + idx + '">' +
+      '<input type="text" data-field="eventName" value="' + (ev.eventName || '').replace(/"/g, '&quot;') + '" placeholder="Event name"' + (!ev.eventName ? ' class="invalid"' : '') + '>' +
+      '<input type="date" data-field="eventStartDate" value="' + (ev.eventStartDate || '') + '"' + (!ev.eventStartDate ? ' class="invalid"' : '') + '>' +
+      '<input type="text" data-field="venueName" value="' + (ev.venueName || '').replace(/"/g, '&quot;') + '" placeholder="Venue (optional)">' +
+      '<input type="text" data-field="clientName" value="' + (ev.clientName || '').replace(/"/g, '&quot;') + '" placeholder="Client (optional)">' +
+      '<button type="button" class="bulk-remove" onclick="bulkRemoveRow(' + idx + ')" title="Remove">&times;</button>' +
+      '</div>';
+  }).join('');
+  // Attach input listeners to refresh import count + invalid styling
+  document.querySelectorAll('.bulk-row input').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const row = inp.closest('.bulk-row');
+      const idx = parseInt(row.dataset.idx);
+      BULK_PARSED[idx][inp.dataset.field] = inp.value;
+      const e = BULK_PARSED[idx];
+      const valid = !!(e.eventName && e.eventStartDate);
+      const validCnt = BULK_PARSED.filter(r => r.eventName && r.eventStartDate).length;
+      document.getElementById('bulkImportBtn').textContent = 'Import ' + validCnt + ' event' + (validCnt !== 1 ? 's' : '');
+      row.querySelector('[data-field=eventName]').classList.toggle('invalid', !e.eventName);
+      row.querySelector('[data-field=eventStartDate]').classList.toggle('invalid', !e.eventStartDate);
+    });
+  });
+}
+function bulkRemoveRow(idx) {
+  BULK_PARSED.splice(idx, 1);
+  document.getElementById('bulkCount').textContent = BULK_PARSED.length;
+  bulkRenderRows();
+}
+
+async function bulkImport() {
+  const valid = BULK_PARSED.filter(r => r.eventName && r.eventStartDate);
+  if (!valid.length) { toast('No valid rows to import', 'error'); return; }
+  if (!getPasscode()) { openSettingsModal(); return; }
+  document.getElementById('bulkChoose').style.display = 'none';
+  document.getElementById('bulkPreview').style.display = 'none';
+  document.getElementById('bulkProgress').style.display = 'block';
+  let success = 0, fail = 0;
+  for (let i = 0; i < valid.length; i++) {
+    const pct = Math.round((i / valid.length) * 100);
+    document.getElementById('bulkProgressBar').style.width = pct + '%';
+    document.getElementById('bulkProgressText').textContent = 'Importing ' + (i+1) + ' of ' + valid.length + ' — ' + valid[i].eventName;
+    try { await bulkSaveOne(valid[i]); success++; }
+    catch (e) { console.error('bulk import row failed:', valid[i], e); fail++; }
+  }
+  document.getElementById('bulkProgressBar').style.width = '100%';
+  toast(success + ' imported' + (fail ? ', ' + fail + ' failed' : ''));
+  closeBulkModal();
+  eventsCache.filenames = null;
+  eventsCache.byName = {};
+  renderDashboard();
+}
+
+async function bulkSaveOne(ev) {
+  const formData = {
+    eventName: ev.eventName,
+    bookingStatus: 'Provisional',
+    clientName: ev.clientName || '',
+    clientType: 'Corporate',
+    contactName: '', contactPhone: '', contactEmail: '', onsiteContact: '',
+    loadInDate: ev.eventStartDate, loadInTime: '',
+    eventStartDate: ev.eventStartDate, eventStartTime: '',
+    eventFinishDate: ev.eventStartDate, eventFinishTime: '',
+    loadOutDate: ev.eventStartDate, loadOutTime: '',
+    loadNotes: '', attendance: '',
+    venueName: ev.venueName || '', venueAddress: '', accessNotes: '',
+    otherUnits: '', pitchRef: '', pitchSize: '', groundSurface: '', vehicleLayout: 'TBC', pitchNotes: '',
+    cableRun: '', powerNotes: '',
+    waterSource: '', waterVolume: '', wasteDisposal: '', solidWaste: '', waterNotes: '',
+    commercialClient: '', commercialClientRef: '',
+    pitchFeeAmount: '', pitchFeeType: 'Fixed fee per event', pitchFeePayableTo: 'We pay the venue/client', pitchFeeNotes: '',
+    revSharePct: '', revShareBasis: 'Gross takings', revShareSettlement: 'Post-event invoice', revShareNotes: '',
+    prePaidCovers: '', prePaidPrice: '', prePaidTotal: '', minSpend: '', prePaidMenu: '', prePaidNotes: '',
+    voucherDetails: '', posNotes: '',
+    menuNotes: '',
+    foodCovers: '', coffeeCovers: '', icecreamCovers: '',
+    deliveryDate: '', coldChain: '', stockNotes: '',
+    eventManager: '', opsLead: '', leadChef: '', staffNotes: '',
+    clientInstructions: '', opsNotes: '(Bulk-imported skeleton — fill in details)', postEventNotes: '',
+    _isScattered: false, _tradingDays: [],
+    _fleet: [], _power: [], _revenue: [], _pos: [], _safety: [],
+    _stockStatuses: [], _staffAllocations: [], _truckSafetyChecks: {},
+    _signatures: [], _changeLog: { step1: { user: getUser() || 'Bulk import', at: new Date().toISOString() } }
+  };
+  const id = eventIdFor(formData);
+  const filename = id + '.json';
+  let sha = null;
+  try {
+    const existing = await apiCall('/events/' + encodeURIComponent(filename));
+    if (existing.ok) sha = (await existing.json()).sha;
+  } catch (e) {}
+  const payload = { version: 1, id, savedAt: new Date().toISOString(), form: formData, _bulkImported: true };
+  const body = { event: payload };
+  if (sha) body.sha = sha;
+  const res = await apiCall('/events/' + encodeURIComponent(filename), { method: 'PUT', body: JSON.stringify(body) });
+  if (!res.ok) throw new Error('save failed: ' + res.status);
 }
 
 // ─── PER-TRUCK FIRE EQUIPMENT (Step 5) ────────────────────────
