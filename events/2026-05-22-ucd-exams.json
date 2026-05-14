@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-22-ucd-exams",
-  "savedAt": "2026-05-14T01:01:52.586Z",
+  "savedAt": "2026-05-14T01:02:04.158Z",
   "form": {
     "eventName": "UCD Exams",
     "bookingStatus": "Confirmed",
@@ -240,9 +240,9 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": true,
-            "doneBy": "Thomas O'Brien",
-            "doneAt": "2026-05-14T00:51:44.124Z"
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
           },
           {
             "label": "Pitched / parked correctly",
