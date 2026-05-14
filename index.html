@@ -1404,6 +1404,10 @@ body {
   <div class="card">
     <div class="card-title">Power Supply</div>
     <div id="powerSupplyQuickRef" style="display:none;margin-bottom:14px;"></div>
+    <label style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--white);padding:10px 14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;margin-bottom:14px;cursor:pointer;line-height:1.5;">
+      <input type="checkbox" id="iceVansNeedPower" onchange="updatePowerSummary()" style="accent-color:var(--sage);margin-top:2px;">
+      <span>🍦 Force-include ice cream vans in power calculation<br><span style="color:var(--grey);font-size:11px;">Default: excluded. Vans run off their own engines unless pitched indoors or specifically requested by the venue/client.</span></span>
+    </label>
     <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">How is power being provided at this event?</p>
     <div class="chip-group" id="powerChipGroup" style="margin-bottom:16px;">
       <div class="chip" data-val="We provide generator" onclick="togglePower(this)">⚡ We provide generator</div>
@@ -2570,10 +2574,17 @@ function getSelectedFleet() {
 
 function calculatePower() {
   const selected = getSelectedFleet();
+  const iceVansToggle = document.getElementById('iceVansNeedPower');
+  const includeIceVans = !!(iceVansToggle && iceVansToggle.checked);
   let singleTotal = 0, threeTotal = 0;
   const singleBreakers = {}, threeBreakers = {};
   let comboCount = 0;
+  let excludedIceVans = 0;
   selected.forEach(u => {
+    if (u.category === 'Ice Cream Vans' && !includeIceVans) {
+      excludedIceVans++;
+      return;
+    }
     if (u.phase === 'combo') comboCount++;
     u.singleBreakers.forEach(a => {
       singleTotal += a;
@@ -2589,11 +2600,33 @@ function calculatePower() {
   return {
     count: selected.length,
     comboCount,
+    excludedIceVans,
     singleTotal, threeTotal,
     singleBreakers, threeBreakers,
     singleKVA, threeKVA,
     totalKVA: singleKVA + threeKVA
   };
+}
+
+// ─── GENERATOR SIZE SUGGESTION ────────────────────────────────
+// Road-tow generators we hire come in standard kVA sizes. 80% load
+// factor headroom is industry-standard for continuous loads.
+const ROAD_TOW_GEN_SIZES = [30, 45, 60, 100, 150, 200, 250, 350, 500];
+function suggestGenerator(totalKVA) {
+  if (!totalKVA || totalKVA <= 0) return null;
+  const required = totalKVA / 0.8; // 80% safe continuous load
+  const single = ROAD_TOW_GEN_SIZES.find(s => s >= required);
+  if (single) return { required, single, parallel: null };
+  // Falls back to parallel pair: 500 + next size that covers the remainder
+  const big = ROAD_TOW_GEN_SIZES[ROAD_TOW_GEN_SIZES.length - 1];
+  const remainder = required - big;
+  const second = ROAD_TOW_GEN_SIZES.find(s => s >= remainder) || big;
+  return { required, single: null, parallel: [big, second] };
+}
+function describeSuggestion(s) {
+  if (!s) return '';
+  if (s.single) return s.single + ' kVA road-tow gen';
+  return s.parallel[0] + ' kVA + ' + s.parallel[1] + ' kVA (parallel)';
 }
 
 function breakerBreakdown(map) {
@@ -2612,6 +2645,7 @@ function updatePowerSummary() {
     return;
   }
   card.style.display = 'block';
+  const sugg = suggestGenerator(p.totalKVA);
   if (quick) {
     quick.style.display = 'block';
     quick.innerHTML =
@@ -2621,8 +2655,9 @@ function updatePowerSummary() {
           '<div><span style="font-size:11px;color:#666;">Single Ø</span> <strong style="font-size:18px;">' + p.singleTotal + 'A</strong> <span style="font-size:11px;color:#666;">~' + p.singleKVA.toFixed(1) + ' kVA</span></div>' +
           '<div><span style="font-size:11px;color:#666;">Three Ø</span> <strong style="font-size:18px;">' + p.threeTotal + 'A</strong> <span style="font-size:11px;color:#666;">~' + p.threeKVA.toFixed(1) + ' kVA</span></div>' +
           '<div><span style="font-size:11px;color:#666;">Combined</span> <strong style="font-size:18px;color:var(--sage-dark);">~' + p.totalKVA.toFixed(1) + ' kVA</strong></div>' +
-          '<div style="font-size:11px;color:#666;">' + p.count + ' unit' + (p.count !== 1 ? 's' : '') + (p.comboCount ? ' · ' + p.comboCount + ' combined' : '') + '</div>' +
+          '<div style="font-size:11px;color:#666;">' + p.count + ' unit' + (p.count !== 1 ? 's' : '') + (p.comboCount ? ' · ' + p.comboCount + ' combined' : '') + (p.excludedIceVans ? ' · ' + p.excludedIceVans + ' ice cream van' + (p.excludedIceVans !== 1 ? 's' : '') + ' self-powered' : '') + '</div>' +
         '</div>' +
+        (sugg ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #c5d8b8;font-size:12px;color:#111;"><strong>Suggested hire:</strong> ' + describeSuggestion(sugg) + ' <span style="color:#666;font-size:11px;">(' + sugg.required.toFixed(1) + ' kVA after 80% load factor)</span></div>' : '') +
         '<div style="font-size:10px;color:#666;margin-top:6px;">Breakers needed &mdash; ' +
           (p.singleTotal ? '1Ø: ' + breakerBreakdown(p.singleBreakers) : '') +
           (p.singleTotal && p.threeTotal ? ' &nbsp;|&nbsp; ' : '') +
@@ -2632,6 +2667,15 @@ function updatePowerSummary() {
   }
   const comboNote = p.comboCount
     ? ' <span style="font-size:12px;color:var(--white);background:#444;padding:2px 8px;border-radius:2px;margin-left:6px;">' + p.comboCount + ' combined unit' + (p.comboCount > 1 ? 's' : '') + ' need both supplies</span>'
+    : '';
+  const iceNote = p.excludedIceVans
+    ? ' <span style="font-size:11px;color:#bbb;background:#2d2040;padding:2px 8px;border-radius:2px;margin-left:6px;">🍦 ' + p.excludedIceVans + ' ice cream van' + (p.excludedIceVans !== 1 ? 's' : '') + ' excluded (self-powered)</span>'
+    : '';
+  const suggHtml = sugg
+    ? '<div style="background:#1a1a1a;border:1px solid var(--sage);border-radius:3px;padding:10px 14px;margin-top:10px;color:var(--white);font-size:13px;line-height:1.5;">' +
+        '<strong style="color:var(--sage);">Suggested hire:</strong> ' + describeSuggestion(sugg) +
+        ' <span style="color:var(--grey);font-size:11px;">(' + sugg.required.toFixed(1) + ' kVA after 80% load factor for continuous safe load)</span>' +
+      '</div>'
     : '';
   document.getElementById('powerSummary').innerHTML =
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">' +
@@ -2647,9 +2691,10 @@ function updatePowerSummary() {
       '</div>' +
     '</div>' +
     '<div style="background:var(--sage);color:#111;padding:12px 16px;border-radius:3px;font-size:13px;line-height:1.5;">' +
-      '<strong>Combined estimate: ~' + p.totalKVA.toFixed(1) + ' kVA</strong> across ' + p.count + ' unit' + (p.count > 1 ? 's' : '') + '.' + comboNote +
+      '<strong>Combined estimate: ~' + p.totalKVA.toFixed(1) + ' kVA</strong> across ' + p.count + ' unit' + (p.count > 1 ? 's' : '') + '.' + comboNote + iceNote +
       '<br><span style="font-size:11px;">Assumes 230V single-phase / 400V three-phase at PF 1.0 (worst-case). Sense-check before final generator/distro spec.</span>' +
-    '</div>';
+    '</div>' +
+    suggHtml;
 }
 
 function updateRevenueCards() {
@@ -2979,7 +3024,8 @@ function generateBrief() {
           <div><strong>Single Phase:</strong> ${powerCalc.singleTotal}A (~${powerCalc.singleKVA.toFixed(1)} kVA)<br><span style="color:#666;font-size:11px;">Breakers: ${breakerBreakdown(powerCalc.singleBreakers)}</span></div>
           <div><strong>Three Phase:</strong> ${powerCalc.threeTotal}A (~${powerCalc.threeKVA.toFixed(1)} kVA)<br><span style="color:#666;font-size:11px;">Breakers: ${breakerBreakdown(powerCalc.threeBreakers)}</span></div>
         </div>
-        <div style="margin-top:8px;font-size:13px;color:#111;font-weight:700;">Combined: ~${powerCalc.totalKVA.toFixed(1)} kVA total estimate${powerCalc.comboCount ? ' &nbsp;·&nbsp; <span style="font-weight:400;color:#b8590e;">' + powerCalc.comboCount + ' combined-phase unit' + (powerCalc.comboCount > 1 ? 's' : '') + '</span>' : ''}</div>
+        <div style="margin-top:8px;font-size:13px;color:#111;font-weight:700;">Combined: ~${powerCalc.totalKVA.toFixed(1)} kVA total estimate${powerCalc.comboCount ? ' &nbsp;·&nbsp; <span style="font-weight:400;color:#b8590e;">' + powerCalc.comboCount + ' combined-phase unit' + (powerCalc.comboCount > 1 ? 's' : '') + '</span>' : ''}${powerCalc.excludedIceVans ? ' &nbsp;·&nbsp; <span style="font-weight:400;color:#666;">' + powerCalc.excludedIceVans + ' ice cream van' + (powerCalc.excludedIceVans > 1 ? 's' : '') + ' self-powered (engine)</span>' : ''}</div>
+        ${(() => { const s = suggestGenerator(powerCalc.totalKVA); return s ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #c5d8b8;font-size:13px;color:#111;"><strong>Suggested hire:</strong> ' + describeSuggestion(s) + ' <span style="color:#666;font-size:11px;">(' + s.required.toFixed(1) + ' kVA after 80% load factor)</span></div>' : ''; })()}
       </div>
       ` : '<div style="color:#999;font-size:12px;margin-bottom:14px;">No units selected</div>'}
       <div class="brief-grid-3">
@@ -3705,6 +3751,8 @@ function collectFormData() {
   const scatteredCb = document.getElementById('isScattered');
   data._isScattered = scatteredCb ? scatteredCb.checked : false;
   data._tradingDays = getTradingDays();
+  const iceCb = document.getElementById('iceVansNeedPower');
+  data._iceVansNeedPower = iceCb ? iceCb.checked : false;
   data._stockStatuses = collectStockStatuses();
   data._staffAllocations = collectStaffAllocations();
   data._truckSafetyChecks = collectTruckSafety();
@@ -3740,6 +3788,8 @@ function populateForm(data) {
     toggleScattered();
   }
   setTradingDays(data._tradingDays);
+  const iceCb = document.getElementById('iceVansNeedPower');
+  if (iceCb) iceCb.checked = !!data._iceVansNeedPower;
   const restoreChip = (groupSel, val) => {
     const escVal = val.replace(/"/g, '\\"');
     const chip = document.querySelector(groupSel + '[data-val="' + escVal + '"]');
