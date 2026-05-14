@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-22-ucd-exams",
-  "savedAt": "2026-05-14T00:31:07.109Z",
+  "savedAt": "2026-05-14T00:39:02.300Z",
   "form": {
     "eventName": "UCD Exams",
     "bookingStatus": "Confirmed",
@@ -95,6 +95,7 @@
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
+    "_iceVansNeedPower": false,
     "_stockStatuses": [
       {
         "truck": "Smash Burger 1",
