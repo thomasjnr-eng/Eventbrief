@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-ces-power-summer-party",
-  "savedAt": "2026-05-14T21:44:47.856Z",
+  "savedAt": "2026-05-14T21:46:21.424Z",
   "form": {
     "eventName": "CES Power Summer Party",
     "bookingStatus": "Confirmed",
@@ -68,7 +68,7 @@
     "staffNotes": "All black uniform. ",
     "clientInstructions": "",
     "opsNotes": "",
-    "postEventNotes": "",
+    "postEventNotes": "Invoice with 7 days\n\nPayment 7 days post Invoice",
     "_fleet": [
       "O'Briens Chipper 1",
       "Angelo's Pizza",
@@ -168,6 +168,10 @@
       "step5": {
         "user": "Colm Dunne",
         "at": "2026-05-14T21:44:42.459Z"
+      },
+      "step6": {
+        "user": "Colm Dunne",
+        "at": "2026-05-14T21:45:30.220Z"
       }
     },
     "_crewChecklists": {
@@ -381,9 +385,9 @@
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Colm Dunne",
+            "doneAt": "2026-05-14T21:46:21.116Z"
           },
           {
             "label": "Pre-trade brief from event lead complete",
