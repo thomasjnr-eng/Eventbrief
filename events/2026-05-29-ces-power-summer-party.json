@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-ces-power-summer-party",
-  "savedAt": "2026-05-14T21:35:45.026Z",
+  "savedAt": "2026-05-14T21:40:57.196Z",
   "form": {
     "eventName": "CES Power Summer Party",
     "bookingStatus": "Confirmed",
@@ -26,16 +26,16 @@
     "accessNotes": "",
     "otherUnits": "",
     "pitchRef": "",
-    "pitchSize": "",
-    "groundSurface": "",
+    "pitchSize": "25 x 8 meters ",
+    "groundSurface": "Tarmac",
     "vehicleLayout": "Side by Side",
     "pitchNotes": "",
     "cableRun": "",
-    "powerNotes": "",
-    "waterSource": "",
-    "waterVolume": "",
-    "wasteDisposal": "",
-    "solidWaste": "",
+    "powerNotes": "€4 / kva.  4 x 150 = 600 + vat ",
+    "waterSource": "Mixed — site + our tanks",
+    "waterVolume": "240",
+    "wasteDisposal": "On-site drain available",
+    "solidWaste": "Venue provides bins",
     "waterNotes": "",
     "commercialClient": "",
     "commercialClientRef": "",
@@ -69,14 +69,20 @@
     "clientInstructions": "",
     "opsNotes": "",
     "postEventNotes": "",
-    "_fleet": [],
-    "_power": [],
+    "_fleet": [
+      "O'Briens Chipper 1",
+      "Angelo's Pizza",
+      "BMC"
+    ],
+    "_power": [
+      "We provide generator"
+    ],
     "_revenue": [],
     "_pos": [],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
-    "_iceVansNeedPower": false,
+    "_iceVansNeedPower": true,
     "_stockStatuses": [],
     "_staffAllocations": [],
     "_truckSafetyChecks": {},
@@ -85,8 +91,241 @@
       "step1": {
         "user": "Colm Dunne",
         "at": "2026-05-14T21:35:44.774Z"
+      },
+      "step2": {
+        "user": "Colm Dunne",
+        "at": "2026-05-14T21:40:54.359Z"
       }
     },
-    "_crewChecklists": {}
+    "_crewChecklists": {
+      "O'Briens Chipper 1": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          }
+        ]
+      },
+      "Angelo's Pizza": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          }
+        ]
+      },
+      "BMC": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          }
+        ]
+      }
+    }
   }
 }
