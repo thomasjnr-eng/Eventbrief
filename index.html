@@ -453,6 +453,44 @@ body {
 }
 .brief-mode-banner.full { background: #111; color: var(--sage); border: 1px solid var(--sage); }
 .brief-mode-banner.crew { background: var(--sage); color: #111; }
+.brief-mode-banner.ops { background: #b8590e; color: #fff; }
+
+/* ─── OPS VIEW ─── */
+.ops-truck-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.ops-truck-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.ops-truck-name { font-size: 16px; font-weight: 700; color: #111; }
+.ops-truck-pct { font-size: 13px; font-weight: 700; }
+.ops-bar { height: 5px; background: #eee; border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
+.ops-bar-fill { height: 100%; transition: width 0.3s; }
+.ops-checks { display: flex; flex-direction: column; gap: 4px; }
+.ops-check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #f8f5f0;
+  border: 1px solid #e0ddd8;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #111;
+}
+.ops-check-row:hover { background: #f0ece6; }
+.ops-check-row input[type=checkbox] { width: 18px; height: 18px; accent-color: #4a9a5c; cursor: pointer; }
+.ops-check-row.done { background: #e8f5ee; border-color: #b8d8c2; }
+.ops-check-row.done .ops-label { color: #2d7a49; text-decoration: line-through; }
+.ops-label { flex: 1; }
 
 @media print {
   .brief-actions { display: none; }
@@ -575,7 +613,7 @@ body {
 /* ─── SAVED EVENTS LIST ─── */
 .event-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto auto auto;
   gap: 14px;
   align-items: center;
   padding: 12px;
@@ -584,6 +622,18 @@ body {
   margin-bottom: 8px;
   background: #2a2a2a;
 }
+.ev-ops-cell {
+  font-size: 11px;
+  color: var(--grey);
+  text-align: center;
+  min-width: 70px;
+}
+.ev-ops-cell .ev-ops-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+.ev-ops-cell .ev-ops-pct { display: block; font-weight: 700; font-size: 13px; margin-top: 2px; }
+.ev-ops-cell.green .ev-ops-pct { color: #6fcf6f; }
+.ev-ops-cell.amber .ev-ops-pct { color: #e0b370; }
+.ev-ops-cell.red .ev-ops-pct { color: #ff8c8c; }
+.ev-ops-cell.empty .ev-ops-pct { color: #555; }
 .event-row:hover { border-color: var(--sage); }
 .event-row .ev-name { font-weight: 700; color: var(--white); font-size: 14px; }
 .event-row .ev-meta { font-size: 11px; color: var(--grey); margin-top: 3px; }
@@ -1811,6 +1861,7 @@ body {
     <div style="display:flex;gap:6px;align-items:center;background:#222;padding:4px;border-radius:3px;">
       <button class="btn btn-secondary" id="modeFullBtn" onclick="setBriefMode('full')" style="font-size:12px;padding:7px 14px;">Full</button>
       <button class="btn btn-secondary" id="modeCrewBtn" onclick="setBriefMode('crew')" style="font-size:12px;padding:7px 14px;">Crew</button>
+      <button class="btn btn-secondary" id="modeOpsBtn" onclick="setBriefMode('ops')" style="font-size:12px;padding:7px 14px;">Ops</button>
     </div>
     <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
     <button class="btn btn-green" id="calendarBtn" onclick="addToCalendar()">📅 Add to Calendar</button>
@@ -1839,6 +1890,71 @@ function goStep(n) {
   window.scrollTo(0,0);
   if (n === 4) renderStockOrderRows();
   if (n === 5) { renderStaffRows(); renderTruckSafetyRows(); }
+}
+
+// ─── CREW CHECKLISTS (Ops mode) ───────────────────────────────
+// Per-truck day-of operational checks. Lives on each saved event as
+// _crewChecklists: { TruckName: { items: [{label, done, doneBy, doneAt}] }}
+const CREW_CHECKLIST_DEFAULTS = [
+  'Arrived on site',
+  'Pitched / parked correctly',
+  'Power connected & tested',
+  'Water connected (if applicable)',
+  'Waste containers in place',
+  'Fire equipment laid out & accessible',
+  'Hand wash station set up',
+  'Menu boards / signage up',
+  'POS / payment system tested',
+  'Stock checked & loaded',
+  'Pre-trade brief from event lead complete',
+  'Ready to trade'
+];
+let CREW_CHECKLISTS = {};
+
+function ensureCrewChecklists() {
+  if (!CREW_CHECKLISTS || typeof CREW_CHECKLISTS !== 'object') CREW_CHECKLISTS = {};
+  const selectedTrucks = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
+  selectedTrucks.forEach(truck => {
+    if (!CREW_CHECKLISTS[truck]) {
+      CREW_CHECKLISTS[truck] = {
+        items: CREW_CHECKLIST_DEFAULTS.map(label => ({ label, done: false, doneBy: null, doneAt: null }))
+      };
+    }
+  });
+  // Drop entries for trucks no longer selected
+  const sel = new Set(selectedTrucks);
+  Object.keys(CREW_CHECKLISTS).forEach(t => { if (!sel.has(t)) delete CREW_CHECKLISTS[t]; });
+}
+
+function setCrewChecklists(obj) {
+  CREW_CHECKLISTS = (obj && typeof obj === 'object') ? Object.assign({}, obj) : {};
+}
+
+function crewProgressFor(checklists) {
+  const trucks = Object.keys(checklists || {});
+  if (!trucks.length) return { trucks: 0, totalItems: 0, doneItems: 0, percent: 0, perTruck: {} };
+  let total = 0, done = 0;
+  const perTruck = {};
+  trucks.forEach(t => {
+    const items = (checklists[t].items || []);
+    const tDone = items.filter(i => i.done).length;
+    perTruck[t] = { total: items.length, done: tDone, percent: items.length ? Math.round((tDone / items.length) * 100) : 0 };
+    total += items.length; done += tDone;
+  });
+  return { trucks: trucks.length, totalItems: total, doneItems: done, percent: total ? Math.round((done / total) * 100) : 0, perTruck };
+}
+
+function tickCrewItem(truck, idx, checked) {
+  if (!CREW_CHECKLISTS[truck]) return;
+  const item = CREW_CHECKLISTS[truck].items[idx];
+  if (!item) return;
+  item.done = !!checked;
+  item.doneBy = checked ? (getUser() || 'Anonymous') : null;
+  item.doneAt = checked ? new Date().toISOString() : null;
+  // Re-render the brief to refresh progress
+  generateBrief();
+  // Push to Worker silently (saveEvent handles passcode/missing-name gracefully)
+  autoSave();
 }
 
 // ─── BULK IMPORT ──────────────────────────────────────────────
@@ -2667,16 +2783,19 @@ function statusBadge(s) {
 // ─── GENERATE BRIEF ───────────────────────────────────────────
 let currentBriefMode = 'full';
 function setBriefMode(mode) {
-  currentBriefMode = (mode === 'crew') ? 'crew' : 'full';
+  currentBriefMode = (mode === 'crew') ? 'crew' : (mode === 'ops') ? 'ops' : 'full';
   const fullBtn = document.getElementById('modeFullBtn');
   const crewBtn = document.getElementById('modeCrewBtn');
+  const opsBtn = document.getElementById('modeOpsBtn');
   if (fullBtn) fullBtn.classList.toggle('mode-active', currentBriefMode === 'full');
   if (crewBtn) crewBtn.classList.toggle('mode-active', currentBriefMode === 'crew');
+  if (opsBtn) opsBtn.classList.toggle('mode-active', currentBriefMode === 'ops');
   generateBrief();
 }
 
 function generateBrief() {
   const isCrew = currentBriefMode === 'crew';
+  const isOps = currentBriefMode === 'ops';
   const ref = genRef();
   const fleet = getSelectedFleet();
   const units = fleet.map(u => u.name);
@@ -2693,8 +2812,12 @@ function generateBrief() {
   // Reflect mode on toggle buttons (covers the very first render too)
   const fullBtn = document.getElementById('modeFullBtn');
   const crewBtn = document.getElementById('modeCrewBtn');
-  if (fullBtn) fullBtn.classList.toggle('mode-active', !isCrew);
+  const opsBtn = document.getElementById('modeOpsBtn');
+  if (fullBtn) fullBtn.classList.toggle('mode-active', currentBriefMode === 'full');
   if (crewBtn) crewBtn.classList.toggle('mode-active', isCrew);
+  if (opsBtn) opsBtn.classList.toggle('mode-active', isOps);
+
+  if (isOps) { renderOpsView(fleet, ref); return; }
 
   const allSafetyItems = [
     'Fire risk assessment completed', 'Evacuation point confirmed with venue',
@@ -3049,6 +3172,81 @@ function backToForm() {
   document.getElementById('form-app').style.display = 'block';
   document.title = 'Event Briefs - OBEC';
   window.scrollTo(0,0);
+}
+
+function renderOpsView(fleet, ref) {
+  ensureCrewChecklists();
+  const venue = val('venueName');
+  const eventName = val('eventName') || 'Event';
+  const isScattered = document.getElementById('isScattered') && document.getElementById('isScattered').checked;
+  const formData = collectFormDataLight();
+  const [winStart, winEnd] = getEventWindow(Object.assign({}, formData, { _isScattered: isScattered, _tradingDays: getTradingDays() }));
+  const dateStr = (winStart && winEnd && winStart !== winEnd) ? formatDate(winStart) + ' – ' + formatDate(winEnd) : formatDate(winStart || val('eventStartDate'));
+
+  const progress = crewProgressFor(CREW_CHECKLISTS);
+
+  const trucksHtml = fleet.length ? fleet.map(u => {
+    const list = CREW_CHECKLISTS[u.name];
+    if (!list) return '';
+    const items = list.items || [];
+    const tDone = items.filter(i => i.done).length;
+    const tPct = items.length ? Math.round((tDone / items.length) * 100) : 0;
+    const rows = items.map((it, idx) => {
+      const meta = it.done && it.doneBy ? ' <span style="color:#666;font-size:11px;">— ' + (it.doneBy || '').replace(/</g,'&lt;') + ', ' + formatRelativeTime(it.doneAt) + '</span>' : '';
+      const escTruck = u.name.replace(/"/g, '&quot;');
+      return '<label class="ops-check-row' + (it.done ? ' done' : '') + '" data-truck="' + escTruck + '" data-idx="' + idx + '">' +
+        '<input type="checkbox" ' + (it.done ? 'checked' : '') + ' onchange="tickCrewItem(\'' + escTruck.replace(/'/g, "\\'") + '\', ' + idx + ', this.checked)">' +
+        '<span class="ops-label">' + it.label + meta + '</span>' +
+        '</label>';
+    }).join('');
+    const barColor = tPct === 100 ? '#4a9a5c' : tPct >= 50 ? '#c89a4a' : '#c0392b';
+    return '<div class="ops-truck-card">' +
+      '<div class="ops-truck-head">' +
+        '<div class="ops-truck-name">' + u.name + '</div>' +
+        '<div class="ops-truck-pct" style="color:' + barColor + ';">' + tDone + '/' + items.length + ' · ' + tPct + '%</div>' +
+      '</div>' +
+      '<div class="ops-bar"><div class="ops-bar-fill" style="width:' + tPct + '%;background:' + barColor + ';"></div></div>' +
+      '<div class="ops-checks">' + rows + '</div>' +
+      '</div>';
+  }).join('') : '<div style="color:#666;text-align:center;padding:30px;font-size:14px;">No trucks selected for this event. Add trucks in Step 2 to enable per-truck operational checks.</div>';
+
+  const overallColor = progress.percent === 100 ? '#4a9a5c' : progress.percent >= 50 ? '#c89a4a' : '#c0392b';
+
+  const html = `
+    <div class="brief-mode-banner ops">OPS MODE — TICK CHECKS AS YOU COMPLETE THEM</div>
+    <div class="brief-header">
+      <div>
+        <div class="brief-logo">O'<span>Brien</span> Event Catering</div>
+        <div style="font-size:11px;color:#888;margin-top:4px;letter-spacing:0.06em;">Crew Operations Checklist</div>
+      </div>
+      <div>
+        <div class="brief-event-name">${eventName.replace(/</g,'&lt;')}</div>
+        <div class="brief-ref">${dateStr}${venue ? ' &nbsp;|&nbsp; ' + venue.replace(/</g,'&lt;') : ''}</div>
+      </div>
+    </div>
+
+    <div style="background:#111;color:#f8f5f0;border-radius:3px;padding:18px 22px;margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <div style="font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#888;margin-bottom:4px;">Overall Crew Progress</div>
+          <div style="font-size:26px;font-weight:700;color:${overallColor};">${progress.doneItems}/${progress.totalItems} · ${progress.percent}%</div>
+        </div>
+        <div style="font-size:11px;color:#888;text-align:right;">${progress.trucks} truck${progress.trucks !== 1 ? 's' : ''}<br>Ref: ${ref}</div>
+      </div>
+      <div style="margin-top:12px;height:6px;background:#333;border-radius:3px;overflow:hidden;"><div style="width:${progress.percent}%;height:100%;background:${overallColor};"></div></div>
+    </div>
+
+    ${trucksHtml}
+
+    <div style="margin-top:36px;padding-top:16px;border-top:2px solid #111;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:11px;color:#888;">${progress.doneItems} of ${progress.totalItems} checks complete</div>
+      <div style="font-size:11px;color:#888;">Ref: ${ref}</div>
+    </div>
+  `;
+  document.getElementById('brief-content').innerHTML = html;
+  document.getElementById('form-app').style.display = 'none';
+  document.getElementById('brief-output').style.display = 'block';
+  document.title = '🚧 ' + eventName + ' — Ops';
 }
 
 // ─── CALENDAR ─────────────────────────────────────────────────
@@ -3460,9 +3658,21 @@ async function openEventsModal() {
       const comp = computeEventCompleteness(f);
       const band = progressBand(comp.percent);
       const tip = comp.missing.length ? 'Missing: ' + comp.missing.join(', ') : 'All checks passed';
+      const ops = crewProgressFor(f._crewChecklists || {});
+      let opsBand = 'empty';
+      if (ops.totalItems > 0) {
+        opsBand = ops.percent === 100 ? 'green' : ops.percent >= 50 ? 'amber' : 'red';
+      }
+      const opsLabel = ops.totalItems ? (ops.doneItems + '/' + ops.totalItems) : '—';
+      const opsTip = ops.totalItems
+        ? 'Crew checks: ' + ops.doneItems + ' of ' + ops.totalItems + ' (' + ops.percent + '%) across ' + ops.trucks + ' truck' + (ops.trucks !== 1 ? 's' : '')
+        : 'No trucks selected yet';
       return '<div class="event-row">' +
         '<div><div class="ev-name">' + escName + scatteredTag + '</div>' +
         '<div class="ev-meta">' + dateLabel + ' &middot; ' + escClient + ' &middot; ' + escVenue + ' &middot; ' + units + ' unit' + (units !== 1 ? 's' : '') + ' &middot; ' + (f.bookingStatus || '—') + '</div></div>' +
+        '<div class="ev-ops-cell ' + opsBand + '" title="' + opsTip.replace(/"/g, '&quot;') + '">' +
+          '<div class="ev-ops-label">Crew</div><div class="ev-ops-pct">' + opsLabel + '</div>' +
+        '</div>' +
         '<div class="ev-progress ' + band + '" title="' + tip.replace(/"/g, '&quot;') + '">' +
           '<div class="pct">' + comp.percent + '%</div>' +
           '<div class="bar"><div class="bar-fill" style="width:' + comp.percent + '%;"></div></div>' +
@@ -3500,6 +3710,8 @@ function collectFormData() {
   data._truckSafetyChecks = collectTruckSafety();
   data._signatures = getSignatures();
   data._changeLog = CHANGE_LOG;
+  ensureCrewChecklists();
+  data._crewChecklists = CREW_CHECKLISTS;
   return data;
 }
 
@@ -3548,6 +3760,8 @@ function populateForm(data) {
   renderTruckSafetyRows(data._truckSafetyChecks);
   setSignatures(data._signatures);
   setChangeLog(data._changeLog);
+  setCrewChecklists(data._crewChecklists);
+  ensureCrewChecklists();
   checkDoubleBooking();
   updateStepColors(data);
   setTimeout(() => { autoSavePaused = false; }, 200);
@@ -3574,22 +3788,51 @@ async function renderDashboard() {
   const monthDate = new Date(today); monthDate.setDate(monthDate.getDate() + 30);
   const monthStr = fmtIso(monthDate);
 
-  const buckets = { week: [], month: [], beyond: [] };
+  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = fmtIso(tomorrow);
+
+  const buckets = { live: [], week: [], month: [], beyond: [] };
   valid.forEach(ev => {
+    const [winStart, winEnd] = getEventWindow(ev.form);
     const d = getEventDate(ev.form);
     if (!d || d < todayStr) return;
     const comp = computeEventCompleteness(ev.form);
     const item = { ev, date: d, comp };
+    // "Today on site" = the load-in window covers today or tomorrow
+    if (winStart && winEnd && winStart <= tomorrowStr && winEnd >= todayStr) buckets.live.push(item);
     if (d <= weekStr) buckets.week.push(item);
     else if (d <= monthStr) buckets.month.push(item);
     else buckets.beyond.push(item);
   });
 
   container.innerHTML =
+    renderTodayPill(buckets.live) +
     renderDashPill(buckets.week, 'This Week', 'week') +
     renderDashPill(buckets.month, 'Next 30 Days', 'month') +
     renderDashPill(buckets.beyond, 'Beyond', 'beyond');
   container.classList.add('show');
+}
+
+function renderTodayPill(items) {
+  if (!items.length) return '';
+  let totalItems = 0, doneItems = 0;
+  items.forEach(i => {
+    const p = crewProgressFor(i.ev.form._crewChecklists || {});
+    totalItems += p.totalItems;
+    doneItems += p.doneItems;
+  });
+  const pct = totalItems ? Math.round((doneItems / totalItems) * 100) : 0;
+  let cls = 'good';
+  if (totalItems === 0) cls = '';
+  else if (pct < 50) cls = 'urgent';
+  else if (pct < 100) cls = 'amber';
+  const counts = totalItems ? doneItems + '/' + totalItems + ' crew checks · ' + pct + '%' : 'No crew checks ticked yet';
+  return '<div class="dash-pill ' + cls + '" onclick="openEventsModal()" title="' + counts.replace(/"/g, '&quot;') + '">' +
+    '<span class="dash-dot"></span>' +
+    '<span class="dash-count">' + items.length + '</span>' +
+    '<span class="dash-label">Today / Tmrw On Site</span>' +
+    (totalItems ? '<span class="dash-alert" style="color:' + (pct === 100 ? '#6fcf6f' : pct >= 50 ? '#e0b370' : '#ff8c8c') + ';">' + pct + '%</span>' : '') +
+    '</div>';
 }
 
 function renderDashPill(items, label, bucket) {
