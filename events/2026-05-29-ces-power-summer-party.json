@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-ces-power-summer-party",
-  "savedAt": "2026-05-14T21:46:21.424Z",
+  "savedAt": "2026-05-14T21:46:22.545Z",
   "form": {
     "eventName": "CES Power Summer Party",
     "bookingStatus": "Confirmed",
@@ -385,9 +385,9 @@
           },
           {
             "label": "Stock checked & loaded",
-            "done": true,
-            "doneBy": "Colm Dunne",
-            "doneAt": "2026-05-14T21:46:21.116Z"
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
           },
           {
             "label": "Pre-trade brief from event lead complete",
