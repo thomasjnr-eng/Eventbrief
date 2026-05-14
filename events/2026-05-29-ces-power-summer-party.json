@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-ces-power-summer-party",
-  "savedAt": "2026-05-14T21:42:05.521Z",
+  "savedAt": "2026-05-14T21:42:57.761Z",
   "form": {
     "eventName": "CES Power Summer Party",
     "bookingStatus": "Confirmed",
@@ -56,11 +56,11 @@
     "voucherDetails": "Food & Dessert vouchers",
     "posNotes": "",
     "menuNotes": "",
-    "foodCovers": "",
+    "foodCovers": "95",
     "coffeeCovers": "",
-    "icecreamCovers": "",
-    "deliveryDate": "",
-    "coldChain": "",
+    "icecreamCovers": "95",
+    "deliveryDate": "2026-05-31",
+    "coldChain": "Truck fridges sufficient",
     "stockNotes": "",
     "eventManager": "",
     "opsLead": "",
@@ -85,7 +85,23 @@
     "_isScattered": false,
     "_tradingDays": [],
     "_iceVansNeedPower": true,
-    "_stockStatuses": [],
+    "_stockStatuses": [
+      {
+        "truck": "O'Briens Chipper 1",
+        "status": "Fully ordered",
+        "notes": ""
+      },
+      {
+        "truck": "Angelo's Pizza",
+        "status": "Partial",
+        "notes": ""
+      },
+      {
+        "truck": "BMC",
+        "status": "N/A",
+        "notes": ""
+      }
+    ],
     "_staffAllocations": [],
     "_truckSafetyChecks": {},
     "_signatures": [],
@@ -101,6 +117,10 @@
       "step3": {
         "user": "Colm Dunne",
         "at": "2026-05-14T21:42:05.316Z"
+      },
+      "step4": {
+        "user": "Colm Dunne",
+        "at": "2026-05-14T21:42:53.796Z"
       }
     },
     "_crewChecklists": {
