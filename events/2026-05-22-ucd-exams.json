@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-22-ucd-exams",
-  "savedAt": "2026-05-13T23:28:17.429Z",
+  "savedAt": "2026-05-14T00:10:09.259Z",
   "form": {
     "eventName": "UCD Exams",
     "bookingStatus": "Confirmed",
@@ -30,7 +30,6 @@
     "groundSurface": "Concrete",
     "vehicleLayout": "Side by Side",
     "pitchNotes": "",
-    "powerSpec": "",
     "cableRun": "",
     "powerNotes": "",
     "waterSource": "We bring our own tanks",
@@ -70,8 +69,6 @@
     "clientInstructions": "",
     "opsNotes": "",
     "postEventNotes": "",
-    "newSignerName": "",
-    "newSignerRole": "Ops Lead",
     "_fleet": [
       "Smash Burger 1",
       "Smash Burger 2",
@@ -223,6 +220,7 @@
         "role": "Ops Lead",
         "signedAt": "2026-05-13T23:02:41.460Z"
       }
-    ]
+    ],
+    "_changeLog": {}
   }
 }
