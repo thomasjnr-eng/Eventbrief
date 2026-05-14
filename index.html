@@ -332,7 +332,29 @@ body {
   padding-bottom: 6px;
   border-bottom: 1px solid #ccc;
   margin-bottom: 14px;
+  cursor: pointer;
+  position: relative;
+  padding-right: 24px;
+  user-select: none;
 }
+.brief-section-head::after {
+  content: '▾';
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  font-size: 14px;
+  transition: transform 0.15s;
+  color: #888;
+}
+.brief-section.collapsed > .brief-section-head::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
+.brief-section.collapsed > .brief-section-head {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.brief-section.collapsed > *:not(.brief-section-head) { display: none; }
 .brief-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
 .brief-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px 20px; }
 
@@ -1867,6 +1889,10 @@ body {
       <button class="btn btn-secondary" id="modeCrewBtn" onclick="setBriefMode('crew')" style="font-size:12px;padding:7px 14px;">Crew</button>
       <button class="btn btn-secondary" id="modeOpsBtn" onclick="setBriefMode('ops')" style="font-size:12px;padding:7px 14px;">Ops</button>
     </div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <button class="btn btn-secondary" onclick="briefExpandAll()" style="font-size:12px;padding:7px 12px;">Expand all</button>
+      <button class="btn btn-secondary" onclick="briefCollapseAll()" style="font-size:12px;padding:7px 12px;">Collapse all</button>
+    </div>
     <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
     <button class="btn btn-green" id="calendarBtn" onclick="addToCalendar()">📅 Add to Calendar</button>
   </div>
@@ -3219,6 +3245,31 @@ function backToForm() {
   document.title = 'Event Briefs - OBEC';
   window.scrollTo(0,0);
 }
+
+// ─── COLLAPSIBLE BRIEF SECTIONS ───────────────────────────────
+function briefSectionsForEach(fn) {
+  document.querySelectorAll('#brief-content .brief-section').forEach(fn);
+}
+function briefExpandAll() { briefSectionsForEach(s => s.classList.remove('collapsed')); }
+function briefCollapseAll() { briefSectionsForEach(s => s.classList.add('collapsed')); }
+// One-time delegated click handler on the brief content host.
+(function () {
+  const setup = () => {
+    const host = document.getElementById('brief-content');
+    if (!host || host._collapseBound) return;
+    host._collapseBound = true;
+    host.addEventListener('click', (e) => {
+      const head = e.target.closest('.brief-section-head');
+      if (!head) return;
+      const section = head.parentElement;
+      if (section && section.classList.contains('brief-section')) {
+        section.classList.toggle('collapsed');
+      }
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+  else setup();
+})();
 
 function renderOpsView(fleet, ref) {
   ensureCrewChecklists();
