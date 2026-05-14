@@ -759,6 +759,81 @@ body {
 .welcome-skip a { color: var(--sage); text-decoration: none; }
 .welcome-skip a:hover { text-decoration: underline; }
 
+/* ─── OPS TRACKER (main-page live progress) ─── */
+.ops-tracker {
+  max-width: 1100px;
+  margin: 14px auto 0;
+  padding: 0 24px;
+}
+.ops-tracker-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  user-select: none;
+}
+.ops-tracker-head:hover { background: #252525; }
+.ops-tracker-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--sage);
+}
+.ops-tracker-summary { font-size: 11px; color: var(--grey); flex: 1; }
+.ops-tracker-chevron {
+  color: var(--grey);
+  font-size: 12px;
+  transition: transform 0.15s;
+}
+.ops-tracker.collapsed .ops-tracker-chevron { transform: rotate(-90deg); }
+.ops-tracker-body {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  padding: 6px 14px 12px;
+}
+.ops-tracker.collapsed .ops-tracker-body { display: none; }
+.ops-tracker.collapsed .ops-tracker-head { border-radius: 4px; }
+.ote-event {
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ote-event:last-child { border-bottom: none; }
+.ote-event:hover { background: rgba(168,196,154,0.06); }
+.ote-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.ote-name { font-size: 13px; color: var(--white); font-weight: 700; }
+.ote-meta { font-size: 11px; color: var(--grey); }
+.ote-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+.ote-bar-fill { height: 100%; transition: width 0.3s; }
+.ote-trucks { display: flex; flex-wrap: wrap; gap: 6px; }
+.ote-truck {
+  font-size: 11px;
+  color: var(--white);
+  background: #1a1a1a;
+  border: 1px solid var(--border);
+  border-left: 3px solid #555;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+.ote-truck.green { border-left-color: #4a9a5c; }
+.ote-truck.amber { border-left-color: #c89a4a; }
+.ote-truck.red { border-left-color: var(--red); }
+.ote-truck .ote-truck-pct { color: var(--grey); margin-left: 4px; font-size: 10px; }
+
 /* ─── DASHBOARD (compact pill strip) ─── */
 .dashboard {
   display: none;
@@ -1207,6 +1282,7 @@ body {
 
 <div id="draftBanner" style="display:none;"></div>
 <div id="dashboard" class="dashboard"></div>
+<div id="opsTracker" class="ops-tracker" style="display:none;"></div>
 
 <!-- ══════════════════════════════════════════
      STEP 1 — EVENT OVERVIEW
@@ -2225,7 +2301,7 @@ async function bulkImport() {
   closeBulkModal();
   eventsCache.filenames = null;
   eventsCache.byName = {};
-  renderDashboard();
+  renderDashboard(); renderOpsTracker();
 }
 
 async function bulkSaveOne(ev) {
@@ -3243,6 +3319,7 @@ function backToForm() {
   document.getElementById('brief-output').style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
   document.title = 'Event Briefs - OBEC';
+  renderOpsTracker();
   window.scrollTo(0,0);
 }
 
@@ -3689,7 +3766,7 @@ async function submitWelcomePasscode() {
     closeWelcomeOverlay();
     btn.disabled = false; btn.textContent = 'Continue';
     nameInp.value = ''; codeInp.value = '';
-    renderDashboard();
+    renderDashboard(); renderOpsTracker();
     checkDoubleBooking();
     toast('Welcome, ' + name);
   } catch (e) {
@@ -3718,7 +3795,7 @@ function savePasscodeAndClose() {
   eventsCache.filenames = null;
   eventsCache.byName = {};
   checkDoubleBooking();
-  renderDashboard();
+  renderDashboard(); renderOpsTracker();
 }
 function clearPasscodeAndClose() {
   clearPasscode();
@@ -3866,6 +3943,99 @@ function populateForm(data) {
   checkDoubleBooking();
   updateStepColors(data);
   setTimeout(() => { autoSavePaused = false; }, 200);
+}
+
+// ─── OPS TRACKER (main-page panel for next 7 days) ────────────
+async function renderOpsTracker() {
+  const tracker = document.getElementById('opsTracker');
+  if (!tracker) return;
+  if (!getPasscode()) { tracker.style.display = 'none'; return; }
+  let filenames;
+  try { filenames = await listEventFilenames(); }
+  catch (e) { tracker.style.display = 'none'; return; }
+  if (!filenames.length) { tracker.style.display = 'none'; return; }
+
+  const events = await Promise.all(filenames.map(getEventByFilename));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const fmtIso = (d) => d.toISOString().slice(0, 10);
+  const todayStr = fmtIso(today);
+  const weekDate = new Date(today); weekDate.setDate(weekDate.getDate() + 7);
+  const weekStr = fmtIso(weekDate);
+
+  const items = (events || []).filter(Boolean).filter(ev => {
+    const d = getEventDate(ev.form);
+    if (!d || d < todayStr || d > weekStr) return false;
+    return (ev.form._fleet || []).length > 0;
+  }).map(ev => ({
+    ev,
+    date: getEventDate(ev.form),
+    progress: crewProgressFor(ev.form._crewChecklists || {})
+  }));
+
+  if (!items.length) { tracker.style.display = 'none'; return; }
+  items.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+  let totalItems = 0, doneItems = 0;
+  items.forEach(i => { totalItems += i.progress.totalItems; doneItems += i.progress.doneItems; });
+  const overallPct = totalItems ? Math.round((doneItems / totalItems) * 100) : 0;
+  const overallColor = overallPct === 100 ? '#6fcf6f' : overallPct >= 50 ? '#e0b370' : '#ff8c8c';
+
+  const isCollapsed = tracker.classList.contains('collapsed');
+  const summary = items.length + ' event' + (items.length !== 1 ? 's' : '') + ' · ' + doneItems + '/' + totalItems + ' checks · <span style="color:' + overallColor + ';font-weight:700;">' + overallPct + '%</span>';
+
+  const bodyHtml = items.map(i => {
+    const f = i.ev.form;
+    const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+    const venue = (f.venueName || '').replace(/</g, '&lt;');
+    const pct = i.progress.percent;
+    const col = pct === 100 ? '#4a9a5c' : pct >= 50 ? '#c89a4a' : '#c0392b';
+    const truckChips = (f._fleet || []).map(t => {
+      const pt = i.progress.perTruck[t];
+      if (!pt) return '';
+      const cls = pt.percent === 100 ? 'green' : pt.percent >= 50 ? 'amber' : 'red';
+      return '<div class="ote-truck ' + cls + '">' + t.replace(/</g, '&lt;') + '<span class="ote-truck-pct">' + pt.done + '/' + pt.total + '</span></div>';
+    }).join('');
+    const filename = i.ev._filename.replace(/'/g, "\\'");
+    return '<div class="ote-event" onclick="loadEventToOps(\'' + filename + '\')">' +
+      '<div class="ote-header">' +
+        '<div class="ote-name">' + name + '</div>' +
+        '<div class="ote-meta">' + formatDate(i.date) + (venue ? ' · ' + venue : '') + ' · <strong style="color:' + col + ';">' + i.progress.doneItems + '/' + i.progress.totalItems + ' · ' + pct + '%</strong></div>' +
+      '</div>' +
+      '<div class="ote-bar"><div class="ote-bar-fill" style="width:' + pct + '%;background:' + col + ';"></div></div>' +
+      '<div class="ote-trucks">' + truckChips + '</div>' +
+      '</div>';
+  }).join('');
+
+  tracker.innerHTML =
+    '<div class="ops-tracker-head" onclick="toggleOpsTracker()">' +
+      '<span class="ops-tracker-title">Ops Tracker · This Week</span>' +
+      '<span class="ops-tracker-summary">' + summary + '</span>' +
+      '<span class="ops-tracker-chevron">▾</span>' +
+    '</div>' +
+    '<div class="ops-tracker-body">' + bodyHtml + '</div>';
+  tracker.style.display = 'block';
+  if (isCollapsed) tracker.classList.add('collapsed');
+}
+function toggleOpsTracker() {
+  const tracker = document.getElementById('opsTracker');
+  if (tracker) tracker.classList.toggle('collapsed');
+}
+async function loadEventToOps(filename) {
+  try {
+    const ev = await getEventByFilename(filename);
+    if (!ev) { toast('Could not load event', 'error'); return; }
+    autoSavePaused = true;
+    populateForm(ev.form);
+    clearDraft();
+    setBriefState('continued');
+    closeEventsModal && closeEventsModal();
+    setTimeout(() => {
+      autoSavePaused = false;
+      setBriefMode('ops');
+    }, 200);
+  } catch (e) {
+    toast('Load failed: ' + e.message, 'error');
+  }
 }
 
 // ─── DASHBOARD (compact pill strip) ───────────────────────────
@@ -4157,7 +4327,7 @@ async function saveEvent(opts) {
     eventsCache.byName = {};
     clearDraft();
     setBriefState('continued');
-    renderDashboard();
+    renderDashboard(); renderOpsTracker();
     if (!silent) toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
   } catch (e) {
     if (silent) return;
@@ -4217,7 +4387,7 @@ async function deleteEventConfirm(filename, name) {
     eventsCache.filenames = null;
     delete eventsCache.byName[filename];
     openEventsModal();
-    renderDashboard();
+    renderDashboard(); renderOpsTracker();
     toast('Deleted ' + name);
   } catch (e) {
     toast('Delete failed: ' + e.message, 'error');
@@ -4293,7 +4463,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Offer to restore unsaved draft from a previous session
   offerDraftRestore();
   // Mini dashboard at top of form-app
-  renderDashboard();
+  renderDashboard(); renderOpsTracker();
   // First-load welcome prompt — show if either name or passcode is missing
   if (!getPasscode() || !getUser()) openWelcomeOverlay();
 });
