@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-16T19:15:52.144Z",
+  "savedAt": "2026-05-16T19:16:48.051Z",
   "form": {
     "eventName": "Breeze Up",
     "bookingStatus": "Confirmed",
@@ -67,7 +67,7 @@
     "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
-    "opsNotes": "",
+    "opsNotes": "Client can be picky, be smart.",
     "postEventNotes": "",
     "_fleet": [
       "Caffe Duomo 3",
@@ -150,6 +150,10 @@
       "step5": {
         "user": "Thomas O'Brien",
         "at": "2026-05-16T19:15:23.221Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-16T19:16:47.357Z"
       }
     },
     "_crewChecklists": {
