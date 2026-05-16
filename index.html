@@ -761,10 +761,21 @@ body {
 
 /* ─── HOME VIEW (dashboard landing) ─── */
 #home-view { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
+.home-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  margin-bottom: 4px;
+  border-bottom: 3px solid var(--sage);
+  padding-bottom: 10px;
+}
+@media (max-width: 600px) { .home-title { font-size: 30px; } }
 .home-welcome {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  margin-top: 14px;
   margin-bottom: 22px;
   flex-wrap: wrap;
   gap: 10px;
@@ -1412,6 +1423,7 @@ body {
      HOME VIEW (landing dashboard)
 ══════════════════════════════════════════ -->
 <div id="home-view">
+  <div class="home-title">Event Briefs Dashboard</div>
   <div class="home-welcome">
     <div class="home-greet">Welcome back<span id="homeGreetUser"></span></div>
     <div class="home-date" id="homeDate"></div>
