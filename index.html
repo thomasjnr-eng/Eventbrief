@@ -4655,7 +4655,10 @@ async function saveEvent(opts) {
     clearDraft();
     setBriefState('continued');
     renderDashboard(); renderOpsTracker();
-    if (!silent) toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
+    if (!silent) {
+      toast(sha ? 'Updated ' + data.eventName : 'Saved ' + data.eventName);
+      showHome();
+    }
   } catch (e) {
     if (silent) return;
     if (e.message === 'BAD_PASSCODE') { toast('Passcode rejected — re-enter it', 'error'); openSettingsModal(); return; }
