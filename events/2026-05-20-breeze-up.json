@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-16T19:08:16.327Z",
+  "savedAt": "2026-05-16T19:10:22.211Z",
   "form": {
     "eventName": "Breeze Up",
     "bookingStatus": "Confirmed",
@@ -25,17 +25,17 @@
     "venueAddress": "Fairyhouse, Ratoath, Meath",
     "accessNotes": "Careful of horses in stable yard. ",
     "otherUnits": "",
-    "pitchRef": "",
+    "pitchRef": "Stableyard & Trackside Arch",
     "pitchSize": "",
-    "groundSurface": "",
-    "vehicleLayout": "",
+    "groundSurface": "Tarmac",
+    "vehicleLayout": "Separate Zones",
     "pitchNotes": "",
     "cableRun": "",
     "powerNotes": "",
-    "waterSource": "",
-    "waterVolume": "",
-    "wasteDisposal": "",
-    "solidWaste": "",
+    "waterSource": "Mixed — site + our tanks",
+    "waterVolume": "100",
+    "wasteDisposal": "On-site drain available",
+    "solidWaste": "Shared bins on site",
     "waterNotes": "",
     "commercialClient": "",
     "commercialClientRef": "",
@@ -69,7 +69,10 @@
     "clientInstructions": "",
     "opsNotes": "",
     "postEventNotes": "",
-    "_fleet": [],
+    "_fleet": [
+      "Caffe Duomo 3",
+      "Caffe Duomo Van"
+    ],
     "_power": [],
     "_revenue": [],
     "_pos": [],
@@ -98,8 +101,165 @@
       "step1": {
         "user": "Thomas O'Brien",
         "at": "2026-05-16T19:08:13.606Z"
+      },
+      "step2": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-16T19:10:19.812Z"
       }
     },
-    "_crewChecklists": {}
+    "_crewChecklists": {
+      "Caffe Duomo 3": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          }
+        ]
+      },
+      "Caffe Duomo Van": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
+          }
+        ]
+      }
+    }
   }
 }
