@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-16T19:14:16.851Z",
+  "savedAt": "2026-05-16T19:15:07.152Z",
   "form": {
     "eventName": "Breeze Up",
     "bookingStatus": "Confirmed",
@@ -55,12 +55,12 @@
     "prePaidNotes": "Invoice same day, payment 14 days ",
     "voucherDetails": "",
     "posNotes": "",
-    "menuNotes": "",
-    "foodCovers": "",
-    "coffeeCovers": "",
+    "menuNotes": "Tea/Coffee\nBreakfast Rolls",
+    "foodCovers": "100",
+    "coffeeCovers": "200",
     "icecreamCovers": "",
-    "deliveryDate": "",
-    "coldChain": "",
+    "deliveryDate": "2026-05-19",
+    "coldChain": "Truck fridges sufficient",
     "stockNotes": "",
     "eventManager": "",
     "opsLead": "",
@@ -99,7 +99,18 @@
       }
     ],
     "_iceVansNeedPower": false,
-    "_stockStatuses": [],
+    "_stockStatuses": [
+      {
+        "truck": "Caffe Duomo 3",
+        "status": "Partial",
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo Van",
+        "status": "Partial",
+        "notes": ""
+      }
+    ],
     "_staffAllocations": [],
     "_truckSafetyChecks": {},
     "_signatures": [],
@@ -115,6 +126,10 @@
       "step3": {
         "user": "Thomas O'Brien",
         "at": "2026-05-16T19:14:11.111Z"
+      },
+      "step4": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-16T19:15:00.803Z"
       }
     },
     "_crewChecklists": {
