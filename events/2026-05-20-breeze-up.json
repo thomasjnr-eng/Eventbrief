@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-16T19:15:07.152Z",
+  "savedAt": "2026-05-16T19:15:52.144Z",
   "form": {
     "eventName": "Breeze Up",
     "bookingStatus": "Confirmed",
@@ -62,9 +62,9 @@
     "deliveryDate": "2026-05-19",
     "coldChain": "Truck fridges sufficient",
     "stockNotes": "",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
+    "eventManager": "Thomas ",
+    "opsLead": "Robo",
+    "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
     "opsNotes": "",
@@ -111,8 +111,24 @@
         "notes": ""
       }
     ],
-    "_staffAllocations": [],
-    "_truckSafetyChecks": {},
+    "_staffAllocations": [
+      {
+        "truck": "Caffe Duomo 3",
+        "minimum": 2,
+        "count": 2,
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo Van",
+        "minimum": 2,
+        "count": 2,
+        "notes": ""
+      }
+    ],
+    "_truckSafetyChecks": {
+      "Caffe Duomo 3": [],
+      "Caffe Duomo Van": []
+    },
     "_signatures": [],
     "_changeLog": {
       "step1": {
@@ -130,6 +146,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-05-16T19:15:00.803Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-16T19:15:23.221Z"
       }
     },
     "_crewChecklists": {
