@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-16T19:10:22.211Z",
+  "savedAt": "2026-05-16T19:14:16.851Z",
   "form": {
     "eventName": "Breeze Up",
     "bookingStatus": "Confirmed",
@@ -37,22 +37,22 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "Shared bins on site",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Levy",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
     "pitchFeeNotes": "",
-    "revSharePct": "",
-    "revShareBasis": "",
-    "revShareSettlement": "",
-    "revShareNotes": "",
-    "prePaidCovers": "",
+    "revSharePct": "20",
+    "revShareBasis": "Net takings",
+    "revShareSettlement": "Post-event invoice",
+    "revShareNotes": "Levy - Tea/Coffees paid for, Barista coffee to be charged for, breakfast rolls on day 2 covered by client",
+    "prePaidCovers": "100",
     "prePaidPrice": "",
     "prePaidTotal": "",
     "minSpend": "",
-    "prePaidMenu": "",
-    "prePaidNotes": "",
+    "prePaidMenu": "Day 1 - Tea/Coffee (Barista Coffee Charged for)\nDay 2 - Tea/Coffee + Breakfast Roll \n",
+    "prePaidNotes": "Invoice same day, payment 14 days ",
     "voucherDetails": "",
     "posNotes": "",
     "menuNotes": "",
@@ -74,8 +74,14 @@
       "Caffe Duomo Van"
     ],
     "_power": [],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Revenue share / percentage",
+      "Pre-paid meals / meal deal",
+      "Minimum spend"
+    ],
+    "_pos": [
+      "Client vouchers accepted"
+    ],
     "_safety": [],
     "_isScattered": true,
     "_tradingDays": [
@@ -105,6 +111,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-05-16T19:10:19.812Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-16T19:14:11.111Z"
       }
     },
     "_crewChecklists": {
