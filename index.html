@@ -759,6 +759,129 @@ body {
 .welcome-skip a { color: var(--sage); text-decoration: none; }
 .welcome-skip a:hover { text-decoration: underline; }
 
+/* ─── HOME VIEW (dashboard landing) ─── */
+#home-view { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
+.home-welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.home-greet {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.06em;
+  color: var(--white);
+}
+.home-greet span { color: var(--sage); margin-left: 8px; }
+.home-date { font-size: 12px; color: var(--grey); letter-spacing: 0.05em; }
+
+.home-pies {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.home-pie {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.home-pie svg { width: 130px; height: 130px; }
+.home-pie .pie-bg { fill: none; stroke: #2a2a2a; stroke-width: 3.2; }
+.home-pie .pie-fill { fill: none; stroke-width: 3.2; stroke-linecap: round; transition: stroke-dasharray 0.4s; }
+.home-pie .pie-pct { font-size: 7px; font-weight: 700; }
+.home-pie .pie-sub { font-size: 4px; fill: #888; }
+.home-pie-label {
+  margin-top: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--sage);
+}
+.home-pie-sub2 {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--grey);
+}
+
+.home-events-section {
+  margin-top: 24px;
+}
+.home-events-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.home-events-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.14em;
+  color: var(--sage);
+}
+.home-events-meta { font-size: 11px; color: var(--grey); }
+.home-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.home-event-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+  position: relative;
+}
+.home-event-card:hover { border-color: var(--sage); transform: translateY(-1px); }
+.home-event-card .he-date {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 6px;
+}
+.home-event-card .he-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.home-event-card .he-venue { font-size: 11px; color: var(--grey); margin-bottom: 10px; }
+.home-event-card .he-bars { display: flex; flex-direction: column; gap: 6px; }
+.home-event-card .he-bar-row { display: flex; align-items: center; gap: 8px; }
+.home-event-card .he-bar-label { font-size: 10px; color: var(--grey); letter-spacing: 0.04em; min-width: 38px; }
+.home-event-card .he-bar { flex: 1; height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.home-event-card .he-bar-fill { height: 100%; }
+.home-event-card .he-pct { font-size: 11px; font-weight: 700; min-width: 36px; text-align: right; }
+.home-event-card .he-status {
+  position: absolute; top: 12px; right: 12px;
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.home-events-empty {
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 30px;
+  text-align: center;
+  color: var(--grey);
+  font-size: 13px;
+}
+
+@media (max-width: 800px) {
+  .home-pies { grid-template-columns: 1fr; }
+}
+
 /* ─── OPS TRACKER (main-page live progress) ─── */
 .ops-tracker {
   max-width: 1100px;
@@ -833,6 +956,9 @@ body {
 .ote-truck.amber { border-left-color: #c89a4a; }
 .ote-truck.red { border-left-color: var(--red); }
 .ote-truck .ote-truck-pct { color: var(--grey); margin-left: 4px; font-size: 10px; }
+
+/* Override sub-component padding when nested in home-view */
+#home-view .dashboard, #home-view .ops-tracker { padding: 0; margin: 14px 0 0; max-width: none; }
 
 /* ─── DASHBOARD (compact pill strip) ─── */
 .dashboard {
@@ -1175,7 +1301,7 @@ body {
 </div>
 
 <header class="app-header">
-  <div class="logo">O'<span>Brien</span> Event Catering</div>
+  <div class="logo" onclick="showHome()" title="Home" style="cursor:pointer;">O'<span>Brien</span> Event Catering</div>
   <div style="display:flex;align-items:center;gap:14px;">
     <div class="step-indicator">
       <div class="step-dot active" id="sd1" onclick="goStep(1)" title="Step 1 — Event Overview">1</div>
@@ -1281,8 +1407,34 @@ body {
 <div id="form-app">
 
 <div id="draftBanner" style="display:none;"></div>
-<div id="dashboard" class="dashboard"></div>
-<div id="opsTracker" class="ops-tracker" style="display:none;"></div>
+
+<!-- ══════════════════════════════════════════
+     HOME VIEW (landing dashboard)
+══════════════════════════════════════════ -->
+<div id="home-view">
+  <div class="home-welcome">
+    <div class="home-greet">Welcome back<span id="homeGreetUser"></span></div>
+    <div class="home-date" id="homeDate"></div>
+  </div>
+
+  <div class="home-pies" id="homePies"></div>
+
+  <div id="dashboard" class="dashboard"></div>
+  <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
+
+  <div class="home-events-section">
+    <div class="home-events-head">
+      <span class="home-events-title">Upcoming Events</span>
+      <span class="home-events-meta" id="homeEventsMeta"></span>
+    </div>
+    <div id="homeEventsGrid" class="home-events-grid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BRIEF EDIT VIEW (the 6 numbered steps)
+══════════════════════════════════════════ -->
+<div id="brief-edit-view" style="display:none;">
 
 <!-- ══════════════════════════════════════════
      STEP 1 — EVENT OVERVIEW
@@ -1947,6 +2099,7 @@ body {
 </div>
 </div>
 
+</div><!-- /brief-edit-view -->
 </div><!-- /form-app -->
 
 <!-- ══════════════════════════════════════════
@@ -3319,6 +3472,7 @@ function backToForm() {
   document.getElementById('brief-output').style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
   document.title = 'Event Briefs - OBEC';
+  showBriefEdit();
   renderOpsTracker();
   window.scrollTo(0,0);
 }
@@ -3604,6 +3758,7 @@ function newBrief() {
   // Clear draft + reset state
   clearDraft();
   setBriefState('new');
+  showBriefEdit();
   goStep(1);
   updateStepColors();
   toast('Started a new brief');
@@ -3766,7 +3921,7 @@ async function submitWelcomePasscode() {
     closeWelcomeOverlay();
     btn.disabled = false; btn.textContent = 'Continue';
     nameInp.value = ''; codeInp.value = '';
-    renderDashboard(); renderOpsTracker();
+    showHome();
     checkDoubleBooking();
     toast('Welcome, ' + name);
   } catch (e) {
@@ -4029,6 +4184,7 @@ async function loadEventToOps(filename) {
     clearDraft();
     setBriefState('continued');
     closeEventsModal && closeEventsModal();
+    showBriefEdit();
     setTimeout(() => {
       autoSavePaused = false;
       setBriefMode('ops');
@@ -4036,6 +4192,177 @@ async function loadEventToOps(filename) {
   } catch (e) {
     toast('Load failed: ' + e.message, 'error');
   }
+}
+
+// ─── VIEW MANAGEMENT (Home / Edit / Brief Output) ─────────────
+function showHome() {
+  document.getElementById('home-view').style.display = 'block';
+  document.getElementById('brief-edit-view').style.display = 'none';
+  const brief = document.getElementById('brief-output');
+  if (brief) brief.style.display = 'none';
+  document.getElementById('form-app').style.display = 'block';
+  document.title = 'Event Briefs - OBEC';
+  const ind = document.querySelector('.step-indicator');
+  if (ind) ind.style.display = 'none';
+  renderHome();
+  window.scrollTo(0, 0);
+}
+function showBriefEdit() {
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('brief-edit-view').style.display = 'block';
+  const brief = document.getElementById('brief-output');
+  if (brief) brief.style.display = 'none';
+  document.getElementById('form-app').style.display = 'block';
+  const ind = document.querySelector('.step-indicator');
+  if (ind) ind.style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+
+// ─── HOME VIEW RENDERING ──────────────────────────────────────
+async function renderHome() {
+  const greetEl = document.getElementById('homeGreetUser');
+  if (greetEl) {
+    const u = getUser();
+    greetEl.textContent = u ? ', ' + u : '';
+  }
+  const dateEl = document.getElementById('homeDate');
+  if (dateEl) {
+    const d = new Date();
+    dateEl.textContent = d.toLocaleDateString('en-IE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+  }
+  renderDashboard();
+  renderOpsTracker();
+  await renderHomePies();
+  await renderHomeEvents();
+}
+
+function pieSvg(percent, color) {
+  const safePct = Math.max(0, Math.min(100, percent));
+  return '<svg viewBox="0 0 36 36">' +
+    '<path class="pie-bg" d="M 18 2.1 a 15.9 15.9 0 0 1 0 31.8 a 15.9 15.9 0 0 1 0 -31.8" />' +
+    '<path class="pie-fill" style="stroke:' + color + ';" stroke-dasharray="' + safePct + ', 100" d="M 18 2.1 a 15.9 15.9 0 0 1 0 31.8 a 15.9 15.9 0 0 1 0 -31.8" />' +
+    '<text x="18" y="20.5" class="pie-pct" text-anchor="middle" style="fill:' + color + ';">' + safePct + '%</text>' +
+    '</svg>';
+}
+function pieColor(pct, empty) {
+  if (empty) return '#555';
+  if (pct >= 85) return '#6fcf6f';
+  if (pct >= 50) return '#e0b370';
+  return '#ff8c8c';
+}
+
+async function renderHomePies() {
+  const host = document.getElementById('homePies');
+  if (!host) return;
+  if (!getPasscode()) {
+    host.innerHTML = '<div class="home-pie" style="grid-column:1/-1;color:var(--grey);font-size:13px;">Sign in (Settings) to see live event stats.</div>';
+    return;
+  }
+  let filenames = [];
+  try { filenames = await listEventFilenames(); } catch (e) {}
+  const events = await Promise.all(filenames.map(getEventByFilename));
+  const valid = events.filter(Boolean);
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+  const weekDate = new Date(today); weekDate.setDate(weekDate.getDate() + 7);
+  const weekStr = weekDate.toISOString().slice(0, 10);
+  const monthDate = new Date(today); monthDate.setDate(monthDate.getDate() + 30);
+  const monthStr = monthDate.toISOString().slice(0, 10);
+  const tomorrowDate = new Date(today); tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const tomorrowStr = tomorrowDate.toISOString().slice(0, 10);
+
+  const upcoming30 = valid.filter(ev => {
+    const d = getEventDate(ev.form);
+    return d && d >= todayStr && d <= monthStr;
+  });
+
+  // Pie 1: Brief readiness — avg completeness % across next-30-days events
+  let avg = 0;
+  if (upcoming30.length) {
+    const sum = upcoming30.reduce((acc, ev) => acc + computeEventCompleteness(ev.form).percent, 0);
+    avg = Math.round(sum / upcoming30.length);
+  }
+  const briefColor = pieColor(avg, upcoming30.length === 0);
+
+  // Pie 2: Crew readiness — events today/tomorrow, sum of checks
+  const liveEvents = valid.filter(ev => {
+    const [s, e] = getEventWindow(ev.form);
+    return s && e && s <= tomorrowStr && e >= todayStr;
+  });
+  let totalChecks = 0, doneChecks = 0;
+  liveEvents.forEach(ev => {
+    const p = crewProgressFor(ev.form._crewChecklists || {});
+    totalChecks += p.totalItems; doneChecks += p.doneItems;
+  });
+  const crewPct = totalChecks ? Math.round((doneChecks / totalChecks) * 100) : 0;
+  const crewColor = pieColor(crewPct, totalChecks === 0);
+
+  // Pie 3: This week — count + percentage of those that are fully briefed
+  const thisWeek = valid.filter(ev => {
+    const d = getEventDate(ev.form);
+    return d && d >= todayStr && d <= weekStr;
+  });
+  let weekReady = 0;
+  thisWeek.forEach(ev => { if (computeEventCompleteness(ev.form).percent === 100) weekReady++; });
+  const weekPct = thisWeek.length ? Math.round((weekReady / thisWeek.length) * 100) : 0;
+  const weekColor = pieColor(weekPct, thisWeek.length === 0);
+
+  host.innerHTML =
+    '<div class="home-pie">' + pieSvg(avg, briefColor) + '<div class="home-pie-label">Brief Readiness</div><div class="home-pie-sub2">avg across ' + upcoming30.length + ' upcoming event' + (upcoming30.length !== 1 ? 's' : '') + ' (30d)</div></div>' +
+    '<div class="home-pie">' + pieSvg(crewPct, crewColor) + '<div class="home-pie-label">Crew Today / Tmrw</div><div class="home-pie-sub2">' + (totalChecks ? doneChecks + ' of ' + totalChecks + ' checks · ' + liveEvents.length + ' event' + (liveEvents.length !== 1 ? 's' : '') : 'No events on site') + '</div></div>' +
+    '<div class="home-pie">' + pieSvg(weekPct, weekColor) + '<div class="home-pie-label">This Week Fully Briefed</div><div class="home-pie-sub2">' + weekReady + ' of ' + thisWeek.length + ' event' + (thisWeek.length !== 1 ? 's' : '') + ' at 100%</div></div>';
+}
+
+async function renderHomeEvents() {
+  const host = document.getElementById('homeEventsGrid');
+  const meta = document.getElementById('homeEventsMeta');
+  if (!host) return;
+  if (!getPasscode()) {
+    host.innerHTML = '<div class="home-events-empty">Sign in to see upcoming events.</div>';
+    if (meta) meta.textContent = '';
+    return;
+  }
+  let filenames = [];
+  try { filenames = await listEventFilenames(); } catch (e) {}
+  const events = await Promise.all(filenames.map(getEventByFilename));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+  const upcoming = (events || []).filter(Boolean).filter(ev => {
+    const d = getEventDate(ev.form);
+    return d && d >= todayStr;
+  });
+  upcoming.sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+
+  if (meta) meta.textContent = upcoming.length + ' event' + (upcoming.length !== 1 ? 's' : '') + ' upcoming';
+
+  if (!upcoming.length) {
+    host.innerHTML = '<div class="home-events-empty">No upcoming events. Click <strong>+ New Brief</strong> to start one, or <strong>Bulk Add</strong> to import a list.</div>';
+    return;
+  }
+
+  host.innerHTML = upcoming.slice(0, 20).map(ev => {
+    const f = ev.form || {};
+    const date = getEventDate(f);
+    const comp = computeEventCompleteness(f);
+    const crew = crewProgressFor(f._crewChecklists || {});
+    const brBand = pieColor(comp.percent, false);
+    const crewBand = pieColor(crew.percent, crew.totalItems === 0);
+    const status = comp.percent === 100 ? '#6fcf6f' : '#e0b370';
+    const filename = ev._filename.replace(/'/g, "\\'");
+    const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+    const venue = (f.venueName || '').replace(/</g, '&lt;');
+    return '<div class="home-event-card" onclick="loadEvent(\'' + filename + '\')">' +
+      '<div class="he-status" style="background:' + status + ';" title="' + (comp.percent === 100 ? 'Fully briefed' : 'Brief in progress') + '"></div>' +
+      '<div class="he-date">' + formatDate(date) + '</div>' +
+      '<div class="he-name">' + name + '</div>' +
+      '<div class="he-venue">' + (venue || '—') + (f.commercialClient ? ' · ' + f.commercialClient.replace(/</g, '&lt;') : '') + '</div>' +
+      '<div class="he-bars">' +
+        '<div class="he-bar-row"><span class="he-bar-label">Brief</span><div class="he-bar"><div class="he-bar-fill" style="width:' + comp.percent + '%;background:' + brBand + ';"></div></div><span class="he-pct" style="color:' + brBand + ';">' + comp.percent + '%</span></div>' +
+        '<div class="he-bar-row"><span class="he-bar-label">Crew</span><div class="he-bar"><div class="he-bar-fill" style="width:' + crew.percent + '%;background:' + crewBand + ';"></div></div><span class="he-pct" style="color:' + (crew.totalItems ? crewBand : '#555') + ';">' + (crew.totalItems ? crew.percent + '%' : '—') + '</span></div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
 }
 
 // ─── DASHBOARD (compact pill strip) ───────────────────────────
@@ -4372,6 +4699,7 @@ async function loadEvent(filename) {
     clearDraft();
     setBriefState('continued');
     closeEventsModal();
+    showBriefEdit();
     goStep(1);
     toast('Loaded ' + (ev.form.eventName || filename));
   } catch (e) {
@@ -4462,8 +4790,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // Offer to restore unsaved draft from a previous session
   offerDraftRestore();
-  // Mini dashboard at top of form-app
-  renderDashboard(); renderOpsTracker();
+  // Initial view: Home dashboard (renders pies, events grid, dashboard pills, ops tracker)
+  showHome();
   // First-load welcome prompt — show if either name or passcode is missing
   if (!getPasscode() || !getUser()) openWelcomeOverlay();
 });
