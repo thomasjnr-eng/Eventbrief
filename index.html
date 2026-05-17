@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Briefs - OBEC</title>
+<title>Planning - OBEC</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M62 4 L70 36 L100 44 L70 52 L62 84 L54 52 L24 44 L54 36 Z' fill='%23a8c49a'/><path d='M22 56 L27 74 L44 80 L27 86 L22 100 L17 86 L0 80 L17 74 Z' fill='%23a8c49a'/></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23111111'/><path d='M62 14 L70 42 L96 50 L70 58 L62 86 L54 58 L28 50 L54 42 Z' fill='%23a8c49a'/><path d='M26 60 L30 74 L44 78 L30 82 L26 96 L22 82 L8 78 L22 74 Z' fill='%23a8c49a'/></svg>">
 <style>
@@ -893,6 +893,59 @@ body {
   .home-pies { grid-template-columns: 1fr; }
 }
 
+/* ─── DAY PLAN TASKS (Plan Edit view) ─── */
+.plan-task-row {
+  display: grid;
+  grid-template-columns: 26px 1fr 180px 32px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.plan-task-row:last-child { border-bottom: none; }
+.plan-task-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--sage); cursor: pointer; }
+.plan-task-row input[type=text] {
+  background: #2a2a2a;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  padding: 7px 10px;
+  outline: none;
+}
+.plan-task-row input[type=text]:focus { border-color: var(--sage); }
+.plan-task-row.done input[data-field=label] { text-decoration: line-through; color: var(--grey); }
+.plan-task-row .plan-task-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  width: 28px; height: 28px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.plan-task-row .plan-task-remove:hover { border-color: var(--red); color: var(--red); }
+.plan-task-meta { font-size: 11px; color: var(--grey); margin-top: 2px; padding-left: 34px; }
+@media (max-width: 700px) { .plan-task-row { grid-template-columns: 26px 1fr 32px; } .plan-task-row input[data-field=assignedTo] { grid-column: 2/3; } }
+
+/* ─── PLAN CARD ON HOME (visual distinction from events) ─── */
+.home-event-card.is-plan { border-left: 3px solid #c89a4a; }
+.home-event-card.is-plan .he-date { color: #e0b370; }
+.he-plan-tag {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #e0b370;
+  background: #3a2d1a;
+  padding: 1px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.btn-secondary.danger { color: #ff8c8c; }
+
 /* ─── OPS TRACKER (main-page live progress) ─── */
 .ops-tracker {
   max-width: 1100px;
@@ -1331,6 +1384,7 @@ body {
       <span class="user-indicator" id="userIndicator" style="display:none;"></span>
       <span class="draft-indicator" id="draftIndicator"></span>
       <button class="header-btn primary" onclick="newBrief()">+ New Brief</button>
+      <button class="header-btn" onclick="newPlan()">+ Day Plan</button>
       <button class="header-btn" id="btnEvents" onclick="openEventsModal()">Load Brief</button>
       <button class="header-btn" id="btnBulk" onclick="openBulkModal()">Bulk Add</button>
       <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
@@ -1430,7 +1484,7 @@ body {
      HOME VIEW (landing dashboard)
 ══════════════════════════════════════════ -->
 <div id="home-view">
-  <div class="home-title">Event Briefs Dashboard</div>
+  <div class="home-title">Planning Dashboard</div>
   <div class="home-welcome">
     <div class="home-greet">Welcome back<span id="homeGreetUser"></span></div>
     <div class="home-date" id="homeDate"></div>
@@ -1443,10 +1497,81 @@ body {
 
   <div class="home-events-section">
     <div class="home-events-head">
+      <span class="home-events-title">Upcoming Day Plans</span>
+      <span class="home-events-meta" id="homePlansMeta"></span>
+    </div>
+    <div id="homePlansGrid" class="home-events-grid"></div>
+  </div>
+
+  <div class="home-events-section">
+    <div class="home-events-head">
       <span class="home-events-title">Upcoming Events</span>
       <span class="home-events-meta" id="homeEventsMeta"></span>
     </div>
     <div id="homeEventsGrid" class="home-events-grid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PLAN EDIT VIEW (single-panel day plan editor)
+══════════════════════════════════════════ -->
+<div id="plan-edit-view" style="display:none;">
+  <div class="container">
+    <div class="step-title" id="planTitleLabel">New Day Plan</div>
+    <div class="step-subtitle">Ad-hoc daily planning for the ops team — no event required</div>
+
+    <div class="card">
+      <div class="card-title">Plan Details</div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Plan Title</label>
+          <input type="text" id="planTitle" placeholder="e.g. Tomorrow morning prep">
+        </div>
+        <div class="field">
+          <label>Plan Date</label>
+          <input type="date" id="planDate">
+        </div>
+        <div class="field">
+          <label>Start Time (optional)</label>
+          <input type="time" id="planStart">
+        </div>
+        <div class="field">
+          <label>End Time (optional)</label>
+          <input type="time" id="planEnd">
+        </div>
+        <div class="field">
+          <label>Lead</label>
+          <input type="text" id="planLead" placeholder="Name">
+        </div>
+        <div class="field">
+          <label>Assigned (comma-separated names)</label>
+          <input type="text" id="planAssigned" placeholder="e.g. Aoife, Mark, Tom">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tasks</div>
+      <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Add tasks the crew need to complete. Each row is tickable — once you've saved the plan, anyone on the team can open it and tick items off as they go.</p>
+      <div id="planTasksList"></div>
+      <button type="button" class="btn btn-secondary" onclick="addPlanTask()" style="margin-top:8px;font-size:12px;padding:8px 14px;">+ Add Task</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Notes</div>
+      <div class="field">
+        <label>Plan Notes</label>
+        <textarea id="planNotes" rows="3" placeholder="Anything else the crew should know — context, deliveries arriving, who to phone..."></textarea>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn btn-secondary" onclick="showHome()">← Cancel</button>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button class="btn btn-secondary danger" id="planDeleteBtn" onclick="deleteCurrentPlan()" style="display:none;font-size:14px;padding:12px 22px;border-color:#5a2a2a;color:#ff8c8c;">Delete</button>
+        <button class="btn btn-green" onclick="savePlan()" style="font-size:18px;padding:14px 36px;">Save Plan ✓</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4216,7 +4341,8 @@ async function openEventsModal() {
   }
   list.innerHTML = 'Loading...';
   try {
-    const filenames = await listEventFilenames(true);
+    const allFilenames = await listEventFilenames(true);
+    const filenames = allFilenames.filter(isEventFile);
     if (!filenames.length) { list.innerHTML = '<p style="color:var(--grey);">No saved events yet.</p>'; return; }
     const events = await Promise.all(filenames.map(getEventByFilename));
     const sortedByStart = events.filter(Boolean).sort((a, b) => {
@@ -4356,6 +4482,7 @@ async function renderOpsTracker() {
   let filenames;
   try { filenames = await listEventFilenames(); }
   catch (e) { tracker.style.display = 'none'; return; }
+  filenames = filenames.filter(isEventFile);
   if (!filenames.length) { tracker.style.display = 'none'; return; }
 
   const events = await Promise.all(filenames.map(getEventByFilename));
@@ -4442,14 +4569,16 @@ async function loadEventToOps(filename) {
   }
 }
 
-// ─── VIEW MANAGEMENT (Home / Edit / Brief Output) ─────────────
+// ─── VIEW MANAGEMENT (Home / Edit Brief / Plan Edit / Brief Output) ─────
 function showHome() {
   document.getElementById('home-view').style.display = 'block';
   document.getElementById('brief-edit-view').style.display = 'none';
+  const planEdit = document.getElementById('plan-edit-view');
+  if (planEdit) planEdit.style.display = 'none';
   const brief = document.getElementById('brief-output');
   if (brief) brief.style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
-  document.title = 'Event Briefs - OBEC';
+  document.title = 'Planning - OBEC';
   const ind = document.querySelector('.step-indicator');
   if (ind) ind.style.display = 'none';
   renderHome();
@@ -4458,12 +4587,254 @@ function showHome() {
 function showBriefEdit() {
   document.getElementById('home-view').style.display = 'none';
   document.getElementById('brief-edit-view').style.display = 'block';
+  const planEdit = document.getElementById('plan-edit-view');
+  if (planEdit) planEdit.style.display = 'none';
   const brief = document.getElementById('brief-output');
   if (brief) brief.style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
   const ind = document.querySelector('.step-indicator');
   if (ind) ind.style.display = 'flex';
   window.scrollTo(0, 0);
+}
+function showPlanEdit() {
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('brief-edit-view').style.display = 'none';
+  document.getElementById('plan-edit-view').style.display = 'block';
+  const brief = document.getElementById('brief-output');
+  if (brief) brief.style.display = 'none';
+  document.getElementById('form-app').style.display = 'block';
+  const ind = document.querySelector('.step-indicator');
+  if (ind) ind.style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+// ─── DAY PLANS ───────────────────────────────────────────────
+let PLAN_TASKS = [];
+let CURRENT_PLAN_FILENAME = null;
+function isPlanFile(name) { return typeof name === 'string' && name.startsWith('plan-'); }
+function isEventFile(name) { return typeof name === 'string' && !name.startsWith('plan-'); }
+
+function newPlan() {
+  CURRENT_PLAN_FILENAME = null;
+  PLAN_TASKS = [];
+  document.getElementById('planTitleLabel').textContent = 'New Day Plan';
+  document.getElementById('planTitle').value = '';
+  document.getElementById('planDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('planStart').value = '';
+  document.getElementById('planEnd').value = '';
+  document.getElementById('planLead').value = getUser() || '';
+  document.getElementById('planAssigned').value = '';
+  document.getElementById('planNotes').value = '';
+  document.getElementById('planDeleteBtn').style.display = 'none';
+  renderPlanTasks();
+  showPlanEdit();
+}
+
+function addPlanTask(label, assignedTo, done, doneBy, doneAt) {
+  PLAN_TASKS.push({
+    label: label || '',
+    assignedTo: assignedTo || '',
+    done: !!done,
+    doneBy: doneBy || null,
+    doneAt: doneAt || null
+  });
+  renderPlanTasks();
+}
+function removePlanTask(idx) {
+  PLAN_TASKS.splice(idx, 1);
+  renderPlanTasks();
+}
+function renderPlanTasks() {
+  const list = document.getElementById('planTasksList');
+  if (!list) return;
+  if (!PLAN_TASKS.length) {
+    list.innerHTML = '<div style="color:var(--grey);font-size:12px;font-style:italic;padding:8px 0;">No tasks yet. Click + Add Task below to start.</div>';
+    return;
+  }
+  list.innerHTML = PLAN_TASKS.map((t, idx) => {
+    const escLabel = (t.label || '').replace(/"/g, '&quot;');
+    const escAssigned = (t.assignedTo || '').replace(/"/g, '&quot;');
+    const checked = t.done ? 'checked' : '';
+    const meta = (t.done && t.doneBy) ? '<div class="plan-task-meta">✓ ' + (t.doneBy || '').replace(/</g, '&lt;') + ' · ' + formatRelativeTime(t.doneAt) + '</div>' : '';
+    return '<div class="plan-task-row' + (t.done ? ' done' : '') + '" data-idx="' + idx + '">' +
+      '<input type="checkbox" ' + checked + ' onchange="onPlanTaskToggle(' + idx + ', this.checked)">' +
+      '<input type="text" data-field="label" value="' + escLabel + '" placeholder="Task description" oninput="PLAN_TASKS[' + idx + '].label = this.value">' +
+      '<input type="text" data-field="assignedTo" value="' + escAssigned + '" placeholder="Assigned to (optional)" oninput="PLAN_TASKS[' + idx + '].assignedTo = this.value">' +
+      '<button type="button" class="plan-task-remove" onclick="removePlanTask(' + idx + ')" title="Remove">&times;</button>' +
+      '</div>' + meta;
+  }).join('');
+}
+function onPlanTaskToggle(idx, checked) {
+  if (!PLAN_TASKS[idx]) return;
+  PLAN_TASKS[idx].done = !!checked;
+  PLAN_TASKS[idx].doneBy = checked ? (getUser() || 'Anonymous') : null;
+  PLAN_TASKS[idx].doneAt = checked ? new Date().toISOString() : null;
+  renderPlanTasks();
+  // Auto-save tick to Worker if we have a saved plan
+  if (CURRENT_PLAN_FILENAME) savePlan({ silent: true });
+}
+
+function collectPlanData() {
+  return {
+    title: val('planTitle'),
+    planDate: val('planDate'),
+    startTime: val('planStart'),
+    endTime: val('planEnd'),
+    lead: val('planLead'),
+    assigned: val('planAssigned'),
+    notes: val('planNotes'),
+    tasks: PLAN_TASKS.slice()
+  };
+}
+
+function planFilenameFor(data) {
+  const slug = (data.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 50);
+  return 'plan-' + (data.planDate || 'undated') + '-' + (slug || 'untitled') + '.json';
+}
+
+async function savePlan(opts) {
+  opts = opts || {};
+  const silent = opts.silent === true;
+  const data = collectPlanData();
+  if (!data.title || !data.planDate) {
+    if (silent) return;
+    toast('Title and date are required for a plan', 'error');
+    return;
+  }
+  if (!getPasscode()) {
+    if (silent) return;
+    openSettingsModal();
+    toast('Add the team passcode to save plans', 'error');
+    return;
+  }
+  // Use existing filename if editing, else derive from data
+  const filename = CURRENT_PLAN_FILENAME || planFilenameFor(data);
+  let sha = null;
+  try {
+    const existing = await apiCall('/events/' + encodeURIComponent(filename));
+    if (existing.ok) sha = (await existing.json()).sha;
+  } catch (e) {
+    if (e.message === 'NO_PASSCODE') { if (!silent) openSettingsModal(); return; }
+    if (e.message === 'BAD_PASSCODE') { if (!silent) { toast('Passcode rejected', 'error'); openSettingsModal(); } return; }
+  }
+  const payload = {
+    version: 1, type: 'dayplan', id: filename.replace(/^plan-|\.json$/g, ''),
+    savedAt: new Date().toISOString(),
+    savedBy: getUser() || null,
+    form: data
+  };
+  const body = { event: payload };
+  if (sha) body.sha = sha;
+  try {
+    const res = await apiCall('/events/' + encodeURIComponent(filename), { method: 'PUT', body: JSON.stringify(body) });
+    if (!res.ok) {
+      if (!silent) toast('Save failed (' + res.status + ')', 'error');
+      return;
+    }
+    CURRENT_PLAN_FILENAME = filename;
+    document.getElementById('planDeleteBtn').style.display = 'inline-flex';
+    eventsCache.filenames = null;
+    eventsCache.byName = {};
+    if (!silent) {
+      toast(sha ? 'Plan updated' : 'Plan saved');
+      showHome();
+    }
+  } catch (e) {
+    if (silent) return;
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+async function loadPlan(filename) {
+  try {
+    const ev = await getEventByFilename(filename);
+    if (!ev || !ev.form) { toast('Could not load plan', 'error'); return; }
+    CURRENT_PLAN_FILENAME = filename;
+    const f = ev.form;
+    document.getElementById('planTitleLabel').textContent = 'Day Plan · ' + (f.title || 'Untitled');
+    document.getElementById('planTitle').value = f.title || '';
+    document.getElementById('planDate').value = f.planDate || '';
+    document.getElementById('planStart').value = f.startTime || '';
+    document.getElementById('planEnd').value = f.endTime || '';
+    document.getElementById('planLead').value = f.lead || '';
+    document.getElementById('planAssigned').value = f.assigned || '';
+    document.getElementById('planNotes').value = f.notes || '';
+    PLAN_TASKS = Array.isArray(f.tasks) ? f.tasks.map(t => Object.assign({}, t)) : [];
+    renderPlanTasks();
+    document.getElementById('planDeleteBtn').style.display = 'inline-flex';
+    showPlanEdit();
+  } catch (e) {
+    toast('Load failed: ' + e.message, 'error');
+  }
+}
+
+async function deleteCurrentPlan() {
+  if (!CURRENT_PLAN_FILENAME) return;
+  if (!confirm('Delete this day plan? This cannot be undone.')) return;
+  try {
+    const res = await apiCall('/events/' + encodeURIComponent(CURRENT_PLAN_FILENAME), { method: 'DELETE' });
+    if (!res.ok) { toast('Delete failed', 'error'); return; }
+    eventsCache.filenames = null;
+    delete eventsCache.byName[CURRENT_PLAN_FILENAME];
+    CURRENT_PLAN_FILENAME = null;
+    toast('Plan deleted');
+    showHome();
+  } catch (e) {
+    toast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+async function renderHomePlans() {
+  const host = document.getElementById('homePlansGrid');
+  const meta = document.getElementById('homePlansMeta');
+  if (!host) return;
+  if (!getPasscode()) {
+    host.innerHTML = '<div class="home-events-empty">Sign in to see upcoming plans.</div>';
+    if (meta) meta.textContent = '';
+    return;
+  }
+  let filenames = [];
+  try { filenames = await listEventFilenames(); } catch (e) {}
+  const planNames = filenames.filter(isPlanFile);
+  if (!planNames.length) {
+    host.innerHTML = '<div class="home-events-empty">No upcoming day plans. Click <strong>+ Day Plan</strong> to add one.</div>';
+    if (meta) meta.textContent = '';
+    return;
+  }
+  const events = await Promise.all(planNames.map(getEventByFilename));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+  const upcoming = (events || []).filter(Boolean).filter(p => (p.form.planDate || '') >= todayStr);
+  upcoming.sort((a, b) => (a.form.planDate || '').localeCompare(b.form.planDate || ''));
+
+  if (meta) meta.textContent = upcoming.length + ' plan' + (upcoming.length !== 1 ? 's' : '') + ' upcoming';
+
+  if (!upcoming.length) {
+    host.innerHTML = '<div class="home-events-empty">No upcoming day plans. Click <strong>+ Day Plan</strong> to add one.</div>';
+    return;
+  }
+
+  host.innerHTML = upcoming.slice(0, 20).map(p => {
+    const f = p.form || {};
+    const total = (f.tasks || []).length;
+    const done = (f.tasks || []).filter(t => t.done).length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    const col = pct === 100 ? '#4a9a5c' : pct >= 50 ? '#c89a4a' : (total ? '#c0392b' : '#555');
+    const filename = p._filename.replace(/'/g, "\\'");
+    const title = (f.title || '(untitled)').replace(/</g, '&lt;');
+    const lead = (f.lead || '').replace(/</g, '&lt;');
+    const status = pct === 100 ? '#6fcf6f' : '#e0b370';
+    const timing = (f.startTime && f.endTime) ? f.startTime + '–' + f.endTime : (f.startTime || '');
+    return '<div class="home-event-card is-plan" onclick="loadPlan(\'' + filename + '\')">' +
+      '<div class="he-status" style="background:' + status + ';"></div>' +
+      '<div class="he-date">' + formatDate(f.planDate) + (timing ? ' · ' + timing : '') + '<span class="he-plan-tag">PLAN</span></div>' +
+      '<div class="he-name">' + title + '</div>' +
+      '<div class="he-venue">' + (lead ? 'Lead: ' + lead : '—') + (f.assigned ? ' · ' + f.assigned.replace(/</g, '&lt;') : '') + '</div>' +
+      '<div class="he-bars">' +
+        '<div class="he-bar-row"><span class="he-bar-label">Tasks</span><div class="he-bar"><div class="he-bar-fill" style="width:' + pct + '%;background:' + col + ';"></div></div><span class="he-pct" style="color:' + col + ';">' + (total ? done + '/' + total : '0') + '</span></div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
 }
 
 // ─── HOME VIEW RENDERING ──────────────────────────────────────
@@ -4482,6 +4853,7 @@ async function renderHome() {
   renderOpsTracker();
   await renderHomePies();
   await renderHomeEvents();
+  await renderHomePlans();
 }
 
 function pieSvg(percent, color) {
@@ -4508,6 +4880,7 @@ async function renderHomePies() {
   }
   let filenames = [];
   try { filenames = await listEventFilenames(); } catch (e) {}
+  filenames = filenames.filter(isEventFile);
   const events = await Promise.all(filenames.map(getEventByFilename));
   const valid = events.filter(Boolean);
 
@@ -4573,6 +4946,7 @@ async function renderHomeEvents() {
   }
   let filenames = [];
   try { filenames = await listEventFilenames(); } catch (e) {}
+  filenames = filenames.filter(isEventFile);
   const events = await Promise.all(filenames.map(getEventByFilename));
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const todayStr = today.toISOString().slice(0, 10);
@@ -4621,6 +4995,7 @@ async function renderDashboard() {
   let filenames;
   try { filenames = await listEventFilenames(); }
   catch (e) { container.classList.remove('show'); return; }
+  filenames = filenames.filter(isEventFile);
   if (!filenames.length) { container.classList.remove('show'); return; }
 
   const events = await Promise.all(filenames.map(getEventByFilename));
@@ -5022,6 +5397,7 @@ async function doCheckDoubleBooking() {
   let filenames;
   try { filenames = await listEventFilenames(); }
   catch (e) { banner.style.display = 'none'; return; }
+  filenames = filenames.filter(isEventFile);
   if (!filenames.length) { banner.style.display = 'none'; return; }
   const myId = eventIdFor(myData);
   const conflicts = [];
