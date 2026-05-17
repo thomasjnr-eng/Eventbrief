@@ -1690,6 +1690,26 @@ body {
   </div>
 
   <div class="card">
+    <div class="card-title">⛽ Diesel &amp; Refuelling</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Forecast for the suggested generator + event duration. Running out of fuel mid-event is the #1 power issue — confirm source and refill plan before the event.</p>
+    <div id="dieselForecast" style="margin-bottom:14px;"></div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Diesel Source / Supplier</label>
+        <input type="text" id="dieselSource" placeholder="e.g. Generator hire company, on-site bowser, local Maxol">
+      </div>
+      <div class="field">
+        <label>Responsible for Ordering / Refilling</label>
+        <input type="text" id="dieselResponsible" placeholder="Name + phone">
+      </div>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label>Diesel Notes / Refill Plan</label>
+      <textarea id="dieselNotes" placeholder="Delivery windows, payment, after-hours contact, fuel card details, planned refill times (e.g. '0600 & 1800 daily')..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Water &amp; Waste</div>
     <div class="grid-2">
       <div class="field">
@@ -2875,6 +2895,103 @@ function calculatePower() {
   };
 }
 
+// ─── DIESEL FORECAST ──────────────────────────────────────────
+// Litres per hour at ~75% load and typical road-tow trailer tank sizes
+// (approximate; verify with hire spec sheet).
+function lphForKva(kva) {
+  if (kva <= 30) return 6;
+  if (kva <= 45) return 9;
+  if (kva <= 60) return 12;
+  if (kva <= 100) return 22;
+  if (kva <= 150) return 33;
+  if (kva <= 200) return 44;
+  if (kva <= 250) return 55;
+  if (kva <= 350) return 75;
+  return 105;
+}
+function tankForKva(kva) {
+  if (kva <= 30) return 100;
+  if (kva <= 45) return 100;
+  if (kva <= 60) return 150;
+  if (kva <= 100) return 250;
+  if (kva <= 150) return 300;
+  if (kva <= 200) return 400;
+  if (kva <= 250) return 500;
+  if (kva <= 350) return 700;
+  return 1000;
+}
+function getRunningHours() {
+  const isScattered = document.getElementById('isScattered') && document.getElementById('isScattered').checked;
+  if (isScattered) {
+    const days = getTradingDays();
+    let total = 0;
+    days.forEach(d => {
+      if (d.startTime && d.endTime) {
+        const [sh, sm] = d.startTime.split(':').map(Number);
+        const [eh, em] = d.endTime.split(':').map(Number);
+        let mins = (eh * 60 + em) - (sh * 60 + sm);
+        if (mins < 0) mins += 24 * 60;
+        total += mins / 60;
+      }
+    });
+    return total;
+  }
+  const liDate = val('loadInDate');
+  const liTime = val('loadInTime') || '00:00';
+  const loDate = val('loadOutDate');
+  const loTime = val('loadOutTime') || '00:00';
+  if (!liDate || !loDate) return 0;
+  try {
+    const liDt = new Date(liDate + 'T' + liTime + ':00');
+    const loDt = new Date(loDate + 'T' + loTime + ':00');
+    return Math.max(0, (loDt - liDt) / 3600000);
+  } catch (e) { return 0; }
+}
+function dieselForecastSummary() {
+  const power = getChipValues('powerChipGroup');
+  const weHandle = power.some(p => /We provide generator|Generator only/.test(p));
+  const calc = calculatePower();
+  const gen = suggestGenerator(calc.totalKVA);
+  const hours = getRunningHours();
+  if (!weHandle) return { applicable: false };
+  if (!gen || hours <= 0) return { applicable: true, missing: true };
+  const genSize = gen.single || gen.parallel.reduce((a, b) => a + b, 0);
+  const lph = lphForKva(genSize);
+  const tank = tankForKva(genSize);
+  const totalL = Math.ceil(lph * hours);
+  const safeRuntime = Math.max(1, Math.floor((tank * 0.7) / lph));
+  const refills = Math.max(0, Math.ceil(hours / safeRuntime) - 1);
+  return { applicable: true, missing: false, genSize, lph, tank, totalL, hours, refills, safeRuntime };
+}
+function renderDieselForecast() {
+  const host = document.getElementById('dieselForecast');
+  if (!host) return;
+  const s = dieselForecastSummary();
+  if (!s.applicable) {
+    host.innerHTML = '<div style="background:#1a1a1a;border:1px dashed var(--border);border-radius:3px;padding:10px 14px;color:var(--grey);font-size:12px;">Power is from venue/client — diesel not our responsibility for this event.</div>';
+    return;
+  }
+  if (s.missing) {
+    host.innerHTML = '<div style="background:#1a1a1a;border:1px dashed var(--border);border-radius:3px;padding:10px 14px;color:var(--grey);font-size:12px;">Pick fleet + load-in/load-out times to see the diesel forecast.</div>';
+    return;
+  }
+  const urgent = s.refills >= 2;
+  const colour = urgent ? '#e0b370' : 'var(--sage)';
+  host.innerHTML =
+    '<div style="background:#1a1a1a;border:1px solid var(--border);border-left:3px solid ' + colour + ';border-radius:3px;padding:12px 16px;">' +
+      '<div style="font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:' + colour + ';font-weight:700;margin-bottom:8px;">⛽ Diesel Forecast — ' + s.genSize + ' kVA generator</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;color:var(--white);">' +
+        '<div><div style="color:var(--grey);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;">Run hours</div><div style="font-size:18px;font-weight:700;margin-top:2px;">' + s.hours.toFixed(1) + 'h</div></div>' +
+        '<div><div style="color:var(--grey);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;">Litres / hr</div><div style="font-size:18px;font-weight:700;margin-top:2px;">' + s.lph + ' L</div></div>' +
+        '<div><div style="color:var(--grey);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;">Total litres</div><div style="font-size:18px;font-weight:700;margin-top:2px;color:var(--sage);">' + s.totalL + ' L</div></div>' +
+        '<div><div style="color:var(--grey);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;">Refills</div><div style="font-size:18px;font-weight:700;margin-top:2px;color:' + (urgent ? '#e0b370' : 'var(--white)') + ';">' + s.refills + '</div></div>' +
+      '</div>' +
+      '<div style="font-size:11px;color:var(--grey);margin-top:10px;line-height:1.5;">' +
+        'Typical ' + s.tank + 'L tank · refill at 30% remaining (~every ' + s.safeRuntime + ' hrs running). Estimates assume ~75% load factor — verify with gen hire spec.' +
+      '</div>' +
+    '</div>';
+}
+
 // ─── GENERATOR SIZE SUGGESTION ────────────────────────────────
 // Road-tow generators we hire come in standard kVA sizes. 80% load
 // factor headroom is industry-standard for continuous loads.
@@ -2962,6 +3079,7 @@ function updatePowerSummary() {
       '<br><span style="font-size:11px;">Assumes 230V single-phase / 400V three-phase at PF 1.0 (worst-case). Sense-check before final generator/distro spec.</span>' +
     '</div>' +
     suggHtml;
+  renderDieselForecast();
 }
 
 function updateRevenueCards() {
@@ -3317,6 +3435,19 @@ function generateBrief() {
       </div>
       <div style="font-size:11px;color:#666;margin-top:8px;font-style:italic;">Calculated requirement is in Section 03 — Fleet &amp; Logistics.</div>
       ${val('powerNotes') ? '<div class="notice-box" style="margin-top:10px;"><strong>Power:</strong> ' + val('powerNotes') + '</div>' : ''}
+      ${(() => {
+        const d = dieselForecastSummary();
+        if (!d.applicable) return '';
+        if (d.missing) return val('dieselSource') || val('dieselResponsible') || val('dieselNotes') ? '<div class="notice-box" style="margin-top:6px;"><strong>⛽ Diesel:</strong> ' + (val('dieselSource') ? 'Source: ' + val('dieselSource') + '. ' : '') + (val('dieselResponsible') ? 'Responsible: ' + val('dieselResponsible') + '. ' : '') + (val('dieselNotes') ? val('dieselNotes').replace(/\n/g,'<br>') : '') + '</div>' : '';
+        const urgent = d.refills >= 2;
+        return '<div class="notice-box" style="margin-top:10px;border-color:' + (urgent ? '#b07a10' : 'var(--sage)') + ';background:' + (urgent ? '#fff8e6' : '#f5f8f2') + ';">' +
+          '<strong>⛽ Diesel Forecast (' + d.genSize + ' kVA gen, ' + d.hours.toFixed(1) + ' run hrs):</strong> ' +
+          '<strong style="color:#111;">' + d.totalL + ' L total</strong> · ~' + d.lph + ' L/hr · ' + d.refills + ' refill' + (d.refills !== 1 ? 's' : '') + ' (every ~' + d.safeRuntime + ' hrs, typical ' + d.tank + 'L tank).' +
+          (val('dieselSource') ? '<br><strong>Source:</strong> ' + val('dieselSource') : '') +
+          (val('dieselResponsible') ? '<br><strong>Responsible:</strong> ' + val('dieselResponsible') : '') +
+          (val('dieselNotes') ? '<br>' + val('dieselNotes').replace(/\n/g,'<br>') : '') +
+          '</div>';
+      })()}
       ${val('waterNotes') ? '<div class="notice-box" style="margin-top:6px;"><strong>Water/Waste:</strong> ' + val('waterNotes') + '</div>' : ''}
     </div>
 
@@ -4484,6 +4615,11 @@ function getStepStatus(stepNum, form) {
         (form._power || []).length > 0,
         !!form.waterSource
       ];
+      // If we provide the generator, diesel plan is part of readiness
+      if ((form._power || []).some(p => /We provide generator|Generator only/.test(p))) {
+        required.push(!!form.dieselSource);
+        required.push(!!form.dieselResponsible);
+      }
       break;
     }
     case 3: {
@@ -4792,9 +4928,9 @@ document.addEventListener('DOMContentLoaded', function() {
   refreshUserIndicator();
   updateStepEditorIndicators();
   updateStepColors();
-  ['loadInDate', 'loadOutDate', 'eventStartDate', 'eventFinishDate'].forEach(id => {
+  ['loadInDate', 'loadOutDate', 'eventStartDate', 'eventFinishDate', 'loadInTime', 'loadOutTime'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener('change', checkDoubleBooking);
+    if (el) el.addEventListener('change', () => { checkDoubleBooking(); renderDieselForecast(); });
   });
   // Auto-save on any input or change inside the form (also records change attribution)
   const formApp = document.getElementById('form-app');
