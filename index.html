@@ -1349,6 +1349,13 @@ body {
         <button class="btn btn-secondary" onclick="signOut()" style="font-size:13px;padding:8px 16px;">Sign out / switch user</button>
       </div>
       <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
+      <p><strong style="color:var(--white);">Offline Cache</strong></p>
+      <p>Every event is mirrored to this browser so you can read them when Wi-Fi or the server is down. Drafts you make while offline stay safe in local storage and you can re-save when you're back online.</p>
+      <p style="margin-top:8px;">Last synced: <span id="settingsLastSync" style="color:var(--sage);">never</span></p>
+      <div class="modal-actions" style="justify-content:flex-start;margin-top:6px;margin-bottom:18px;">
+        <button class="btn btn-secondary" onclick="settingsSyncNow()" style="font-size:13px;padding:8px 16px;">Sync now</button>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
       <p><strong style="color:var(--white);">Team Passcode</strong></p>
       <p>Stored only in this browser. Used to save / load / check events.</p>
       <div class="field" style="margin-top:14px;">
@@ -3781,6 +3788,83 @@ const WORKER_URL = 'https://obrien-brief-api.thomasjnr.workers.dev';
 const PASSCODE_KEY = 'obrien_brief_passcode';
 const USER_KEY = 'obrien_brief_user';
 const DRAFT_KEY = 'obrien_brief_draft';
+const CACHE_FILENAMES_KEY = 'obrien_brief_cache_filenames';
+const CACHE_EVENTS_KEY = 'obrien_brief_cache_events';
+const CACHE_SYNCED_KEY = 'obrien_brief_cache_synced';
+
+// ─── LOCAL CACHE (offline resilience) ─────────────────────────
+function cacheRead(key, fallback) {
+  try { const v = localStorage.getItem(key); return v == null ? fallback : JSON.parse(v); }
+  catch (e) { return fallback; }
+}
+function cacheWrite(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch (e) { /* quota */ }
+}
+function cacheLastSynced() { return localStorage.getItem(CACHE_SYNCED_KEY) || ''; }
+function markSyncedNow() { localStorage.setItem(CACHE_SYNCED_KEY, new Date().toISOString()); }
+
+let offlineMode = false;
+function setOfflineMode(on, reason) {
+  const changed = offlineMode !== !!on;
+  offlineMode = !!on;
+  if (changed) renderOfflineBanner(reason);
+}
+function renderOfflineBanner(reason) {
+  let banner = document.getElementById('offlineBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'offlineBanner';
+    banner.style.cssText = 'position:sticky;top:0;z-index:90;display:none;';
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+  if (offlineMode) {
+    const synced = cacheLastSynced();
+    const when = synced ? formatRelativeTime(synced) : 'never';
+    banner.innerHTML = '<div style="background:#3a2424;color:#ffb0b0;text-align:center;padding:8px 16px;font-size:12px;letter-spacing:0.04em;border-bottom:1px solid var(--red);">' +
+      '⚠ OFFLINE — showing cached events (last synced ' + when + ').' +
+      ' Drafts still save locally. <a href="#" onclick="forceSyncRetry();return false;" style="color:#fff;text-decoration:underline;margin-left:6px;">Retry sync</a>' +
+      '</div>';
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+async function forceSyncRetry() {
+  eventsCache.filenames = null;
+  eventsCache.byName = {};
+  try {
+    await syncAllEventsToCache();
+    setOfflineMode(false);
+    toast('Back online — synced');
+    renderHome();
+  } catch (e) {
+    toast('Still offline — try again later', 'error');
+  }
+}
+async function syncAllEventsToCache() {
+  if (!getPasscode()) return;
+  const res = await fetch(WORKER_URL + '/events', { headers: { 'X-Auth-Passcode': getPasscode() } });
+  if (!res.ok) throw new Error('worker ' + res.status);
+  const data = await res.json();
+  const filenames = data.files || [];
+  cacheWrite(CACHE_FILENAMES_KEY, filenames);
+  // Fetch each event in parallel and cache
+  const fetches = filenames.map(name =>
+    fetch(WORKER_URL + '/events/' + encodeURIComponent(name), { headers: { 'X-Auth-Passcode': getPasscode() } })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => j ? { name, event: j.event, sha: j.sha } : null)
+      .catch(() => null)
+  );
+  const results = await Promise.all(fetches);
+  const map = {};
+  results.forEach(r => { if (r && r.event) { r.event._sha = r.sha; r.event._filename = r.name; map[r.name] = r.event; } });
+  cacheWrite(CACHE_EVENTS_KEY, map);
+  markSyncedNow();
+  // Update in-memory cache too
+  eventsCache.filenames = filenames;
+  Object.entries(map).forEach(([k, v]) => { eventsCache.byName[k] = v; });
+}
 
 // ─── USER IDENTITY ────────────────────────────────────────────
 function getUser() { return localStorage.getItem(USER_KEY) || ''; }
@@ -4081,7 +4165,28 @@ function openSettingsModal() {
   document.getElementById('patInput').value = getPasscode();
   const u = document.getElementById('settingsUser');
   if (u) u.textContent = getUser() || '— (not signed in)';
+  const ls = document.getElementById('settingsLastSync');
+  if (ls) {
+    const s = cacheLastSynced();
+    ls.textContent = s ? formatRelativeTime(s) + ' (' + new Date(s).toLocaleString('en-IE') + ')' : 'never';
+  }
   document.getElementById('settingsModal').classList.add('open');
+}
+async function settingsSyncNow() {
+  toast('Syncing...');
+  try {
+    await syncAllEventsToCache();
+    setOfflineMode(false);
+    const ls = document.getElementById('settingsLastSync');
+    if (ls) {
+      const s = cacheLastSynced();
+      ls.textContent = s ? formatRelativeTime(s) + ' (' + new Date(s).toLocaleString('en-IE') + ')' : 'never';
+    }
+    toast('Synced ' + (eventsCache.filenames || []).length + ' events');
+    renderHome();
+  } catch (e) {
+    toast('Sync failed — server unreachable', 'error');
+  }
 }
 function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
 function savePasscodeAndClose() {
@@ -4821,9 +4926,19 @@ async function listEventFilenames(force) {
     if (!res.ok) throw new Error('list ' + res.status);
     const data = await res.json();
     eventsCache.filenames = data.files || [];
+    cacheWrite(CACHE_FILENAMES_KEY, eventsCache.filenames);
+    markSyncedNow();
+    setOfflineMode(false);
     return eventsCache.filenames;
   } catch (e) {
     if (e.message === 'NO_PASSCODE' || e.message === 'BAD_PASSCODE') return [];
+    // Network failure → use local cache
+    const cached = cacheRead(CACHE_FILENAMES_KEY, []);
+    if (cached.length) {
+      setOfflineMode(true, e.message);
+      eventsCache.filenames = cached;
+      return cached;
+    }
     throw e;
   }
 }
@@ -4832,14 +4947,30 @@ async function getEventByFilename(name) {
   if (eventsCache.byName[name]) return eventsCache.byName[name];
   try {
     const res = await apiCall('/events/' + encodeURIComponent(name));
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const cached = cacheRead(CACHE_EVENTS_KEY, {})[name];
+      if (cached) { eventsCache.byName[name] = cached; return cached; }
+      return null;
+    }
     const data = await res.json();
     const obj = data.event;
     obj._sha = data.sha;
     obj._filename = name;
     eventsCache.byName[name] = obj;
+    // Update the cached map for offline access later
+    const all = cacheRead(CACHE_EVENTS_KEY, {});
+    all[name] = obj;
+    cacheWrite(CACHE_EVENTS_KEY, all);
     return obj;
-  } catch (e) { return null; }
+  } catch (e) {
+    const cached = cacheRead(CACHE_EVENTS_KEY, {})[name];
+    if (cached) {
+      setOfflineMode(true, e.message);
+      eventsCache.byName[name] = cached;
+      return cached;
+    }
+    return null;
+  }
 }
 
 async function loadEvent(filename) {
@@ -4943,6 +5074,11 @@ document.addEventListener('DOMContentLoaded', function() {
   offerDraftRestore();
   // Initial view: Home dashboard (renders pies, events grid, dashboard pills, ops tracker)
   showHome();
+  // Background-sync the full event cache so offline read works
+  if (getPasscode()) syncAllEventsToCache().catch(() => {});
+  // Detect online/offline transitions and retry on regain
+  window.addEventListener('online', () => { if (getPasscode()) forceSyncRetry(); });
+  window.addEventListener('offline', () => setOfflineMode(true, 'browser offline'));
   // First-load welcome prompt — show if either name or passcode is missing
   if (!getPasscode() || !getUser()) openWelcomeOverlay();
 });
