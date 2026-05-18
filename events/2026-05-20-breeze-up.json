@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-18T11:52:37.590Z",
+  "savedAt": "2026-05-18T11:57:59.288Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -64,7 +64,7 @@
     "prePaidMenu": "Day 1 - Tea/Coffee (Barista Coffee Charged for)\nDay 2 - Tea/Coffee + Breakfast Roll \n",
     "prePaidNotes": "Invoice same day, payment 14 days ",
     "voucherDetails": "",
-    "posNotes": "",
+    "posNotes": "Barista coffee to be paid at till, filter coffee/teas and breakfast rolls covered by voucher. Americanos instead of filter coffee.",
     "menuNotes": "Tea/Coffee\nBreakfast Rolls",
     "foodCovers": "100",
     "coffeeCovers": "200",
@@ -90,7 +90,8 @@
       "Minimum spend"
     ],
     "_pos": [
-      "Client vouchers accepted"
+      "Client vouchers accepted",
+      "Card only"
     ],
     "_safety": [],
     "_isScattered": true,
@@ -151,7 +152,7 @@
       },
       "step3": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-16T19:14:11.111Z"
+        "at": "2026-05-18T11:57:58.803Z"
       },
       "step4": {
         "user": "Thomas O'Brien",
