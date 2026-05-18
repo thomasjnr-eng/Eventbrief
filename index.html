@@ -4,24 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Planning - OBEC</title>
+<script>
+  // Apply saved theme immediately to avoid a flash of the wrong palette
+  (function () {
+    try { document.documentElement.dataset.theme = localStorage.getItem('obrien_brief_theme') || 'light'; }
+    catch (e) { document.documentElement.dataset.theme = 'light'; }
+  })();
+</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M62 4 L70 36 L100 44 L70 52 L62 84 L54 52 L24 44 L54 36 Z' fill='%23a8c49a'/><path d='M22 56 L27 74 L44 80 L27 86 L22 100 L17 86 L0 80 L17 74 Z' fill='%23a8c49a'/></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23111111'/><path d='M62 14 L70 42 L96 50 L70 58 L62 86 L54 58 L28 50 L54 42 Z' fill='%23a8c49a'/><path d='M26 60 L30 74 L44 78 L30 82 L26 96 L22 82 L8 78 L22 74 Z' fill='%23a8c49a'/></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@300;400;700&display=swap');
 
 :root {
-  --black: #111111;
-  --white: #f8f5f0;
-  --sage: #a8c49a;          /* O'Brien brand sage — primary accent */
-  --sage-dark: #88a47a;     /* hover / pressed */
-  --sage-deep: #6b8c5e;     /* high-contrast text on light bg */
-  --grey: #888;
-  --light: #e8e4de;
-  --card: #1e1e1e;
-  --border: #333;
-  --green: #5a8a4a;         /* "Generate" CTA — deeper olive, distinct from sage */
+  /* Default = light theme */
+  --bg: #f7f5f0;
+  --bg-card: #ffffff;
+  --bg-input: #ece8de;
+  --bg-deep: #efece6;
+  --text: var(--bg-deep);
+  --text-muted: #6a6a6a;
+  --border: #d8d4ce;
+  --sage: #88a47a;         /* slightly deeper on light bg for AA contrast */
+  --sage-dark: #6b8c5e;
+  --sage-deep: #4a6e3e;
+  --green: #5a8a4a;
   --green-dark: #466e3a;
   --red: #c0392b;
+  --light: #efece6;
+  /* Legacy aliases — keep all existing var(--black) / var(--white) etc. working */
+  --black: var(--bg);
+  --white: var(--text);
+  --card: var(--bg-card);
+  --grey: var(--text-muted);
+}
+[data-theme="dark"] {
+  --bg: #111111;
+  --bg-card: #1e1e1e;
+  --bg-input: var(--bg-input);
+  --bg-deep: var(--bg-deep);
+  --text: #f8f5f0;
+  --text-muted: #888;
+  --border: #333;
+  --sage: #a8c49a;
+  --sage-dark: #88a47a;
+  --sage-deep: #6b8c5e;
+  --light: #e8e4de;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -144,7 +172,7 @@ body {
 .field input,
 .field textarea,
 .field select {
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--white);
@@ -159,7 +187,7 @@ body {
 .field input:focus,
 .field textarea:focus,
 .field select:focus { border-color: var(--sage); }
-.field select option { background: #2a2a2a; }
+.field select option { background: var(--bg-input); }
 .field textarea { min-height: 64px; line-height: 1.5; }
 
 /* ─── TOGGLE CHIPS ─── */
@@ -174,7 +202,7 @@ body {
   cursor: pointer;
   transition: all 0.15s;
   user-select: none;
-  background: #2a2a2a;
+  background: var(--bg-input);
 }
 .chip:hover { border-color: var(--sage); color: var(--sage); }
 .chip.selected { background: var(--sage); border-color: var(--sage); color: #fff; font-weight: 700; }
@@ -208,7 +236,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   cursor: pointer;
@@ -629,7 +657,7 @@ body {
 .modal-body { font-size: 13px; color: var(--white); line-height: 1.5; }
 .modal-body p { margin-bottom: 10px; color: var(--grey); }
 .modal-body ol { margin: 10px 0 14px 20px; color: var(--grey); }
-.modal-body code { background: #2a2a2a; padding: 2px 6px; border-radius: 2px; font-size: 12px; color: var(--sage); }
+.modal-body code { background: var(--bg-input); padding: 2px 6px; border-radius: 2px; font-size: 12px; color: var(--sage); }
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
 
 /* ─── SAVED EVENTS LIST ─── */
@@ -642,7 +670,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 3px;
   margin-bottom: 8px;
-  background: #2a2a2a;
+  background: var(--bg-input);
 }
 .ev-ops-cell {
   font-size: 11px;
@@ -676,7 +704,7 @@ body {
 /* ─── WELCOME OVERLAY ─── */
 .welcome-overlay {
   position: fixed; inset: 0;
-  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+  background: var(--bg);
   z-index: 700;
   display: none;
   align-items: center;
@@ -717,7 +745,7 @@ body {
 }
 .welcome-input {
   width: 100%;
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--white);
@@ -806,7 +834,7 @@ body {
   text-align: center;
 }
 .home-pie svg { width: 130px; height: 130px; }
-.home-pie .pie-bg { fill: none; stroke: #2a2a2a; stroke-width: 3.2; }
+.home-pie .pie-bg { fill: none; stroke: var(--bg-input); stroke-width: 3.2; }
 .home-pie .pie-fill { fill: none; stroke-width: 3.2; stroke-linecap: round; transition: stroke-dasharray 0.4s; }
 .home-pie .pie-pct { font-size: 7px; font-weight: 700; }
 .home-pie .pie-sub { font-size: 4px; fill: #888; }
@@ -872,7 +900,7 @@ body {
 .home-event-card .he-bars { display: flex; flex-direction: column; gap: 6px; }
 .home-event-card .he-bar-row { display: flex; align-items: center; gap: 8px; }
 .home-event-card .he-bar-label { font-size: 10px; color: var(--grey); letter-spacing: 0.04em; min-width: 38px; }
-.home-event-card .he-bar { flex: 1; height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.home-event-card .he-bar { flex: 1; height: 4px; background: var(--bg-deep); border-radius: 2px; overflow: hidden; }
 .home-event-card .he-bar-fill { height: 100%; }
 .home-event-card .he-pct { font-size: 11px; font-weight: 700; min-width: 36px; text-align: right; }
 .home-event-card .he-status {
@@ -905,7 +933,7 @@ body {
 .plan-task-row:last-child { border-bottom: none; }
 .plan-task-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--sage); cursor: pointer; }
 .plan-task-row input[type=text] {
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--white);
@@ -945,6 +973,22 @@ body {
   vertical-align: middle;
 }
 .btn-secondary.danger { color: #ff8c8c; }
+
+/* ─── THEME TOGGLE BUTTONS ─── */
+.theme-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 7px 14px;
+  border-radius: 3px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+}
+.theme-btn:hover { color: var(--sage); border-color: var(--sage); }
+.theme-btn.active { background: var(--sage); color: #fff; border-color: var(--sage); }
 
 /* ─── OPS TRACKER (main-page live progress) ─── */
 .ops-tracker {
@@ -1004,13 +1048,13 @@ body {
 }
 .ote-name { font-size: 13px; color: var(--white); font-weight: 700; }
 .ote-meta { font-size: 11px; color: var(--grey); }
-.ote-bar { height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+.ote-bar { height: 4px; background: var(--bg-deep); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
 .ote-bar-fill { height: 100%; transition: width 0.3s; }
 .ote-trucks { display: flex; flex-wrap: wrap; gap: 6px; }
 .ote-truck {
   font-size: 11px;
   color: var(--white);
-  background: #1a1a1a;
+  background: var(--bg-deep);
   border: 1px solid var(--border);
   border-left: 3px solid #555;
   padding: 4px 10px;
@@ -1074,7 +1118,7 @@ body {
 .ev-progress.good .pct  { background: #1f3a23; color: #6fcf6f; }
 .ev-progress.mid .pct   { background: #3a2d1a; color: #e0b370; }
 .ev-progress.low .pct   { background: #3a1a1a; color: #ff8c8c; }
-.ev-progress .bar { width: 56px; height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.ev-progress .bar { width: 56px; height: 4px; background: var(--bg-deep); border-radius: 2px; overflow: hidden; }
 .ev-progress .bar-fill { height: 100%; transition: width 0.3s; }
 .ev-progress.good .bar-fill { background: #4a9a5c; }
 .ev-progress.mid .bar-fill  { background: #c89a4a; }
@@ -1109,7 +1153,7 @@ body {
   margin-bottom: 8px;
 }
 .trading-day-row input {
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--white);
@@ -1144,7 +1188,7 @@ body {
   margin: 14px 0;
   transition: all 0.15s;
 }
-.bulk-drop:hover { border-color: var(--sage); background: #1a1a1a; }
+.bulk-drop:hover { border-color: var(--sage); background: var(--bg-deep); }
 .bulk-drop.drag-over { border-color: var(--sage); background: rgba(168,196,154,0.1); }
 .bulk-row {
   display: grid;
@@ -1156,7 +1200,7 @@ body {
 }
 .bulk-row:last-child { border-bottom: none; }
 .bulk-row input {
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--white);
@@ -1186,7 +1230,7 @@ body {
 /* ─── TRUCK SAFETY ROWS ─── */
 .truck-safety-row {
   padding: 12px;
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   margin-bottom: 8px;
@@ -1242,7 +1286,7 @@ body {
 .staff-row .sr-min { font-size: 11px; color: var(--grey); }
 .staff-row .sr-min strong { color: var(--sage); font-size: 14px; }
 .staff-row select, .staff-row input {
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--white);
@@ -1264,7 +1308,7 @@ body {
   gap: 10px;
   align-items: center;
   padding: 10px 14px;
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-left: 3px solid var(--sage);
   border-radius: 3px;
@@ -1296,7 +1340,7 @@ body {
 .stock-row:last-child { border-bottom: none; }
 .stock-row .sr-name { font-size: 13px; color: var(--white); font-weight: 700; }
 .stock-row select, .stock-row input {
-  background: #2a2a2a;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--white);
@@ -1403,6 +1447,13 @@ body {
         <button class="btn btn-secondary" onclick="signOut()" style="font-size:13px;padding:8px 16px;">Sign out / switch user</button>
       </div>
       <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
+      <p><strong style="color:var(--white);">Appearance</strong></p>
+      <p>Switch between light and dark themes.</p>
+      <div style="display:flex;gap:6px;margin:8px 0 18px;background:var(--bg-input);padding:4px;border-radius:4px;width:fit-content;">
+        <button class="theme-btn" id="themeBtnLight" onclick="setTheme('light')">☀ Light</button>
+        <button class="theme-btn" id="themeBtnDark" onclick="setTheme('dark')">☾ Dark</button>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
       <p><strong style="color:var(--white);">Offline Cache</strong></p>
       <p>Every event is mirrored to this browser so you can read them when Wi-Fi or the server is down. Drafts you make while offline stay safe in local storage and you can re-save when you're back online.</p>
       <p style="margin-top:8px;">Last synced: <span id="settingsLastSync" style="color:var(--sage);">never</span></p>
@@ -1455,7 +1506,7 @@ body {
       </div>
       <div id="bulkProgress" style="display:none;text-align:center;padding:30px 0;">
         <div id="bulkProgressText" style="font-size:14px;color:var(--white);margin-bottom:10px;">Importing...</div>
-        <div style="width:100%;height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;">
+        <div style="width:100%;height:6px;background:var(--bg-deep);border-radius:3px;overflow:hidden;">
           <div id="bulkProgressBar" style="width:0%;height:100%;background:var(--sage);transition:width 0.2s;"></div>
         </div>
       </div>
@@ -1798,7 +1849,7 @@ body {
   <div class="card">
     <div class="card-title">Power Supply</div>
     <div id="powerSupplyQuickRef" style="display:none;margin-bottom:14px;"></div>
-    <label style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--white);padding:10px 14px;background:#2a2a2a;border:1px solid var(--border);border-radius:3px;margin-bottom:14px;cursor:pointer;line-height:1.5;">
+    <label style="display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--white);padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:3px;margin-bottom:14px;cursor:pointer;line-height:1.5;">
       <input type="checkbox" id="iceVansNeedPower" onchange="updatePowerSummary()" style="accent-color:var(--sage);margin-top:2px;">
       <span>🍦 Force-include ice cream vans in power calculation<br><span style="color:var(--grey);font-size:11px;">Default: excluded. Vans run off their own engines unless pitched indoors or specifically requested by the venue/client.</span></span>
     </label>
@@ -3100,17 +3151,17 @@ function renderDieselForecast() {
   if (!host) return;
   const s = dieselForecastSummary();
   if (!s.applicable) {
-    host.innerHTML = '<div style="background:#1a1a1a;border:1px dashed var(--border);border-radius:3px;padding:10px 14px;color:var(--grey);font-size:12px;">Power is from venue/client — diesel not our responsibility for this event.</div>';
+    host.innerHTML = '<div style="background:var(--bg-deep);border:1px dashed var(--border);border-radius:3px;padding:10px 14px;color:var(--grey);font-size:12px;">Power is from venue/client — diesel not our responsibility for this event.</div>';
     return;
   }
   if (s.missing) {
-    host.innerHTML = '<div style="background:#1a1a1a;border:1px dashed var(--border);border-radius:3px;padding:10px 14px;color:var(--grey);font-size:12px;">Pick fleet + load-in/load-out times to see the diesel forecast.</div>';
+    host.innerHTML = '<div style="background:var(--bg-deep);border:1px dashed var(--border);border-radius:3px;padding:10px 14px;color:var(--grey);font-size:12px;">Pick fleet + load-in/load-out times to see the diesel forecast.</div>';
     return;
   }
   const urgent = s.refills >= 2;
   const colour = urgent ? '#e0b370' : 'var(--sage)';
   host.innerHTML =
-    '<div style="background:#1a1a1a;border:1px solid var(--border);border-left:3px solid ' + colour + ';border-radius:3px;padding:12px 16px;">' +
+    '<div style="background:var(--bg-deep);border:1px solid var(--border);border-left:3px solid ' + colour + ';border-radius:3px;padding:12px 16px;">' +
       '<div style="font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:' + colour + ';font-weight:700;margin-bottom:8px;">⛽ Diesel Forecast — ' + s.genSize + ' kVA generator</div>' +
       '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;color:var(--white);">' +
         '<div><div style="color:var(--grey);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;">Run hours</div><div style="font-size:18px;font-weight:700;margin-top:2px;">' + s.hours.toFixed(1) + 'h</div></div>' +
@@ -3188,19 +3239,19 @@ function updatePowerSummary() {
     ? ' <span style="font-size:11px;color:#bbb;background:#2d2040;padding:2px 8px;border-radius:2px;margin-left:6px;">🍦 ' + p.excludedIceVans + ' ice cream van' + (p.excludedIceVans !== 1 ? 's' : '') + ' excluded (self-powered)</span>'
     : '';
   const suggHtml = sugg
-    ? '<div style="background:#1a1a1a;border:1px solid var(--sage);border-radius:3px;padding:10px 14px;margin-top:10px;color:var(--white);font-size:13px;line-height:1.5;">' +
+    ? '<div style="background:var(--bg-deep);border:1px solid var(--sage);border-radius:3px;padding:10px 14px;margin-top:10px;color:var(--white);font-size:13px;line-height:1.5;">' +
         '<strong style="color:var(--sage);">Suggested hire:</strong> ' + describeSuggestion(sugg) +
         ' <span style="color:var(--grey);font-size:11px;">(' + sugg.required.toFixed(1) + ' kVA after 80% load factor for continuous safe load)</span>' +
       '</div>'
     : '';
   document.getElementById('powerSummary').innerHTML =
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">' +
-      '<div style="background:#2a2a2a;border-left:3px solid #8EAADB;padding:14px;">' +
+      '<div style="background:var(--bg-input);border-left:3px solid #8EAADB;padding:14px;">' +
         '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey);margin-bottom:6px;">Single Phase Total</div>' +
         '<div style="font-size:22px;font-weight:700;color:var(--white);">' + p.singleTotal + 'A <span style="font-size:13px;color:var(--grey);font-weight:400;">~' + p.singleKVA.toFixed(1) + ' kVA</span></div>' +
         '<div style="font-size:11px;color:var(--grey);margin-top:8px;">Breakers: ' + breakerBreakdown(p.singleBreakers) + '</div>' +
       '</div>' +
-      '<div style="background:#2a2a2a;border-left:3px solid #FF7E79;padding:14px;">' +
+      '<div style="background:var(--bg-input);border-left:3px solid #FF7E79;padding:14px;">' +
         '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey);margin-bottom:6px;">Three Phase Total</div>' +
         '<div style="font-size:22px;font-weight:700;color:var(--white);">' + p.threeTotal + 'A <span style="font-size:13px;color:var(--grey);font-weight:400;">~' + p.threeKVA.toFixed(1) + ' kVA</span></div>' +
         '<div style="font-size:11px;color:var(--grey);margin-top:8px;">Breakers: ' + breakerBreakdown(p.threeBreakers) + '</div>' +
@@ -3913,6 +3964,24 @@ const WORKER_URL = 'https://obrien-brief-api.thomasjnr.workers.dev';
 const PASSCODE_KEY = 'obrien_brief_passcode';
 const USER_KEY = 'obrien_brief_user';
 const DRAFT_KEY = 'obrien_brief_draft';
+const THEME_KEY = 'obrien_brief_theme';
+
+// ─── THEME (light / dark) ────────────────────────────────────
+function getTheme() { return localStorage.getItem(THEME_KEY) || 'light'; }
+function setTheme(t) {
+  const theme = t === 'dark' ? 'dark' : 'light';
+  localStorage.setItem(THEME_KEY, theme);
+  document.documentElement.dataset.theme = theme;
+  refreshThemeButtons();
+}
+function refreshThemeButtons() {
+  const t = getTheme();
+  const lb = document.getElementById('themeBtnLight');
+  const db = document.getElementById('themeBtnDark');
+  if (lb) lb.classList.toggle('active', t === 'light');
+  if (db) db.classList.toggle('active', t === 'dark');
+}
+
 const CACHE_FILENAMES_KEY = 'obrien_brief_cache_filenames';
 const CACHE_EVENTS_KEY = 'obrien_brief_cache_events';
 const CACHE_SYNCED_KEY = 'obrien_brief_cache_synced';
@@ -4290,6 +4359,7 @@ function openSettingsModal() {
   document.getElementById('patInput').value = getPasscode();
   const u = document.getElementById('settingsUser');
   if (u) u.textContent = getUser() || '— (not signed in)';
+  refreshThemeButtons();
   const ls = document.getElementById('settingsLastSync');
   if (ls) {
     const s = cacheLastSynced();
