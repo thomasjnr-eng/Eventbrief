@@ -25,9 +25,9 @@
   --text: var(--bg-deep);
   --text-muted: #1a1a1a;
   --border: #d8d4ce;
-  --sage: #88a47a;         /* slightly deeper on light bg for AA contrast */
-  --sage-dark: #6b8c5e;
-  --sage-deep: #4a6e3e;
+  --sage: #5a7a4f;         /* darkened for AA contrast on cream bg */
+  --sage-dark: #466e3a;
+  --sage-deep: #2f4a26;
   --green: #5a8a4a;
   --green-dark: #466e3a;
   --red: #c0392b;
@@ -834,7 +834,7 @@ body {
   text-align: center;
 }
 .home-pie svg { width: 130px; height: 130px; }
-.home-pie .pie-bg { fill: none; stroke: var(--bg-input); stroke-width: 3.2; }
+.home-pie .pie-bg { fill: none; stroke: var(--border); stroke-width: 3.2; }
 .home-pie .pie-fill { fill: none; stroke-width: 3.2; stroke-linecap: round; transition: stroke-dasharray 0.4s; }
 .home-pie .pie-pct { font-size: 7px; font-weight: 700; }
 .home-pie .pie-sub { font-size: 4px; fill: #888; }
@@ -4935,7 +4935,7 @@ function pieSvg(percent, color) {
     '</svg>';
 }
 function pieColor(pct, empty) {
-  if (empty) return '#555';
+  if (empty) return getTheme() === 'dark' ? '#888' : '#555';
   if (pct >= 85) return '#6fcf6f';
   if (pct >= 50) return '#e0b370';
   return '#ff8c8c';
