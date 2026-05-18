@@ -5,12 +5,15 @@
 // (X-Auth-Passcode header), which is checked against env.TEAM_PASSCODE.
 //
 // REQUIRED SECRETS (Cloudflare dashboard → Worker → Settings → Variables):
-//   GITHUB_PAT       fine-grained PAT with Contents: read & write on the repo
-//   TEAM_PASSCODE    shared passcode that users enter once per browser
-//   GITHUB_REPO      e.g. "thomasjnr-eng/eventbrief"
-//   GITHUB_BRANCH    e.g. "main" (or the working branch)
-//   ALLOWED_ORIGIN   the frontend's URL, e.g. "https://briefs.obriencatering.ie"
-//                    set to "*" only during initial testing
+//   GITHUB_PAT         fine-grained PAT with Contents: read & write on the repo
+//   TEAM_PASSCODE      shared passcode that users enter once per browser
+//   GITHUB_REPO        e.g. "thomasjnr-eng/eventbrief"
+//   GITHUB_BRANCH      e.g. "main" (or the working branch)
+//   ALLOWED_ORIGIN     the frontend's URL, e.g. "https://briefs.obriencatering.ie"
+//                      set to "*" only during initial testing
+//   ANTHROPIC_API_KEY  (optional) Claude API key for the Import screenshot
+//                      extraction. If unset, /extract returns a 503 telling
+//                      the user to add the key in Settings.
 
 const corsHeaders = (origin) => ({
   'Access-Control-Allow-Origin': origin || '*',
@@ -43,6 +46,9 @@ export default {
     try {
       if (path === '/events' && request.method === 'GET') {
         return await listEvents(env, origin);
+      }
+      if (path === '/extract' && request.method === 'POST') {
+        return await extractFromImage(await request.json(), env, origin);
       }
       const m = path.match(/^\/events\/(.+)$/);
       if (m) {
@@ -136,6 +142,68 @@ async function deleteEvent(id, env, origin) {
   }, env);
   if (!res.ok) return json({ error: 'delete failed' }, 502, origin);
   return json({ ok: true }, 200, origin);
+}
+
+// ─── EVENT EXTRACTION FROM IMAGE ─────────────────────────────
+// Proxies a vision request to the Anthropic API. The frontend sends
+// { imageBase64, mediaType } (e.g. mediaType 'image/png'). We send
+// the image + an extraction prompt to Claude Haiku and return the
+// parsed JSON list of events.
+async function extractFromImage(payload, env, origin) {
+  if (!env.ANTHROPIC_API_KEY) {
+    return json({ error: 'extraction_disabled', message: "Anthropic API key not configured on the Worker. Add it as the ANTHROPIC_API_KEY secret in Cloudflare." }, 503, origin);
+  }
+  if (!payload || !payload.imageBase64 || !payload.mediaType) {
+    return json({ error: 'imageBase64 and mediaType required' }, 400, origin);
+  }
+  const systemPrompt =
+    "You extract event-booking details from images (screenshots of emails, " +
+    "WhatsApp messages, schedules, contracts) for an Irish event-catering company. " +
+    "Return ONLY valid JSON with the shape " +
+    '{"events":[{"eventName":string,"eventStartDate":"YYYY-MM-DD","venueName":string,' +
+    '"clientName":string,"attendance":string,"notes":string}]}. ' +
+    "If you're unsure of any field, omit it. When the date format is ambiguous " +
+    "assume European DD/MM/YYYY. If you can't find any events at all, return " +
+    '{"events":[]}. No commentary, no markdown fences — JSON only.';
+  let res;
+  try {
+    res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 2000,
+        system: systemPrompt,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: payload.mediaType, data: payload.imageBase64 } },
+            { type: 'text', text: 'Extract any events from this image. Return JSON only.' }
+          ]
+        }]
+      })
+    });
+  } catch (e) {
+    return json({ error: 'anthropic_unreachable', detail: e.message }, 502, origin);
+  }
+  if (!res.ok) {
+    const errText = await res.text();
+    return json({ error: 'anthropic_' + res.status, detail: errText }, 502, origin);
+  }
+  const data = await res.json();
+  const text = (data.content && data.content[0] && data.content[0].text) || '';
+  let parsed;
+  try {
+    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+    parsed = JSON.parse(cleaned);
+  } catch (e) {
+    return json({ error: 'parse_failed', raw: text }, 502, origin);
+  }
+  return json({ events: Array.isArray(parsed.events) ? parsed.events : [] }, 200, origin);
 }
 
 // UTF-8 safe base64 (atob/btoa in Workers handle Latin-1 only)

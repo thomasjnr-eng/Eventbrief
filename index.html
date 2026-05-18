@@ -1478,7 +1478,7 @@ body {
       <button class="header-btn primary" onclick="newBrief()">+ New Brief</button>
       <button class="header-btn" onclick="newPlan()">+ Day Plan</button>
       <button class="header-btn" id="btnEvents" onclick="openEventsModal()">Load Brief</button>
-      <button class="header-btn" id="btnBulk" onclick="openBulkModal()">Bulk Add</button>
+      <button class="header-btn" id="btnBulk" onclick="openBulkModal()">Import</button>
       <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
   </div>
@@ -1527,15 +1527,15 @@ body {
 <div class="modal-overlay" id="bulkModal" onclick="if(event.target===this) closeBulkModal()">
   <div class="modal-content" style="max-width:820px;">
     <button class="modal-close" onclick="closeBulkModal()">&times;</button>
-    <div class="modal-title">Bulk Add Events</div>
+    <div class="modal-title">Import Events</div>
     <div class="modal-body">
       <div id="bulkChoose">
-        <p>Drop a file or paste below to import multiple events at once. Each becomes a skeleton brief (name + date + venue + client populated, everything else blank). You complete the rest from <strong>Load Brief</strong>.</p>
-        <p style="font-size:11px;color:var(--grey);">Supported: CSV / TSV files, Excel paste (tabs), <code>.ics</code> calendar exports, or one event per line.</p>
+        <p>Drop a file or paste below to import one or more events at once. Each becomes a skeleton brief (name + date + venue + client populated, everything else blank). You complete the rest from <strong>Load Brief</strong>.</p>
+        <p style="font-size:11px;color:var(--grey);">Supported: <strong>📸 screenshots</strong> of emails / WhatsApps (auto-extracted via Claude), CSV / TSV files, Excel paste (tabs), <code>.ics</code> calendar exports, or one event per line.</p>
         <div id="bulkDrop" class="bulk-drop">
-          <div style="font-size:14px;color:var(--white);margin-bottom:6px;">Drop file here</div>
+          <div style="font-size:14px;color:var(--white);margin-bottom:6px;">Drop file or screenshot here</div>
           <div style="font-size:11px;color:var(--grey);">or tap to choose</div>
-          <input type="file" id="bulkFile" accept=".csv,.tsv,.ics,text/*" style="display:none;">
+          <input type="file" id="bulkFile" accept=".csv,.tsv,.ics,image/*,text/*" style="display:none;">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--grey);margin:14px 0;">— or —</div>
         <textarea id="bulkPaste" rows="6" placeholder="Paste here. Excel rows (tab-separated): &#10;Aviva Stadium  &#9;  2026-07-15&#10;Bord Gais Theatre  &#9;  2026-08-02"></textarea>
@@ -2514,14 +2514,70 @@ function bulkBackToChoose() {
 function bulkParseInput() {
   const file = document.getElementById('bulkFile').files[0];
   if (file) {
+    if (/^image\//i.test(file.type)) { bulkExtractFromImage(file); return; }
     const reader = new FileReader();
     reader.onload = (e) => bulkParseText(e.target.result, file.name);
     reader.readAsText(file);
   } else {
     const paste = document.getElementById('bulkPaste').value;
     if (paste.trim()) bulkParseText(paste, null);
-    else toast('Drop a file or paste content first', 'error');
+    else toast('Drop a file, screenshot, or paste content first', 'error');
   }
+}
+
+async function bulkExtractFromImage(file) {
+  // Show progress UI immediately
+  document.getElementById('bulkChoose').style.display = 'none';
+  document.getElementById('bulkPreview').style.display = 'none';
+  document.getElementById('bulkProgress').style.display = 'block';
+  document.getElementById('bulkProgressText').textContent = 'Reading image…';
+  document.getElementById('bulkProgressBar').style.width = '20%';
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+    if (!match) { toast('Could not read image', 'error'); bulkBackToChoose(); return; }
+    const mediaType = match[1];
+    const imageBase64 = match[2];
+    document.getElementById('bulkProgressText').textContent = 'Sending to Claude for extraction…';
+    document.getElementById('bulkProgressBar').style.width = '55%';
+    try {
+      const res = await apiCall('/extract', {
+        method: 'POST',
+        body: JSON.stringify({ imageBase64, mediaType })
+      });
+      if (res.status === 503) {
+        const data = await res.json();
+        toast(data.message || 'Extraction not enabled — set ANTHROPIC_API_KEY on the Worker', 'error');
+        bulkBackToChoose();
+        return;
+      }
+      if (!res.ok) {
+        const errText = await res.text();
+        toast('Extraction failed (' + res.status + ')', 'error');
+        console.error(errText);
+        bulkBackToChoose();
+        return;
+      }
+      document.getElementById('bulkProgressBar').style.width = '90%';
+      const data = await res.json();
+      const events = (data.events || []).map(ev => ({
+        eventName: ev.eventName || '',
+        eventStartDate: ev.eventStartDate || '',
+        venueName: ev.venueName || '',
+        clientName: ev.clientName || ''
+      }));
+      if (!events.length) { toast('No events found in image — try a clearer screenshot', 'error'); bulkBackToChoose(); return; }
+      BULK_PARSED = events;
+      bulkShowPreview();
+      toast('Extracted ' + events.length + ' event' + (events.length !== 1 ? 's' : '') + ' — review and import');
+    } catch (e) {
+      if (e.message === 'NO_PASSCODE') { openSettingsModal(); bulkBackToChoose(); return; }
+      toast('Extraction failed: ' + e.message, 'error');
+      bulkBackToChoose();
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function bulkParseText(text, filename) {
