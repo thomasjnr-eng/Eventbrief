@@ -2393,6 +2393,7 @@ body {
       <button class="btn btn-secondary" onclick="briefCollapseAll()" style="font-size:12px;padding:7px 12px;">Collapse all</button>
     </div>
     <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
+    <button class="btn btn-primary" onclick="shareBrief()">📤 Share</button>
     <button class="btn btn-green" id="calendarBtn" onclick="addToCalendar()">📅 Add to Calendar</button>
   </div>
 </div>
@@ -4008,6 +4009,54 @@ function backToForm() {
   showBriefEdit();
   renderOpsTracker();
   window.scrollTo(0,0);
+}
+
+// ─── SHARE BRIEF (to email / WhatsApp / etc. via native share sheet) ─────
+async function shareBrief() {
+  const eventName = val('eventName') || 'Event';
+  const venue = val('venueName') || '';
+  const data = collectFormDataLight();
+  const date = getEventDate(data);
+  const ref = genRef();
+  const isScattered = data._isScattered;
+
+  const lines = [
+    '🚚 ' + eventName + (venue ? ' — ' + venue : ''),
+    date ? '📅 ' + formatDate(date) + (isScattered ? ' (multi-day)' : '') : null,
+    val('venueAddress') ? '📍 ' + val('venueAddress').split(/\r?\n/).filter(Boolean).join(', ') : null,
+    (val('onsiteContact') || val('contactName'))
+      ? '👤 ' + (val('onsiteContact') || val('contactName')) + (val('contactPhone') ? ' · ' + val('contactPhone') : '')
+      : null,
+    val('loadInDate') ? '🚛 Load-in: ' + formatDate(val('loadInDate')) + (val('loadInTime') ? ' ' + val('loadInTime') : '') : null,
+    !isScattered && val('eventStartDate') ? '⏰ Trading: ' + formatTime(val('eventStartTime')) + ' – ' + formatTime(val('eventFinishTime')) : null,
+    'Ref: ' + ref
+  ].filter(Boolean);
+
+  const id = eventIdFor(collectFormData());
+  const base = window.location.origin + window.location.pathname;
+  const url = base + '?event=' + encodeURIComponent(id + '.json');
+
+  const shareText = lines.join('\n');
+  const shareData = { title: eventName + (venue ? ' — ' + venue : ''), text: shareText, url };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch (e) {
+      if (e && e.name !== 'AbortError') {
+        toast('Share cancelled or failed', 'error');
+      }
+    }
+    return;
+  }
+  // Fallback: copy combined text+url to clipboard
+  const combined = shareText + '\n\n' + url;
+  try {
+    await navigator.clipboard.writeText(combined);
+    toast('Brief copied to clipboard — paste into Mail/WhatsApp');
+  } catch (e) {
+    toast('Share not supported on this browser', 'error');
+  }
 }
 
 // ─── COLLAPSIBLE BRIEF SECTIONS ───────────────────────────────
@@ -5784,6 +5833,15 @@ document.addEventListener('DOMContentLoaded', function() {
   showHome();
   // Background-sync the full event cache so offline read works
   if (getPasscode()) syncAllEventsToCache().catch(() => {});
+  // Deep-link from a shared URL: ?event=<filename> or ?plan=<filename>
+  setTimeout(() => {
+    if (!getPasscode()) return;
+    const params = new URLSearchParams(window.location.search);
+    const evP = params.get('event');
+    const plP = params.get('plan');
+    if (evP) { loadEvent(evP).catch(() => {}); }
+    else if (plP) { loadPlan(plP).catch(() => {}); }
+  }, 300);
   // Detect online/offline transitions and retry on regain
   window.addEventListener('online', () => { if (getPasscode()) forceSyncRetry(); });
   window.addEventListener('offline', () => setOfflineMode(true, 'browser offline'));
