@@ -3536,6 +3536,35 @@ function generateBrief() {
     <!-- VENUE -->
     <div class="brief-section">
       <div class="brief-section-head">02 — VENUE & SCHEDULE</div>
+      ${isCrew ? `
+        <div style="background:#e8f0e3;border:2px solid #5a7a4f;border-radius:4px;padding:14px 18px;margin-bottom:18px;">
+          <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#2f4a26;font-weight:700;margin-bottom:10px;">🚛 LOAD-IN BRIEFING</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:13px;color:#111;line-height:1.4;">
+            <div>
+              <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#666;">Venue</div>
+              <div style="font-size:15px;font-weight:700;">${fmt('venueName')}</div>
+              <div style="color:#444;margin-top:2px;">${fmt('venueAddress').replace(/\n/g, '<br>')}</div>
+              ${val('venueAddress') ? '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent((val('venueName') || '') + ' ' + val('venueAddress')) + '" target="_blank" style="color:#5a7a4f;font-size:11px;font-weight:700;text-decoration:none;display:inline-block;margin-top:4px;">→ Open in Maps</a>' : ''}
+            </div>
+            <div>
+              <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#666;">Arrive (Load-In)</div>
+              <div style="font-size:15px;font-weight:700;">${formatDate(val('loadInDate'))}${val('loadInTime') ? ' at ' + val('loadInTime') : ''}</div>
+              <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#666;margin-top:8px;">Depart (Load-Out)</div>
+              <div style="font-size:13px;color:#444;">${formatDate(val('loadOutDate'))}${val('loadOutTime') ? ' at ' + val('loadOutTime') : ''}</div>
+            </div>
+            <div>
+              <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#666;">On-Site Contact</div>
+              <div style="font-size:14px;font-weight:700;">${fmt(val('onsiteContact') ? 'onsiteContact' : 'contactName')}</div>
+              ${val('contactPhone') ? '<a href="tel:' + val('contactPhone').replace(/\s/g,'') + '" style="color:#5a7a4f;font-size:13px;font-weight:700;text-decoration:none;">📞 ' + val('contactPhone') + '</a>' : ''}
+            </div>
+            <div>
+              <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#666;">Access</div>
+              <div style="font-size:12px;color:#222;">${val('accessNotes') ? val('accessNotes').replace(/\n/g, '<br>') : '—'}</div>
+            </div>
+          </div>
+          ${val('loadNotes') ? '<div style="margin-top:12px;padding-top:10px;border-top:1px solid #c5d8b8;font-size:12px;color:#222;"><strong>Load-In / Load-Out:</strong> ' + val('loadNotes').replace(/\n/g, '<br>') + '</div>' : ''}
+        </div>
+      ` : ''}
       <div class="brief-grid-2" style="margin-bottom:14px;">
         <div class="bfield"><div class="bl">Venue</div><div class="bv big">${fmt('venueName')}</div></div>
         <div class="bfield"><div class="bl">Address</div><div class="bv">${fmt('venueAddress')}</div></div>
