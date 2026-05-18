@@ -921,6 +921,34 @@ body {
   .home-pies { grid-template-columns: 1fr; }
 }
 
+/* ─── SUPPLIER DEADLINES ─── */
+.supplier-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2.5fr 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 3px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.supplier-row.urgent { border-left-color: var(--red); background: rgba(192,57,43,0.06); }
+.supplier-row.soon   { border-left-color: #c89a4a; background: rgba(200,154,74,0.06); }
+.supplier-row.passed { border-left-color: #888; opacity: 0.55; }
+.supplier-row.ok     { border-left-color: #4a9a5c; }
+.supplier-row .sup-name { font-weight: 700; color: var(--white); }
+.supplier-row .sup-lead { color: var(--grey); }
+.supplier-row .sup-rule { color: var(--text); font-size: 11px; }
+.supplier-row .sup-deadline { font-weight: 700; text-align: right; }
+.supplier-row.urgent .sup-deadline { color: var(--red); }
+.supplier-row.soon .sup-deadline { color: #b07a10; }
+.supplier-row.ok .sup-deadline { color: #2d7a49; }
+.supplier-row.passed .sup-deadline { color: var(--grey); }
+@media (max-width: 700px) { .supplier-row { grid-template-columns: 1fr 1fr; } .supplier-row .sup-rule { grid-column: 1/3; } }
+
 /* ─── DAY PLAN TASKS (Plan Edit view) ─── */
 .plan-task-row {
   display: grid;
@@ -2164,6 +2192,12 @@ body {
   </div>
 
   <div class="card">
+    <div class="card-title">📦 Supplier Order Deadlines</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Cut-off times for our regular suppliers. Once an event date is set above, deadlines auto-calculate so you can see what's about to expire.</p>
+    <div id="supplierDeadlinesContainer"></div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Stock — Other Details</div>
     <div class="grid-3">
       <div class="field">
@@ -2375,7 +2409,7 @@ function goStep(n) {
   document.getElementById('sd' + n).classList.add('active');
   document.getElementById('sd' + n).classList.remove('done');
   window.scrollTo(0,0);
-  if (n === 4) renderStockOrderRows();
+  if (n === 4) { renderStockOrderRows(); renderSupplierDeadlines(); }
   if (n === 5) { renderStaffRows(); renderTruckSafetyRows(); }
 }
 
@@ -3089,6 +3123,73 @@ function calculatePower() {
     singleKVA, threeKVA,
     totalKVA: singleKVA + threeKVA
   };
+}
+
+// ─── SUPPLIER ORDER DEADLINES ─────────────────────────────────
+const SUPPLIERS = [
+  { name: 'Sysco',                    leadHrs: 24,    cutoff: '11:30pm cut-off for Dublin · 4pm cut-off for outside Dublin', items: 'General wholesaler' },
+  { name: 'BWG',                      leadHrs: 24,    cutoff: '4pm cut-off for veg · 7pm cut-off for everything else',       items: 'Wholesaler' },
+  { name: 'Bretzel Bakery',           leadHrs: 48,    cutoff: 'Day 1 order for Day 3 delivery',                              items: 'Bakery' },
+  { name: 'Camile Thai',              leadHrs: 48,    cutoff: '2-day lead time',                                              items: 'Thai' },
+  { name: 'Thindi',                   leadHrs: 48,    cutoff: '2-day lead time',                                              items: 'Indian' },
+  { name: 'Pitt Bros / Fried Chicken',leadHrs: 72,    cutoff: '3-day lead time',                                              items: 'BBQ / fried meat' },
+  { name: 'Off Beat Donuts',          leadHrs: 24,    cutoff: 'Order ≥24 hrs ahead — delivery 1 hr before event start',       items: 'Donuts' },
+  { name: 'Italicatessen',            leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Italian deli' },
+  { name: 'Raw Juices & Smoothies',   leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Cold beverages' },
+  { name: 'Coffee Perfection',        leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Coffee supplies' },
+  { name: 'RCL',                      leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Confectionery + ice cream toppings' },
+  { name: 'Sheerans Dairy',           leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Ice cream mix + UHT milk' },
+  { name: 'Gaffney Packaging',        leadHrs: 24 * 14, cutoff: 'Up to 2 pallets standard · >2 pallets needs a few weeks',    items: 'Coffee cups + packaging' }
+];
+
+function eventStartIsoForSuppliers() {
+  // Use the earliest of: load-in, event start, first trading day
+  const isScattered = document.getElementById('isScattered') && document.getElementById('isScattered').checked;
+  if (isScattered) {
+    const days = getTradingDays();
+    const dates = days.map(d => d.date).filter(Boolean).sort();
+    if (dates.length) return dates[0];
+  }
+  return val('eventStartDate') || val('loadInDate') || '';
+}
+
+function describeDeadline(deadlineDate) {
+  const now = new Date();
+  const diffHrs = (deadlineDate - now) / 3600000;
+  const abs = deadlineDate.toLocaleDateString('en-IE', { weekday: 'short', day: '2-digit', month: 'short' });
+  if (diffHrs < -1) return { label: 'passed (' + abs + ')', band: 'passed' };
+  if (diffHrs < 24)  return { label: 'TODAY · ' + abs, band: 'urgent' };
+  if (diffHrs < 72)  return { label: 'in ' + Math.round(diffHrs / 24) + ' days · ' + abs, band: 'soon' };
+  return { label: abs + ' · in ' + Math.ceil(diffHrs / 24) + ' days', band: 'ok' };
+}
+
+function renderSupplierDeadlines() {
+  const host = document.getElementById('supplierDeadlinesContainer');
+  if (!host) return;
+  const eventIso = eventStartIsoForSuppliers();
+  if (!eventIso) {
+    host.innerHTML = '<div style="background:var(--bg-deep);border:1px dashed var(--border);border-radius:3px;padding:14px;color:var(--grey);font-size:12px;text-align:center;">Set an event start (or first trading) date in Step 1 to see per-supplier deadlines for this event.</div>'
+      + '<div style="margin-top:12px;">' + SUPPLIERS.map(s =>
+        '<div class="supplier-row passed">' +
+          '<div><div class="sup-name">' + s.name + '</div><div class="sup-lead">' + s.items + '</div></div>' +
+          '<div class="sup-lead">' + (s.leadHrs >= 168 ? Math.round(s.leadHrs / 168) + ' wk' : s.leadHrs + ' hrs') + '</div>' +
+          '<div class="sup-rule">' + s.cutoff + '</div>' +
+          '<div class="sup-deadline">—</div>' +
+        '</div>'
+      ).join('') + '</div>';
+    return;
+  }
+  const eventStart = new Date(eventIso + 'T08:00:00');
+  host.innerHTML = SUPPLIERS.map(s => {
+    const deadline = new Date(eventStart.getTime() - s.leadHrs * 3600000);
+    const desc = describeDeadline(deadline);
+    return '<div class="supplier-row ' + desc.band + '">' +
+      '<div><div class="sup-name">' + s.name + '</div><div class="sup-lead">' + s.items + '</div></div>' +
+      '<div class="sup-lead">' + (s.leadHrs >= 168 ? Math.round(s.leadHrs / 168) + ' wk' : s.leadHrs + ' hrs') + '</div>' +
+      '<div class="sup-rule">' + s.cutoff + '</div>' +
+      '<div class="sup-deadline">' + desc.label + '</div>' +
+      '</div>';
+  }).join('');
 }
 
 // ─── DIESEL FORECAST ──────────────────────────────────────────
@@ -5577,7 +5678,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateStepColors();
   ['loadInDate', 'loadOutDate', 'eventStartDate', 'eventFinishDate', 'loadInTime', 'loadOutTime'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener('change', () => { checkDoubleBooking(); renderDieselForecast(); });
+    if (el) el.addEventListener('change', () => { checkDoubleBooking(); renderDieselForecast(); renderSupplierDeadlines(); });
   });
   // Auto-save on any input or change inside the form (also records change attribution)
   const formApp = document.getElementById('form-app');
