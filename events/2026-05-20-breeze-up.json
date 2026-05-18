@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-18T11:49:47.781Z",
+  "savedAt": "2026-05-18T11:52:37.590Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -39,9 +39,9 @@
     "pitchNotes": "",
     "cableRun": "",
     "powerNotes": "",
-    "dieselSource": "",
-    "dieselResponsible": "",
-    "dieselNotes": "",
+    "dieselSource": "OUR GENERATOR",
+    "dieselResponsible": "Tom - 0852402555",
+    "dieselNotes": "Order before 4pm daily ",
     "waterSource": "Mixed — site + our tanks",
     "waterVolume": "100",
     "wasteDisposal": "On-site drain available",
@@ -147,7 +147,7 @@
       },
       "step2": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-16T19:10:19.812Z"
+        "at": "2026-05-18T11:52:17.718Z"
       },
       "step3": {
         "user": "Thomas O'Brien",
