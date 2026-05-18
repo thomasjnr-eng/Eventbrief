@@ -953,13 +953,20 @@ body {
 .plan-task-row {
   display: grid;
   grid-template-columns: 26px 1fr 100px 90px 130px 32px;
-  gap: 8px;
+  grid-auto-rows: auto;
+  gap: 6px 8px;
   align-items: center;
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
   border-left: 3px solid transparent;
   padding-left: 8px;
 }
+.plan-task-row .task-event-link {
+  grid-column: 2 / 6;
+  font-size: 11px;
+  padding: 5px 9px;
+}
+.plan-task-row .task-event-link::before { content: '↳ '; }
 .plan-task-row.prio-high { border-left-color: var(--red); }
 .plan-task-row.prio-medium { border-left-color: #c89a4a; }
 .plan-task-row.prio-low { border-left-color: var(--border); }
@@ -1645,6 +1652,7 @@ body {
     <div class="card">
       <div class="card-title">Tasks</div>
       <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Add tasks the crew need to complete. Each row is tickable — once you've saved the plan, anyone on the team can open it and tick items off as they go.</p>
+      <datalist id="upcomingEventsList"></datalist>
       <div id="planTasksList"></div>
       <button type="button" class="btn btn-secondary" onclick="addPlanTask()" style="margin-top:8px;font-size:12px;padding:8px 14px;">+ Add Task</button>
     </div>
@@ -4818,6 +4826,7 @@ function showPlanEdit() {
   document.getElementById('form-app').style.display = 'block';
   const ind = document.querySelector('.step-indicator');
   if (ind) ind.style.display = 'none';
+  populateUpcomingEventsDatalist();
   window.scrollTo(0, 0);
 }
 
@@ -4826,6 +4835,29 @@ let PLAN_TASKS = [];
 let CURRENT_PLAN_FILENAME = null;
 function isPlanFile(name) { return typeof name === 'string' && name.startsWith('plan-'); }
 function isEventFile(name) { return typeof name === 'string' && !name.startsWith('plan-'); }
+
+async function populateUpcomingEventsDatalist() {
+  const dl = document.getElementById('upcomingEventsList');
+  if (!dl) return;
+  let filenames = [];
+  try { filenames = await listEventFilenames(); } catch (e) {}
+  filenames = filenames.filter(isEventFile);
+  if (!filenames.length) { dl.innerHTML = ''; return; }
+  const events = await Promise.all(filenames.map(getEventByFilename));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+  const upcoming = events.filter(Boolean).filter(ev => {
+    const d = getEventDate(ev.form);
+    return d && d >= todayStr;
+  });
+  upcoming.sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+  dl.innerHTML = upcoming.map(ev => {
+    const f = ev.form;
+    const d = getEventDate(f);
+    const label = (f.eventName || '(unnamed)') + (d ? ' (' + formatDate(d) + ')' : '');
+    return '<option value="' + label.replace(/"/g, '&quot;') + '"></option>';
+  }).join('');
+}
 
 function newPlan() {
   CURRENT_PLAN_FILENAME = null;
@@ -4843,12 +4875,13 @@ function newPlan() {
   showPlanEdit();
 }
 
-function addPlanTask(label, assignedTo, done, doneBy, doneAt, priority, dueTime) {
+function addPlanTask(label, assignedTo, done, doneBy, doneAt, priority, dueTime, eventLink) {
   PLAN_TASKS.push({
     label: label || '',
     assignedTo: assignedTo || '',
     priority: priority || 'medium',
     dueTime: dueTime || '',
+    eventLink: eventLink || '',
     done: !!done,
     doneBy: doneBy || null,
     doneAt: doneAt || null
@@ -4891,6 +4924,7 @@ function renderPlanTasks() {
     const due = t.dueTime || '';
     const checked = t.done ? 'checked' : '';
     const meta = (t.done && t.doneBy) ? '<div class="plan-task-meta">✓ ' + (t.doneBy || '').replace(/</g, '&lt;') + ' · ' + formatRelativeTime(t.doneAt) + '</div>' : '';
+    const escLink = (t.eventLink || '').replace(/"/g, '&quot;');
     return '<div class="plan-task-row prio-' + prio + (t.done ? ' done' : '') + '" data-idx="' + idx + '">' +
       '<input type="checkbox" ' + checked + ' onchange="onPlanTaskToggle(' + idx + ', this.checked)">' +
       '<input type="text" data-field="label" value="' + escLabel + '" placeholder="Task description" oninput="PLAN_TASKS[' + idx + '].label = this.value">' +
@@ -4902,6 +4936,7 @@ function renderPlanTasks() {
       '<input type="time" data-field="dueTime" value="' + due + '" title="Due time (optional)" oninput="PLAN_TASKS[' + idx + '].dueTime = this.value">' +
       '<input type="text" data-field="assignedTo" value="' + escAssigned + '" placeholder="Assigned to" oninput="PLAN_TASKS[' + idx + '].assignedTo = this.value">' +
       '<button type="button" class="plan-task-remove" onclick="removePlanTask(' + idx + ')" title="Remove">&times;</button>' +
+      '<input class="task-event-link" list="upcomingEventsList" data-field="eventLink" value="' + escLink + '" placeholder="Linked event (pick from list) or note — leave blank if neither" oninput="PLAN_TASKS[' + idx + '].eventLink = this.value">' +
       '</div>' + meta;
   }).join('');
 }
