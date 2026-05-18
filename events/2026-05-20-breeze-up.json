@@ -1,8 +1,15 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-16T19:50:19.649Z",
+  "savedAt": "2026-05-18T11:39:47.571Z",
   "form": {
+    "planTitle": "",
+    "planDate": "",
+    "planStart": "",
+    "planEnd": "",
+    "planLead": "",
+    "planAssigned": "",
+    "planNotes": "",
     "eventName": "Breeze Up",
     "bookingStatus": "Confirmed",
     "clientName": "Levy/Tattersalls",
@@ -10,7 +17,7 @@
     "contactName": "Shay ",
     "contactPhone": "0851830697",
     "contactEmail": "shay.cooney@levy.ie",
-    "onsiteContact": "",
+    "onsiteContact": "Shay",
     "loadInDate": "2026-05-19",
     "loadInTime": "10:30",
     "eventStartDate": "2026-05-20",
@@ -20,7 +27,7 @@
     "loadOutDate": "2026-05-22",
     "loadOutTime": "17:00",
     "loadNotes": "Load-In to stable yard first.",
-    "attendance": "100",
+    "attendance": "200",
     "venueName": "Fairyhouse Racecourse ",
     "venueAddress": "Fairyhouse, Ratoath, Meath",
     "accessNotes": "Careful of horses in stable yard. ",
@@ -32,6 +39,9 @@
     "pitchNotes": "",
     "cableRun": "",
     "powerNotes": "",
+    "dieselSource": "",
+    "dieselResponsible": "",
+    "dieselNotes": "",
     "waterSource": "Mixed — site + our tanks",
     "waterVolume": "100",
     "wasteDisposal": "On-site drain available",
@@ -87,14 +97,14 @@
     "_tradingDays": [
       {
         "date": "2026-05-20",
-        "startTime": "09:00",
-        "endTime": "16:00",
+        "startTime": "07:00",
+        "endTime": "14:30",
         "notes": "Stable Yard "
       },
       {
         "date": "2026-05-21",
-        "startTime": "09:00",
-        "endTime": "16:00",
+        "startTime": "07:00",
+        "endTime": "14:30",
         "notes": "Stable Yard + Trackside Arch"
       }
     ],
@@ -133,7 +143,7 @@
     "_changeLog": {
       "step1": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-16T19:08:13.606Z"
+        "at": "2026-05-18T11:39:43.898Z"
       },
       "step2": {
         "user": "Thomas O'Brien",
