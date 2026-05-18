@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-18T11:57:59.288Z",
+  "savedAt": "2026-05-18T11:58:24.715Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -66,7 +66,7 @@
     "voucherDetails": "",
     "posNotes": "Barista coffee to be paid at till, filter coffee/teas and breakfast rolls covered by voucher. Americanos instead of filter coffee.",
     "menuNotes": "Tea/Coffee\nBreakfast Rolls",
-    "foodCovers": "100",
+    "foodCovers": "200",
     "coffeeCovers": "200",
     "icecreamCovers": "",
     "deliveryDate": "2026-05-19",
@@ -156,7 +156,7 @@
       },
       "step4": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-16T19:15:00.803Z"
+        "at": "2026-05-18T11:58:23.335Z"
       },
       "step5": {
         "user": "Thomas O'Brien",
