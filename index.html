@@ -348,6 +348,29 @@ body {
   color: #f8f5f0;
 }
 
+.brief-directions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.brief-dir-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  color: #fff;
+  flex: 1;
+  text-align: center;
+  min-width: 200px;
+}
+.brief-dir-btn.gmaps { background: #5a7a4f; }
+.brief-dir-btn.waze  { background: #33ccff; }
+.brief-dir-btn:hover { opacity: 0.9; }
+@media print { .brief-directions { display: none; } }
+
 .brief-section {
   margin-bottom: 24px;
   break-inside: avoid;
@@ -3688,6 +3711,14 @@ function generateBrief() {
         <div class="mc-val">${units.length || '—'}</div>
       </div>
     </div>
+
+    ${val('venueAddress') ? (() => {
+      const q = encodeURIComponent((val('venueName') || '') + ' ' + val('venueAddress'));
+      return '<div class="brief-directions">' +
+        '<a href="https://www.google.com/maps/dir/?api=1&destination=' + q + '" target="_blank" class="brief-dir-btn gmaps">🧭 Google Maps</a>' +
+        '<a href="https://waze.com/ul?q=' + q + '&navigate=yes" target="_blank" class="brief-dir-btn waze">🚗 Waze</a>' +
+        '</div>';
+    })() : ''}
 
     <!-- CLIENT -->
     <div class="brief-section">
