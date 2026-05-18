@@ -810,6 +810,58 @@ body {
 .welcome-skip a { color: var(--sage); text-decoration: none; }
 .welcome-skip a:hover { text-decoration: underline; }
 
+/* ─── ACTION REQUIRED PANEL ─── */
+.action-required {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--red);
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+.action-required-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ar-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  color: var(--red);
+}
+.ar-summary {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.action-required-body { display: flex; flex-direction: column; gap: 5px; }
+.ar-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 18px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--bg-input);
+  border-left: 3px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.ar-row.ar-critical { border-left-color: var(--red); }
+.ar-row.ar-warning { border-left-color: #c89a4a; }
+.ar-row:hover { background: var(--bg-deep); }
+.ar-icon { font-size: 14px; text-align: center; }
+.ar-line { line-height: 1.4; }
+.ar-line strong { color: var(--white); }
+.ar-detail { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.ar-arrow { color: var(--sage); font-size: 14px; text-align: right; }
+.ar-more { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 6px; }
+
 /* ─── HOME VIEW (dashboard landing) ─── */
 #home-view { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
 .home-title {
@@ -1611,6 +1663,8 @@ body {
     <div class="home-greet">Welcome back<span id="homeGreetUser"></span></div>
     <div class="home-date" id="homeDate"></div>
   </div>
+
+  <div id="actionRequired" class="action-required" style="display:none;"></div>
 
   <div class="home-pies" id="homePies"></div>
 
@@ -5373,6 +5427,7 @@ async function renderHome() {
   }
   renderDashboard();
   renderOpsTracker();
+  await renderActionRequired();
   await renderHomePies();
   await renderHomeEvents();
   await renderHomePlans();
@@ -5507,6 +5562,163 @@ async function renderHomeEvents() {
       '</div>' +
       '</div>';
   }).join('');
+}
+
+// ─── ACTION REQUIRED (proactive nudges across all upcoming events) ─────
+function relativeDays(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr); d.setHours(0, 0, 0, 0);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((d - today) / 86400000);
+  if (diff === 0) return 'TODAY';
+  if (diff === 1) return 'tomorrow';
+  if (diff < 0) return Math.abs(diff) + ' days ago';
+  return 'in ' + diff + ' days';
+}
+function deadlineLabel(deadline) {
+  const diffHrs = (deadline - new Date()) / 3600000;
+  if (diffHrs < 0) return 'PAST by ' + Math.abs(Math.round(diffHrs)) + ' hrs';
+  if (diffHrs < 1) return 'in ' + Math.max(1, Math.round(diffHrs * 60)) + ' min';
+  if (diffHrs < 24) return 'in ' + Math.round(diffHrs) + ' hrs';
+  return 'in ' + Math.round(diffHrs / 24) + ' days';
+}
+
+async function computeActionRequired() {
+  if (!getPasscode()) return [];
+  let filenames = [];
+  try { filenames = await listEventFilenames(); } catch (e) { return []; }
+  filenames = filenames.filter(isEventFile);
+  if (!filenames.length) return [];
+  const events = await Promise.all(filenames.map(getEventByFilename));
+  const valid = events.filter(Boolean);
+
+  const now = new Date();
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+  const d1 = new Date(today); d1.setDate(d1.getDate() + 1);
+  const d1Str = d1.toISOString().slice(0, 10);
+  const d3 = new Date(today); d3.setDate(d3.getDate() + 3);
+  const d3Str = d3.toISOString().slice(0, 10);
+
+  const actions = [];
+
+  valid.forEach(ev => {
+    const f = ev.form;
+    const eventDate = getEventDate(f);
+    if (!eventDate || eventDate < todayStr) return;
+    if (eventDate > d3Str) return; // strict mode: only <=3 days out
+
+    // 1. Brief completeness check
+    const comp = computeEventCompleteness(f);
+    if (comp.percent < 60) {
+      actions.push({
+        severity: 'critical', icon: '⚠',
+        title: f.eventName || '(unnamed)',
+        message: 'Brief only ' + comp.percent + '% complete · ' + relativeDays(eventDate),
+        detail: 'Missing: ' + comp.missing.slice(0, 3).join(', ') + (comp.missing.length > 3 ? '…' : ''),
+        action: 'edit', eventFilename: ev._filename,
+        sortKey: 0 + ('00' + Math.floor((new Date(eventDate) - now) / 3600000)).slice(-3)
+      });
+    } else if (comp.percent < 100) {
+      actions.push({
+        severity: 'warning', icon: '⚡',
+        title: f.eventName || '(unnamed)',
+        message: 'Brief ' + comp.percent + '% complete · ' + relativeDays(eventDate),
+        detail: 'Missing: ' + comp.missing.slice(0, 2).join(', '),
+        action: 'edit', eventFilename: ev._filename,
+        sortKey: 10 + ('00' + Math.floor((new Date(eventDate) - now) / 3600000)).slice(-3)
+      });
+    }
+
+    // 2. Supplier cut-offs within 24hrs
+    const eventStart = new Date(eventDate + 'T08:00:00');
+    const fleet = f._fleet || [];
+    const statuses = f._stockStatuses || [];
+    const notStocked = fleet.some(t => {
+      const st = statuses.find(s => s.truck === t);
+      return !st || st.status !== 'Fully ordered';
+    });
+    if (notStocked && fleet.length) {
+      SUPPLIERS.forEach(sup => {
+        const deadline = new Date(eventStart.getTime() - sup.leadHrs * 3600000);
+        const diffHrs = (deadline - now) / 3600000;
+        if (diffHrs > -2 && diffHrs < 24) {
+          actions.push({
+            severity: diffHrs < 6 ? 'critical' : 'warning', icon: '⏰',
+            title: sup.name + ' cut-off',
+            message: deadlineLabel(deadline) + ' — for ' + (f.eventName || '(unnamed)'),
+            detail: sup.cutoff,
+            action: 'stock', eventFilename: ev._filename,
+            sortKey: (diffHrs < 6 ? 1 : 11) + ('00' + Math.max(0, Math.floor(diffHrs))).slice(-3)
+          });
+        }
+      });
+    }
+
+    // 3. Crew not ready: event today/tomorrow AND <50% checks done
+    const [winStart, winEnd] = getEventWindow(f);
+    if (winStart && winEnd && winStart <= d1Str && winEnd >= todayStr && fleet.length) {
+      const progress = crewProgressFor(f._crewChecklists || {});
+      if (progress.percent < 50) {
+        actions.push({
+          severity: winStart <= todayStr ? 'critical' : 'warning', icon: '🚛',
+          title: (f.eventName || '(unnamed)') + ' — Crew',
+          message: 'Checks at ' + progress.percent + '% · ' + (winStart <= todayStr ? 'ON SITE NOW' : 'starts tomorrow'),
+          detail: progress.doneItems + '/' + progress.totalItems + ' across ' + fleet.length + ' truck' + (fleet.length !== 1 ? 's' : ''),
+          action: 'crew', eventFilename: ev._filename,
+          sortKey: 2 + ''
+        });
+      }
+    }
+  });
+
+  // Sort: critical first, then by urgency
+  actions.sort((a, b) => {
+    if (a.severity !== b.severity) return a.severity === 'critical' ? -1 : 1;
+    return (a.sortKey || '').localeCompare(b.sortKey || '');
+  });
+  return actions;
+}
+
+async function renderActionRequired() {
+  const host = document.getElementById('actionRequired');
+  if (!host) return;
+  const actions = await computeActionRequired();
+  if (!actions.length) { host.style.display = 'none'; return; }
+  const crit = actions.filter(a => a.severity === 'critical').length;
+  const warn = actions.filter(a => a.severity === 'warning').length;
+  let summary = '';
+  if (crit) summary += crit + ' critical';
+  if (warn) summary += (summary ? ' · ' : '') + warn + ' upcoming';
+  let html = '<div class="action-required-head">' +
+    '<span class="ar-title">⚠ Action Required</span>' +
+    '<span class="ar-summary">' + summary + '</span>' +
+    '</div><div class="action-required-body">';
+  actions.slice(0, 10).forEach(a => {
+    const filename = (a.eventFilename || '').replace(/'/g, "\\'");
+    html += '<div class="ar-row ar-' + a.severity + '" onclick="actionRequiredJump(\'' + a.action + '\',\'' + filename + '\')">' +
+      '<div class="ar-icon">' + a.icon + '</div>' +
+      '<div>' +
+        '<div class="ar-line"><strong>' + a.title.replace(/</g, '&lt;') + '</strong> — ' + a.message.replace(/</g, '&lt;') + '</div>' +
+        (a.detail ? '<div class="ar-detail">' + a.detail.replace(/</g, '&lt;') + '</div>' : '') +
+      '</div>' +
+      '<div class="ar-arrow">→</div>' +
+      '</div>';
+  });
+  if (actions.length > 10) html += '<div class="ar-more">+ ' + (actions.length - 10) + ' more</div>';
+  html += '</div>';
+  host.innerHTML = html;
+  host.style.display = 'block';
+}
+
+async function actionRequiredJump(action, filename) {
+  if (!filename) return;
+  if (action === 'crew') {
+    await loadEventToOps(filename);
+  } else {
+    await loadEvent(filename);
+    if (action === 'stock') setTimeout(() => goStep(4), 250);
+  }
 }
 
 // ─── DASHBOARD (compact pill strip) ───────────────────────────
