@@ -2416,7 +2416,8 @@ body {
       <button class="btn btn-secondary" onclick="briefCollapseAll()" style="font-size:12px;padding:7px 12px;">Collapse all</button>
     </div>
     <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
-    <button class="btn btn-primary" onclick="shareBrief()">📤 Share</button>
+    <button class="btn btn-primary" onclick="shareBrief()">📤 Share Link</button>
+    <button class="btn btn-primary" onclick="shareBriefAsPdf()">📄 Share PDF</button>
     <button class="btn btn-green" id="calendarBtn" onclick="addToCalendar()">📅 Add to Calendar</button>
   </div>
 </div>
@@ -4049,6 +4050,71 @@ function backToForm() {
   showBriefEdit();
   renderOpsTracker();
   window.scrollTo(0,0);
+}
+
+// ─── SHARE BRIEF AS PDF (generates + native-shares PDF blob) ─────
+let _pdfLibLoading = null;
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('script load failed: ' + src));
+    document.head.appendChild(s);
+  });
+}
+async function ensurePdfLib() {
+  if (window.html2pdf) return;
+  if (!_pdfLibLoading) {
+    _pdfLibLoading = loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js');
+  }
+  await _pdfLibLoading;
+}
+
+async function shareBriefAsPdf() {
+  const eventName = val('eventName') || 'Event';
+  const venue = val('venueName') || '';
+  const safeName = (eventName + (venue ? ' — ' + venue : '')).replace(/[/\\?%*:|"<>]/g, '-');
+  const filename = '🚚 ' + safeName + '.pdf';
+  try {
+    toast('Loading PDF generator…');
+    await ensurePdfLib();
+  } catch (e) {
+    toast('Could not load PDF library — check connection', 'error');
+    return;
+  }
+  const element = document.getElementById('brief-content');
+  if (!element) return;
+  toast('Generating PDF…');
+  try {
+    const opt = {
+      margin: [12, 10, 12, 10],
+      filename,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: 1100 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+      pagebreak: { mode: ['css', 'legacy'], avoid: '.brief-section' }
+    };
+    const blob = await html2pdf().set(opt).from(element).output('blob');
+    const file = new File([blob], filename, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+      try {
+        await navigator.share({ files: [file], title: safeName, text: '🚚 ' + safeName });
+      } catch (e) {
+        if (e && e.name !== 'AbortError') throw e;
+      }
+    } else {
+      // Browser doesn't support file share — download instead
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      toast('PDF downloaded — share from Files');
+    }
+  } catch (e) {
+    toast('PDF share failed: ' + e.message, 'error');
+  }
 }
 
 // ─── SHARE BRIEF (to email / WhatsApp / etc. via native share sheet) ─────
