@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T13:09:26.466Z",
+  "savedAt": "2026-05-19T13:10:50.831Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -189,9 +189,9 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Simon O Connor",
+            "doneAt": "2026-05-19T13:10:50.488Z"
           },
           {
             "label": "Pitched / parked correctly",
