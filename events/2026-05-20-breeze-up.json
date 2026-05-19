@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T15:08:30.519Z",
+  "savedAt": "2026-05-19T15:08:41.036Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -323,9 +323,9 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Simon O Connor",
+            "doneAt": "2026-05-19T15:08:40.686Z"
           },
           {
             "label": "Hand wash station set up",
