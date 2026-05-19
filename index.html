@@ -1394,7 +1394,85 @@ body {
 .truck-safety-row .ts-check input { accent-color: var(--sage); cursor: pointer; }
 .truck-safety-row .ts-check.checked { background: #1f3a23; border-color: #4a9a5c; }
 
-/* ─── STAFF ROWS ─── */
+/* ─── STAFF ROSTER (Per-Truck) ─── */
+.staff-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.staff-card.under-min { border-color: var(--red); border-left: 3px solid var(--red); }
+.staff-card.fully-met { border-left: 3px solid #4a9a5c; }
+.staff-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.sc-name { font-size: 14px; font-weight: 700; color: var(--white); }
+.sc-cat { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.staff-card.under-min .sc-cat { color: var(--red); }
+.staff-card.fully-met .sc-cat { color: #4a9a5c; }
+.sc-add {
+  background: var(--sage);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.sc-add:hover { background: var(--sage-dark); }
+.roster-rows { display: flex; flex-direction: column; gap: 5px; }
+.roster-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.1fr 110px 1.1fr 30px;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 0;
+}
+.roster-row input,
+.roster-row select {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  padding: 6px 9px;
+  outline: none;
+  width: 100%;
+}
+.roster-row input:focus,
+.roster-row select:focus { border-color: var(--sage); }
+.roster-row .roster-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  width: 26px; height: 26px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.roster-row .roster-remove:hover { border-color: var(--red); color: var(--red); }
+.roster-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 0;
+  font-style: italic;
+}
+@media (max-width: 700px) {
+  .roster-row { grid-template-columns: 1fr 30px; }
+  .roster-row > input:nth-child(n+2):nth-child(-n+4),
+  .roster-row > select { grid-column: 1 / 2; }
+}
+
+/* ─── STAFF ROWS (legacy — kept for old data only) ─── */
 .staff-row {
   display: grid;
   grid-template-columns: 1.6fr 90px 90px 2fr;
@@ -2363,8 +2441,9 @@ body {
   </div>
 
   <div class="card">
-    <div class="card-title">Staff Per Truck</div>
-    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Suggested minimums &mdash; coffee 2, hot/cold food 4, dessert/confectionery 2, ice cream / carts 1. Override per truck below.</p>
+    <div class="card-title">Crew Roster (Per Truck)</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Add every crew member assigned, with phone + experience + role on this truck. Roles auto-suggest from the truck's menu — type anything custom if needed.</p>
+    <p style="font-size:11px;color:var(--grey);margin-bottom:12px;" id="staffMenuContext"></p>
     <div id="staffContainer"></div>
     <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;color:var(--white);">
       <strong>Total staff:</strong> <span id="totalStaffCalc" style="color:var(--sage);font-weight:700;">&mdash;</span>
@@ -2505,7 +2584,7 @@ function goStep(n) {
   document.getElementById('sd' + n).classList.remove('done');
   window.scrollTo(0,0);
   if (n === 4) { renderStockOrderRows(); renderSupplierDeadlines(); }
-  if (n === 5) { renderStaffRows(); renderTruckSafetyRows(); }
+  if (n === 5) { renderCrewRoster(); renderTruckSafetyRows(); }
 }
 
 // ─── CREW CHECKLISTS (Ops mode) ───────────────────────────────
@@ -3089,7 +3168,144 @@ function collectTruckSafety() {
   return out;
 }
 
-// ─── STAFF PER TRUCK ──────────────────────────────────────────
+// ─── CREW ROSTER PER TRUCK (full staff details) ────────────────
+const ROLE_SUGGESTIONS_BY_CATEGORY = {
+  'Burger/Chipper Units': ['Fryer / Grill', 'Prep', 'Bun assembly', 'Cashier', 'Front of house'],
+  'Misc. Food Units':     ['Lead chef', 'Cook', 'Prep', 'Plating', 'Cashier'],
+  'Coffee/Beverages':     ['Lead Barista', 'Second Barista', 'Pastry / FoH', 'Cashier'],
+  'Confectionery':        ['Server', 'Prep / topping', 'Cashier'],
+  'Ice Cream Vans':       ['Driver / Server'],
+  'Carts & Trikes':       ['Cart server']
+};
+const ROLE_SUGGESTIONS_BY_TRUCK = {
+  "O'Briens Chipper 1":   ['Chipper', 'Burger grill', 'Cashier', 'Front of house'],
+  "O'Briens Chipper 2":   ['Chipper', 'Burger grill', 'Cashier'],
+  "Smash Burger 1":       ['Smash grill', 'Bun assembly', 'Cashier', 'Front of house'],
+  "Smash Burger 2":       ['Smash grill', 'Bun assembly', 'Cashier', 'Front of house'],
+  "Loaded Burger":        ['Smash grill', 'Loaded assembly', 'Cashier'],
+  "Angelo's Pizza":       ['Pizza maker', 'Topping', 'Cashier'],
+  "Angelo's Pizza & Pasta": ['Pizza chef', 'Pasta cook', 'Plating', 'Cashier'],
+  "Pitt Bros BBQ":        ['Pit chef', 'Plating', 'Cashier'],
+  "Lucky Bao Buns":       ['Steamer chef', 'Assembly', 'Cashier'],
+  "Camile Thai":          ['Wok chef', 'Plating', 'Cashier'],
+  "Camile Thai 2.0":      ['Wok chef', 'Plating', 'Cashier'],
+  "Thindi":               ['Tandoor chef', 'Curry station', 'Plating', 'Cashier'],
+  "Fried Chicken Truck":  ['Fryer', 'Coating / breading', 'Cashier'],
+  "Bun Club Hot Dogs":    ['Grill', 'Bun assembly', 'Cashier'],
+  "Zambrero":             ['Burrito roller', 'Prep', 'Cashier'],
+  "Toasted":              ['Toaster station', 'Sandwich build', 'Cashier'],
+  "Flex Use Airstream":   ['Cook', 'Prep', 'Cashier'],
+  "Off Beat Donuts":      ['Donut fryer', 'Glazing / topping', 'Barista', 'Cashier'],
+  "Off Beat Donuts 2":    ['Donut fryer', 'Glazing / topping', 'Barista', 'Cashier'],
+  "Sprinkles Churros":    ['Churro fryer', 'Topping', 'Cashier'],
+  "Sprinkles Desserts":   ['Dessert plating', 'Cashier'],
+  "Smoothies & Shakes 1": ['Blender', 'Cashier']
+};
+const EXPERIENCE_LEVELS = ['Trainee', 'Experienced', 'Lead', 'Specialist'];
+function roleSuggestionsFor(unit) {
+  if (!unit) return ['Server'];
+  return ROLE_SUGGESTIONS_BY_TRUCK[unit.name] || ROLE_SUGGESTIONS_BY_CATEGORY[unit.category] || ['Server'];
+}
+
+let CREW_ROSTER = {}; // { truck: [{ name, phone, experience, role }] }
+
+function rosterRowHtml(unit, member, idx) {
+  const escTruck = unit.name.replace(/"/g, '&quot;');
+  const dlId = 'roles-' + unit.name.replace(/[^a-z0-9]/gi, '_');
+  return '<div class="roster-row" data-truck="' + escTruck + '" data-idx="' + idx + '">' +
+    '<input type="text" data-field="name" placeholder="Name" value="' + (member.name || '').replace(/"/g, '&quot;') + '" oninput="onRosterEdit()">' +
+    '<input type="tel"  data-field="phone" placeholder="+353…" value="' + (member.phone || '').replace(/"/g, '&quot;') + '" oninput="onRosterEdit()">' +
+    '<select data-field="experience" onchange="onRosterEdit()">' +
+      EXPERIENCE_LEVELS.map(l => '<option' + ((member.experience || 'Experienced') === l ? ' selected' : '') + '>' + l + '</option>').join('') +
+    '</select>' +
+    '<input type="text" data-field="role" list="' + dlId + '" placeholder="Role" value="' + (member.role || '').replace(/"/g, '&quot;') + '" oninput="onRosterEdit()">' +
+    '<button type="button" class="roster-remove" onclick="removeRosterMember(\'' + unit.name.replace(/'/g, "\\\\'") + '\', ' + idx + ')" title="Remove">&times;</button>' +
+    '</div>';
+}
+
+function renderCrewRoster(preserve) {
+  const container = document.getElementById('staffContainer');
+  if (!container) return;
+  const fleetMap = fleetByName();
+  const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => fleetMap[c.dataset.val]).filter(Boolean);
+  // Menu context
+  const menuCtx = document.getElementById('staffMenuContext');
+  if (menuCtx) {
+    const notes = val('menuNotes');
+    menuCtx.textContent = notes ? 'Menu context: ' + notes.replace(/\n/g, ' · ') : 'Standard menu assumed (no menu variations noted in Step 4).';
+  }
+  if (!selected.length) {
+    container.innerHTML = '<div class="stock-empty">Select trucks in Step 2 first — crew rosters appear per truck here.</div>';
+    updateStaffTotal();
+    return;
+  }
+  if (preserve && typeof preserve === 'object') CREW_ROSTER = Object.assign({}, preserve);
+  selected.forEach(u => { if (!CREW_ROSTER[u.name]) CREW_ROSTER[u.name] = []; });
+  const sel = new Set(selected.map(u => u.name));
+  Object.keys(CREW_ROSTER).forEach(t => { if (!sel.has(t)) delete CREW_ROSTER[t]; });
+
+  container.innerHTML = selected.map(u => {
+    const roster = CREW_ROSTER[u.name] || [];
+    const min = staffMinFor(u.category);
+    const under = roster.length < min;
+    const fully = roster.length >= min;
+    const escTruck = u.name.replace(/"/g, '&quot;');
+    const suggestions = roleSuggestionsFor(u);
+    const dlId = 'roles-' + u.name.replace(/[^a-z0-9]/gi, '_');
+    const statusLine = under
+      ? '<span style="color:var(--red);">Min ' + min + ' · ' + roster.length + ' assigned · need ' + (min - roster.length) + ' more</span>'
+      : '<span style="color:#4a9a5c;">Min ' + min + ' · ' + roster.length + ' assigned ✓</span>';
+    return '<div class="staff-card ' + (under ? 'under-min' : (fully ? 'fully-met' : '')) + '" data-truck="' + escTruck + '" data-min="' + min + '">' +
+      '<div class="staff-card-head">' +
+        '<div>' +
+          '<div class="sc-name">' + u.name + '</div>' +
+          '<div class="sc-cat">' + u.category + ' · ' + statusLine + '</div>' +
+        '</div>' +
+        '<button type="button" class="sc-add" onclick="addRosterMember(\'' + u.name.replace(/'/g, "\\\\'") + '\')">+ Add member</button>' +
+      '</div>' +
+      '<datalist id="' + dlId + '">' +
+        suggestions.map(r => '<option value="' + r.replace(/"/g, '&quot;') + '"></option>').join('') +
+      '</datalist>' +
+      '<div class="roster-rows" data-truck="' + escTruck + '">' +
+        (roster.length === 0
+          ? '<div class="roster-empty">No crew assigned. Tap + Add member.</div>'
+          : roster.map((m, idx) => rosterRowHtml(u, m, idx)).join('')) +
+      '</div>' +
+      '</div>';
+  }).join('');
+  updateStaffTotal();
+}
+
+function addRosterMember(truck) {
+  syncRosterFromDOM();
+  if (!CREW_ROSTER[truck]) CREW_ROSTER[truck] = [];
+  CREW_ROSTER[truck].push({ name: '', phone: '', experience: 'Experienced', role: '' });
+  renderCrewRoster();
+}
+function removeRosterMember(truck, idx) {
+  syncRosterFromDOM();
+  if (!CREW_ROSTER[truck]) return;
+  CREW_ROSTER[truck].splice(idx, 1);
+  renderCrewRoster();
+}
+function syncRosterFromDOM() {
+  document.querySelectorAll('.staff-card').forEach(card => {
+    const truck = card.dataset.truck;
+    const rows = [];
+    card.querySelectorAll('.roster-row').forEach(r => {
+      const m = {};
+      r.querySelectorAll('[data-field]').forEach(el => m[el.dataset.field] = el.value);
+      rows.push(m);
+    });
+    CREW_ROSTER[truck] = rows;
+  });
+}
+function onRosterEdit() {
+  syncRosterFromDOM();
+  updateStaffTotal();
+}
+
+// Legacy helper kept for back-compat with old _staffAllocations data shape.
 const STAFF_MIN = {
   'Burger/Chipper Units': 4,
   'Misc. Food Units': 4,
@@ -3139,13 +3355,9 @@ function collectStaffAllocations() {
 }
 
 function updateStaffTotal() {
-  const allocs = collectStaffAllocations();
+  syncRosterFromDOM();
   let truckSum = 0;
-  allocs.forEach(s => {
-    truckSum += s.count;
-    const row = document.querySelector('.staff-row[data-truck="' + s.truck.replace(/"/g, '\\"') + '"]');
-    if (row) row.classList.toggle('under-min', s.count < s.minimum);
-  });
+  Object.values(CREW_ROSTER).forEach(arr => { truckSum += arr.length; });
   const leadCount = ['eventManager', 'opsLead', 'leadChef'].filter(id => val(id)).length;
   const total = truckSum + leadCount;
   const el = document.getElementById('totalStaffCalc');
@@ -4206,27 +4418,42 @@ function generateBrief() {
         <div class="bfield"><div class="bl">Food Lead</div><div class="bv big">${fmt('leadChef')}</div></div>
       </div>
       ${(() => {
-        const allocs = collectStaffAllocations();
-        if (!allocs.length) return '';
-        const truckSum = allocs.reduce((a, s) => a + s.count, 0);
+        syncRosterFromDOM();
+        const trucks = Object.keys(CREW_ROSTER);
+        if (!trucks.length) return '';
+        const fmap = fleetByName();
+        const allMembers = trucks.reduce((sum, t) => sum + (CREW_ROSTER[t] || []).length, 0);
         const leadCount = ['eventManager', 'opsLead', 'leadChef'].filter(id => val(id)).length;
-        const total = truckSum + leadCount;
-        return '<div style="margin-bottom:12px;">' +
-          '<div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Staff Per Truck (' + truckSum + ' on trucks + ' + leadCount + ' lead' + (leadCount !== 1 ? 's' : '') + ' = <strong>' + total + ' total</strong>)</div>' +
-          '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
-          '<thead><tr>' +
-          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Truck</th>' +
-          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Min</th>' +
-          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Allocated</th>' +
-          '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Names / Notes</th>' +
-          '</tr></thead><tbody>' + allocs.map(s => {
-            const under = s.count < s.minimum;
-            return '<tr>' +
-              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;"><strong>' + s.truck + '</strong></td>' +
-              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#666;">' + s.minimum + '</td>' +
-              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;font-weight:700;color:' + (under ? '#c0392b' : '#111') + ';">' + s.count + (under ? ' &nbsp;⚠' : '') + '</td>' +
-              '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#555;">' + (s.notes || '—') + '</td></tr>';
-          }).join('') + '</tbody></table></div>';
+        const total = allMembers + leadCount;
+        return trucks.map(t => {
+          const u = fmap[t];
+          const min = u ? staffMinFor(u.category) : 1;
+          const members = CREW_ROSTER[t] || [];
+          const under = members.length < min;
+          return '<div style="margin-bottom:14px;break-inside:avoid;">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;font-size:13px;color:#111;">' +
+              '<strong>' + t + '</strong>' +
+              '<span style="font-size:11px;color:' + (under ? '#c0392b' : '#2d7a49') + ';font-weight:700;">' + members.length + ' / ' + min + ' min' + (under ? ' ⚠' : '') + '</span>' +
+            '</div>' +
+            (members.length === 0
+              ? '<div style="font-size:12px;color:#888;font-style:italic;padding:6px 0;">No crew assigned</div>'
+              : '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+                '<thead><tr>' +
+                '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Name</th>' +
+                '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Contact</th>' +
+                '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Experience</th>' +
+                '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Role</th>' +
+                '</tr></thead><tbody>' +
+                members.map(m => '<tr>' +
+                  '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;"><strong>' + (m.name || '—').replace(/</g,'&lt;') + '</strong></td>' +
+                  '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;">' + (m.phone ? '<a href="tel:' + m.phone.replace(/\s/g,'') + '" style="color:#5a7a4f;text-decoration:none;">' + m.phone.replace(/</g,'&lt;') + '</a>' : '<span style="color:#888;">—</span>') + '</td>' +
+                  '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#555;">' + (m.experience || '—').replace(/</g,'&lt;') + '</td>' +
+                  '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#111;">' + (m.role || '—').replace(/</g,'&lt;') + '</td>' +
+                '</tr>').join('') +
+                '</tbody></table>') +
+            '</div>';
+        }).join('') +
+        '<div style="font-size:11px;color:#666;margin-top:6px;">Total: ' + total + ' (' + leadCount + ' lead' + (leadCount !== 1 ? 's' : '') + ' + ' + allMembers + ' on trucks)</div>';
       })()}
       ${val('staffNotes') ? '<div class="notice-box"><strong>Briefing Notes:</strong> ' + val('staffNotes').replace(/\n/g,'<br>') + '</div>' : ''}
     </div>
@@ -4791,11 +5018,12 @@ function newBrief() {
   document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
   // Clear safety checkboxes
   document.querySelectorAll('input[name="safety"]').forEach(c => c.checked = false);
-  // Reset signatures (legacy), trading days, change log, sign-offs
+  // Reset signatures (legacy), trading days, change log, sign-offs, crew roster
   SIGNATURES = [];
   setTradingDays([]);
   setChangeLog({});
   SIGN_OFFS = [];
+  CREW_ROSTER = {};
   // Reset scattered toggle
   const sc = document.getElementById('isScattered');
   if (sc) { sc.checked = false; toggleScattered(); }
@@ -5111,7 +5339,10 @@ function collectFormData() {
   const iceCb = document.getElementById('iceVansNeedPower');
   data._iceVansNeedPower = iceCb ? iceCb.checked : false;
   data._stockStatuses = collectStockStatuses();
-  data._staffAllocations = collectStaffAllocations();
+  syncRosterFromDOM();
+  data._crewRoster = CREW_ROSTER;
+  // Legacy back-compat summary
+  data._staffAllocations = Object.keys(CREW_ROSTER).map(t => ({ truck: t, minimum: staffMinFor((fleetByName()[t] || {}).category), count: (CREW_ROSTER[t] || []).length, notes: '' }));
   data._truckSafetyChecks = collectTruckSafety();
   data._signatures = getSignatures();
   data._changeLog = CHANGE_LOG;
@@ -5164,7 +5395,19 @@ function populateForm(data) {
   updateRevenueCards();
   updatePowerSummary();
   renderStockOrderRows(data._stockStatuses);
-  renderStaffRows(data._staffAllocations);
+  // Migrate _staffAllocations → _crewRoster if loading an older event
+  if (data._crewRoster && typeof data._crewRoster === 'object') {
+    CREW_ROSTER = data._crewRoster;
+  } else if (Array.isArray(data._staffAllocations)) {
+    CREW_ROSTER = {};
+    data._staffAllocations.forEach(a => {
+      CREW_ROSTER[a.truck] = [];
+      for (let i = 0; i < (a.count || 0); i++) CREW_ROSTER[a.truck].push({ name: '', phone: '', experience: 'Experienced', role: '' });
+    });
+  } else {
+    CREW_ROSTER = {};
+  }
+  renderCrewRoster(CREW_ROSTER);
   renderTruckSafetyRows(data._truckSafetyChecks);
   setSignatures(data._signatures);
   setChangeLog(data._changeLog);
@@ -6058,14 +6301,19 @@ function getStepStatus(stepNum, form) {
     case 5: {
       const hasLead = !!(form.eventManager || form.opsLead || form.leadChef);
       const fleet = form._fleet || [];
+      const roster = form._crewRoster || {};
       const allocs = form._staffAllocations || [];
+      const fleetMap2 = fleetByName();
       let staffOk = true;
       if (fleet.length) {
-        const byTruck = {};
-        allocs.forEach(a => { byTruck[a.truck] = a; });
         staffOk = fleet.every(t => {
-          const a = byTruck[t];
-          return a && a.count >= (a.minimum || 1);
+          const u = fleetMap2[t];
+          const min = u ? staffMinFor(u.category) : 1;
+          const rosterCount = (roster[t] || []).length;
+          if (rosterCount >= min) return true;
+          // Fallback to legacy count
+          const a = allocs.find(x => x.truck === t);
+          return a && a.count >= min;
         });
       }
       // Per-truck FF: every selected truck has all its required items ticked
