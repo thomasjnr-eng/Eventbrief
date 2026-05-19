@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T14:21:00.709Z",
+  "savedAt": "2026-05-19T14:21:27.359Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -353,9 +353,9 @@
           },
           {
             "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-05-19T14:21:26.914Z"
           },
           {
             "label": "POS / payment system tested",
