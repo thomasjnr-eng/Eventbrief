@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T15:18:34.451Z",
+  "savedAt": "2026-05-19T15:18:53.294Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -65,13 +65,13 @@
     "prePaidNotes": "Invoice same day, payment 14 days ",
     "voucherDetails": "",
     "posNotes": "Barista coffee to be paid at till, filter coffee/teas and breakfast rolls covered by voucher. Americanos instead of filter coffee.",
-    "menuNotes": "Tea/Coffee\nBreakfast Rolls",
     "foodCovers": "200",
     "coffeeCovers": "200",
     "icecreamCovers": "",
     "deliveryDate": "2026-05-19",
     "coldChain": "Truck fridges sufficient",
     "stockNotes": "",
+    "menuNotes": "Tea/Coffee\nBreakfast Rolls",
     "eventManager": "Thomas ",
     "opsLead": "Robo",
     "leadChef": "Simon",
@@ -122,6 +122,24 @@
         "notes": ""
       }
     ],
+    "_serviceWindows": [
+      {
+        "id": "sw_5m9eqs0",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_we4pkib",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
+    "_menu": {
+      "Caffe Duomo 3": [],
+      "Caffe Duomo Van": []
+    },
     "_crewRoster": {
       "Caffe Duomo 3": [],
       "Caffe Duomo Van": [
@@ -164,8 +182,8 @@
         "at": "2026-05-18T11:39:43.898Z"
       },
       "step2": {
-        "user": "Thomas O'Brien",
-        "at": "2026-05-18T11:52:17.718Z"
+        "user": "Robert Mahon",
+        "at": "2026-05-19T15:18:45.514Z"
       },
       "step3": {
         "user": "Thomas O'Brien",
@@ -185,110 +203,6 @@
       }
     },
     "_crewChecklists": {
-      "Caffe Duomo 3": {
-        "items": [
-          {
-            "label": "Arrived on site",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T13:10:50.488Z"
-          },
-          {
-            "label": "Pitched / parked correctly",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T13:10:53.349Z"
-          },
-          {
-            "label": "Power connected & tested",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T13:48:38.769Z"
-          },
-          {
-            "label": "Water connected (if applicable)",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T13:48:41.092Z"
-          },
-          {
-            "label": "Waste containers in place",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T13:48:43.459Z"
-          },
-          {
-            "label": "Fire equipment laid out & accessible",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T13:48:46.637Z"
-          },
-          {
-            "label": "Hand wash station set up",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T15:08:22.683Z"
-          },
-          {
-            "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
-          },
-          {
-            "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
-          },
-          {
-            "label": "Stock checked & loaded",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T15:08:07.266Z"
-          },
-          {
-            "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
-          },
-          {
-            "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
-          },
-          {
-            "label": "End-of-trade: cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "End-of-trade: bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "End-of-trade: all food covered / stored / disposed",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "End-of-trade: truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          }
-        ]
-      },
       "Caffe Duomo Van": {
         "items": [
           {
@@ -362,6 +276,122 @@
             "done": false,
             "doneBy": null,
             "doneAt": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      },
+      "Caffe Duomo 3": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
           },
           {
             "label": "End-of-trade: cash counted & secured",
