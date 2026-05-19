@@ -3204,6 +3204,7 @@ function toggleFleetChip(el) {
   if (typeof recordChange === 'function') recordChange();
   if (typeof autoSaveDraft === 'function') autoSaveDraft();
   if (typeof updateStepColors === 'function') updateStepColors();
+  if (typeof renderSupplierDeadlines === 'function') renderSupplierDeadlines();
 }
 
 function togglePower(el) {
@@ -3268,21 +3269,35 @@ function calculatePower() {
 }
 
 // ─── SUPPLIER ORDER DEADLINES ─────────────────────────────────
+// Per-supplier 'trucks' = exact unit names, 'categories' = fleet category
+// labels, or 'appliesToAll' for suppliers that touch every event.
 const SUPPLIERS = [
-  { name: 'Sysco',                    leadHrs: 24,    cutoff: '11:30pm cut-off for Dublin · 4pm cut-off for outside Dublin', items: 'General wholesaler' },
-  { name: 'BWG',                      leadHrs: 24,    cutoff: '4pm cut-off for veg · 7pm cut-off for everything else',       items: 'Wholesaler' },
-  { name: 'Bretzel Bakery',           leadHrs: 48,    cutoff: 'Day 1 order for Day 3 delivery',                              items: 'Bakery' },
-  { name: 'Camile Thai',              leadHrs: 48,    cutoff: '2-day lead time',                                              items: 'Thai' },
-  { name: 'Thindi',                   leadHrs: 48,    cutoff: '2-day lead time',                                              items: 'Indian' },
-  { name: 'Pitt Bros / Fried Chicken',leadHrs: 72,    cutoff: '3-day lead time',                                              items: 'BBQ / fried meat' },
-  { name: 'Off Beat Donuts',          leadHrs: 24,    cutoff: 'Order ≥24 hrs ahead — delivery 1 hr before event start',       items: 'Donuts' },
-  { name: 'Italicatessen',            leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Italian deli' },
-  { name: 'Raw Juices & Smoothies',   leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Cold beverages' },
-  { name: 'Coffee Perfection',        leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Coffee supplies' },
-  { name: 'RCL',                      leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Confectionery + ice cream toppings' },
-  { name: 'Sheerans Dairy',           leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Ice cream mix + UHT milk' },
-  { name: 'Gaffney Packaging',        leadHrs: 24 * 14, cutoff: 'Up to 2 pallets standard · >2 pallets needs a few weeks',    items: 'Coffee cups + packaging' }
+  { name: 'Sysco',                    leadHrs: 24,    cutoff: '11:30pm cut-off for Dublin · 4pm cut-off for outside Dublin', items: 'General wholesaler',                appliesToAll: true },
+  { name: 'Gaffney Packaging',        leadHrs: 24*14, cutoff: 'Up to 2 pallets standard · >2 pallets needs a few weeks',    items: 'Coffee cups + packaging',           appliesToAll: true },
+  { name: 'Bretzel Bakery',           leadHrs: 48,    cutoff: 'Day 1 order for Day 3 delivery',                              items: 'Pastries (coffee events only)',     categories: ['Coffee/Beverages'] },
+  { name: 'Coffee Perfection',        leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Coffee supplies',                   categories: ['Coffee/Beverages'], trucks: ['Off Beat Donuts', 'Off Beat Donuts 2'] },
+  { name: 'Sheerans Dairy',           leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Ice cream mix + UHT milk',          categories: ['Ice Cream Vans', 'Coffee/Beverages'] },
+  { name: 'RCL',                      leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Confectionery + ice cream toppings', categories: ['Confectionery', 'Ice Cream Vans'] },
+  { name: 'Pitt Bros / Fried Chicken',leadHrs: 72,    cutoff: '3-day lead time',                                              items: 'BBQ / fried meat',                  trucks: ['Pitt Bros BBQ', 'Fried Chicken Truck'] },
+  { name: 'Camile Thai',              leadHrs: 48,    cutoff: '2-day lead time',                                              items: 'Thai',                              trucks: ['Camile Thai', 'Camile Thai 2.0'] },
+  { name: 'Thindi',                   leadHrs: 48,    cutoff: '2-day lead time',                                              items: 'Indian',                            trucks: ['Thindi'] },
+  { name: 'Italicatessen',            leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Italian deli',                      trucks: ["Angelo's Pizza", "Angelo's Pizza & Pasta"] },
+  { name: 'Off Beat Donuts',          leadHrs: 24,    cutoff: 'Order ≥24 hrs ahead — delivery 1 hr before event start',       items: 'Donuts',                            trucks: ['Off Beat Donuts', 'Off Beat Donuts 2'] },
+  { name: 'BWG',                      leadHrs: 24,    cutoff: '4pm cut-off for veg · 7pm cut-off for everything else',       items: 'Wholesaler',                        trucks: ['Zambrero'] },
+  { name: 'Raw Juices & Smoothies',   leadHrs: 24,    cutoff: '24 hr lead time',                                              items: 'Cold beverages',                    trucks: ['Smoothies & Shakes 1'] }
 ];
+
+function supplierAppliesToFleet(supplier, selectedTruckNames) {
+  if (!selectedTruckNames || !selectedTruckNames.length) return false;
+  if (supplier.appliesToAll) return true;
+  const fleetMap = fleetByName();
+  return selectedTruckNames.some(name => {
+    if (supplier.trucks && supplier.trucks.includes(name)) return true;
+    const u = fleetMap[name];
+    if (u && supplier.categories && supplier.categories.includes(u.category)) return true;
+    return false;
+  });
+}
 
 function eventStartIsoForSuppliers() {
   // Use the earliest of: load-in, event start, first trading day
@@ -3309,29 +3324,33 @@ function renderSupplierDeadlines() {
   const host = document.getElementById('supplierDeadlinesContainer');
   if (!host) return;
   const eventIso = eventStartIsoForSuppliers();
-  if (!eventIso) {
-    host.innerHTML = '<div style="background:var(--bg-deep);border:1px dashed var(--border);border-radius:3px;padding:14px;color:var(--grey);font-size:12px;text-align:center;">Set an event start (or first trading) date in Step 1 to see per-supplier deadlines for this event.</div>'
-      + '<div style="margin-top:12px;">' + SUPPLIERS.map(s =>
-        '<div class="supplier-row passed">' +
-          '<div><div class="sup-name">' + s.name + '</div><div class="sup-lead">' + s.items + '</div></div>' +
-          '<div class="sup-lead">' + (s.leadHrs >= 168 ? Math.round(s.leadHrs / 168) + ' wk' : s.leadHrs + ' hrs') + '</div>' +
-          '<div class="sup-rule">' + s.cutoff + '</div>' +
-          '<div class="sup-deadline">—</div>' +
-        '</div>'
-      ).join('') + '</div>';
-    return;
-  }
-  const eventStart = new Date(eventIso + 'T08:00:00');
-  host.innerHTML = SUPPLIERS.map(s => {
-    const deadline = new Date(eventStart.getTime() - s.leadHrs * 3600000);
-    const desc = describeDeadline(deadline);
+  const selectedTrucks = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
+  const renderRow = (s, deadline) => {
+    const desc = deadline ? describeDeadline(deadline) : { label: '—', band: 'passed' };
     return '<div class="supplier-row ' + desc.band + '">' +
       '<div><div class="sup-name">' + s.name + '</div><div class="sup-lead">' + s.items + '</div></div>' +
       '<div class="sup-lead">' + (s.leadHrs >= 168 ? Math.round(s.leadHrs / 168) + ' wk' : s.leadHrs + ' hrs') + '</div>' +
       '<div class="sup-rule">' + s.cutoff + '</div>' +
       '<div class="sup-deadline">' + desc.label + '</div>' +
       '</div>';
-  }).join('');
+  };
+
+  if (!eventIso) {
+    host.innerHTML = '<div style="background:var(--bg-deep);border:1px dashed var(--border);border-radius:3px;padding:14px;color:var(--grey);font-size:12px;text-align:center;">Set an event start (or first trading) date in Step 1 to see deadlines, and select trucks in Step 2 to filter suppliers to just the ones you need.</div>'
+      + '<div style="margin-top:12px;">' + SUPPLIERS.map(s => renderRow(s, null)).join('') + '</div>';
+    return;
+  }
+  const eventStart = new Date(eventIso + 'T08:00:00');
+  const applicable = SUPPLIERS.filter(s => selectedTrucks.length ? supplierAppliesToFleet(s, selectedTrucks) : true);
+  const notApplicable = SUPPLIERS.filter(s => selectedTrucks.length && !supplierAppliesToFleet(s, selectedTrucks));
+
+  let html = applicable.map(s => renderRow(s, new Date(eventStart.getTime() - s.leadHrs * 3600000))).join('');
+  if (notApplicable.length) {
+    html += '<details style="margin-top:14px;"><summary style="font-size:11px;color:var(--grey);cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;">+ ' + notApplicable.length + ' supplier(s) not relevant to this fleet</summary>'
+      + '<div style="opacity:0.55;margin-top:8px;">' + notApplicable.map(s => renderRow(s, new Date(eventStart.getTime() - s.leadHrs * 3600000))).join('') + '</div>'
+      + '</details>';
+  }
+  host.innerHTML = html;
 }
 
 // ─── DIESEL FORECAST ──────────────────────────────────────────
@@ -5640,6 +5659,7 @@ async function computeActionRequired() {
     });
     if (notStocked && fleet.length) {
       SUPPLIERS.forEach(sup => {
+        if (!supplierAppliesToFleet(sup, fleet)) return;
         const deadline = new Date(eventStart.getTime() - sup.leadHrs * 3600000);
         const diffHrs = (deadline - now) / 3600000;
         if (diffHrs > -2 && diffHrs < 24) {
