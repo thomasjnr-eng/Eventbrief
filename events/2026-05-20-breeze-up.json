@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T15:07:54.310Z",
+  "savedAt": "2026-05-19T15:08:07.719Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -243,9 +243,9 @@
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Simon O Connor",
+            "doneAt": "2026-05-19T15:08:07.266Z"
           },
           {
             "label": "Pre-trade brief from event lead complete",
