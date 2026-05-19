@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T15:18:29.943Z",
+  "savedAt": "2026-05-19T15:18:31.681Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -65,13 +65,13 @@
     "prePaidNotes": "Invoice same day, payment 14 days ",
     "voucherDetails": "",
     "posNotes": "Barista coffee to be paid at till, filter coffee/teas and breakfast rolls covered by voucher. Americanos instead of filter coffee.",
+    "menuNotes": "Tea/Coffee\nBreakfast Rolls",
     "foodCovers": "200",
     "coffeeCovers": "200",
     "icecreamCovers": "",
     "deliveryDate": "2026-05-19",
     "coldChain": "Truck fridges sufficient",
     "stockNotes": "",
-    "menuNotes": "Tea/Coffee\nBreakfast Rolls",
     "eventManager": "Thomas ",
     "opsLead": "Robo",
     "leadChef": "Simon",
@@ -122,24 +122,6 @@
         "notes": ""
       }
     ],
-    "_serviceWindows": [
-      {
-        "id": "sw_5m9eqs0",
-        "name": "Lunch",
-        "start": "12:00",
-        "end": "14:30"
-      },
-      {
-        "id": "sw_we4pkib",
-        "name": "Dinner",
-        "start": "18:00",
-        "end": "21:00"
-      }
-    ],
-    "_menu": {
-      "Caffe Duomo 3": [],
-      "Caffe Duomo Van": []
-    },
     "_crewRoster": {
       "Caffe Duomo 3": [],
       "Caffe Duomo Van": [
