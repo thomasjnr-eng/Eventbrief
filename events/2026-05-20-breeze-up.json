@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T12:36:24.345Z",
+  "savedAt": "2026-05-19T12:57:30.498Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -122,12 +122,29 @@
         "notes": ""
       }
     ],
+    "_crewRoster": {
+      "Caffe Duomo 3": [],
+      "Caffe Duomo Van": [
+        {
+          "name": "",
+          "phone": "",
+          "experience": "Experienced",
+          "role": ""
+        },
+        {
+          "name": "",
+          "phone": "",
+          "experience": "Experienced",
+          "role": ""
+        }
+      ]
+    },
     "_staffAllocations": [
       {
         "truck": "Caffe Duomo 3",
         "minimum": 2,
         "count": 0,
-        "notes": "Nicola "
+        "notes": ""
       },
       {
         "truck": "Caffe Duomo Van",
