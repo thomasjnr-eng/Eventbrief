@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T11:49:18.350Z",
+  "savedAt": "2026-05-19T11:49:44.791Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -126,8 +126,8 @@
       {
         "truck": "Caffe Duomo 3",
         "minimum": 2,
-        "count": 2,
-        "notes": ""
+        "count": 0,
+        "notes": "Nicola "
       },
       {
         "truck": "Caffe Duomo Van",
@@ -159,8 +159,8 @@
         "at": "2026-05-18T11:58:23.335Z"
       },
       "step5": {
-        "user": "Thomas O'Brien",
-        "at": "2026-05-16T19:15:23.221Z"
+        "user": "Lauren obrien",
+        "at": "2026-05-19T11:49:28.207Z"
       },
       "step6": {
         "user": "Thomas O'Brien",
