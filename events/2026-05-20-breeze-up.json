@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T13:48:39.114Z",
+  "savedAt": "2026-05-19T13:48:41.357Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -207,9 +207,9 @@
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Simon O Connor",
+            "doneAt": "2026-05-19T13:48:41.092Z"
           },
           {
             "label": "Waste containers in place",
