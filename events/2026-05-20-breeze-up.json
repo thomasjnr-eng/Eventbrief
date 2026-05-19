@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T14:17:05.172Z",
+  "savedAt": "2026-05-19T14:17:11.732Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -317,9 +317,9 @@
           },
           {
             "label": "Waste containers in place",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Simon O Connor",
+            "doneAt": "2026-05-19T14:17:11.231Z"
           },
           {
             "label": "Fire equipment laid out & accessible",
