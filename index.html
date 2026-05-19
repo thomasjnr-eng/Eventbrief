@@ -1472,6 +1472,141 @@ body {
   .roster-row > select { grid-column: 1 / 2; }
 }
 
+/* ─── SERVICE WINDOWS & MENU ITEMS ─── */
+.sw-row {
+  display: grid;
+  grid-template-columns: 1.4fr 110px 18px 110px 32px;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.sw-row:last-child { border-bottom: none; }
+.sw-row input[type=text],
+.sw-row input[type=time] {
+  background: var(--bg-input);
+  color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 7px 10px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+}
+.sw-row input:focus { border-color: var(--sage); outline: none; }
+.sw-row .sw-sep { color: var(--grey); text-align: center; font-size: 14px; }
+.sw-row .sw-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  border-radius: 3px;
+  width: 28px; height: 28px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.sw-row .sw-remove:hover { border-color: var(--red); color: var(--red); }
+
+.menu-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.menu-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.mc-name { font-size: 14px; font-weight: 700; color: var(--white); }
+.mc-cat  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.menu-item-list { display: flex; flex-direction: column; gap: 10px; }
+.menu-item-row {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 10px;
+  background: var(--bg-input);
+}
+.menu-item-row .mi-head {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 30px;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.menu-item-row .mi-name,
+.menu-item-row .mi-window,
+.menu-item-row .mi-notes {
+  background: var(--bg-card);
+  color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 7px 10px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+}
+.menu-item-row .mi-name:focus,
+.menu-item-row .mi-window:focus,
+.menu-item-row .mi-notes:focus { border-color: var(--sage); outline: none; }
+.menu-item-row .mi-notes { width: 100%; margin-top: 8px; font-size: 12px; }
+.menu-item-row .mi-remove {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  border-radius: 3px;
+  width: 28px; height: 28px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+.menu-item-row .mi-remove:hover { border-color: var(--red); color: var(--red); }
+.menu-item-row .mi-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+.mi-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.mi-pill {
+  background: var(--bg-card);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: 'Lato', sans-serif;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.mi-pill:hover { border-color: var(--sage); color: var(--white); }
+.mi-pill.on {
+  background: var(--sage);
+  border-color: var(--sage);
+  color: #fff;
+  font-weight: 700;
+}
+.mi-pill.custom.on { background: #6e5b89; border-color: #6e5b89; }
+.mi-pill.add {
+  border-style: dashed;
+  color: var(--sage);
+}
+.mi-pill .mi-x { opacity: 0.7; margin-left: 2px; }
+@media (max-width: 720px) {
+  .sw-row { grid-template-columns: 1fr 1fr 18px 1fr 28px; gap: 4px; }
+  .menu-item-row .mi-head { grid-template-columns: 1fr 30px; }
+  .menu-item-row .mi-window { grid-column: 1 / 2; }
+}
+
 /* ─── STAFF ROWS (legacy — kept for old data only) ─── */
 .staff-row {
   display: grid;
@@ -1619,11 +1754,13 @@ body {
       <div class="step-line" id="sl2"></div>
       <div class="step-dot" id="sd3" onclick="goStep(3)" title="Step 3 — Commercial Terms">3</div>
       <div class="step-line" id="sl3"></div>
-      <div class="step-dot" id="sd4" onclick="goStep(4)" title="Step 4 — Menu &amp; Stock">4</div>
+      <div class="step-dot" id="sd4" onclick="goStep(4)" title="Step 4 — Stock &amp; Suppliers">4</div>
       <div class="step-line" id="sl4"></div>
-      <div class="step-dot" id="sd5" onclick="goStep(5)" title="Step 5 — Staff &amp; Safety">5</div>
+      <div class="step-dot" id="sd5" onclick="goStep(5)" title="Step 5 — Menu &amp; Service">5</div>
       <div class="step-line" id="sl5"></div>
-      <div class="step-dot" id="sd6" onclick="goStep(6)" title="Step 6 — Notes &amp; Generate">6</div>
+      <div class="step-dot" id="sd6" onclick="goStep(6)" title="Step 6 — Staff &amp; Safety">6</div>
+      <div class="step-line" id="sl6"></div>
+      <div class="step-dot" id="sd7" onclick="goStep(7)" title="Step 7 — Notes &amp; Generate">7</div>
     </div>
     <div class="header-actions">
       <span class="user-indicator" id="userIndicator" style="display:none;"></span>
@@ -2331,7 +2468,7 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(4)">Menu &amp; Stock →</button>
+    <button class="btn btn-primary" onclick="goStep(4)">Stock &amp; Suppliers →</button>
   </div>
 </div>
 </div>
@@ -2342,20 +2479,9 @@ body {
 
 <div class="step-panel" id="step4">
 <div class="container">
-  <div class="step-title">Menu &amp; Stock</div>
-  <div class="step-subtitle">What we're serving, forecasting and stock management</div>
+  <div class="step-title">Stock &amp; Suppliers</div>
+  <div class="step-subtitle">Forecasting, supplier deadlines and order status per truck</div>
   <div class="step-editor" id="stepEditor4"></div>
-
-  <div class="card">
-    <div class="card-title">Menu Notes</div>
-    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Standard menu is assumed for all units. Use the box below only if anything deviates.</p>
-    <div class="grid-1">
-      <div class="field">
-        <label>Variations / Special Requirements</label>
-        <textarea id="menuNotes" rows="5" placeholder="e.g. Dietary requirements — gluten-free buns for 10% of covers; vegan option confirmed.&#10;Remove side dishes — main item only.&#10;Halal option required for 30 covers.&#10;Smaller portions for school event.&#10;Nut-free site."></textarea>
-      </div>
-    </div>
-  </div>
 
   <div class="card">
     <div class="card-title">Stock Status (Per Truck)</div>
@@ -2407,20 +2533,59 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(5)">Staff &amp; Safety →</button>
+    <button class="btn btn-primary" onclick="goStep(5)">Menu &amp; Service →</button>
   </div>
 </div>
 </div>
 
 <!-- ══════════════════════════════════════════
-     STEP 5 — STAFF & SAFETY
+     STEP 5 — MENU & SERVICE
 ══════════════════════════════════════════ -->
 
 <div class="step-panel" id="step5">
 <div class="container">
+  <div class="step-title">Menu &amp; Service</div>
+  <div class="step-subtitle">What each truck is serving and when &mdash; ops uses this to pack ingredients and equipment</div>
+  <div class="step-editor" id="stepEditor5"></div>
+
+  <div class="card">
+    <div class="card-title">Service Windows</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Define the event-wide service times once (Lunch, Dinner, All-day, etc.). Every menu item below gets tagged to a window so ops can pull a per-window service schedule.</p>
+    <div id="serviceWindowsList"></div>
+    <button type="button" class="btn btn-secondary" onclick="addServiceWindow()" style="margin-top:10px;font-size:13px;padding:8px 16px;">+ Add window</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Menu Notes (variations from standard)</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Standard menu is assumed for all units. Use the box below only if anything deviates across the event.</p>
+    <div class="field">
+      <label>Variations / Special Requirements</label>
+      <textarea id="menuNotes" rows="4" placeholder="e.g. Dietary requirements — gluten-free buns for 10% of covers; vegan option confirmed.&#10;Halal option required for 30 covers.&#10;Smaller portions for school event.&#10;Nut-free site."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Per-Truck Menu</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:14px;">For each truck: add the items being served, the service window, the ingredients needed and the equipment required. Ingredient and equipment suggestions come from the truck's standard kit &mdash; tick the ones in use, or add custom.</p>
+    <div id="menuContainer"></div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="goStep(4)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(6)">Staff &amp; Safety →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 6 — STAFF & SAFETY
+══════════════════════════════════════════ -->
+
+<div class="step-panel" id="step6">
+<div class="container">
   <div class="step-title">Staff &amp; Safety</div>
   <div class="step-subtitle">Team allocation and mandatory compliance checks</div>
-  <div class="step-editor" id="stepEditor5"></div>
+  <div class="step-editor" id="stepEditor6"></div>
 
   <div class="card">
     <div class="card-title">Leads</div>
@@ -2484,21 +2649,21 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(4)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(6)">Notes &amp; Finalise →</button>
+    <button class="btn btn-secondary" onclick="goStep(5)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(7)">Notes &amp; Finalise →</button>
   </div>
 </div>
 </div>
 
 <!-- ══════════════════════════════════════════
-     STEP 6 — NOTES & GENERATE
+     STEP 7 — NOTES & GENERATE
 ══════════════════════════════════════════ -->
 
-<div class="step-panel" id="step6">
+<div class="step-panel" id="step7">
 <div class="container">
   <div class="step-title">Notes &amp; Generate</div>
   <div class="step-subtitle">Final notes, then generate your event brief</div>
-  <div class="step-editor" id="stepEditor6"></div>
+  <div class="step-editor" id="stepEditor7"></div>
 
   <div class="card">
     <div class="card-title">Additional Notes</div>
@@ -2525,7 +2690,7 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(5)">← Back</button>
+    <button class="btn btn-secondary" onclick="goStep(6)">← Back</button>
     <div style="display:flex;gap:10px;align-items:center;">
       <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 22px;">💾 Save Event</button>
       <button class="btn btn-green" onclick="generateBrief()" style="font-size:18px;padding:14px 36px;">Generate Brief ✓</button>
@@ -2566,7 +2731,7 @@ body {
 <script>
 // ─── NAVIGATION ───────────────────────────────────────────────
 let currentStep = 1;
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 7;
 
 function goStep(n) {
   // Fire-and-forget silent save on step navigation (no-op until signed + valid)
@@ -2584,7 +2749,8 @@ function goStep(n) {
   document.getElementById('sd' + n).classList.remove('done');
   window.scrollTo(0,0);
   if (n === 4) { renderStockOrderRows(); renderSupplierDeadlines(); }
-  if (n === 5) { renderCrewRoster(); renderTruckSafetyRows(); }
+  if (n === 5) { renderServiceWindows(); renderMenu(); }
+  if (n === 6) { renderCrewRoster(); renderTruckSafetyRows(); }
 }
 
 // ─── CREW CHECKLISTS (Ops mode) ───────────────────────────────
@@ -3166,6 +3332,309 @@ function collectTruckSafety() {
     out[truck] = checked;
   });
   return out;
+}
+
+// ─── MENU & SERVICE TIMES (per-truck items, event-wide windows) ─
+// Service windows are shared at event level (Lunch 12-14, Dinner 18-21);
+// each truck's menu items are tagged to a window so ops can pull a
+// per-window service schedule. Ingredient + equipment libraries are
+// per-truck so ops can tick what's needed instead of typing every time.
+
+const SERVICE_WINDOW_DEFAULTS = [
+  { name: 'Lunch',   start: '12:00', end: '14:30' },
+  { name: 'Dinner',  start: '18:00', end: '21:00' }
+];
+
+const INGREDIENT_LIBRARY_BY_CATEGORY = {
+  'Burger/Chipper Units': ['Beef patties', 'Brioche buns', 'Cheese slices', 'Bacon', 'Lettuce', 'Tomato', 'Pickles', 'Onions', 'Burger sauce', 'Ketchup', 'Mayo', 'Chipping potatoes', 'Cooking oil', 'Salt', 'Vinegar', 'Curry sauce'],
+  'Misc. Food Units':     ['Cooking oil', 'Salt', 'Pepper', 'Garlic', 'Onion', 'Olive oil', 'Tinned tomato', 'Stock', 'Herbs', 'Chilli'],
+  'Coffee/Beverages':     ['Espresso beans', 'Decaf beans', 'Milk', 'Oat milk', 'Almond milk', 'Sugar syrups', 'Chocolate powder', 'Vanilla syrup', 'Caramel syrup', 'Cups (8oz)', 'Cups (12oz)', 'Lids', 'Stirrers', 'Napkins'],
+  'Confectionery':        ['Donut mix', 'Glaze', 'Sprinkles', 'Chocolate sauce', 'Caramel sauce', 'Whipped cream', 'Nuts', 'Chocolate buttons', 'Marshmallows', 'Cones', 'Wafers'],
+  'Ice Cream Vans':       ['Soft serve mix', 'Cones', 'Flakes (99s)', 'Strawberry sauce', 'Lime sauce', 'Sprinkles', 'Wafers', 'Tubs', 'Spoons', 'Napkins', 'Bagged sweets'],
+  'Carts & Trikes':       ['Cones', 'Cups', 'Napkins', 'Stock from main truck']
+};
+
+const INGREDIENT_LIBRARY_BY_TRUCK = {
+  "Angelo's Pizza":         ['Pizza dough balls', 'Mozzarella', 'Passata', 'Pepperoni', 'Ham', 'Mushroom', 'Olives', 'Basil', 'Parmesan', 'Olive oil', 'Pizza boxes'],
+  "Angelo's Pizza & Pasta": ['Pizza dough balls', 'Pasta (penne)', 'Pasta (spaghetti)', 'Mozzarella', 'Passata', 'Pesto', 'Carbonara base', 'Bolognese base', 'Parmesan', 'Olive oil', 'Pizza boxes', 'Pasta boxes'],
+  "Camile Thai":            ['Jasmine rice', 'Pad Thai noodles', 'Chicken', 'Tofu', 'Pad Thai sauce', 'Green curry paste', 'Red curry paste', 'Coconut milk', 'Peanuts', 'Lime', 'Coriander', 'Thai chilli', 'Takeaway boxes'],
+  "Camile Thai 2.0":        ['Jasmine rice', 'Pad Thai noodles', 'Chicken', 'Tofu', 'Pad Thai sauce', 'Green curry paste', 'Red curry paste', 'Coconut milk', 'Peanuts', 'Lime', 'Coriander', 'Thai chilli', 'Takeaway boxes'],
+  "Thindi":                 ['Basmati rice', 'Naan dough', 'Chicken (marinated)', 'Paneer', 'Curry bases (butter/tikka/madras)', 'Yoghurt', 'Mango chutney', 'Mint sauce', 'Poppadoms', 'Coriander', 'Takeaway boxes'],
+  "Fried Chicken Truck":    ['Chicken pieces', 'Buttermilk', 'Coating flour', 'Cooking oil', 'Brioche buns', 'Hot sauce', 'Ranch', 'Slaw mix', 'Pickles', 'Salt'],
+  "Pitt Bros BBQ":          ['Brisket', 'Pulled pork', 'BBQ sauce', 'Slaw', 'Pickles', 'Brioche buns', 'Cornbread', 'Mac & cheese', 'Beans'],
+  "Lucky Bao Buns":         ['Bao buns', 'Pulled pork', 'Tofu', 'Pickled veg', 'Cucumber', 'Coriander', 'Hoisin sauce', 'Sriracha mayo', 'Spring onion'],
+  "Zambrero":               ['Tortillas (small/large)', 'Mexican rice', 'Black beans', 'Pinto beans', 'Chicken', 'Beef', 'Tofu', 'Salsa', 'Guacamole', 'Sour cream', 'Cheese', 'Jalapeños', 'Foil wraps'],
+  "Bun Club Hot Dogs":      ['Hot dog sausages', 'Hot dog buns', 'Crispy onions', 'Sauerkraut', 'Mustard', 'Ketchup', 'Cheese sauce'],
+  "Toasted":                ['Sourdough', 'Cheddar', 'Ham', 'Pesto', 'Tomato', 'Butter', 'Greaseproof'],
+  "Off Beat Donuts":        ['Donut mix', 'Glazes (vanilla/chocolate/strawberry)', 'Sprinkles', 'Filling (jam/custard)', 'Coffee beans', 'Milk', 'Cups', 'Bags'],
+  "Off Beat Donuts 2":      ['Donut mix', 'Glazes (vanilla/chocolate/strawberry)', 'Sprinkles', 'Filling (jam/custard)', 'Coffee beans', 'Milk', 'Cups', 'Bags'],
+  "Sprinkles Churros":      ['Churro mix', 'Sugar', 'Cinnamon', 'Chocolate sauce', 'Caramel sauce', 'Cones', 'Napkins'],
+  "Sprinkles Desserts":     ['Waffle mix', 'Ice cream tubs', 'Strawberries', 'Bananas', 'Nutella', 'Whipped cream', 'Sprinkles', 'Sauces'],
+  "Smoothies & Shakes 1":   ['Frozen berries', 'Banana', 'Mango', 'Yoghurt', 'Apple juice', 'Milk', 'Ice', 'Cups', 'Straws'],
+  "Chocolate Fountain":     ['Belgian chocolate', 'Marshmallows', 'Strawberries', 'Pineapple', 'Wafers', 'Skewers'],
+  "Pick'n'Mix":             ['Mixed sweets bulk', 'Bags', 'Scoops', 'Tongs']
+};
+
+const EQUIPMENT_LIBRARY_BY_CATEGORY = {
+  'Burger/Chipper Units': ['Fryer x2', 'Smash grill', 'Char grill', 'Chip baskets', 'Burger spatulas', 'Sauce bottles', 'Bun warmer', 'Tongs', 'Heat lamp'],
+  'Misc. Food Units':     ['Wok / saucepans', 'Plancha / grill', 'Stockpot', 'Ladles', 'Chopping boards', 'Knives', 'Heat lamp'],
+  'Coffee/Beverages':     ['Espresso machine', 'Grinder', 'Milk jugs', 'Tampers', 'Knock box', 'Frothing pitcher', 'Blender (if shakes)'],
+  'Confectionery':        ['Donut fryer', 'Glazing tray', 'Topping bowls', 'Whipped cream dispenser', 'Tongs', 'Display tray'],
+  'Ice Cream Vans':       ['Soft serve machine', 'Scoops', 'Sauce dispensers', 'Cone holder', 'Float tin'],
+  'Carts & Trikes':       ['Service tongs', 'Display tray', 'Float tin', 'Napkin holder']
+};
+
+const EQUIPMENT_LIBRARY_BY_TRUCK = {
+  "Angelo's Pizza":         ['Pizza oven', 'Pizza peels', 'Pizza cutter', 'Dough tray', 'Topping bowls', 'Pizza boxes'],
+  "Angelo's Pizza & Pasta": ['Pizza oven', 'Pasta cooker', 'Pizza peels', 'Pizza cutter', 'Tongs', 'Pasta strainer', 'Ladles', 'Pizza boxes', 'Pasta boxes'],
+  "Camile Thai":            ['Wok burner x2', 'Rice cooker', 'Ladles', 'Tongs', 'Takeaway boxes'],
+  "Camile Thai 2.0":        ['Wok burner x2', 'Rice cooker', 'Ladles', 'Tongs', 'Takeaway boxes'],
+  "Thindi":                 ['Tandoor', 'Curry pans', 'Rice cooker', 'Ladles', 'Tongs'],
+  "Fried Chicken Truck":    ['Fryers x2', 'Coating tray', 'Baskets', 'Tongs', 'Heat lamp'],
+  "Pitt Bros BBQ":          ['Smoker / hot hold', 'Carving board', 'Carving knife', 'Sauce bottles', 'Tongs'],
+  "Lucky Bao Buns":         ['Bao steamer', 'Tongs', 'Sauce bottles', 'Cleaver'],
+  "Zambrero":               ['Burrito press', 'Rice steamer', 'Bain marie', 'Tongs', 'Tortilla warmer'],
+  "Off Beat Donuts":        ['Donut fryer', 'Glazing tray', 'Topping bowls', 'Espresso machine', 'Grinder'],
+  "Off Beat Donuts 2":      ['Donut fryer', 'Glazing tray', 'Topping bowls', 'Espresso machine', 'Grinder'],
+  "Sprinkles Churros":      ['Churro fryer', 'Piping bag', 'Cinnamon shaker', 'Sauce bottles']
+};
+
+function ingredientsFor(unit) {
+  if (!unit) return [];
+  return INGREDIENT_LIBRARY_BY_TRUCK[unit.name] || INGREDIENT_LIBRARY_BY_CATEGORY[unit.category] || [];
+}
+function equipmentFor(unit) {
+  if (!unit) return [];
+  return EQUIPMENT_LIBRARY_BY_TRUCK[unit.name] || EQUIPMENT_LIBRARY_BY_CATEGORY[unit.category] || [];
+}
+
+let SERVICE_WINDOWS = []; // [{ id, name, start, end }]
+let MENU = {};            // { truckName: [{ name, windowId, ingredients:[], equipment:[], notes }] }
+
+function uid(prefix) { return (prefix || 'id') + '_' + Math.random().toString(36).slice(2, 9); }
+
+function ensureDefaultServiceWindow() {
+  if (!SERVICE_WINDOWS.length) {
+    SERVICE_WINDOWS = SERVICE_WINDOW_DEFAULTS.map(w => Object.assign({ id: uid('sw') }, w));
+  }
+}
+
+function syncServiceWindowsFromDOM() {
+  const rows = document.querySelectorAll('#serviceWindowsList .sw-row');
+  if (!rows.length) return;
+  SERVICE_WINDOWS = [...rows].map(r => ({
+    id:    r.dataset.id,
+    name:  r.querySelector('[data-field=name]').value.trim()  || 'Service',
+    start: r.querySelector('[data-field=start]').value || '',
+    end:   r.querySelector('[data-field=end]').value   || ''
+  }));
+}
+
+function renderServiceWindows() {
+  const host = document.getElementById('serviceWindowsList');
+  if (!host) return;
+  ensureDefaultServiceWindow();
+  host.innerHTML = SERVICE_WINDOWS.map(w =>
+    '<div class="sw-row" data-id="' + w.id + '">' +
+      '<input type="text" data-field="name"  placeholder="Lunch / Dinner / All day" value="' + (w.name || '').replace(/"/g,'&quot;') + '" oninput="onServiceWindowEdit()">' +
+      '<input type="time" data-field="start" value="' + (w.start || '') + '" oninput="onServiceWindowEdit()">' +
+      '<span class="sw-sep">→</span>' +
+      '<input type="time" data-field="end"   value="' + (w.end || '')   + '" oninput="onServiceWindowEdit()">' +
+      '<button type="button" class="sw-remove" onclick="removeServiceWindow(\'' + w.id + '\')" title="Remove">&times;</button>' +
+    '</div>'
+  ).join('');
+}
+
+function addServiceWindow() {
+  syncServiceWindowsFromDOM();
+  SERVICE_WINDOWS.push({ id: uid('sw'), name: 'Service', start: '12:00', end: '15:00' });
+  renderServiceWindows();
+  renderMenu();
+  if (typeof recordChange === 'function') recordChange();
+}
+
+function removeServiceWindow(id) {
+  syncServiceWindowsFromDOM();
+  syncMenuFromDOM();
+  SERVICE_WINDOWS = SERVICE_WINDOWS.filter(w => w.id !== id);
+  // Detach any menu items pointing at the removed window
+  Object.keys(MENU).forEach(t => (MENU[t] || []).forEach(i => { if (i.windowId === id) i.windowId = ''; }));
+  renderServiceWindows();
+  renderMenu();
+  if (typeof recordChange === 'function') recordChange();
+}
+
+function onServiceWindowEdit() {
+  syncServiceWindowsFromDOM();
+  // Update window dropdowns in menu items without full re-render
+  document.querySelectorAll('.menu-item-row select[data-field=window]').forEach(sel => {
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">(no window)</option>' +
+      SERVICE_WINDOWS.map(w => '<option value="' + w.id + '"' + (w.id === cur ? ' selected' : '') + '>' +
+        (w.name || 'Service') + ' ' + (w.start || '?') + '–' + (w.end || '?') + '</option>').join('');
+  });
+  if (typeof recordChange === 'function') recordChange();
+}
+
+function pillsHtml(truck, idx, type, selected, library) {
+  const safeTruck = truck.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  const sel = new Set(selected);
+  // Library suggestions (toggleable)
+  const libBtns = library.map(item => {
+    const isOn = sel.has(item);
+    const esc = item.replace(/"/g, '&quot;');
+    return '<button type="button" class="mi-pill ' + (isOn ? 'on' : '') + '" ' +
+      'onclick="toggleMenuTag(\'' + safeTruck + '\',' + idx + ',\'' + type + '\',\'' + esc.replace(/'/g, "\\'") + '\')">' +
+      (isOn ? '✓ ' : '') + esc + '</button>';
+  }).join('');
+  // Custom items not in library — shown as removable pills
+  const customBtns = selected.filter(s => !library.includes(s)).map(item => {
+    const esc = item.replace(/"/g, '&quot;');
+    return '<button type="button" class="mi-pill custom on" ' +
+      'onclick="toggleMenuTag(\'' + safeTruck + '\',' + idx + ',\'' + type + '\',\'' + esc.replace(/'/g, "\\'") + '\')" title="Remove">' +
+      '✓ ' + esc + ' <span class="mi-x">×</span></button>';
+  }).join('');
+  return '<div class="mi-pills">' + libBtns + customBtns +
+    '<button type="button" class="mi-pill add" onclick="addCustomMenuTag(\'' + safeTruck + '\',' + idx + ',\'' + type + '\')">+ Add</button>' +
+    '</div>';
+}
+
+function menuItemHtml(unit, item, idx) {
+  const truck = unit.name;
+  const escTruck = truck.replace(/"/g, '&quot;');
+  const winOpts = '<option value="">(no window)</option>' +
+    SERVICE_WINDOWS.map(w => '<option value="' + w.id + '"' + (w.id === item.windowId ? ' selected' : '') + '>' +
+      (w.name || 'Service') + ' ' + (w.start || '?') + '–' + (w.end || '?') + '</option>').join('');
+  return '<div class="menu-item-row" data-truck="' + escTruck + '" data-idx="' + idx + '">' +
+    '<div class="mi-head">' +
+      '<input type="text" data-field="name" class="mi-name" placeholder="Item name (e.g. Smash burger)" value="' + (item.name || '').replace(/"/g,'&quot;') + '" oninput="onMenuEdit()">' +
+      '<select data-field="window" class="mi-window" onchange="onMenuEdit()">' + winOpts + '</select>' +
+      '<button type="button" class="mi-remove" onclick="removeMenuItem(\'' + truck.replace(/'/g, "\\'") + '\',' + idx + ')" title="Remove">&times;</button>' +
+    '</div>' +
+    '<div class="mi-label">Ingredients</div>' +
+    pillsHtml(truck, idx, 'ingredients', item.ingredients || [], ingredientsFor(unit)) +
+    '<div class="mi-label">Equipment</div>' +
+    pillsHtml(truck, idx, 'equipment', item.equipment || [], equipmentFor(unit)) +
+    '<input type="text" data-field="notes" class="mi-notes" placeholder="Prep notes (optional)" value="' + (item.notes || '').replace(/"/g,'&quot;') + '" oninput="onMenuEdit()">' +
+    '</div>';
+}
+
+function renderMenu(preserve) {
+  const host = document.getElementById('menuContainer');
+  if (!host) return;
+  const fleetMap = fleetByName();
+  const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => fleetMap[c.dataset.val]).filter(Boolean);
+  if (!selected.length) {
+    host.innerHTML = '<div class="stock-empty">Select trucks in Step 2 first — menu items appear per truck here.</div>';
+    return;
+  }
+  if (preserve && typeof preserve === 'object') MENU = Object.assign({}, preserve);
+  selected.forEach(u => { if (!MENU[u.name]) MENU[u.name] = []; });
+  const sel = new Set(selected.map(u => u.name));
+  Object.keys(MENU).forEach(t => { if (!sel.has(t)) delete MENU[t]; });
+
+  host.innerHTML = selected.map(u => {
+    const items = MENU[u.name] || [];
+    const escTruck = u.name.replace(/"/g, '&quot;');
+    return '<div class="menu-card" data-truck="' + escTruck + '">' +
+      '<div class="menu-card-head">' +
+        '<div>' +
+          '<div class="mc-name">' + u.name + '</div>' +
+          '<div class="mc-cat">' + u.category + ' · ' + items.length + ' item' + (items.length === 1 ? '' : 's') + '</div>' +
+        '</div>' +
+        '<button type="button" class="sc-add" onclick="addMenuItem(\'' + u.name.replace(/'/g, "\\'") + '\')">+ Add item</button>' +
+      '</div>' +
+      '<div class="menu-item-list">' +
+        (items.length === 0
+          ? '<div class="roster-empty">No items yet. Tap + Add item.</div>'
+          : items.map((m, idx) => menuItemHtml(u, m, idx)).join('')) +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function addMenuItem(truck) {
+  syncMenuFromDOM();
+  if (!MENU[truck]) MENU[truck] = [];
+  const defaultWin = SERVICE_WINDOWS[0] ? SERVICE_WINDOWS[0].id : '';
+  MENU[truck].push({ name: '', windowId: defaultWin, ingredients: [], equipment: [], notes: '' });
+  renderMenu();
+  if (typeof recordChange === 'function') recordChange();
+}
+
+function removeMenuItem(truck, idx) {
+  syncMenuFromDOM();
+  if (!MENU[truck]) return;
+  MENU[truck].splice(idx, 1);
+  renderMenu();
+  if (typeof recordChange === 'function') recordChange();
+}
+
+function toggleMenuTag(truck, idx, type, value) {
+  syncMenuFromDOM();
+  const item = (MENU[truck] || [])[idx];
+  if (!item) return;
+  item[type] = item[type] || [];
+  const i = item[type].indexOf(value);
+  if (i >= 0) item[type].splice(i, 1); else item[type].push(value);
+  renderMenu();
+  if (typeof recordChange === 'function') recordChange();
+}
+
+function addCustomMenuTag(truck, idx, type) {
+  syncMenuFromDOM();
+  const item = (MENU[truck] || [])[idx];
+  if (!item) return;
+  const label = type === 'ingredients' ? 'ingredient' : 'equipment item';
+  const val = prompt('Add custom ' + label + ':');
+  if (!val) return;
+  item[type] = item[type] || [];
+  if (!item[type].includes(val)) item[type].push(val);
+  renderMenu();
+  if (typeof recordChange === 'function') recordChange();
+}
+
+function syncMenuFromDOM() {
+  document.querySelectorAll('.menu-card').forEach(card => {
+    const truck = card.dataset.truck;
+    const items = [];
+    card.querySelectorAll('.menu-item-row').forEach(row => {
+      const idx = parseInt(row.dataset.idx);
+      // Pull current name/window/notes from DOM; ingredients/equipment come
+      // from MENU because pills aren't form controls.
+      const existing = (MENU[truck] || [])[idx] || { ingredients: [], equipment: [] };
+      items.push({
+        name:        row.querySelector('[data-field=name]').value,
+        windowId:    row.querySelector('[data-field=window]').value,
+        ingredients: (existing.ingredients || []).slice(),
+        equipment:   (existing.equipment || []).slice(),
+        notes:       row.querySelector('[data-field=notes]').value
+      });
+    });
+    MENU[truck] = items;
+  });
+}
+
+function onMenuEdit() {
+  syncMenuFromDOM();
+  if (typeof recordChange === 'function') recordChange();
+  // Update item-count subtitle without full re-render
+  document.querySelectorAll('.menu-card').forEach(card => {
+    const truck = card.dataset.truck;
+    const count = (MENU[truck] || []).length;
+    const cat = card.querySelector('.mc-cat');
+    if (cat) {
+      const parts = cat.textContent.split('·');
+      if (parts.length >= 1) cat.textContent = parts[0].trim() + ' · ' + count + ' item' + (count === 1 ? '' : 's');
+    }
+  });
+}
+
+function windowById(id) { return SERVICE_WINDOWS.find(w => w.id === id); }
+function windowLabel(id) {
+  const w = windowById(id);
+  if (!w) return 'No window set';
+  return (w.name || 'Service') + ' ' + (w.start || '?') + '–' + (w.end || '?');
 }
 
 // ─── CREW ROSTER PER TRUCK (full staff details) ────────────────
@@ -4380,9 +4849,9 @@ function generateBrief() {
     </div>
     `}
 
-    <!-- MENU & STOCK -->
+    <!-- STOCK & SUPPLIERS -->
     <div class="brief-section">
-      <div class="brief-section-head">06 — MENU & STOCK</div>
+      <div class="brief-section-head">06 — STOCK & SUPPLIERS</div>
       <div class="brief-grid-3" style="margin-bottom:12px;">
         <div class="bfield"><div class="bl">Food Covers Forecast</div><div class="bv big">${fmt('foodCovers')}</div></div>
         <div class="bfield"><div class="bl">Coffee Covers Forecast</div><div class="bv big">${fmt('coffeeCovers')}</div></div>
@@ -4405,13 +4874,66 @@ function generateBrief() {
               '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#555;">' + (s.notes || '—') + '</td></tr>';
           }).join('') + '</tbody></table></div>';
       })()}
-      ${val('menuNotes') ? '<div class="notice-box"><strong>Menu Notes (variations from standard):</strong><br>' + val('menuNotes').replace(/\n/g,'<br>') + '</div>' : '<div style="font-size:12px;color:#666;margin-bottom:8px;"><em>Standard menu assumed — no variations noted.</em></div>'}
       ${val('stockNotes') ? '<div class="notice-box">' + val('stockNotes') + '</div>' : ''}
+    </div>
+
+    <!-- MENU & SERVICE -->
+    <div class="brief-section">
+      <div class="brief-section-head">07 — MENU & SERVICE</div>
+      ${(() => {
+        syncServiceWindowsFromDOM();
+        syncMenuFromDOM();
+        const windows = SERVICE_WINDOWS || [];
+        let out = '';
+        // Service window summary
+        if (windows.length) {
+          out += '<div style="margin-bottom:12px;">' +
+            '<div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Service Windows</div>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+            windows.map(w => '<div style="background:#f0ece6;border-radius:3px;padding:6px 10px;font-size:12px;"><strong>' + (w.name || 'Service') + '</strong> · ' + (w.start || '?') + '–' + (w.end || '?') + '</div>').join('') +
+            '</div></div>';
+        }
+        // Per-truck menu items
+        const trucks = Object.keys(MENU).filter(t => (MENU[t] || []).length);
+        if (!trucks.length) {
+          out += '<div style="font-size:12px;color:#666;font-style:italic;padding:6px 0;">No menu items defined yet.</div>';
+        } else {
+          out += trucks.map(t => {
+            const items = MENU[t] || [];
+            return '<div style="margin-top:14px;break-inside:avoid;">' +
+              '<div style="font-size:13px;font-weight:700;color:#111;margin-bottom:6px;border-bottom:1px solid #e0ddd8;padding-bottom:4px;">' + t + '</div>' +
+              '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+              '<thead><tr>' +
+              '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;width:22%;">Item</th>' +
+              '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;width:16%;">Service</th>' +
+              '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Ingredients</th>' +
+              '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Equipment</th>' +
+              '</tr></thead><tbody>' +
+              items.map(it => {
+                const safeName = (it.name || '—').replace(/</g, '&lt;');
+                const win = windowById(it.windowId);
+                const winLabel = win ? ('<strong>' + (win.name || 'Service') + '</strong><br>' + (win.start || '?') + '–' + (win.end || '?')) : '<span style="color:#c0392b;">No window</span>';
+                const ing = (it.ingredients || []).map(i => '<span style="display:inline-block;background:#f5f3ef;border-radius:2px;padding:2px 6px;margin:1px 2px 1px 0;font-size:11px;">' + i.replace(/</g, '&lt;') + '</span>').join('') || '<span style="color:#888;">—</span>';
+                const eq  = (it.equipment   || []).map(i => '<span style="display:inline-block;background:#f5f3ef;border-radius:2px;padding:2px 6px;margin:1px 2px 1px 0;font-size:11px;">' + i.replace(/</g, '&lt;') + '</span>').join('') || '<span style="color:#888;">—</span>';
+                const noteRow = it.notes ? '<tr><td colspan="4" style="padding:2px 8px 8px 8px;font-size:11px;color:#555;border-bottom:1px solid #e0ddd8;"><em>Note:</em> ' + it.notes.replace(/</g, '&lt;') + '</td></tr>' : '';
+                return '<tr>' +
+                  '<td style="padding:6px 8px;border-bottom:' + (noteRow ? 'none' : '1px solid #e0ddd8') + ';vertical-align:top;"><strong>' + safeName + '</strong></td>' +
+                  '<td style="padding:6px 8px;border-bottom:' + (noteRow ? 'none' : '1px solid #e0ddd8') + ';font-size:11px;color:#555;vertical-align:top;">' + winLabel + '</td>' +
+                  '<td style="padding:6px 8px;border-bottom:' + (noteRow ? 'none' : '1px solid #e0ddd8') + ';vertical-align:top;">' + ing + '</td>' +
+                  '<td style="padding:6px 8px;border-bottom:' + (noteRow ? 'none' : '1px solid #e0ddd8') + ';vertical-align:top;">' + eq + '</td>' +
+                  '</tr>' + noteRow;
+              }).join('') +
+              '</tbody></table></div>';
+          }).join('');
+        }
+        return out;
+      })()}
+      ${val('menuNotes') ? '<div class="notice-box" style="margin-top:14px;"><strong>Menu Notes (variations from standard):</strong><br>' + val('menuNotes').replace(/\n/g,'<br>') + '</div>' : ''}
     </div>
 
     <!-- STAFF -->
     <div class="brief-section">
-      <div class="brief-section-head">07 — STAFF</div>
+      <div class="brief-section-head">08 — STAFF</div>
       <div class="brief-grid-3" style="margin-bottom:14px;">
         <div class="bfield"><div class="bl">Event Lead</div><div class="bv big">${fmt('eventManager')}</div></div>
         <div class="bfield"><div class="bl">Ops Lead</div><div class="bv big">${fmt('opsLead')}</div></div>
@@ -4460,7 +4982,7 @@ function generateBrief() {
 
     <!-- SAFETY -->
     <div class="brief-section">
-      <div class="brief-section-head">08 — SAFETY & COMPLIANCE</div>
+      <div class="brief-section-head">09 — SAFETY & COMPLIANCE</div>
       ${truckSafetyTable}
       <div class="bl" style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Event-Wide Checks</div>
       <div class="ops-checklist">${safetyRows}</div>
@@ -4474,7 +4996,7 @@ function generateBrief() {
       if (!showClient && !showOps && !showPost) return '';
       return `
         <div class="brief-section">
-          <div class="brief-section-head">09 — NOTES &amp; ACTIONS</div>
+          <div class="brief-section-head">10 — NOTES &amp; ACTIONS</div>
           ${showClient ? '<div class="notice-box"><strong>Client Instructions:</strong> ' + val('clientInstructions').replace(/\n/g,'<br>') + '</div>' : ''}
           ${showOps ? '<div class="notice-box" style="border-color:#2d7a49;background:#f5fbf7;"><strong>Ops Notes:</strong> ' + val('opsNotes').replace(/\n/g,'<br>') + '</div>' : ''}
           ${showPost ? '<div class="notice-box"><strong>Post-Event Actions:</strong> ' + val('postEventNotes').replace(/\n/g,'<br>') + '</div>' : ''}
@@ -4483,15 +5005,15 @@ function generateBrief() {
 
     <!-- CHANGE LOG -->
     ${(() => {
-      const labels = ['Event Overview', 'Fleet & Logistics', 'Commercial Terms', 'Menu & Stock', 'Staff & Safety', 'Notes & Generate'];
+      const labels = ['Event Overview', 'Fleet & Logistics', 'Commercial Terms', 'Stock & Suppliers', 'Menu & Service', 'Staff & Safety', 'Notes & Generate'];
       const entries = [];
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= 7; i++) {
         const e = CHANGE_LOG['step' + i];
         if (e) entries.push({ step: i, label: labels[i-1], user: e.user, at: e.at });
       }
       if (!entries.length) return '';
       return '<div class="brief-section" style="margin-top:24px;">' +
-        '<div class="brief-section-head">10 — CHANGE LOG (PER SECTION)</div>' +
+        '<div class="brief-section-head">11 — CHANGE LOG (PER SECTION)</div>' +
         '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
         '<thead><tr>' +
         '<th style="text-align:left;padding:6px 10px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Section</th>' +
@@ -4956,7 +5478,7 @@ function formatRelativeTime(iso) {
   } catch (e) { return ''; }
 }
 function updateStepEditorIndicators() {
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     const el = document.getElementById('stepEditor' + i);
     if (!el) continue;
     const entry = CHANGE_LOG['step' + i];
@@ -4968,10 +5490,10 @@ function updateStepEditorIndicators() {
   if (preview) preview.innerHTML = renderChangeLogTable();
 }
 function renderChangeLogTable() {
-  const labels = ['Event Overview', 'Fleet & Logistics', 'Commercial Terms', 'Menu & Stock', 'Staff & Safety', 'Notes & Generate'];
+  const labels = ['Event Overview', 'Fleet & Logistics', 'Commercial Terms', 'Stock & Suppliers', 'Menu & Service', 'Staff & Safety', 'Notes & Generate'];
   let rows = '';
   let anyEntry = false;
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     const entry = CHANGE_LOG['step' + i];
     if (entry) anyEntry = true;
     rows += '<div style="display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center;">' +
@@ -5024,6 +5546,8 @@ function newBrief() {
   setChangeLog({});
   SIGN_OFFS = [];
   CREW_ROSTER = {};
+  SERVICE_WINDOWS = [];
+  MENU = {};
   // Reset scattered toggle
   const sc = document.getElementById('isScattered');
   if (sc) { sc.checked = false; toggleScattered(); }
@@ -5339,6 +5863,10 @@ function collectFormData() {
   const iceCb = document.getElementById('iceVansNeedPower');
   data._iceVansNeedPower = iceCb ? iceCb.checked : false;
   data._stockStatuses = collectStockStatuses();
+  syncServiceWindowsFromDOM();
+  syncMenuFromDOM();
+  data._serviceWindows = SERVICE_WINDOWS;
+  data._menu = MENU;
   syncRosterFromDOM();
   data._crewRoster = CREW_ROSTER;
   // Legacy back-compat summary
@@ -5395,6 +5923,11 @@ function populateForm(data) {
   updateRevenueCards();
   updatePowerSummary();
   renderStockOrderRows(data._stockStatuses);
+  // Menu & service windows
+  SERVICE_WINDOWS = Array.isArray(data._serviceWindows) ? data._serviceWindows.slice() : [];
+  MENU = (data._menu && typeof data._menu === 'object') ? data._menu : {};
+  renderServiceWindows();
+  renderMenu(MENU);
   // Migrate _staffAllocations → _crewRoster if loading an older event
   if (data._crewRoster && typeof data._crewRoster === 'object') {
     CREW_ROSTER = data._crewRoster;
@@ -6299,6 +6832,17 @@ function getStepStatus(stepNum, form) {
       return 'empty';
     }
     case 5: {
+      const fleet = form._fleet || [];
+      if (!fleet.length) return 'empty';
+      const menu = form._menu || {};
+      const trucksWithMenu = fleet.filter(t => (menu[t] || []).length > 0).length;
+      const allItemsHaveName = fleet.every(t => (menu[t] || []).every(i => i.name));
+      const allItemsHaveWindow = fleet.every(t => (menu[t] || []).every(i => i.windowId));
+      if (trucksWithMenu === 0) return 'empty';
+      if (trucksWithMenu === fleet.length && allItemsHaveName && allItemsHaveWindow) return 'complete';
+      return 'partial';
+    }
+    case 6: {
       const hasLead = !!(form.eventManager || form.opsLead || form.leadChef);
       const fleet = form._fleet || [];
       const roster = form._crewRoster || {};
@@ -6330,7 +6874,7 @@ function getStepStatus(stepNum, form) {
       required = [hasLead, staffOk, ffOk, safetyMin];
       break;
     }
-    case 6: {
+    case 7: {
       required = [
         !!(form.clientInstructions || form.opsNotes || form.postEventNotes)
       ];
@@ -6347,7 +6891,7 @@ function updateStepColors(form) {
   if (!form) {
     try { form = collectFormData(); } catch (e) { return; }
   }
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     const dot = document.getElementById('sd' + i);
     if (!dot) continue;
     dot.classList.remove('partial', 'complete');
@@ -6355,7 +6899,7 @@ function updateStepColors(form) {
     if (status === 'partial') dot.classList.add('partial');
     if (status === 'complete') dot.classList.add('complete');
     // Connecting line takes the colour of the step it leaves
-    if (i < 6) {
+    if (i < 7) {
       const line = document.getElementById('sl' + i);
       if (line) {
         line.classList.remove('partial', 'complete');
@@ -6387,6 +6931,9 @@ function computeEventCompleteness(form) {
     const stockedTrucks = statuses.filter(s => s.status && s.status !== 'Not yet').map(s => s.truck);
     const allStocked = fleetSel.every(t => stockedTrucks.includes(t));
     checks.push({ label: 'Stock status set for all trucks', ok: allStocked });
+    const menu = form._menu || {};
+    const allWithMenu = fleetSel.every(t => (menu[t] || []).length > 0);
+    checks.push({ label: 'Menu defined for every truck', ok: allWithMenu });
   }
   checks.push({ label: 'At least one lead named', ok: !!(form.eventManager || form.opsLead || form.leadChef) });
   checks.push({ label: 'Safety checks (≥50%)', ok: (form._safety || []).length >= 12 });
