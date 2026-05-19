@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T11:49:44.791Z",
+  "savedAt": "2026-05-19T12:36:19.301Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -241,6 +241,34 @@
             "done": false,
             "doneBy": null,
             "doneAt": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
           }
         ]
       },
@@ -317,9 +345,38 @@
             "done": false,
             "doneBy": null,
             "doneAt": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
           }
         ]
       }
-    }
+    },
+    "_signOffs": []
   }
 }
