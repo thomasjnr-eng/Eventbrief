@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-19T15:08:07.719Z",
+  "savedAt": "2026-05-19T15:08:23.004Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -225,9 +225,9 @@
           },
           {
             "label": "Hand wash station set up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Simon O Connor",
+            "doneAt": "2026-05-19T15:08:22.683Z"
           },
           {
             "label": "Menu boards / signage up",
