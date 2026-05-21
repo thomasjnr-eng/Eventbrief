@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-21T19:18:54.546Z",
+  "savedAt": "2026-05-21T19:18:56.394Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -267,9 +267,9 @@
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-05-21T19:18:56.156Z"
           },
           {
             "label": "Ready to trade",
