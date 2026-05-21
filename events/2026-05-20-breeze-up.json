@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-21T19:18:08.393Z",
+  "savedAt": "2026-05-21T19:18:13.897Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -255,9 +255,9 @@
           },
           {
             "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-05-21T19:18:13.637Z"
           },
           {
             "label": "Stock checked & loaded",
