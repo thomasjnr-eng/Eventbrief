@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-21T19:18:28.240Z",
+  "savedAt": "2026-05-21T19:18:35.300Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -286,9 +286,9 @@
           },
           {
             "label": "End-of-trade: bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-05-21T19:18:35.049Z",
             "assignedTo": null
           },
           {
