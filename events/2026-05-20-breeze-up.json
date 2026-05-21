@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-21T19:18:20.248Z",
+  "savedAt": "2026-05-21T19:18:23.927Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -323,9 +323,9 @@
           },
           {
             "label": "Power connected & tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-05-21T19:18:23.667Z"
           },
           {
             "label": "Water connected (if applicable)",
