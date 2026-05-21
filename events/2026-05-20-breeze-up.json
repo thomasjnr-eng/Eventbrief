@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-21T19:18:07.042Z",
+  "savedAt": "2026-05-21T19:18:08.393Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -213,9 +213,9 @@
           },
           {
             "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-05-21T19:18:08.104Z"
           },
           {
             "label": "Power connected & tested",
