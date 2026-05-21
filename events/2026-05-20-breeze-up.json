@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-21T19:19:01.256Z",
+  "savedAt": "2026-05-21T19:19:06.029Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -404,9 +404,9 @@
           },
           {
             "label": "End-of-trade: truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-05-21T19:19:05.816Z",
             "assignedTo": null
           }
         ]
