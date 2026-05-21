@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-20-breeze-up",
-  "savedAt": "2026-05-21T10:20:54.238Z",
+  "savedAt": "2026-05-21T19:18:07.042Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -213,9 +213,9 @@
           },
           {
             "label": "Pitched / parked correctly",
-            "done": true,
-            "doneBy": "Simon O Connor",
-            "doneAt": "2026-05-19T13:10:53.349Z"
+            "done": false,
+            "doneBy": null,
+            "doneAt": null
           },
           {
             "label": "Power connected & tested",
