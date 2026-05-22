@@ -65,10 +65,12 @@ body {
 .app-header {
   background: var(--black);
   border-bottom: 3px solid var(--sage);
-  padding: 18px 32px;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -82,32 +84,66 @@ body {
 .logo span { color: var(--sage); }
 .step-indicator {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   align-items: center;
+  justify-content: flex-end;
 }
-.step-dot {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+.step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  border: 2px solid var(--border);
+  letter-spacing: 0.04em;
+  border: 1.5px solid var(--border);
+  background: transparent;
   color: var(--grey);
-  transition: all 0.2s;
   cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Lato', sans-serif;
+  white-space: nowrap;
 }
-.step-dot:hover { border-color: var(--sage); color: var(--sage); }
-.step-dot.partial { background: #c89a4a; border-color: #c89a4a; color: #fff; }
-.step-dot.complete { background: #4a9a5c; border-color: #4a9a5c; color: #fff; }
-.step-dot.done { background: var(--sage); border-color: var(--sage); color: #fff; }
-.step-dot.active { border-color: var(--sage); color: var(--sage); }
-.step-dot.active.partial,
-.step-dot.active.complete { color: #fff; box-shadow: 0 0 0 2px rgba(168, 196, 154, 0.55); }
-.step-line { width: 20px; height: 2px; background: var(--border); }
-.step-line.done { background: var(--sage); }
-.step-line.partial { background: #c89a4a; }
-.step-line.complete { background: #4a9a5c; }
+.step-btn .sb-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--grey);
+  font-size: 9px;
+  padding: 0 4px;
+  transition: all 0.15s;
+}
+.step-btn:hover { border-color: var(--sage); color: var(--sage); }
+.step-btn:hover .sb-num { background: var(--sage); color: #fff; }
+.step-btn.partial   { border-color: #c89a4a; color: #c89a4a; }
+.step-btn.partial .sb-num { background: #c89a4a; color: #fff; }
+.step-btn.complete  { border-color: #4a9a5c; color: #4a9a5c; }
+.step-btn.complete .sb-num { background: #4a9a5c; color: #fff; }
+.step-btn.done      { border-color: var(--sage); color: var(--sage); }
+.step-btn.done .sb-num { background: var(--sage); color: #fff; }
+.step-btn.active {
+  background: var(--sage);
+  border-color: var(--sage);
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(168, 196, 154, 0.35);
+}
+.step-btn.active .sb-num { background: #fff; color: var(--sage); }
+.step-btn.active.partial { background: #c89a4a; border-color: #c89a4a; }
+.step-btn.active.partial .sb-num { background: #fff; color: #c89a4a; }
+.step-btn.active.complete { background: #4a9a5c; border-color: #4a9a5c; }
+.step-btn.active.complete .sb-num { background: #fff; color: #4a9a5c; }
+.step-line { display: none; }
+@media (max-width: 880px) {
+  .step-indicator { gap: 4px; }
+  .step-btn { padding: 6px 9px; font-size: 10px; }
+  .step-btn .sb-label-long { display: none; }
+}
 
 /* ─── FORM SHELL ─── */
 #form-app { display: block; }
@@ -1748,19 +1784,13 @@ body {
   <div class="logo" onclick="showHome()" title="Home" style="cursor:pointer;">O'<span>Brien</span> Event Catering</div>
   <div style="display:flex;align-items:center;gap:14px;">
     <div class="step-indicator">
-      <div class="step-dot active" id="sd1" onclick="goStep(1)" title="Step 1 — Event Overview">1</div>
-      <div class="step-line" id="sl1"></div>
-      <div class="step-dot" id="sd2" onclick="goStep(2)" title="Step 2 — Fleet &amp; Logistics">2</div>
-      <div class="step-line" id="sl2"></div>
-      <div class="step-dot" id="sd3" onclick="goStep(3)" title="Step 3 — Commercial Terms">3</div>
-      <div class="step-line" id="sl3"></div>
-      <div class="step-dot" id="sd4" onclick="goStep(4)" title="Step 4 — Stock &amp; Suppliers">4</div>
-      <div class="step-line" id="sl4"></div>
-      <div class="step-dot" id="sd5" onclick="goStep(5)" title="Step 5 — Menu &amp; Service">5</div>
-      <div class="step-line" id="sl5"></div>
-      <div class="step-dot" id="sd6" onclick="goStep(6)" title="Step 6 — Staff &amp; Safety">6</div>
-      <div class="step-line" id="sl6"></div>
-      <div class="step-dot" id="sd7" onclick="goStep(7)" title="Step 7 — Notes &amp; Generate">7</div>
+      <button type="button" class="step-btn active" id="sd1" onclick="goStep(1)" title="Step 1 — Event Overview"><span class="sb-num">1</span>Event</button>
+      <button type="button" class="step-btn"        id="sd2" onclick="goStep(2)" title="Step 2 — Fleet &amp; Logistics"><span class="sb-num">2</span>Fleet</button>
+      <button type="button" class="step-btn"        id="sd3" onclick="goStep(3)" title="Step 3 — Commercial Terms"><span class="sb-num">3</span>Commercial</button>
+      <button type="button" class="step-btn"        id="sd4" onclick="goStep(4)" title="Step 4 — Stock &amp; Suppliers"><span class="sb-num">4</span>Stock</button>
+      <button type="button" class="step-btn"        id="sd5" onclick="goStep(5)" title="Step 5 — Menu &amp; Service"><span class="sb-num">5</span>Menu</button>
+      <button type="button" class="step-btn"        id="sd6" onclick="goStep(6)" title="Step 6 — Staff &amp; Safety"><span class="sb-num">6</span>Staff</button>
+      <button type="button" class="step-btn"        id="sd7" onclick="goStep(7)" title="Step 7 — Notes &amp; Generate"><span class="sb-num">7</span>Notes</button>
     </div>
     <div class="header-actions">
       <span class="user-indicator" id="userIndicator" style="display:none;"></span>
@@ -2123,7 +2153,10 @@ body {
 
   <div class="nav-bar">
     <div></div>
-    <button class="btn btn-primary" onclick="goStep(2)">Fleet &amp; Logistics →</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-primary" onclick="goStep(2)">Fleet &amp; Logistics →</button>
+    </div>
   </div>
 </div>
 </div>
@@ -2287,7 +2320,10 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(3)">Commercial Terms →</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Commercial Terms →</button>
+    </div>
   </div>
 </div>
 </div>
@@ -2468,7 +2504,10 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(4)">Stock &amp; Suppliers →</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Stock &amp; Suppliers →</button>
+    </div>
   </div>
 </div>
 </div>
@@ -2533,7 +2572,10 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(5)">Menu &amp; Service →</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-primary" onclick="goStep(5)">Menu &amp; Service →</button>
+    </div>
   </div>
 </div>
 </div>
@@ -2572,7 +2614,10 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(4)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(6)">Staff &amp; Safety →</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-primary" onclick="goStep(6)">Staff &amp; Safety →</button>
+    </div>
   </div>
 </div>
 </div>
@@ -2650,7 +2695,10 @@ body {
 
   <div class="nav-bar">
     <button class="btn btn-secondary" onclick="goStep(5)">← Back</button>
-    <button class="btn btn-primary" onclick="goStep(7)">Notes &amp; Finalise →</button>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-primary" onclick="goStep(7)">Notes &amp; Finalise →</button>
+    </div>
   </div>
 </div>
 </div>
