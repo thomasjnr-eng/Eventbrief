@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-05-22T16:36:10.528Z",
+  "savedAt": "2026-05-22T16:39:53.168Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -65,11 +65,11 @@
     "prePaidNotes": "",
     "voucherDetails": "",
     "posNotes": "",
-    "foodCovers": "",
-    "coffeeCovers": "",
-    "icecreamCovers": "",
-    "deliveryDate": "",
-    "coldChain": "",
+    "foodCovers": "600",
+    "coffeeCovers": "250",
+    "icecreamCovers": "600",
+    "deliveryDate": "2026-05-28",
+    "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "",
     "eventManager": "",
@@ -100,7 +100,33 @@
     "_isScattered": false,
     "_tradingDays": [],
     "_iceVansNeedPower": false,
-    "_stockStatuses": [],
+    "_stockStatuses": [
+      {
+        "truck": "Smash Burger 1",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Angelo's Pizza",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Toasted",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "231-D",
+        "status": "Not yet",
+        "notes": ""
+      }
+    ],
     "_serviceWindows": [
       {
         "id": "sw_zr0n1w3",
@@ -116,13 +142,11 @@
       }
     ],
     "_menu": {
-      "Smash Burger 2": [],
-      "Fried Chicken Truck": [],
-      "Thindi": [],
-      "Caffe Duomo 2": [],
       "Off Beat Donuts": [],
       "231-D": [],
-      "201-D": []
+      "Smash Burger 1": [],
+      "Angelo's Pizza": [],
+      "Toasted": []
     },
     "_crewRoster": {},
     "_staffAllocations": [],
@@ -148,6 +172,10 @@
       "step3": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:36:07.463Z"
+      },
+      "step4": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:39:51.575Z"
       }
     },
     "_crewChecklists": {
