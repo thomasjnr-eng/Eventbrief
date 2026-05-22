@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-05-22T16:44:41.883Z",
+  "savedAt": "2026-05-22T16:46:46.355Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -76,8 +76,8 @@
     "opsLead": "Robo",
     "leadChef": "Simon",
     "staffNotes": "",
-    "clientInstructions": "",
-    "opsNotes": "",
+    "clientInstructions": "Halal food only\n",
+    "opsNotes": "No RAC staff ",
     "postEventNotes": "",
     "_fleet": [
       "Smash Burger 1",
@@ -226,6 +226,10 @@
       "step6": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:44:20.320Z"
+      },
+      "step7": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:46:38.917Z"
       }
     },
     "_crewChecklists": {
