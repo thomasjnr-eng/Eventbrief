@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event",
-  "savedAt": "2026-05-22T16:23:24.347Z",
+  "savedAt": "2026-05-22T16:24:38.174Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -65,11 +65,11 @@
     "prePaidNotes": "",
     "voucherDetails": "",
     "posNotes": "",
-    "foodCovers": "",
-    "coffeeCovers": "",
-    "icecreamCovers": "",
-    "deliveryDate": "",
-    "coldChain": "",
+    "foodCovers": "1000",
+    "coffeeCovers": "300",
+    "icecreamCovers": "1000",
+    "deliveryDate": "2026-05-26",
+    "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "",
     "eventManager": "",
@@ -100,9 +100,53 @@
     "_isScattered": false,
     "_tradingDays": [],
     "_iceVansNeedPower": false,
-    "_stockStatuses": [],
+    "_stockStatuses": [
+      {
+        "truck": "Smash Burger 2",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Fried Chicken Truck",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Thindi",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo 2",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "231-D",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "201-D",
+        "status": "Not yet",
+        "notes": ""
+      }
+    ],
     "_serviceWindows": [],
-    "_menu": {},
+    "_menu": {
+      "Smash Burger 2": [],
+      "Fried Chicken Truck": [],
+      "Thindi": [],
+      "Caffe Duomo 2": [],
+      "Off Beat Donuts": [],
+      "231-D": [],
+      "201-D": []
+    },
     "_crewRoster": {},
     "_staffAllocations": [],
     "_truckSafetyChecks": {},
@@ -119,6 +163,10 @@
       "step3": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:22:57.945Z"
+      },
+      "step4": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:24:34.438Z"
       }
     },
     "_crewChecklists": {
