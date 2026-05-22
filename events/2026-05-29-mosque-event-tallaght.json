@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-05-22T16:43:42.035Z",
+  "savedAt": "2026-05-22T16:44:41.883Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -72,9 +72,9 @@
     "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "Halal food only",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
+    "eventManager": "Thomas ",
+    "opsLead": "Robo",
+    "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
     "opsNotes": "",
@@ -149,21 +149,57 @@
       "Toasted": []
     },
     "_crewRoster": {
-      "Smash Burger 1": [],
+      "Smash Burger 1": [
+        {
+          "name": "",
+          "phone": "",
+          "experience": "Experienced",
+          "role": ""
+        }
+      ],
       "Angelo's Pizza": [],
       "Toasted": [],
       "Off Beat Donuts": [],
       "231-D": []
     },
-    "_staffAllocations": [],
+    "_staffAllocations": [
+      {
+        "truck": "Smash Burger 1",
+        "minimum": 4,
+        "count": 1,
+        "notes": ""
+      },
+      {
+        "truck": "Angelo's Pizza",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Toasted",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts",
+        "minimum": 2,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "231-D",
+        "minimum": 1,
+        "count": 0,
+        "notes": ""
+      }
+    ],
     "_truckSafetyChecks": {
-      "Smash Burger 2": [],
-      "Fried Chicken Truck": [],
-      "Thindi": [],
-      "Caffe Duomo 2": [],
+      "Smash Burger 1": [],
+      "Angelo's Pizza": [],
+      "Toasted": [],
       "Off Beat Donuts": [],
-      "231-D": [],
-      "201-D": []
+      "231-D": []
     },
     "_signatures": [],
     "_changeLog": {
@@ -186,6 +222,10 @@
       "step5": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:43:41.668Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:44:20.320Z"
       }
     },
     "_crewChecklists": {
