@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-05-22T16:42:35.733Z",
+  "savedAt": "2026-05-22T16:43:42.035Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -71,7 +71,7 @@
     "deliveryDate": "2026-05-28",
     "coldChain": "Stock storage van required",
     "stockNotes": "",
-    "menuNotes": "",
+    "menuNotes": "Halal food only",
     "eventManager": "",
     "opsLead": "",
     "leadChef": "",
@@ -148,7 +148,13 @@
       "Angelo's Pizza": [],
       "Toasted": []
     },
-    "_crewRoster": {},
+    "_crewRoster": {
+      "Smash Burger 1": [],
+      "Angelo's Pizza": [],
+      "Toasted": [],
+      "Off Beat Donuts": [],
+      "231-D": []
+    },
     "_staffAllocations": [],
     "_truckSafetyChecks": {
       "Smash Burger 2": [],
@@ -176,6 +182,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:39:51.575Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:43:41.668Z"
       }
     },
     "_crewChecklists": {
