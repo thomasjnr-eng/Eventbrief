@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event",
-  "savedAt": "2026-05-22T16:27:49.399Z",
+  "savedAt": "2026-05-22T16:28:11.766Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -72,9 +72,9 @@
     "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "**HALAL ONLY**",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
+    "eventManager": "Thomas ",
+    "opsLead": "Robo",
+    "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
     "opsNotes": "",
@@ -169,8 +169,59 @@
       "231-D": [],
       "201-D": []
     },
-    "_staffAllocations": [],
-    "_truckSafetyChecks": {},
+    "_staffAllocations": [
+      {
+        "truck": "Smash Burger 2",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Fried Chicken Truck",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Thindi",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo 2",
+        "minimum": 2,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts",
+        "minimum": 2,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "231-D",
+        "minimum": 1,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "201-D",
+        "minimum": 1,
+        "count": 0,
+        "notes": ""
+      }
+    ],
+    "_truckSafetyChecks": {
+      "Smash Burger 2": [],
+      "Fried Chicken Truck": [],
+      "Thindi": [],
+      "Caffe Duomo 2": [],
+      "Off Beat Donuts": [],
+      "231-D": [],
+      "201-D": []
+    },
     "_signatures": [],
     "_changeLog": {
       "step1": {
@@ -192,6 +243,10 @@
       "step5": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:27:39.111Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:28:00.588Z"
       }
     },
     "_crewChecklists": {
