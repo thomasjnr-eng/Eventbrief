@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-22T17:05:30.505Z",
+  "savedAt": "2026-05-22T17:15:12.179Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -32,20 +32,20 @@
     "venueAddress": "RDS Anglesea road",
     "accessNotes": "",
     "otherUnits": "",
-    "pitchRef": "",
+    "pitchRef": "Ring 3, hall 1 and hall 4",
     "pitchSize": "",
-    "groundSurface": "",
-    "vehicleLayout": "",
-    "pitchNotes": "",
-    "cableRun": "",
+    "groundSurface": "Mixed",
+    "vehicleLayout": "Separate Zones",
+    "pitchNotes": "Hall 4 - Off beat\nHall 1 - Coffee\nRing 3 - Pizza, Zambrero, Thindi and coffee",
+    "cableRun": "20M",
     "powerNotes": "",
-    "dieselSource": "",
-    "dieselResponsible": "",
+    "dieselSource": "Order deisel to RDS wednesday",
+    "dieselResponsible": "Tom - 0852402555",
     "dieselNotes": "",
-    "waterSource": "",
-    "waterVolume": "",
-    "wasteDisposal": "",
-    "solidWaste": "",
+    "waterSource": "Mixed — site + our tanks",
+    "waterVolume": "600",
+    "wasteDisposal": "On-site drain available",
+    "solidWaste": "Shared bins on site",
     "waterNotes": "",
     "commercialClient": "",
     "commercialClientRef": "",
@@ -79,8 +79,17 @@
     "clientInstructions": "",
     "opsNotes": "",
     "postEventNotes": "",
-    "_fleet": [],
-    "_power": [],
+    "_fleet": [
+      "Angelo's Pizza",
+      "Thindi",
+      "Zambrero",
+      "Caffe Duomo 1",
+      "Caffe Duomo 3",
+      "Off Beat Donuts"
+    ],
+    "_power": [
+      "We provide generator"
+    ],
     "_revenue": [],
     "_pos": [],
     "_safety": [],
@@ -111,9 +120,710 @@
       "step1": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T17:05:26.018Z"
+      },
+      "step2": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T17:15:11.181Z"
       }
     },
-    "_crewChecklists": {},
+    "_crewChecklists": {
+      "Caffe Duomo 1": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      },
+      "Off Beat Donuts": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      },
+      "Angelo's Pizza": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      },
+      "Thindi": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      },
+      "Zambrero": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      },
+      "Caffe Duomo 3": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      }
+    },
     "_signOffs": []
   }
 }
