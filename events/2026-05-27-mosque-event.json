@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event",
-  "savedAt": "2026-05-22T16:22:22.150Z",
+  "savedAt": "2026-05-22T16:23:24.347Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,8 +47,8 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "We provide + remove bags",
     "waterNotes": "",
-    "commercialClient": "",
-    "commercialClientRef": "",
+    "commercialClient": "Other (specify in notes)",
+    "commercialClientRef": "MOSQUE/TOMSNR",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
@@ -92,7 +92,10 @@
       "We provide generator"
     ],
     "_revenue": [],
-    "_pos": [],
+    "_pos": [
+      "Our own POS system",
+      "Cash & card"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -112,6 +115,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:22:15.482Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:22:57.945Z"
       }
     },
     "_crewChecklists": {
