@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event",
-  "savedAt": "2026-05-22T16:24:38.174Z",
+  "savedAt": "2026-05-22T16:27:49.399Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -71,7 +71,7 @@
     "deliveryDate": "2026-05-26",
     "coldChain": "Stock storage van required",
     "stockNotes": "",
-    "menuNotes": "",
+    "menuNotes": "**HALAL ONLY**",
     "eventManager": "",
     "opsLead": "",
     "leadChef": "",
@@ -137,7 +137,20 @@
         "notes": ""
       }
     ],
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_zr0n1w3",
+        "name": "Food + Ice Cream",
+        "start": "08:00",
+        "end": "16:30"
+      },
+      {
+        "id": "sw_tsonhmr",
+        "name": "Coffee",
+        "start": "07:00",
+        "end": "16:30"
+      }
+    ],
     "_menu": {
       "Smash Burger 2": [],
       "Fried Chicken Truck": [],
@@ -147,7 +160,15 @@
       "231-D": [],
       "201-D": []
     },
-    "_crewRoster": {},
+    "_crewRoster": {
+      "Smash Burger 2": [],
+      "Fried Chicken Truck": [],
+      "Thindi": [],
+      "Caffe Duomo 2": [],
+      "Off Beat Donuts": [],
+      "231-D": [],
+      "201-D": []
+    },
     "_staffAllocations": [],
     "_truckSafetyChecks": {},
     "_signatures": [],
@@ -167,6 +188,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:24:34.438Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:27:39.111Z"
       }
     },
     "_crewChecklists": {
