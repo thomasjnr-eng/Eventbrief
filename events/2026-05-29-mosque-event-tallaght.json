@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-05-22T16:35:47.403Z",
+  "savedAt": "2026-05-22T16:36:10.528Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,8 +47,8 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "We provide + remove bags",
     "waterNotes": "",
-    "commercialClient": "",
-    "commercialClientRef": "",
+    "commercialClient": "Other (specify in notes)",
+    "commercialClientRef": "MOSQUE/TOMSNR",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
@@ -89,8 +89,13 @@
     "_power": [
       "We provide generator"
     ],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Cash / card trading"
+    ],
+    "_pos": [
+      "Our own POS system",
+      "Cash & card"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -139,6 +144,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-05-22T16:35:46.389Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-22T16:36:07.463Z"
       }
     },
     "_crewChecklists": {
