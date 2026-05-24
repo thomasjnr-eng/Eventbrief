@@ -139,10 +139,24 @@ body {
 .step-btn.active.complete { background: #4a9a5c; border-color: #4a9a5c; }
 .step-btn.active.complete .sb-num { background: #fff; color: #4a9a5c; }
 .step-line { display: none; }
+.step-nav-wrap { display: flex; align-items: center; }
+/* Mobile step dropdown — hidden on desktop, replaces the pills on mobile */
+.step-select {
+  display: none;
+  background: var(--bg-card, #1c1c1c);
+  color: var(--white);
+  border: 1.5px solid var(--sage);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  max-width: 100%;
+}
+.step-select:focus { outline: none; border-color: var(--sage); }
 @media (max-width: 880px) {
-  .step-indicator { gap: 4px; }
-  .step-btn { padding: 6px 9px; font-size: 10px; }
-  .step-btn .sb-label-long { display: none; }
+  .step-indicator { display: none; }
+  .step-select { display: block; }
 }
 
 /* ─── FORM SHELL ─── */
@@ -308,6 +322,31 @@ body {
 .btn-secondary:hover { border-color: var(--white); color: var(--white); }
 .btn-green { background: var(--green); color: #fff; }
 .btn-green:hover { background: var(--green-dark); }
+
+/* On mobile the action bar becomes a sticky footer; secondary buttons
+   collapse to their icon (.nav-icon) so the row stays uncrowded. */
+@media (max-width: 700px) {
+  .nav-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-card);
+    margin: 28px -24px 0;
+    padding: 11px 16px calc(11px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -3px 14px rgba(0,0,0,0.18);
+    z-index: 60;
+    gap: 8px;
+  }
+  .nav-bar .btn { padding: 12px 16px; font-size: 14px; letter-spacing: 0.05em; }
+  .nav-bar > div { gap: 8px !important; }
+  /* Any icon-collapsing button drops its text label on mobile */
+  .btn.nav-icon .nav-txt { display: none; }
+  .btn.nav-icon { padding-left: 13px; padding-right: 13px; }
+  /* Generated-brief action bar: tighten + drop low-priority controls */
+  .brief-actions { padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
+  .brief-actions .btn { font-size: 13px; }
+  .brief-actions .ba-collapse-group { display: none; }
+}
 
 /* ─── CONDITIONAL SECTIONS ─── */
 .cond { display: none; }
@@ -1783,6 +1822,7 @@ body {
 <header class="app-header">
   <div class="logo" onclick="showHome()" title="Home" style="cursor:pointer;">O'<span>Brien</span> Event Catering</div>
   <div style="display:flex;align-items:center;gap:14px;">
+    <div class="step-nav-wrap">
     <div class="step-indicator">
       <button type="button" class="step-btn active" id="sd1" onclick="goStep(1)" title="Step 1 — Event Overview"><span class="sb-num">1</span>Event</button>
       <button type="button" class="step-btn"        id="sd2" onclick="goStep(2)" title="Step 2 — Fleet &amp; Logistics"><span class="sb-num">2</span>Fleet</button>
@@ -1791,6 +1831,16 @@ body {
       <button type="button" class="step-btn"        id="sd5" onclick="goStep(5)" title="Step 5 — Menu &amp; Service"><span class="sb-num">5</span>Menu</button>
       <button type="button" class="step-btn"        id="sd6" onclick="goStep(6)" title="Step 6 — Staff &amp; Safety"><span class="sb-num">6</span>Staff</button>
       <button type="button" class="step-btn"        id="sd7" onclick="goStep(7)" title="Step 7 — Notes &amp; Generate"><span class="sb-num">7</span>Notes</button>
+    </div>
+    <select class="step-select" id="stepSelect" onchange="goStep(parseInt(this.value))" aria-label="Jump to step">
+      <option value="1">Step 1 of 7 · Event Overview</option>
+      <option value="2">Step 2 of 7 · Fleet &amp; Logistics</option>
+      <option value="3">Step 3 of 7 · Commercial Terms</option>
+      <option value="4">Step 4 of 7 · Stock &amp; Suppliers</option>
+      <option value="5">Step 5 of 7 · Menu &amp; Service</option>
+      <option value="6">Step 6 of 7 · Staff &amp; Safety</option>
+      <option value="7">Step 7 of 7 · Notes &amp; Generate</option>
+    </select>
     </div>
     <div class="header-actions">
       <span class="user-indicator" id="userIndicator" style="display:none;"></span>
@@ -1997,11 +2047,11 @@ body {
     </div>
 
     <div class="nav-bar">
-      <button class="btn btn-secondary" onclick="showHome()">← Cancel</button>
+      <button class="btn btn-secondary nav-icon" onclick="showHome()">←<span class="nav-txt"> Cancel</span></button>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
-        <button class="btn btn-secondary danger" id="planDeleteBtn" onclick="deleteCurrentPlan()" style="display:none;font-size:14px;padding:12px 22px;border-color:#5a2a2a;color:#ff8c8c;">Delete</button>
-        <button class="btn btn-secondary" onclick="savePlanAsPdf()" style="font-size:14px;padding:12px 18px;">📄 Save PDF</button>
-        <button class="btn btn-secondary" onclick="sharePlanWhatsApp()" style="font-size:14px;padding:12px 18px;">💬 WhatsApp</button>
+        <button class="btn btn-secondary danger nav-icon" id="planDeleteBtn" onclick="deleteCurrentPlan()" style="display:none;font-size:14px;padding:12px 18px;border-color:#5a2a2a;color:#ff8c8c;">🗑<span class="nav-txt"> Delete</span></button>
+        <button class="btn btn-secondary nav-icon" onclick="savePlanAsPdf()" style="font-size:14px;padding:12px 18px;">📄<span class="nav-txt"> Save PDF</span></button>
+        <button class="btn btn-secondary nav-icon" onclick="sharePlanWhatsApp()" style="font-size:14px;padding:12px 18px;">💬<span class="nav-txt"> WhatsApp</span></button>
         <button class="btn btn-green" onclick="savePlan()" style="font-size:18px;padding:14px 36px;">Save Plan ✓</button>
       </div>
     </div>
@@ -2156,7 +2206,7 @@ body {
   <div class="nav-bar">
     <div></div>
     <div style="display:flex;gap:10px;align-items:center;">
-      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-secondary nav-icon" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾<span class="nav-txt"> Save</span></button>
       <button class="btn btn-primary" onclick="goStep(2)">Fleet &amp; Logistics →</button>
     </div>
   </div>
@@ -2321,9 +2371,9 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+    <button class="btn btn-secondary nav-icon" onclick="goStep(1)">←<span class="nav-txt"> Back</span></button>
     <div style="display:flex;gap:10px;align-items:center;">
-      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-secondary nav-icon" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾<span class="nav-txt"> Save</span></button>
       <button class="btn btn-primary" onclick="goStep(3)">Commercial Terms →</button>
     </div>
   </div>
@@ -2505,9 +2555,9 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+    <button class="btn btn-secondary nav-icon" onclick="goStep(2)">←<span class="nav-txt"> Back</span></button>
     <div style="display:flex;gap:10px;align-items:center;">
-      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-secondary nav-icon" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾<span class="nav-txt"> Save</span></button>
       <button class="btn btn-primary" onclick="goStep(4)">Stock &amp; Suppliers →</button>
     </div>
   </div>
@@ -2573,9 +2623,9 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
+    <button class="btn btn-secondary nav-icon" onclick="goStep(3)">←<span class="nav-txt"> Back</span></button>
     <div style="display:flex;gap:10px;align-items:center;">
-      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-secondary nav-icon" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾<span class="nav-txt"> Save</span></button>
       <button class="btn btn-primary" onclick="goStep(5)">Menu &amp; Service →</button>
     </div>
   </div>
@@ -2615,9 +2665,9 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(4)">← Back</button>
+    <button class="btn btn-secondary nav-icon" onclick="goStep(4)">←<span class="nav-txt"> Back</span></button>
     <div style="display:flex;gap:10px;align-items:center;">
-      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-secondary nav-icon" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾<span class="nav-txt"> Save</span></button>
       <button class="btn btn-primary" onclick="goStep(6)">Staff &amp; Safety →</button>
     </div>
   </div>
@@ -2696,9 +2746,9 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(5)">← Back</button>
+    <button class="btn btn-secondary nav-icon" onclick="goStep(5)">←<span class="nav-txt"> Back</span></button>
     <div style="display:flex;gap:10px;align-items:center;">
-      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾 Save</button>
+      <button class="btn btn-secondary nav-icon" onclick="saveEvent()" style="font-size:14px;padding:12px 18px;">💾<span class="nav-txt"> Save</span></button>
       <button class="btn btn-primary" onclick="goStep(7)">Notes &amp; Finalise →</button>
     </div>
   </div>
@@ -2740,9 +2790,9 @@ body {
   </div>
 
   <div class="nav-bar">
-    <button class="btn btn-secondary" onclick="goStep(6)">← Back</button>
+    <button class="btn btn-secondary nav-icon" onclick="goStep(6)">←<span class="nav-txt"> Back</span></button>
     <div style="display:flex;gap:10px;align-items:center;">
-      <button class="btn btn-secondary" onclick="saveEvent()" style="font-size:14px;padding:12px 22px;">💾 Save Event</button>
+      <button class="btn btn-secondary nav-icon" onclick="saveEvent()" style="font-size:14px;padding:12px 22px;">💾<span class="nav-txt"> Save Event</span></button>
       <button class="btn btn-green" onclick="generateBrief()" style="font-size:18px;padding:14px 36px;">Generate Brief ✓</button>
     </div>
   </div>
@@ -2762,19 +2812,19 @@ body {
   </div>
 
   <div class="brief-actions">
-    <button class="btn btn-secondary" onclick="backToForm()">← Edit Brief</button>
+    <button class="btn btn-secondary nav-icon" onclick="backToForm()">←<span class="nav-txt"> Edit Brief</span></button>
     <div style="display:flex;gap:6px;align-items:center;background:#222;padding:4px;border-radius:3px;">
       <button class="btn btn-secondary" id="modeFullBtn" onclick="setBriefMode('full')" style="font-size:12px;padding:7px 14px;">Full</button>
       <button class="btn btn-secondary" id="modeCrewBtn" onclick="setBriefMode('crew')" style="font-size:12px;padding:7px 14px;">Crew</button>
     </div>
-    <div style="display:flex;gap:6px;align-items:center;">
+    <div class="ba-collapse-group" style="display:flex;gap:6px;align-items:center;">
       <button class="btn btn-secondary" onclick="briefExpandAll()" style="font-size:12px;padding:7px 12px;">Expand all</button>
       <button class="btn btn-secondary" onclick="briefCollapseAll()" style="font-size:12px;padding:7px 12px;">Collapse all</button>
     </div>
-    <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>
-    <button class="btn btn-primary" onclick="shareBrief()">📤 Share Link</button>
-    <button class="btn btn-primary" onclick="shareBriefAsPdf()">📄 Share PDF</button>
-    <button class="btn btn-green" id="calendarBtn" onclick="addToCalendar()">📅 Add to Calendar</button>
+    <button class="btn btn-primary nav-icon" onclick="window.print()">🖨<span class="nav-txt"> Print / Save PDF</span></button>
+    <button class="btn btn-primary nav-icon" onclick="shareBrief()">📤<span class="nav-txt"> Share Link</span></button>
+    <button class="btn btn-primary nav-icon" onclick="shareBriefAsPdf()">📄<span class="nav-txt"> Share PDF</span></button>
+    <button class="btn btn-green nav-icon" id="calendarBtn" onclick="addToCalendar()">📅<span class="nav-txt"> Add to Calendar</span></button>
   </div>
 </div>
 
@@ -2797,6 +2847,8 @@ function goStep(n) {
   document.getElementById('step' + n).classList.add('active');
   document.getElementById('sd' + n).classList.add('active');
   document.getElementById('sd' + n).classList.remove('done');
+  const stepSelect = document.getElementById('stepSelect');
+  if (stepSelect) stepSelect.value = String(n);
   window.scrollTo(0,0);
   if (n === 4) { renderStockOrderRows(); renderSupplierDeadlines(); }
   if (n === 5) { renderServiceWindows(); renderMenu(); }
@@ -6107,7 +6159,7 @@ function showHome() {
   if (brief) brief.style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
   document.title = 'Planning - OBEC';
-  const ind = document.querySelector('.step-indicator');
+  const ind = document.querySelector('.step-nav-wrap');
   if (ind) ind.style.display = 'none';
   renderHome();
   window.scrollTo(0, 0);
@@ -6120,7 +6172,7 @@ function showBriefEdit() {
   const brief = document.getElementById('brief-output');
   if (brief) brief.style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
-  const ind = document.querySelector('.step-indicator');
+  const ind = document.querySelector('.step-nav-wrap');
   if (ind) ind.style.display = 'flex';
   window.scrollTo(0, 0);
 }
@@ -6131,7 +6183,7 @@ function showPlanEdit() {
   const brief = document.getElementById('brief-output');
   if (brief) brief.style.display = 'none';
   document.getElementById('form-app').style.display = 'block';
-  const ind = document.querySelector('.step-indicator');
+  const ind = document.querySelector('.step-nav-wrap');
   if (ind) ind.style.display = 'none';
   populateUpcomingEventsDatalist();
   window.scrollTo(0, 0);
@@ -7115,10 +7167,12 @@ function getStepStatus(stepNum, form) {
   return 'partial';
 }
 
+const STEP_TITLES = ['Event Overview', 'Fleet & Logistics', 'Commercial Terms', 'Stock & Suppliers', 'Menu & Service', 'Staff & Safety', 'Notes & Generate'];
 function updateStepColors(form) {
   if (!form) {
     try { form = collectFormData(); } catch (e) { return; }
   }
+  const stepSelect = document.getElementById('stepSelect');
   for (let i = 1; i <= 7; i++) {
     const dot = document.getElementById('sd' + i);
     if (!dot) continue;
@@ -7126,14 +7180,10 @@ function updateStepColors(form) {
     const status = getStepStatus(i, form);
     if (status === 'partial') dot.classList.add('partial');
     if (status === 'complete') dot.classList.add('complete');
-    // Connecting line takes the colour of the step it leaves
-    if (i < 7) {
-      const line = document.getElementById('sl' + i);
-      if (line) {
-        line.classList.remove('partial', 'complete');
-        if (status === 'partial') line.classList.add('partial');
-        if (status === 'complete') line.classList.add('complete');
-      }
+    // Mirror status onto the mobile dropdown option
+    if (stepSelect && stepSelect.options[i - 1]) {
+      const mark = status === 'complete' ? '✓ ' : (status === 'partial' ? '• ' : '');
+      stepSelect.options[i - 1].text = mark + 'Step ' + i + ' of 7 · ' + STEP_TITLES[i - 1];
     }
   }
 }
