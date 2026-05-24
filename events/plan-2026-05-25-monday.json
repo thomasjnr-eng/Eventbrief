@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-05-25-monday",
+  "savedAt": "2026-05-24T20:07:18.882Z",
+  "savedBy": "Thomas O'Brien",
+  "form": {
+    "title": "Monday 😁",
+    "planDate": "2026-05-25",
+    "startTime": "09:00",
+    "endTime": "17:00",
+    "lead": "Thomas O'Brien",
+    "assigned": "Robo, Simon, Oisin, Anthony",
+    "notes": "Small Van & Toms Van",
+    "tasks": [
+      {
+        "label": "Meet at cafe to discuss week",
+        "assignedTo": "All",
+        "priority": "medium",
+        "dueTime": "09:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Wrap up RDS",
+        "assignedTo": "All",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Park Dublin Tech Summit (if possible)",
+        "assignedTo": "Robo, Simon",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "Dublin tech summit (27 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Count stock (all vans/trucks)",
+        "assignedTo": "Oisin, Anthony",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Setup Dublin Tech Summit ",
+        "assignedTo": "All",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "Dublin tech summit (27 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Take Rubbish out of toasty",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
