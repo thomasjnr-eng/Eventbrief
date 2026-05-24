@@ -1998,8 +1998,10 @@ body {
 
     <div class="nav-bar">
       <button class="btn btn-secondary" onclick="showHome()">← Cancel</button>
-      <div style="display:flex;gap:10px;align-items:center;">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
         <button class="btn btn-secondary danger" id="planDeleteBtn" onclick="deleteCurrentPlan()" style="display:none;font-size:14px;padding:12px 22px;border-color:#5a2a2a;color:#ff8c8c;">Delete</button>
+        <button class="btn btn-secondary" onclick="savePlanAsPdf()" style="font-size:14px;padding:12px 18px;">📄 Save PDF</button>
+        <button class="btn btn-secondary" onclick="sharePlanWhatsApp()" style="font-size:14px;padding:12px 18px;">💬 WhatsApp</button>
         <button class="btn btn-green" onclick="savePlan()" style="font-size:18px;padding:14px 36px;">Save Plan ✓</button>
       </div>
     </div>
@@ -6271,6 +6273,184 @@ function collectPlanData() {
 function planFilenameFor(data) {
   const slug = (data.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 50);
   return 'plan-' + (data.planDate || 'undated') + '-' + (slug || 'untitled') + '.json';
+}
+
+function planPriorityLabel(p) {
+  return p === 'high' ? '🔴 High' : (p === 'low' ? '⚪ Low' : '🟠 Medium');
+}
+
+// Clean, printable A4-style HTML for a day plan (matches the brief's light look).
+function planToPrintableHtml(data) {
+  const esc = (s) => (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const fmtT = (t) => (t && typeof formatTime === 'function') ? formatTime(t) : (t || '');
+  const dateLabel = data.planDate ? (typeof formatDate === 'function' ? formatDate(data.planDate) : data.planDate) : '';
+  const timeLabel = (data.startTime || data.endTime) ? (fmtT(data.startTime) + (data.endTime ? ' – ' + fmtT(data.endTime) : '')) : '';
+  const order = { high: 0, medium: 1, low: 2 };
+  const tasks = (data.tasks || []).slice().sort((a, b) => {
+    const pa = order[a.priority] ?? 1, pb = order[b.priority] ?? 1;
+    if (pa !== pb) return pa - pb;
+    return (a.dueTime || '99:99').localeCompare(b.dueTime || '99:99');
+  });
+  const doneCount = tasks.filter(t => t.done).length;
+
+  const metaRow = (label, value) => value
+    ? '<div style="margin-bottom:6px;"><span style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;">' + label + '</span><br><span style="font-size:14px;color:#111;font-weight:700;">' + esc(value) + '</span></div>'
+    : '';
+
+  const taskRows = tasks.length ? tasks.map(t => {
+    const prioColor = t.priority === 'high' ? '#c0392b' : (t.priority === 'low' ? '#888' : '#b07a10');
+    const box = t.done ? '☑' : '☐';
+    const doneMeta = (t.done && t.doneBy) ? '<div style="font-size:10px;color:#2d7a49;margin-top:2px;">✓ ' + esc(t.doneBy) + (t.doneAt ? ' · ' + esc(formatDate(t.doneAt.slice(0,10))) : '') + '</div>' : '';
+    const link = t.eventLink ? '<div style="font-size:10px;color:#5a7a4f;margin-top:2px;">↳ ' + esc(t.eventLink) + '</div>' : '';
+    return '<tr>' +
+      '<td style="padding:8px;border-bottom:1px solid #e0ddd8;font-size:16px;vertical-align:top;color:' + (t.done ? '#2d7a49' : '#999') + ';">' + box + '</td>' +
+      '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;">' +
+        '<div style="font-size:13px;color:#111;' + (t.done ? 'text-decoration:line-through;color:#888;' : '') + '">' + (esc(t.label) || '<em style="color:#bbb;">(no description)</em>') + '</div>' +
+        doneMeta + link +
+      '</td>' +
+      '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;font-size:11px;font-weight:700;color:' + prioColor + ';white-space:nowrap;">' + planPriorityLabel(t.priority || 'medium') + '</td>' +
+      '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;font-size:12px;color:#555;white-space:nowrap;">' + (t.dueTime ? fmtT(t.dueTime) : '—') + '</td>' +
+      '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;font-size:12px;color:#555;">' + (esc(t.assignedTo) || '—') + '</td>' +
+      '</tr>';
+  }).join('') : '<tr><td colspan="5" style="padding:12px;color:#888;font-style:italic;font-size:12px;">No tasks listed.</td></tr>';
+
+  return '<div style="font-family:Lato,Helvetica,Arial,sans-serif;color:#111;background:#fff;padding:28px 32px;max-width:900px;">' +
+    '<div style="border-bottom:3px solid #5a7a4f;padding-bottom:12px;margin-bottom:18px;">' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:13px;letter-spacing:0.12em;color:#5a7a4f;">O\'BRIEN EVENT CATERING · DAY PLAN</div>' +
+      '<div style="font-size:26px;font-weight:700;margin-top:4px;">' + (esc(data.title) || 'Day Plan') + '</div>' +
+      (dateLabel ? '<div style="font-size:14px;color:#555;margin-top:2px;">📅 ' + esc(dateLabel) + (timeLabel ? ' · ⏰ ' + esc(timeLabel) : '') + '</div>' : '') +
+    '</div>' +
+    '<div style="display:flex;gap:32px;flex-wrap:wrap;margin-bottom:18px;">' +
+      metaRow('Lead', data.lead) +
+      metaRow('Assigned', data.assigned) +
+      metaRow('Tasks complete', doneCount + ' / ' + tasks.length) +
+    '</div>' +
+    '<div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#999;margin-bottom:6px;">Tasks</div>' +
+    '<table style="width:100%;border-collapse:collapse;">' +
+      '<thead><tr>' +
+        '<th style="width:24px;background:#f0ece6;"></th>' +
+        '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Task</th>' +
+        '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Priority</th>' +
+        '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Due</th>' +
+        '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Assigned</th>' +
+      '</tr></thead><tbody>' + taskRows + '</tbody>' +
+    '</table>' +
+    (data.notes ? '<div style="margin-top:18px;border:1px solid #e0ddd8;border-left:3px solid #5a7a4f;background:#f9f8f5;padding:12px 14px;border-radius:3px;"><strong style="font-size:12px;">Notes:</strong><br><span style="font-size:13px;color:#333;">' + esc(data.notes).replace(/\n/g, '<br>') + '</span></div>' : '') +
+    '<div style="margin-top:20px;font-size:10px;color:#aaa;">Generated ' + esc(new Date().toLocaleString('en-IE')) + (getUser() ? ' · ' + esc(getUser()) : '') + '</div>' +
+    '</div>';
+}
+
+async function savePlanAsPdf() {
+  const data = collectPlanData();
+  if (!data.title && !(data.tasks || []).length) {
+    toast('Add a title or tasks before exporting', 'error');
+    return;
+  }
+  const safeName = ((data.title || 'Day Plan') + (data.planDate ? ' ' + data.planDate : '')).replace(/[/\\?%*:|"<>]/g, '-');
+  const filename = '📋 ' + safeName + '.pdf';
+  try {
+    toast('Loading PDF generator…');
+    await ensurePdfLib();
+  } catch (e) {
+    toast('Could not load PDF library — check connection', 'error');
+    return;
+  }
+  const holder = document.createElement('div');
+  holder.style.position = 'fixed';
+  holder.style.left = '-10000px';
+  holder.style.top = '0';
+  holder.style.width = '900px';
+  holder.innerHTML = planToPrintableHtml(data);
+  document.body.appendChild(holder);
+  toast('Generating PDF…');
+  try {
+    const opt = {
+      margin: [12, 10, 12, 10],
+      filename,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: 900, width: 900 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
+    };
+    const blob = await html2pdf().set(opt).from(holder.firstChild).output('blob');
+    const file = new File([blob], filename, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+      try {
+        await navigator.share({ files: [file], title: safeName, text: '📋 ' + safeName });
+      } catch (e) {
+        if (e && e.name !== 'AbortError') throw e;
+      }
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      toast('PDF downloaded — share from Files');
+    }
+  } catch (e) {
+    toast('PDF failed: ' + e.message, 'error');
+  } finally {
+    holder.remove();
+  }
+}
+
+async function sharePlanWhatsApp() {
+  const data = collectPlanData();
+  if (!data.title && !(data.tasks || []).length) {
+    toast('Add a title or tasks before sharing', 'error');
+    return;
+  }
+  const fmtT = (t) => (t && typeof formatTime === 'function') ? formatTime(t) : (t || '');
+  const dateLabel = data.planDate ? (typeof formatDate === 'function' ? formatDate(data.planDate) : data.planDate) : '';
+  const timeLabel = (data.startTime || data.endTime) ? (fmtT(data.startTime) + (data.endTime ? ' – ' + fmtT(data.endTime) : '')) : '';
+  const order = { high: 0, medium: 1, low: 2 };
+  const tasks = (data.tasks || []).slice().sort((a, b) => {
+    const pa = order[a.priority] ?? 1, pb = order[b.priority] ?? 1;
+    if (pa !== pb) return pa - pb;
+    return (a.dueTime || '99:99').localeCompare(b.dueTime || '99:99');
+  });
+
+  const lines = [
+    '📋 ' + (data.title || 'Day Plan'),
+    dateLabel ? '📅 ' + dateLabel + (timeLabel ? ' · ' + timeLabel : '') : null,
+    data.lead ? '👤 Lead: ' + data.lead : null,
+    data.assigned ? '👥 ' + data.assigned : null,
+    ''
+  ].filter(l => l !== null);
+
+  tasks.forEach(t => {
+    const dot = t.done ? '✅' : (t.priority === 'high' ? '🔴' : (t.priority === 'low' ? '⚪' : '🟠'));
+    const bits = [];
+    if (t.dueTime) bits.push(fmtT(t.dueTime));
+    if (t.assignedTo) bits.push(t.assignedTo);
+    lines.push(dot + ' ' + (t.label || '(task)') + (bits.length ? ' — ' + bits.join(', ') : ''));
+  });
+  if (data.notes) { lines.push(''); lines.push('📝 ' + data.notes); }
+
+  // Deep link if this plan has been saved
+  let url = '';
+  const filename = CURRENT_PLAN_FILENAME || planFilenameFor(data);
+  if (filename) {
+    const base = window.location.origin + window.location.pathname;
+    url = base + '?plan=' + encodeURIComponent(filename);
+    lines.push('');
+    lines.push('Open: ' + url);
+  }
+
+  const shareText = lines.join('\n');
+  // Native share sheet (includes WhatsApp on mobile)
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: data.title || 'Day Plan', text: shareText });
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+      // fall through to wa.me on other errors
+    }
+  }
+  // Fallback: open WhatsApp directly with the prefilled message
+  const waUrl = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+  window.open(waUrl, '_blank');
 }
 
 async function savePlan(opts) {
