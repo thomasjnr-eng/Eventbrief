@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-22T17:15:31.381Z",
+  "savedAt": "2026-05-24T20:14:54.805Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -10,7 +10,7 @@
     "planLead": "",
     "planAssigned": "",
     "planNotes": "",
-    "eventName": "Dublin tech summit",
+    "eventName": "Dublin Tech Summit",
     "bookingStatus": "Confirmed",
     "clientName": "Levy/RDS",
     "clientType": "Contracted Venue",
@@ -18,14 +18,14 @@
     "contactPhone": "0874068984",
     "contactEmail": "gary.brenner@levy.ie",
     "onsiteContact": "",
-    "loadInDate": "2026-05-26",
-    "loadInTime": "",
-    "eventStartDate": "",
-    "eventStartTime": "",
-    "eventFinishDate": "",
-    "eventFinishTime": "",
+    "loadInDate": "2026-05-25",
+    "loadInTime": "11:00",
+    "eventStartDate": "2026-05-27",
+    "eventStartTime": "09:00",
+    "eventFinishDate": "2026-05-28",
+    "eventFinishTime": "17:00",
     "loadOutDate": "2026-05-28",
-    "loadOutTime": "17:00",
+    "loadOutTime": "18:00",
     "loadNotes": "",
     "attendance": "6000",
     "venueName": "RDS Ring 3",
@@ -93,7 +93,7 @@
     "_revenue": [],
     "_pos": [],
     "_safety": [],
-    "_isScattered": true,
+    "_isScattered": false,
     "_tradingDays": [
       {
         "date": "2026-05-27",
@@ -109,17 +109,119 @@
       }
     ],
     "_iceVansNeedPower": false,
-    "_stockStatuses": [],
-    "_serviceWindows": [],
-    "_menu": {},
-    "_crewRoster": {},
-    "_staffAllocations": [],
-    "_truckSafetyChecks": {},
+    "_stockStatuses": [
+      {
+        "truck": "Angelo's Pizza",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Thindi",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Zambrero",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo 1",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo 3",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts",
+        "status": "Not yet",
+        "notes": ""
+      }
+    ],
+    "_serviceWindows": [
+      {
+        "id": "sw_js6elzq",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_bdzykdr",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
+    "_menu": {
+      "Angelo's Pizza": [],
+      "Thindi": [],
+      "Zambrero": [],
+      "Caffe Duomo 1": [],
+      "Caffe Duomo 3": [],
+      "Off Beat Donuts": []
+    },
+    "_crewRoster": {
+      "Angelo's Pizza": [],
+      "Thindi": [],
+      "Zambrero": [],
+      "Caffe Duomo 1": [],
+      "Caffe Duomo 3": [],
+      "Off Beat Donuts": []
+    },
+    "_staffAllocations": [
+      {
+        "truck": "Angelo's Pizza",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Thindi",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Zambrero",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo 1",
+        "minimum": 2,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Caffe Duomo 3",
+        "minimum": 2,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts",
+        "minimum": 2,
+        "count": 0,
+        "notes": ""
+      }
+    ],
+    "_truckSafetyChecks": {
+      "Angelo's Pizza": [],
+      "Thindi": [],
+      "Zambrero": [],
+      "Caffe Duomo 1": [],
+      "Caffe Duomo 3": [],
+      "Off Beat Donuts": []
+    },
     "_signatures": [],
     "_changeLog": {
       "step1": {
-        "user": "Thomas O'Brien",
-        "at": "2026-05-22T17:05:26.018Z"
+        "user": "Tob",
+        "at": "2026-05-24T20:14:48.555Z"
       },
       "step2": {
         "user": "Thomas O'Brien",
