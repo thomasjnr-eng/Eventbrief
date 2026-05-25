@@ -141,7 +141,6 @@ body {
 .step-btn.active.partial .sb-num { background: #fff; color: #c89a4a; }
 .step-btn.active.complete { background: #4a9a5c; border-color: #4a9a5c; }
 .step-btn.active.complete .sb-num { background: #fff; color: #4a9a5c; }
-.step-line { display: none; }
 .step-nav-wrap { display: flex; align-items: center; }
 /* Mobile step dropdown — hidden on desktop, replaces the pills on mobile */
 .step-select {
@@ -2848,7 +2847,6 @@ function goStep(n) {
   document.getElementById('step' + currentStep).classList.remove('active');
   document.getElementById('sd' + currentStep).classList.remove('active');
   document.getElementById('sd' + currentStep).classList.add('done');
-  if (currentStep > 1) document.getElementById('sl' + (currentStep-1)).classList.add('done');
 
   currentStep = n;
   document.getElementById('step' + n).classList.add('active');
