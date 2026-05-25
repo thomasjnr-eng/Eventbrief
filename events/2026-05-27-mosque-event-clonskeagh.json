@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-05-25T15:34:42.761Z",
+  "savedAt": "2026-05-25T15:35:13.266Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -177,19 +177,7 @@
         "notes": ""
       },
       {
-        "truck": "Thindi",
-        "minimum": 4,
-        "count": 0,
-        "notes": ""
-      },
-      {
         "truck": "Caffe Duomo 2",
-        "minimum": 2,
-        "count": 0,
-        "notes": ""
-      },
-      {
-        "truck": "Off Beat Donuts",
         "minimum": 2,
         "count": 0,
         "notes": ""
@@ -205,14 +193,19 @@
         "minimum": 1,
         "count": 0,
         "notes": ""
+      },
+      {
+        "truck": "Off Beat Donuts 2",
+        "minimum": 2,
+        "count": 0,
+        "notes": ""
       }
     ],
     "_truckSafetyChecks": {
       "Smash Burger 2": [],
       "Fried Chicken Truck": [],
-      "Thindi": [],
       "Caffe Duomo 2": [],
-      "Off Beat Donuts": [],
+      "Off Beat Donuts 2": [],
       "231-D": [],
       "201-D": []
     },
