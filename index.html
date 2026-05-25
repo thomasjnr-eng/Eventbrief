@@ -24,6 +24,7 @@
   --bg-deep: #efece6;
   --text: #20241c;          /* primary text — near-black (was cream, which made text invisible) */
   --text-muted: #5b6053;    /* secondary text — medium grey, AA-readable on cream */
+  --heading: #14130f;       /* display-font headings — pure-dark to offset Bebas Neue's thin strokes */
   --border: #d8d4ce;
   --sage: #5a7a4f;         /* darkened for AA contrast on cream bg */
   --sage-dark: #466e3a;
@@ -45,6 +46,7 @@
   --bg-deep: var(--bg-deep);
   --text: #f8f5f0;
   --text-muted: #888;
+  --heading: #ffffff;
   --border: #333;
   --sage: #a8c49a;
   --sage-dark: #88a47a;
@@ -79,7 +81,7 @@ body {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 24px;
   letter-spacing: 0.08em;
-  color: var(--white);
+  color: var(--heading);
 }
 .logo span { color: var(--sage); }
 .step-indicator {
@@ -176,7 +178,7 @@ body {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 36px;
   letter-spacing: 0.06em;
-  color: var(--white);
+  color: var(--heading);
   margin-bottom: 4px;
 }
 .step-subtitle {
@@ -947,7 +949,7 @@ body {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 42px;
   letter-spacing: 0.08em;
-  color: var(--white);
+  color: var(--heading);
   margin-bottom: 4px;
   border-bottom: 3px solid var(--sage);
   padding-bottom: 10px;
