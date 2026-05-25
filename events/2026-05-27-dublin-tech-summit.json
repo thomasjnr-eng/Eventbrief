@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-25T15:18:23.601Z",
+  "savedAt": "2026-05-25T15:19:31.400Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -123,27 +123,27 @@
       },
       {
         "truck": "Thindi",
-        "status": "Not yet",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
         "truck": "Zambrero",
-        "status": "Not yet",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
         "truck": "Caffe Duomo 1",
-        "status": "Not yet",
+        "status": "Partial",
         "notes": ""
       },
       {
         "truck": "Caffe Duomo 3",
-        "status": "Not yet",
+        "status": "Partial",
         "notes": ""
       },
       {
         "truck": "Off Beat Donuts",
-        "status": "Not yet",
+        "status": "Fully ordered",
         "notes": ""
       }
     ],
@@ -236,6 +236,10 @@
       "step3": {
         "user": "Thomas O'Brien",
         "at": "2026-05-25T15:17:45.595Z"
+      },
+      "step4": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-25T15:18:37.731Z"
       }
     },
     "_crewChecklists": {
