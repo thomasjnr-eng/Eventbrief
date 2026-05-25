@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-05-25T13:10:25.968Z",
+  "savedAt": "2026-05-25T13:11:03.707Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -76,7 +76,7 @@
     "opsLead": "Robo",
     "leadChef": "Simon",
     "staffNotes": "",
-    "clientInstructions": "HALAL Food only*\nNo risky staff*",
+    "clientInstructions": "HALAL Food only*\nNo risky staff*\n\n3 units from them (falafel, crepes & BBQ)",
     "opsNotes": "",
     "postEventNotes": "",
     "_fleet": [
@@ -249,8 +249,8 @@
         "at": "2026-05-22T16:28:00.588Z"
       },
       "step7": {
-        "user": "Thomas O'Brien",
-        "at": "2026-05-22T16:29:13.424Z"
+        "user": "TOB",
+        "at": "2026-05-25T13:11:01.728Z"
       }
     },
     "_crewChecklists": {
