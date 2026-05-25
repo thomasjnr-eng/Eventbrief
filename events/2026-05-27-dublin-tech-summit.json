@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-25T19:17:04.183Z",
+  "savedAt": "2026-05-25T19:19:17.648Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -118,7 +118,7 @@
     "_stockStatuses": [
       {
         "truck": "Angelo's Pizza",
-        "status": "Not yet",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
@@ -133,12 +133,12 @@
       },
       {
         "truck": "Caffe Duomo 1",
-        "status": "Partial",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
         "truck": "Caffe Duomo 3",
-        "status": "Partial",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
@@ -238,8 +238,8 @@
         "at": "2026-05-25T19:16:24.960Z"
       },
       "step4": {
-        "user": "Thomas O'Brien",
-        "at": "2026-05-25T15:18:37.731Z"
+        "user": "TOB",
+        "at": "2026-05-25T19:17:25.972Z"
       },
       "step5": {
         "user": "Thomas O'Brien",
