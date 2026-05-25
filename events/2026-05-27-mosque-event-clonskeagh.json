@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-05-25T15:31:19.402Z",
+  "savedAt": "2026-05-25T15:34:01.020Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -38,7 +38,7 @@
     "vehicleLayout": "Side by Side",
     "pitchNotes": "",
     "cableRun": "",
-    "powerNotes": "Possibly providing power for others",
+    "powerNotes": "150KVA - Ordered from Scally*\nPossibly providing power for others",
     "dieselSource": "Order diesel to RDS Monday*",
     "dieselResponsible": "Tom - 0852402555",
     "dieselNotes": "!!!!!!!! ORDER DIESEL MONDAY !!!!!!!!!!!",
@@ -82,9 +82,8 @@
     "_fleet": [
       "Smash Burger 2",
       "Fried Chicken Truck",
-      "Thindi",
       "Caffe Duomo 2",
-      "Off Beat Donuts",
+      "Off Beat Donuts 2",
       "231-D",
       "201-D"
     ],
@@ -230,7 +229,7 @@
       },
       "step2": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-22T16:22:15.482Z"
+        "at": "2026-05-25T15:34:00.526Z"
       },
       "step3": {
         "user": "Thomas O'Brien",
@@ -602,122 +601,6 @@
           }
         ]
       },
-      "Off Beat Donuts": {
-        "items": [
-          {
-            "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Power connected & tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Waste containers in place",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Hand wash station set up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "End-of-trade: cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "End-of-trade: bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "End-of-trade: all food covered / stored / disposed",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          },
-          {
-            "label": "End-of-trade: truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
-            "assignedTo": null
-          }
-        ]
-      },
       "Fried Chicken Truck": {
         "items": [
           {
@@ -834,7 +717,7 @@
           }
         ]
       },
-      "Thindi": {
+      "Smash Burger 2": {
         "items": [
           {
             "label": "Arrived on site",
@@ -950,7 +833,7 @@
           }
         ]
       },
-      "Smash Burger 2": {
+      "Off Beat Donuts 2": {
         "items": [
           {
             "label": "Arrived on site",
