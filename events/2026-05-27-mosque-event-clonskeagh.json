@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-05-25T15:34:35.588Z",
+  "savedAt": "2026-05-25T15:34:42.761Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -158,11 +158,10 @@
     "_crewRoster": {
       "Smash Burger 2": [],
       "Fried Chicken Truck": [],
-      "Thindi": [],
       "Caffe Duomo 2": [],
-      "Off Beat Donuts": [],
       "231-D": [],
-      "201-D": []
+      "201-D": [],
+      "Off Beat Donuts 2": []
     },
     "_staffAllocations": [
       {
