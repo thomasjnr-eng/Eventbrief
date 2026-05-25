@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-25T15:30:11.812Z",
+  "savedAt": "2026-05-25T15:30:55.609Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -72,9 +72,9 @@
     "coldChain": "",
     "stockNotes": "",
     "menuNotes": "",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
+    "eventManager": "Thomas ",
+    "opsLead": "Robo",
+    "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
     "opsNotes": "",
@@ -244,6 +244,10 @@
       "step5": {
         "user": "Thomas O'Brien",
         "at": "2026-05-25T15:29:48.992Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-25T15:30:19.827Z"
       }
     },
     "_crewChecklists": {
