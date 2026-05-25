@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-25T15:17:19.429Z",
+  "savedAt": "2026-05-25T15:17:47.902Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,15 +47,15 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "Shared bins on site",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Levy",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
     "pitchFeeNotes": "",
-    "revSharePct": "",
-    "revShareBasis": "",
-    "revShareSettlement": "",
+    "revSharePct": "25",
+    "revShareBasis": "Net takings",
+    "revShareSettlement": "Post-event invoice",
     "revShareNotes": "",
     "prePaidCovers": "",
     "prePaidPrice": "",
@@ -90,8 +90,14 @@
     "_power": [
       "We provide generator"
     ],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Revenue share / percentage"
+    ],
+    "_pos": [
+      "Client / venue POS system",
+      "Client vouchers accepted",
+      "Cash & card"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [
@@ -226,6 +232,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-05-25T13:26:49.527Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-25T15:17:45.595Z"
       }
     },
     "_crewChecklists": {
