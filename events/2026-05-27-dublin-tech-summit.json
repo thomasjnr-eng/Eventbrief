@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-25T13:24:50.893Z",
+  "savedAt": "2026-05-25T13:26:52.711Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -39,7 +39,7 @@
     "pitchNotes": "Hall 4 - Off beat\nHall 1 - Coffee\nRing 3 - Pizza, Zambrero, Thindi and coffee",
     "cableRun": "20M",
     "powerNotes": "",
-    "dieselSource": "Order deisel to RDS wednesday",
+    "dieselSource": "Order diesel to RDS wednesday",
     "dieselResponsible": "Tom - 0852402555",
     "dieselNotes": "",
     "waterSource": "Mixed — site + our tanks",
@@ -225,7 +225,7 @@
       },
       "step2": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-22T17:15:11.181Z"
+        "at": "2026-05-25T13:26:49.527Z"
       }
     },
     "_crewChecklists": {
