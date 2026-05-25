@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-05-25T15:34:12.361Z",
+  "savedAt": "2026-05-25T15:34:35.588Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -109,22 +109,17 @@
       },
       {
         "truck": "Fried Chicken Truck",
-        "status": "Not yet",
-        "notes": ""
-      },
-      {
-        "truck": "Thindi",
-        "status": "Not yet",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
         "truck": "Caffe Duomo 2",
-        "status": "Not yet",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
-        "truck": "Off Beat Donuts",
-        "status": "Not yet",
+        "truck": "Off Beat Donuts 2",
+        "status": "Fully ordered",
         "notes": ""
       },
       {
@@ -155,11 +150,10 @@
     "_menu": {
       "Smash Burger 2": [],
       "Fried Chicken Truck": [],
-      "Thindi": [],
       "Caffe Duomo 2": [],
-      "Off Beat Donuts": [],
       "231-D": [],
-      "201-D": []
+      "201-D": [],
+      "Off Beat Donuts 2": []
     },
     "_crewRoster": {
       "Smash Burger 2": [],
@@ -239,7 +233,7 @@
       },
       "step4": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-22T16:24:34.438Z"
+        "at": "2026-05-25T15:34:27.334Z"
       },
       "step5": {
         "user": "Thomas O'Brien",
