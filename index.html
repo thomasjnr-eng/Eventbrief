@@ -5945,7 +5945,12 @@ async function openEventsModal() {
         '</div></div>';
     }).join('');
   } catch (e) {
-    list.innerHTML = '<p style="color:var(--red);">Failed to load events: ' + e.message + '</p>';
+    const msg = e.message === 'BAD_PASSCODE'
+      ? '⚠ Passcode rejected — your events are safe on the server. Re-enter the team passcode in Settings (⚙) to load them.'
+      : (e.message === 'NO_PASSCODE'
+          ? 'Enter the team passcode in Settings (⚙) to load events.'
+          : 'Can\'t reach the server right now — your events are saved safely and will load once you\'re back online. (' + e.message + ')');
+    list.innerHTML = '<p style="color:var(--grey);">' + msg + '</p>';
   }
 }
 function closeEventsModal() { document.getElementById('eventsModal').classList.remove('open'); }
@@ -6764,7 +6769,19 @@ async function renderHomeEvents() {
     return;
   }
   let filenames = [];
-  try { filenames = await listEventFilenames(); } catch (e) {}
+  let loadError = null;
+  try { filenames = await listEventFilenames(); } catch (e) { loadError = e.message; }
+  // Connection / auth problems must never look like data loss.
+  if (loadError === 'BAD_PASSCODE') {
+    if (meta) meta.textContent = '';
+    host.innerHTML = '<div class="home-events-empty">⚠ Your saved passcode was rejected, so events can\'t load right now. <strong>Your data is safe on the server</strong> — open Settings (⚙) and re-enter the team passcode to see everything again.</div>';
+    return;
+  }
+  if (loadError) {
+    if (meta) meta.textContent = '';
+    host.innerHTML = '<div class="home-events-empty">⚠ Can\'t reach the server right now. <strong>Your events are saved safely</strong> and will reappear once you\'re back online.</div>';
+    return;
+  }
   filenames = filenames.filter(isEventFile);
   const events = await Promise.all(filenames.map(getEventByFilename));
   const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -6778,7 +6795,11 @@ async function renderHomeEvents() {
   if (meta) meta.textContent = upcoming.length + ' event' + (upcoming.length !== 1 ? 's' : '') + ' upcoming';
 
   if (!upcoming.length) {
-    host.innerHTML = '<div class="home-events-empty">No upcoming events. Click <strong>+ New Brief</strong> to start one, or <strong>Bulk Add</strong> to import a list.</div>';
+    // Distinguish "nothing scheduled ahead" from "nothing exists at all".
+    const totalEvents = filenames.length;
+    host.innerHTML = totalEvents > 0
+      ? '<div class="home-events-empty">No <em>upcoming</em> events (' + totalEvents + ' past event' + (totalEvents !== 1 ? 's' : '') + ' on file). Click <strong>Load Brief</strong> to open a past one, or <strong>+ New Brief</strong> to start one.</div>'
+      : '<div class="home-events-empty">No events yet. Click <strong>+ New Brief</strong> to start one, or <strong>Import</strong> to add a list.</div>';
     return;
   }
 
@@ -7319,7 +7340,10 @@ async function listEventFilenames(force) {
     setOfflineMode(false);
     return eventsCache.filenames;
   } catch (e) {
-    if (e.message === 'NO_PASSCODE' || e.message === 'BAD_PASSCODE') return [];
+    if (e.message === 'NO_PASSCODE') return [];
+    // A rejected passcode is NOT an empty account — surface it so the UI can
+    // tell the user their data is safe and they just need to re-auth.
+    if (e.message === 'BAD_PASSCODE') throw e;
     // Network failure → use local cache
     const cached = cacheRead(CACHE_FILENAMES_KEY, []);
     if (cached.length) {
