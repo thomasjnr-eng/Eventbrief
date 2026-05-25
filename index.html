@@ -22,8 +22,8 @@
   --bg-card: #ffffff;
   --bg-input: #ece8de;
   --bg-deep: #efece6;
-  --text: var(--bg-deep);
-  --text-muted: #1a1a1a;
+  --text: #20241c;          /* primary text — near-black (was cream, which made text invisible) */
+  --text-muted: #5b6053;    /* secondary text — medium grey, AA-readable on cream */
   --border: #d8d4ce;
   --sage: #5a7a4f;         /* darkened for AA contrast on cream bg */
   --sage-dark: #466e3a;
@@ -448,7 +448,9 @@ body {
 
 .brief-section {
   margin-bottom: 24px;
-  break-inside: avoid;
+  /* Allow long sections to flow across pages — forcing avoid on these
+     large blocks was pushing them to a new page and leaving blanks. */
+  break-inside: auto;
 }
 .brief-section-head {
   font-family: 'Bebas Neue', sans-serif;
@@ -583,6 +585,8 @@ body {
   z-index: 200;
   flex-wrap: wrap;
 }
+.brief-actions .btn-secondary { color: #d8d4cc; border-color: #3a3a3a; }
+.brief-actions .btn-secondary:hover { color: #fff; border-color: #666; }
 .brief-actions .btn-secondary.mode-active {
   background: var(--sage);
   color: #111;
@@ -1457,7 +1461,7 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: var(--white);
+  color: #e8e4dc;
   background: #1e1e1e;
   border: 1px solid var(--border);
   padding: 6px 10px;
@@ -2964,7 +2968,7 @@ function renderSignOffModal() {
   }
 
   if (!unticked.length) {
-    html += '<div style="background:#1f3a23;border-left:3px solid #4a9a5c;padding:12px 14px;color:var(--white);font-size:13px;margin-bottom:14px;">✓ Every check across every truck is ticked. Sign off below to commit the record.</div>';
+    html += '<div style="background:#1f3a23;border-left:3px solid #4a9a5c;padding:12px 14px;color:#e8f5ee;font-size:13px;margin-bottom:14px;">✓ Every check across every truck is ticked. Sign off below to commit the record.</div>';
   } else {
     html += '<div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);font-weight:700;margin-bottom:8px;">' + unticked.length + ' outstanding item' + (unticked.length !== 1 ? 's' : '') + '</div>';
     html += '<div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">For each: tick if it\'s actually done now, leave to carry to tomorrow, or assign to someone on the team to handle next.</div>';
@@ -5204,7 +5208,7 @@ async function shareBriefAsPdf() {
       image: { type: 'jpeg', quality: 0.95 },
       html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', windowWidth: 900, width: 900 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-      pagebreak: { mode: ['css', 'legacy'], avoid: '.brief-section' }
+      pagebreak: { mode: ['css', 'legacy'], avoid: '.brief-keep' }
     };
     const blob = await html2pdf().set(opt).from(element).output('blob');
     const file = new File([blob], filename, { type: 'application/pdf' });
@@ -5721,10 +5725,10 @@ function offerDraftRestore() {
     when = dt.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) + ' ' + dt.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
   } catch (e) {}
   const eventName = (d.form.eventName || '(unnamed)').replace(/</g, '&lt;');
-  banner.innerHTML = '<div style="background:#332b1a;border-bottom:2px solid var(--sage);padding:12px 24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;color:var(--white);">' +
+  banner.innerHTML = '<div style="background:#332b1a;border-bottom:2px solid var(--sage);padding:12px 24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;color:#f0ece0;">' +
     '<span style="font-size:13px;"><strong>Unsaved draft:</strong> ' + eventName + ' &mdash; last edit ' + when + '.</span>' +
     '<button onclick="restoreDraft()" class="btn btn-primary" style="font-size:13px;padding:8px 16px;">Restore</button>' +
-    '<button onclick="discardDraft()" class="btn btn-secondary" style="font-size:13px;padding:8px 16px;">Discard</button>' +
+    '<button onclick="discardDraft()" class="btn btn-secondary" style="font-size:13px;padding:8px 16px;color:#e8e4dc;border-color:#5a4f3a;">Discard</button>' +
     '</div>';
   banner.style.display = 'block';
   updateDraftIndicator();
