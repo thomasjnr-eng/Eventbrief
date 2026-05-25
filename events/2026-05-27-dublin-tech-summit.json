@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-25T15:29:02.095Z",
+  "savedAt": "2026-05-25T15:30:11.812Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -151,14 +151,14 @@
       {
         "id": "sw_js6elzq",
         "name": "Lunch",
-        "start": "12:00",
+        "start": "11:00",
         "end": "14:30"
       },
       {
         "id": "sw_bdzykdr",
-        "name": "Dinner",
-        "start": "18:00",
-        "end": "21:00"
+        "name": "Coffee",
+        "start": "09:00",
+        "end": "17:00"
       }
     ],
     "_menu": {
@@ -240,6 +240,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-05-25T15:18:37.731Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-05-25T15:29:48.992Z"
       }
     },
     "_crewChecklists": {
