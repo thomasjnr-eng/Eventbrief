@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-05-25-tuesday",
+  "savedAt": "2026-05-25T18:43:30.701Z",
+  "savedBy": "Thomas O'Brien",
+  "form": {
+    "title": "Tuesday😃",
+    "planDate": "2026-05-25",
+    "startTime": "09:00",
+    "endTime": "17:00",
+    "lead": "Thomas O'Brien",
+    "assigned": "Robo, Simon, Oisin, Anthony, Cian M",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Generator to be collected ",
+        "assignedTo": "Robo, Anto, Cian",
+        "priority": "medium",
+        "dueTime": "09:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Off Beat from Punchestown",
+        "assignedTo": "Tom",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Finish Setup RDS (Deliveries, Repairs, Signage)",
+        "assignedTo": "All",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Park + Setup Mosque",
+        "assignedTo": "All",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Build Fridge Vans for both jobs",
+        "assignedTo": "",
+        "priority": "high",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
