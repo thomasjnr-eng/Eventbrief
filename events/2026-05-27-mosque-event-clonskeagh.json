@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-05-25T15:34:01.020Z",
+  "savedAt": "2026-05-25T15:34:12.361Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -90,7 +90,9 @@
     "_power": [
       "We provide generator"
     ],
-    "_revenue": [],
+    "_revenue": [
+      "Cash / card trading"
+    ],
     "_pos": [
       "Our own POS system",
       "Cash & card"
@@ -233,7 +235,7 @@
       },
       "step3": {
         "user": "Thomas O'Brien",
-        "at": "2026-05-22T16:22:57.945Z"
+        "at": "2026-05-25T15:34:08.047Z"
       },
       "step4": {
         "user": "Thomas O'Brien",
