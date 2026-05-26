@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-05-27-wednesday",
+  "savedAt": "2026-05-26T21:05:51.511Z",
+  "savedBy": "TOB",
+  "form": {
+    "title": "Wednesday 😅",
+    "planDate": "2026-05-27",
+    "startTime": "07:00",
+    "endTime": "17:00",
+    "lead": "TOB",
+    "assigned": "Robo, Simon, Oisin, Anthony, Cian M, Serg",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "RDS to be opened ",
+        "assignedTo": "Robo, Cian M",
+        "priority": "medium",
+        "dueTime": "07:30",
+        "eventLink": "Dublin Tech Summit (27 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Mosque to be opened ",
+        "assignedTo": "Tom, Simon",
+        "priority": "high",
+        "dueTime": "06:30",
+        "eventLink": "Mosque Event (Clonskeagh) (27 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Donuts to be collected - drop to mosque then to RDS",
+        "assignedTo": "Oisin, Anto",
+        "priority": "medium",
+        "dueTime": "08:00",
+        "eventLink": "Mosque Event (Clonskeagh) (27 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Thindi (10am) + Pitt Bros (11am) to be collected  ",
+        "assignedTo": "Serg",
+        "priority": "medium",
+        "dueTime": "11:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
