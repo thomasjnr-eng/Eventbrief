@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-05-25T19:52:25.364Z",
+  "savedAt": "2026-05-27T14:34:03.513Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -133,6 +133,11 @@
         "notes": ""
       },
       {
+        "truck": "Pitt Bros BBQ",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
         "truck": "Caffe Duomo 1",
         "status": "Fully ordered",
         "notes": ""
@@ -168,7 +173,8 @@
       "Zambrero": [],
       "Caffe Duomo 1": [],
       "Caffe Duomo 3": [],
-      "Off Beat Donuts": []
+      "Off Beat Donuts": [],
+      "Pitt Bros BBQ": []
     },
     "_crewRoster": {
       "Angelo's Pizza": [],
@@ -176,7 +182,8 @@
       "Zambrero": [],
       "Caffe Duomo 1": [],
       "Caffe Duomo 3": [],
-      "Off Beat Donuts": []
+      "Off Beat Donuts": [],
+      "Pitt Bros BBQ": []
     },
     "_staffAllocations": [
       {
@@ -214,12 +221,19 @@
         "minimum": 2,
         "count": 0,
         "notes": ""
+      },
+      {
+        "truck": "Pitt Bros BBQ",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
       }
     ],
     "_truckSafetyChecks": {
       "Angelo's Pizza": [],
       "Thindi": [],
       "Zambrero": [],
+      "Pitt Bros BBQ": [],
       "Caffe Duomo 1": [],
       "Caffe Duomo 3": [],
       "Off Beat Donuts": []
