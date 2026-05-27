@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-05-28-thursday",
+  "savedAt": "2026-05-27T20:25:56.125Z",
+  "savedBy": "TOB",
+  "form": {
+    "title": "Thursday 🤪",
+    "planDate": "2026-05-28",
+    "startTime": "07:00",
+    "endTime": "17:00",
+    "lead": "TOB",
+    "assigned": "Tom, Robo, Cian M, Oisín, Anto",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Open RDS ",
+        "assignedTo": "Robo, Cian M",
+        "priority": "high",
+        "dueTime": "07:30",
+        "eventLink": "Dublin Tech Summit (27 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect donuts ",
+        "assignedTo": "Oisín, Anto ",
+        "priority": "medium",
+        "dueTime": "08:00",
+        "eventLink": "Dublin Tech Summit (27 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Bring units from mosque to basketball arena ",
+        "assignedTo": "Tom, Anto, Oisín ",
+        "priority": "medium",
+        "dueTime": "10:00",
+        "eventLink": "Mosque Event (Tallaght) (29 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Setup mosque basketball arena ",
+        "assignedTo": "Anto, Oisín, Tom",
+        "priority": "medium",
+        "dueTime": "12:00",
+        "eventLink": "Mosque Event (Tallaght) (29 May 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Order Zambrero and burger stock for weekend. ",
+        "assignedTo": "Tom",
+        "priority": "medium",
+        "dueTime": "15:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Wrap up Rds ",
+        "assignedTo": "Robo, Cian M, Anto, Oisín ",
+        "priority": "medium",
+        "dueTime": "15:15",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Gather catering equipment for Zambrero BOH for Forbidden Fruit",
+        "assignedTo": "Anto, Oisín ",
+        "priority": "medium",
+        "dueTime": "17:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
