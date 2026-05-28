@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-05-29-friday",
+  "savedAt": "2026-05-28T21:01:21.820Z",
+  "savedBy": "TOB",
+  "form": {
+    "title": "Friday",
+    "planDate": "2026-05-29",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "lead": "TOB",
+    "assigned": "Robo, Cian M, Oisín, Anto, Kian Mc",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Get toasted to basketball arena",
+        "assignedTo": "Robo",
+        "priority": "medium",
+        "dueTime": "08:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Get equipment for Kilmainham ",
+        "assignedTo": "Kian Mc, Cian M - Crafter",
+        "priority": "medium",
+        "dueTime": "08:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Setup Kilmainham : Fridge van built and brought, equipment unloaded and fully setup",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "10:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Setup basketball arena/mosque",
+        "assignedTo": "Robo, Oisín, Anto",
+        "priority": "medium",
+        "dueTime": "11:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Zambrero sign + install",
+        "assignedTo": "Tom",
+        "priority": "medium",
+        "dueTime": "09:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
