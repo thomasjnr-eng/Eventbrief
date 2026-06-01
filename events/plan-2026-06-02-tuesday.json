@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-06-02-tuesday",
+  "savedAt": "2026-06-01T19:47:53.851Z",
+  "savedBy": "TOB",
+  "form": {
+    "title": "Tuesday😬",
+    "planDate": "2026-06-02",
+    "startTime": "09:00",
+    "endTime": "17:00",
+    "lead": "TOB",
+    "assigned": "Robo, Anto, Simon",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Count stock in Kilmainham",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "11:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Plug in fridge vans and switch generators on for a couple hours ",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Count stock in RDS",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "10:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Take trailers out of Simmo ",
+        "assignedTo": "",
+        "priority": "high",
+        "dueTime": "10:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Meet at cafe to discuss next couple weeks",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "15:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Drop Camile + Collect Sharon’s trailers from PCD",
+        "assignedTo": "",
+        "priority": "high",
+        "dueTime": "09:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
