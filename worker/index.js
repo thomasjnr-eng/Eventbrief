@@ -17,6 +17,9 @@
 //   GOOGLE_MAPS_API_KEY (optional) Google Geocoding API key. If unset, the
 //                      /geocode route falls back to OpenStreetMap Nominatim
 //                      (free, low volume only).
+//   MANAGER_CODE       Secret code the manager (Tom) enters once in Settings
+//                      to unlock the override + payroll-export views.
+//                      Without it set, /verify-manager always returns 401.
 
 const corsHeaders = (origin) => ({
   'Access-Control-Allow-Origin': origin || '*',
@@ -62,6 +65,13 @@ export default {
           address = url.searchParams.get('address');
         }
         return await geocodeAddress(address, env, origin);
+      }
+      if (path === '/verify-manager' && request.method === 'POST') {
+        const body = await request.json().catch(() => ({}));
+        const code = body && body.code;
+        if (!env.MANAGER_CODE) return json({ error: 'manager_not_configured' }, 401, origin);
+        if (!code || code !== env.MANAGER_CODE) return json({ error: 'bad_code' }, 401, origin);
+        return json({ ok: true }, 200, origin);
       }
       const m = path.match(/^\/events\/(.+)$/);
       if (m) {

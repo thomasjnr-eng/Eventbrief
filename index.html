@@ -2123,6 +2123,17 @@ body {
         <button class="btn btn-secondary" id="btnClearPat" onclick="clearPasscodeAndClose()" style="font-size:13px;padding:8px 16px;">Clear Passcode</button>
         <button class="btn btn-primary" onclick="savePasscodeAndClose()" style="font-size:13px;padding:8px 16px;">Save Passcode</button>
       </div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
+      <p><strong style="color:var(--white);">Manager Mode</strong> <span id="settingsMgrBadge" style="margin-left:8px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--sage);font-weight:700;display:none;">✓ Unlocked</span></p>
+      <p>Required to view other crew's clock entries, override hours and export weekly timesheets. Enter the manager code that was set on the Worker.</p>
+      <div class="field" style="margin-top:14px;">
+        <label>Manager Code</label>
+        <input type="password" id="managerCodeInput" placeholder="Enter the manager code" autocomplete="off">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="lockManagerMode()" style="font-size:13px;padding:8px 16px;">Lock</button>
+        <button class="btn btn-primary" onclick="unlockManagerMode()" style="font-size:13px;padding:8px 16px;">Unlock Manager Mode</button>
+      </div>
     </div>
   </div>
 </div>
@@ -2184,10 +2195,15 @@ body {
     <div class="modal-title">Manage Hours</div>
     <div class="modal-body">
       <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Edit, delete, or add clock entries for any crew member. Every change is stamped with who made it.</p>
-      <div style="display:grid;grid-template-columns:1fr 160px 90px;gap:8px;margin-bottom:14px;align-items:end;">
+      <div style="display:grid;grid-template-columns:1fr 160px 90px;gap:8px;margin-bottom:10px;align-items:end;">
         <div class="field" style="margin:0;"><label>Filter by name</label><input id="hoursFilterUser" placeholder="(any)" oninput="onHoursFilterChange()"></div>
         <div class="field" style="margin:0;"><label>Filter by date</label><input type="date" id="hoursFilterDate" onchange="onHoursFilterChange()"></div>
         <button class="btn btn-secondary" style="font-size:12px;padding:8px 14px;" onclick="refreshManageHours()">Refresh</button>
+      </div>
+      <div style="display:grid;grid-template-columns:160px 1fr auto;gap:8px;margin-bottom:14px;align-items:end;padding:10px 12px;background:var(--bg-input);border-radius:4px;">
+        <div class="field" style="margin:0;"><label>Export week starting (Mon)</label><input type="date" id="exportWeekStart"></div>
+        <div class="field" style="margin:0;"><label>&nbsp;</label><div style="font-size:11px;color:var(--text-muted);">Generates a CSV (opens in Excel/Sheets) with one row per shift, paired by IN→OUT.</div></div>
+        <button class="btn btn-primary" style="font-size:13px;padding:10px 14px;" onclick="exportClocksWeekCSV()">📊 Export week to CSV</button>
       </div>
       <div id="manageHoursList" style="max-height:50vh;overflow:auto;"></div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);">
@@ -6403,6 +6419,7 @@ function openSettingsModal() {
   const u = document.getElementById('settingsUser');
   if (u) u.textContent = getUser() || '— (not signed in)';
   refreshThemeButtons();
+  refreshManagerBadge();
   const ls = document.getElementById('settingsLastSync');
   if (ls) {
     const s = cacheLastSynced();
@@ -7255,6 +7272,36 @@ async function renderHome() {
 // did it and when, so the trail is never lost.
 
 const CLOCKS_FILENAME = 'clocks.json';
+const MANAGER_KEY = 'obrien_brief_is_manager';
+
+function isManager() { return localStorage.getItem(MANAGER_KEY) === '1'; }
+function refreshManagerBadge() {
+  const badge = document.getElementById('settingsMgrBadge');
+  if (badge) badge.style.display = isManager() ? 'inline' : 'none';
+}
+async function unlockManagerMode() {
+  const code = (document.getElementById('managerCodeInput').value || '').trim();
+  if (!code) { toast('Enter the manager code first', 'error'); return; }
+  try {
+    const res = await apiCall('/verify-manager', { method: 'POST', body: JSON.stringify({ code }) });
+    if (res.status === 401) { toast('Manager code rejected', 'error'); return; }
+    if (!res.ok) { toast('Verification failed (' + res.status + ')', 'error'); return; }
+    localStorage.setItem(MANAGER_KEY, '1');
+    document.getElementById('managerCodeInput').value = '';
+    refreshManagerBadge();
+    renderGlobalClockWidget();
+    toast('Manager mode unlocked ✓');
+  } catch (e) {
+    if (e.message === 'NO_PASSCODE') { toast('Set the team passcode first', 'error'); return; }
+    toast('Could not verify: ' + e.message, 'error');
+  }
+}
+function lockManagerMode() {
+  localStorage.removeItem(MANAGER_KEY);
+  refreshManagerBadge();
+  renderGlobalClockWidget();
+  toast('Manager mode locked');
+}
 
 function uidEntry() { return 'clk_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
 
@@ -7336,14 +7383,21 @@ async function renderGlobalClockWidget() {
     ? '<button class="gcw-btn ' + btnClass + '" onclick="globalClockAction()">' + btnLabel + '</button>'
     : '<button class="gcw-btn disabled" disabled>' + btnLabel + '</button>';
 
+  // Only crew member sees their own count + state. Managers see the
+  // crew-wide count and the override / export link.
+  const myCount = log.entries.filter(e => e.user === user).length;
+  let sub;
+  if (isManager()) {
+    sub = log.entries.length + ' entr' + (log.entries.length === 1 ? 'y' : 'ies') + ' on file across the team ' +
+      '<a onclick="openManageHoursModal()">Manage hours →</a>';
+  } else {
+    sub = 'You have ' + myCount + ' clock entr' + (myCount === 1 ? 'y' : 'ies') + ' on file';
+  }
   host.innerHTML =
     '<div class="gcw-info">' +
       '<div class="gcw-title">🕐 CLOCK IN / OUT</div>' +
       '<div class="gcw-status">' + statusLine + '</div>' +
-      '<div class="gcw-sub">' +
-        log.entries.length + ' entr' + (log.entries.length === 1 ? 'y' : 'ies') + ' on file' +
-        ' <a onclick="openManageHoursModal()">Manage hours →</a>' +
-      '</div>' +
+      '<div class="gcw-sub">' + sub + '</div>' +
     '</div>' + btn;
   host.style.display = 'grid';
 }
@@ -7393,6 +7447,11 @@ async function globalClockAction() {
 let MANAGE_HOURS_STATE = { sha: null, entries: [], filter: { user: '', date: '' } };
 
 async function openManageHoursModal() {
+  if (!isManager()) {
+    toast('Manager mode required — unlock it in Settings', 'error');
+    openSettingsModal();
+    return;
+  }
   const modal = document.getElementById('manageHoursModal');
   if (!modal) return;
   modal.classList.add('open');
@@ -7415,7 +7474,131 @@ async function refreshManageHours() {
     list.innerHTML = '<p style="color:var(--red);">Could not load: ' + e.message + '</p>';
     return;
   }
+  // Default the week-starting picker to the most recent Monday.
+  const wkInput = document.getElementById('exportWeekStart');
+  if (wkInput && !wkInput.value) {
+    const d = new Date();
+    const dow = (d.getDay() + 6) % 7; // 0 = Monday
+    d.setDate(d.getDate() - dow);
+    d.setHours(0, 0, 0, 0);
+    wkInput.value = d.toISOString().slice(0, 10);
+  }
   renderManageHoursList();
+}
+
+// ─── WEEKLY CSV EXPORT FOR PAYROLL ────────────────────────────
+function pairShiftsForWeek(entries, weekStart, weekEnd) {
+  // Group by user, sort, walk pairing IN→OUT. Anything inside the week
+  // window is emitted; pending INs that straddle the window edge are
+  // emitted as orphans so payroll can see them.
+  const byUser = {};
+  entries.forEach(e => {
+    if (!e || !e.timestamp) return;
+    (byUser[e.user] = byUser[e.user] || []).push(e);
+  });
+  const shifts = [];
+  Object.keys(byUser).forEach(user => {
+    const sorted = byUser[user].slice().sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''));
+    let pending = null;
+    sorted.forEach(e => {
+      const t = new Date(e.timestamp);
+      if (e.type === 'in') {
+        if (pending) {
+          // Previous IN never got an OUT — emit as orphan if in window
+          if (pending.t >= weekStart && pending.t < weekEnd) {
+            shifts.push({ user, inEntry: pending.e, outEntry: null });
+          }
+        }
+        pending = { e, t };
+      } else if (e.type === 'out') {
+        if (pending) {
+          if (pending.t >= weekStart && pending.t < weekEnd || t >= weekStart && t < weekEnd) {
+            shifts.push({ user, inEntry: pending.e, outEntry: e });
+          }
+          pending = null;
+        } else {
+          if (t >= weekStart && t < weekEnd) {
+            shifts.push({ user, inEntry: null, outEntry: e });
+          }
+        }
+      }
+    });
+    if (pending && pending.t >= weekStart && pending.t < weekEnd) {
+      shifts.push({ user, inEntry: pending.e, outEntry: null });
+    }
+  });
+  // Sort by user, then in-time
+  shifts.sort((a, b) => {
+    const u = (a.user || '').localeCompare(b.user || '');
+    if (u !== 0) return u;
+    const ta = (a.inEntry || a.outEntry || {}).timestamp || '';
+    const tb = (b.inEntry || b.outEntry || {}).timestamp || '';
+    return ta.localeCompare(tb);
+  });
+  return shifts;
+}
+
+function csvEscape(s) {
+  s = s == null ? '' : String(s);
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+async function exportClocksWeekCSV() {
+  if (!isManager()) { toast('Manager mode required', 'error'); return; }
+  const wkInputEl = document.getElementById('exportWeekStart');
+  const startStr = wkInputEl && wkInputEl.value;
+  if (!startStr) { toast('Pick the Monday of the week to export', 'error'); return; }
+  const weekStart = new Date(startStr + 'T00:00:00');
+  const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
+  let log;
+  try { log = await loadClocksLog(); }
+  catch (e) { toast('Could not load: ' + e.message, 'error'); return; }
+  const shifts = pairShiftsForWeek(log.entries, weekStart, weekEnd);
+  if (!shifts.length) { toast('No clock entries in that week', 'error'); return; }
+
+  const rows = [['User', 'Date', 'Clock In', 'Clock Out', 'Hours', 'Notes']];
+  let totalHours = 0;
+  shifts.forEach(s => {
+    const tIn  = s.inEntry  ? new Date(s.inEntry.timestamp)  : null;
+    const tOut = s.outEntry ? new Date(s.outEntry.timestamp) : null;
+    const refT = tIn || tOut;
+    const date = refT ? refT.toISOString().slice(0, 10) : '';
+    const fmtT = (d) => d ? d.toTimeString().slice(0, 5) : '';
+    let hours = '';
+    const notes = [];
+    if (tIn && tOut) {
+      const diffMs = tOut - tIn;
+      const h = diffMs / 3600000;
+      hours = h.toFixed(2);
+      totalHours += h;
+    } else if (tIn && !tOut) {
+      notes.push('NO CLOCK-OUT');
+    } else if (!tIn && tOut) {
+      notes.push('NO CLOCK-IN');
+    }
+    if (s.inEntry && s.inEntry.editedBy) notes.push('in edited by ' + s.inEntry.editedBy);
+    if (s.outEntry && s.outEntry.editedBy) notes.push('out edited by ' + s.outEntry.editedBy);
+    rows.push([
+      s.user || '',
+      date,
+      fmtT(tIn),
+      fmtT(tOut),
+      hours,
+      notes.join('; ')
+    ]);
+  });
+  rows.push([]);
+  rows.push(['TOTAL', '', '', '', totalHours.toFixed(2), shifts.length + ' shifts']);
+
+  const csv = rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  const filename = 'obec-hours-' + startStr + '.csv';
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast('Exported ' + shifts.length + ' shift' + (shifts.length !== 1 ? 's' : '') + ' (' + totalHours.toFixed(2) + 'h)');
 }
 
 function renderManageHoursList() {
