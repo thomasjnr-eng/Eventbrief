@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-08-beyond-the-pale-crew-catering",
-  "savedAt": "2026-06-02T16:52:58.790Z",
+  "savedAt": "2026-06-02T16:54:45.307Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,7 +47,7 @@
     "wasteDisposal": "",
     "solidWaste": "",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "FUEL",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
@@ -57,7 +57,7 @@
     "revShareBasis": "",
     "revShareSettlement": "",
     "revShareNotes": "",
-    "prePaidCovers": "",
+    "prePaidCovers": "700",
     "prePaidPrice": "",
     "prePaidTotal": "",
     "minSpend": "",
@@ -85,8 +85,12 @@
     "_power": [
       "Client/venue provides power"
     ],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Pre-paid meals / meal deal"
+    ],
+    "_pos": [
+      "Client vouchers accepted"
+    ],
     "_safety": [],
     "_isScattered": true,
     "_tradingDays": [
@@ -152,6 +156,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:49:47.407Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:54:38.221Z"
       }
     },
     "_crewChecklists": {
