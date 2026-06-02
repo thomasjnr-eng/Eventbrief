@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T16:24:51.325Z",
+  "savedAt": "2026-06-02T16:27:53.944Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -32,7 +32,7 @@
     "venueAddress": "Fairyhouse Racecourse, Ratoath, Meath",
     "accessNotes": "",
     "otherUnits": "",
-    "pitchRef": "Serving into Stretch Tent ",
+    "pitchRef": "Serving into Stretch Tent, Parade Ring",
     "pitchSize": "",
     "groundSurface": "Tarmac",
     "vehicleLayout": "Side by Side",
@@ -131,7 +131,7 @@
       },
       "step2": {
         "user": "Thomas O'Brien",
-        "at": "2026-06-02T16:21:03.683Z"
+        "at": "2026-06-02T16:27:29.160Z"
       },
       "step3": {
         "user": "Thomas O'Brien",
