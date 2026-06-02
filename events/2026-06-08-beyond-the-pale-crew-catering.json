@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-08-beyond-the-pale-crew-catering",
-  "savedAt": "2026-06-02T17:04:20.187Z",
+  "savedAt": "2026-06-02T17:05:28.624Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -123,6 +123,18 @@
         "startTime": "09:30",
         "endTime": "17:30",
         "notes": "Crew, Backstage & Artist Catering "
+      },
+      {
+        "date": "2026-06-13",
+        "startTime": "09:30",
+        "endTime": "17:30",
+        "notes": "Crew, Backstage & Artist Catering "
+      },
+      {
+        "date": "2026-06-14",
+        "startTime": "09:30",
+        "endTime": "17:30",
+        "notes": "Crew, Backstage & Artist Catering "
       }
     ],
     "_iceVansNeedPower": false,
@@ -174,7 +186,7 @@
     "_changeLog": {
       "step1": {
         "user": "Thomas O'Brien",
-        "at": "2026-06-02T16:47:53.326Z"
+        "at": "2026-06-02T17:05:23.307Z"
       },
       "step2": {
         "user": "Thomas O'Brien",
