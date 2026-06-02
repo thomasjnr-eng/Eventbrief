@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-02-tuesday",
-  "savedAt": "2026-06-02T23:23:16.107Z",
+  "savedAt": "2026-06-02T23:23:19.461Z",
   "savedBy": "Ae",
   "form": {
     "title": "Tuesday😬",
@@ -59,9 +59,9 @@
         "priority": "medium",
         "dueTime": "15:00",
         "eventLink": "",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "Ae",
+        "doneAt": "2026-06-02T23:23:19.074Z"
       },
       {
         "label": "Drop Camile + Collect Sharon’s trailers from PCD",
