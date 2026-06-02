@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T16:33:19.994Z",
+  "savedAt": "2026-06-02T16:33:42.014Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -133,9 +133,9 @@
     "_serviceWindows": [
       {
         "id": "sw_xkzfoom",
-        "name": "Activation",
-        "start": "10:00",
-        "end": "15:00"
+        "name": "Raceday",
+        "start": "15:00",
+        "end": "20:30"
       }
     ],
     "_menu": {
@@ -143,7 +143,11 @@
       "Pitt Bros BBQ": [],
       "231-D": []
     },
-    "_crewRoster": {},
+    "_crewRoster": {
+      "Fried Chicken Truck": [],
+      "Pitt Bros BBQ": [],
+      "231-D": []
+    },
     "_staffAllocations": [],
     "_truckSafetyChecks": {
       "Vespa Cart #1": []
@@ -165,6 +169,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:33:16.695Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:33:37.225Z"
       }
     },
     "_crewChecklists": {
