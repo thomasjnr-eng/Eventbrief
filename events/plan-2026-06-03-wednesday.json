@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-06-03-wednesday",
+  "savedAt": "2026-06-02T17:31:30.419Z",
+  "savedBy": "Thomas O'Brien",
+  "form": {
+    "title": "Wednesday 😅",
+    "planDate": "2026-06-03",
+    "startTime": "10:00",
+    "endTime": "22:00",
+    "lead": "Thomas O'Brien",
+    "assigned": "Robo, Simon, Anto",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Load Sysco + BWG",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "10:30",
+        "eventLink": "Addison Rae  (03 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Wash Coffee Unit",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "10:30",
+        "eventLink": "Harris/Hino Coffee Morning (04 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Drop Coffee & Generator to Harris & Setup",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "12:00",
+        "eventLink": "Harris/Hino Coffee Morning (04 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Go to Kilmainham and prepare ",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "13:30",
+        "eventLink": "Addison Rae  (03 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Run to Fairyhouse with units",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "17:30",
+        "eventLink": "Fairyhouse Races  (05 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Breakdown Kilmainham ",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "23:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
