@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-slicey-pizza-activation",
-  "savedAt": "2026-06-02T16:03:27.256Z",
+  "savedAt": "2026-06-02T16:07:21.154Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -31,7 +31,7 @@
     "venueName": "",
     "venueAddress": "",
     "accessNotes": "",
-    "otherUnits": "",
+    "otherUnits": "Slicey Piaggio",
     "pitchRef": "",
     "pitchSize": "",
     "groundSurface": "",
@@ -79,7 +79,9 @@
     "clientInstructions": "",
     "opsNotes": "",
     "postEventNotes": "",
-    "_fleet": [],
+    "_fleet": [
+      "Vespa Cart #1"
+    ],
     "_power": [],
     "_revenue": [],
     "_pos": [],
@@ -109,9 +111,130 @@
       "step1": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:03:18.770Z"
+      },
+      "step2": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:03:48.841Z"
       }
     },
-    "_crewChecklists": {},
+    "_crewChecklists": {
+      "Vespa Cart #1": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      }
+    },
     "_signOffs": []
   }
 }
