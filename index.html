@@ -1125,55 +1125,97 @@ body {
 }
 .home-events-meta { font-size: 11px; color: var(--grey); }
 
-/* ─── TODAY CLOCK STRIP (top of home, big Clock In/Out per event) ─── */
-.today-clock-strip {
+/* ─── GLOBAL CLOCK WIDGET (always-visible on home) ─── */
+.global-clock-widget {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-left: 4px solid var(--sage);
   border-radius: 4px;
-  padding: 14px 16px;
+  padding: 14px 18px;
   margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: center;
 }
-.tcs-head {
+.gcw-info { min-width: 0; }
+.gcw-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 14px;
   letter-spacing: 0.14em;
   color: var(--sage);
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
-.tcs-card {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 0;
-  border-top: 1px solid var(--border);
+.gcw-status { font-size: 13px; color: var(--white); font-weight: 700; }
+.gcw-status .gcw-state.in  { color: #2d7a49; }
+.gcw-status .gcw-state.out { color: #b07a10; }
+.gcw-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.gcw-sub a {
+  color: var(--sage);
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: 8px;
 }
-.tcs-card:first-of-type { border-top: none; }
-.tcs-name { font-size: 15px; font-weight: 700; color: var(--white); }
-.tcs-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.tcs-meta .tcs-state.in  { color: #2d7a49; font-weight: 700; }
-.tcs-meta .tcs-state.out { color: #b07a10; font-weight: 700; }
-.tcs-btn {
+.gcw-sub a:hover { text-decoration: underline; }
+.gcw-btn {
   background: var(--sage);
   color: #fff;
   border: none;
   border-radius: 3px;
-  padding: 12px 20px;
+  padding: 14px 24px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   letter-spacing: 0.1em;
   cursor: pointer;
   white-space: nowrap;
 }
-.tcs-btn:hover { background: var(--sage-dark); }
-.tcs-btn.out { background: #b07a10; }
-.tcs-btn.out:hover { background: #8c6210; }
-.tcs-btn.disabled { background: #aaa; cursor: not-allowed; }
-.tcs-empty { color: var(--text-muted); font-size: 12px; font-style: italic; }
+.gcw-btn:hover { background: var(--sage-dark); }
+.gcw-btn.out { background: #b07a10; }
+.gcw-btn.out:hover { background: #8c6210; }
+.gcw-btn.disabled { background: #aaa; cursor: not-allowed; }
 @media (max-width: 480px) {
-  .tcs-card { grid-template-columns: 1fr; }
-  .tcs-btn { width: 100%; }
+  .global-clock-widget { grid-template-columns: 1fr; }
+  .gcw-btn { width: 100%; }
+}
+
+/* ─── MANAGE HOURS MODAL ─── */
+.hours-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 110px 80px 70px 70px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.hours-row .hr-type.in  { color: #2d7a49; font-weight: 700; }
+.hours-row .hr-type.out { color: #b07a10; font-weight: 700; }
+.hours-row .hr-user { color: var(--white); font-weight: 700; }
+.hours-row input,
+.hours-row select {
+  background: var(--bg-input);
+  color: var(--field-text);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 6px 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  width: 100%;
+}
+.hours-row .hr-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  border-radius: 3px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.hours-row .hr-btn:hover { border-color: var(--sage); color: var(--sage); }
+.hours-row .hr-btn.danger:hover { border-color: var(--red); color: var(--red); }
+.hours-row .hr-edited { font-size: 10px; color: var(--text-muted); font-style: italic; }
+@media (max-width: 700px) {
+  .hours-row { grid-template-columns: 1fr 1fr; gap: 6px; }
 }
 
 .home-events-grid {
@@ -1211,6 +1253,34 @@ body {
 .home-event-card .he-bar-label { font-size: 10px; color: var(--grey); letter-spacing: 0.04em; min-width: 38px; }
 .home-event-card .he-bar { flex: 1; height: 4px; background: var(--bg-deep); border-radius: 2px; overflow: hidden; }
 .home-event-card .he-bar-fill { height: 100%; }
+.home-event-card .he-clock-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.home-event-card .he-clock-state { font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.home-event-card .he-clock-state.in  { color: #2d7a49; font-weight: 700; }
+.home-event-card .he-clock-state.out { color: #b07a10; font-weight: 700; }
+.home-event-card .he-clock-btn {
+  background: var(--sage);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.home-event-card .he-clock-btn:hover { background: var(--sage-dark); }
+.home-event-card .he-clock-btn.out { background: #b07a10; }
+.home-event-card .he-clock-btn.out:hover { background: #8c6210; }
+.home-event-card .he-clock-btn.disabled { background: #999; cursor: not-allowed; }
 .home-event-card .he-pct { font-size: 11px; font-weight: 700; min-width: 36px; text-align: right; }
 .home-event-card .he-status {
   position: absolute; top: 12px; right: 12px;
@@ -2107,6 +2177,32 @@ body {
   </div>
 </div>
 
+<!-- ─── MANAGE HOURS MODAL (override clock entries) ─── -->
+<div class="modal-overlay" id="manageHoursModal" onclick="if(event.target===this) closeManageHoursModal()">
+  <div class="modal-content" style="max-width:880px;">
+    <button class="modal-close" onclick="closeManageHoursModal()">&times;</button>
+    <div class="modal-title">Manage Hours</div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Edit, delete, or add clock entries for any crew member. Every change is stamped with who made it.</p>
+      <div style="display:grid;grid-template-columns:1fr 160px 90px;gap:8px;margin-bottom:14px;align-items:end;">
+        <div class="field" style="margin:0;"><label>Filter by name</label><input id="hoursFilterUser" placeholder="(any)" oninput="onHoursFilterChange()"></div>
+        <div class="field" style="margin:0;"><label>Filter by date</label><input type="date" id="hoursFilterDate" onchange="onHoursFilterChange()"></div>
+        <button class="btn btn-secondary" style="font-size:12px;padding:8px 14px;" onclick="refreshManageHours()">Refresh</button>
+      </div>
+      <div id="manageHoursList" style="max-height:50vh;overflow:auto;"></div>
+      <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--grey);margin-bottom:8px;">Add manual entry</div>
+        <div style="display:grid;grid-template-columns:1fr 90px 1fr 100px;gap:8px;align-items:end;">
+          <div class="field" style="margin:0;"><label>Crew name</label><input id="addHourUser" placeholder="e.g. Aoife"></div>
+          <div class="field" style="margin:0;"><label>Type</label><select id="addHourType"><option value="in">IN</option><option value="out">OUT</option></select></div>
+          <div class="field" style="margin:0;"><label>When</label><input type="datetime-local" id="addHourWhen"></div>
+          <button class="btn btn-primary" style="font-size:13px;padding:10px 14px;" onclick="addManualHourEntry()">+ Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- ─── END-OF-DAY SIGN-OFF MODAL ─── -->
@@ -2132,7 +2228,7 @@ body {
     <div class="home-date" id="homeDate"></div>
   </div>
 
-  <div id="todayClockStrip" class="today-clock-strip" style="display:none;"></div>
+  <div id="globalClockWidget" class="global-clock-widget" style="display:none;"></div>
 
   <div id="actionRequired" class="action-required" style="display:none;"></div>
 
@@ -6671,7 +6767,8 @@ function showPlanEdit() {
 let PLAN_TASKS = [];
 let CURRENT_PLAN_FILENAME = null;
 function isPlanFile(name) { return typeof name === 'string' && name.startsWith('plan-'); }
-function isEventFile(name) { return typeof name === 'string' && !name.startsWith('plan-'); }
+function isClocksFile(name) { return name === 'clocks.json'; }
+function isEventFile(name) { return typeof name === 'string' && !name.startsWith('plan-') && !isClocksFile(name); }
 
 async function populateUpcomingEventsDatalist() {
   const dl = document.getElementById('upcomingEventsList');
@@ -7144,81 +7241,295 @@ async function renderHome() {
   renderOpsTracker();
   await renderActionRequired();
   await renderHomePies();
-  await renderTodayClockStrip();
+  await renderGlobalClockWidget();
   await renderHomeEvents();
   await renderHomePlans();
 }
 
-// ─── TODAY CLOCK STRIP ─────────────────────────────────────────
-// Shows today's events at the top of the home page with a big
-// Clock In / Out button per event. Crew don't have to drill into a
-// brief to clock on. Operates on the event JSON directly via the
-// Worker so it stays independent of whatever's loaded in the form.
-function eventWindowIncludesToday(form, todayStr) {
-  if (!form) return false;
-  const dates = [];
-  if (form.loadInDate) dates.push(form.loadInDate);
-  if (form.loadOutDate) dates.push(form.loadOutDate);
-  if (form.eventStartDate) dates.push(form.eventStartDate);
-  if (form.eventFinishDate) dates.push(form.eventFinishDate);
-  if (Array.isArray(form._tradingDays)) form._tradingDays.forEach(d => { if (d && d.date) dates.push(d.date); });
-  if (!dates.length) return false;
-  const minD = dates.reduce((a, b) => (a < b ? a : b));
-  const maxD = dates.reduce((a, b) => (a > b ? a : b));
-  return minD <= todayStr && todayStr <= maxD;
+// ─── GLOBAL CLOCK IN / OUT ─────────────────────────────────────
+// A single shared log file (clocks.json) holds every clock-in/out from
+// every crew member. The home widget is always visible, not tied to an
+// event — tap once to clock on, tap again to clock off. GPS is captured
+// on every entry for audit. A "Manage hours" view lets any signed-in
+// user edit / delete / add entries; each override is stamped with who
+// did it and when, so the trail is never lost.
+
+const CLOCKS_FILENAME = 'clocks.json';
+
+function uidEntry() { return 'clk_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
+
+function fmtClockDateTime(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleString('en-IE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  catch (e) { return iso; }
+}
+function fmtDuration(ms) {
+  if (!ms || ms < 0) return '—';
+  const m = Math.floor(ms / 60000);
+  const h = Math.floor(m / 60);
+  return h + 'h ' + (m % 60).toString().padStart(2, '0') + 'm';
 }
 
-async function renderTodayClockStrip() {
-  const strip = document.getElementById('todayClockStrip');
-  if (!strip) return;
-  if (!getPasscode()) { strip.style.display = 'none'; return; }
-  let filenames = [];
-  try { filenames = await listEventFilenames(); } catch (e) { strip.style.display = 'none'; return; }
-  filenames = filenames.filter(isEventFile);
-  if (!filenames.length) { strip.style.display = 'none'; return; }
-  const events = await Promise.all(filenames.map(getEventByFilename));
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
-  const onToday = (events || []).filter(Boolean).filter(ev => eventWindowIncludesToday(ev.form, todayStr));
-  if (!onToday.length) { strip.style.display = 'none'; return; }
-  onToday.sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+async function loadClocksLog() {
+  if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[CLOCKS_FILENAME];
+  try {
+    const res = await apiCall('/events/' + encodeURIComponent(CLOCKS_FILENAME));
+    if (res.status === 404) return { sha: null, entries: [] };
+    if (!res.ok) throw new Error('clocks_' + res.status);
+    const meta = await res.json();
+    return { sha: meta.sha, entries: Array.isArray(meta.event && meta.event.entries) ? meta.event.entries : [] };
+  } catch (e) {
+    if (e.message === 'NO_PASSCODE' || e.message === 'BAD_PASSCODE') return { sha: null, entries: [] };
+    throw e;
+  }
+}
 
+async function saveClocksLog(entries, sha) {
+  const payload = { version: 1, type: 'clocks', savedAt: new Date().toISOString(), entries };
+  const body = { event: payload };
+  if (sha) body.sha = sha;
+  const res = await apiCall('/events/' + encodeURIComponent(CLOCKS_FILENAME), {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error('clocks_save_' + res.status);
+  return await res.json();
+}
+
+function lastGlobalEntryFor(entries, user) {
+  for (let i = entries.length - 1; i >= 0; i--) {
+    if (entries[i].user === user) return entries[i];
+  }
+  return null;
+}
+
+async function renderGlobalClockWidget() {
+  const host = document.getElementById('globalClockWidget');
+  if (!host) return;
+  if (!getPasscode()) { host.style.display = 'none'; return; }
   const user = getUser() || '';
-  const cards = onToday.map(ev => {
-    const f = ev.form || {};
-    const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
-    const venue = (f.venueName || '').replace(/</g, '&lt;');
-    const entries = Array.isArray(f._clockEntries) ? f._clockEntries : [];
-    let myLast = null;
-    for (let i = entries.length - 1; i >= 0; i--) { if (entries[i].user === user) { myLast = entries[i]; break; } }
-    const clockedIn = !!(myLast && myLast.type === 'in');
-    const action = clockedIn ? 'out' : 'in';
-    const btnLabel = action === 'in' ? '🕐 Clock In' : '🚪 Clock Out';
-    const btnClass = action === 'in' ? '' : 'out';
-    const stateClass = clockedIn ? 'in' : 'out';
-    const stateText = clockedIn ? 'CLOCKED IN' : 'NOT ON SITE';
-    const venueStatus = (f._venuePin && f._venuePin.lat != null)
-      ? ('📍 ' + (venue || 'pinned') + ' · ' + (f._venuePin.radius || 200) + 'm geofence')
-      : '<span style="color:#b07a10;">⚠ Venue not pinned — open the brief to pin it</span>';
-    const canClock = !!user && f._venuePin && f._venuePin.lat != null;
-    const btn = canClock
-      ? '<button class="tcs-btn ' + btnClass + '" onclick="quickClockAction(\'' + ev._filename.replace(/'/g, "\\'") + '\')">' + btnLabel + '</button>'
-      : '<button class="tcs-btn disabled" disabled>' + btnLabel + '</button>';
-    return '<div class="tcs-card">' +
-      '<div><div class="tcs-name">' + name + '</div>' +
-      '<div class="tcs-meta">' + venueStatus + ' &middot; <span class="tcs-state ' + stateClass + '">' + stateText + '</span></div></div>' +
-      btn +
-      '</div>';
-  }).join('');
+  let log = { entries: [] };
+  try { log = await loadClocksLog(); } catch (e) { /* show widget anyway */ }
+  const last = lastGlobalEntryFor(log.entries, user);
+  const clockedIn = !!(last && last.type === 'in');
+  const action = clockedIn ? 'out' : 'in';
+  const btnLabel = action === 'in' ? '🕐 Clock In' : '🚪 Clock Out';
+  const btnClass = action === 'in' ? '' : 'out';
+  const stateLabel = clockedIn ? 'On the clock' : 'Off the clock';
+  const stateClass = clockedIn ? 'in' : 'out';
 
-  const userLine = user
-    ? 'Signed in as <strong>' + user.replace(/</g, '&lt;') + '</strong>'
-    : '<span style="color:#b07a10;">Set your name in Settings before clocking in</span>';
+  let statusLine;
+  if (!user) {
+    statusLine = '<span style="color:#b07a10;">⚠ Set your name in Settings before clocking in</span>';
+  } else if (clockedIn) {
+    const since = new Date(last.timestamp);
+    const dur = fmtDuration(Date.now() - since.getTime());
+    statusLine = '<strong>' + user.replace(/</g,'&lt;') + '</strong> · <span class="gcw-state in">' + stateLabel + '</span> since ' + fmtClockDateTime(last.timestamp) + ' (' + dur + ')';
+  } else if (last) {
+    statusLine = '<strong>' + user.replace(/</g,'&lt;') + '</strong> · <span class="gcw-state out">' + stateLabel + '</span> · last out ' + fmtClockDateTime(last.timestamp);
+  } else {
+    statusLine = '<strong>' + user.replace(/</g,'&lt;') + '</strong> · <span class="gcw-state out">' + stateLabel + '</span> · no entries yet';
+  }
 
-  strip.innerHTML =
-    '<div class="tcs-head">🕐 ON SITE TODAY &middot; <span style="font-family:Lato,sans-serif;font-size:11px;letter-spacing:0;color:var(--text-muted);font-weight:400;">' + userLine + '</span></div>' +
-    cards;
-  strip.style.display = 'block';
+  const canClock = !!user;
+  const btn = canClock
+    ? '<button class="gcw-btn ' + btnClass + '" onclick="globalClockAction()">' + btnLabel + '</button>'
+    : '<button class="gcw-btn disabled" disabled>' + btnLabel + '</button>';
+
+  host.innerHTML =
+    '<div class="gcw-info">' +
+      '<div class="gcw-title">🕐 CLOCK IN / OUT</div>' +
+      '<div class="gcw-status">' + statusLine + '</div>' +
+      '<div class="gcw-sub">' +
+        log.entries.length + ' entr' + (log.entries.length === 1 ? 'y' : 'ies') + ' on file' +
+        ' <a onclick="openManageHoursModal()">Manage hours →</a>' +
+      '</div>' +
+    '</div>' + btn;
+  host.style.display = 'grid';
+}
+
+async function globalClockAction() {
+  const user = getUser();
+  if (!user) { toast('Set your name in Settings first', 'error'); openSettingsModal(); return; }
+  toast('Getting your location…');
+  let pos = { lat: null, lng: null, accuracy: null };
+  try { pos = await getCurrentPos(); }
+  catch (e) { /* GPS optional — still let them clock in */ }
+
+  // Pull the freshest log so concurrent clock-ins from different phones
+  // don't overwrite each other.
+  let log;
+  try { log = await loadClocksLog(); }
+  catch (e) {
+    if (e.message === 'NO_PASSCODE') { openSettingsModal(); return; }
+    toast('Could not reach the server: ' + e.message, 'error'); return;
+  }
+  const last = lastGlobalEntryFor(log.entries, user);
+  const action = (last && last.type === 'in') ? 'out' : 'in';
+
+  const entry = {
+    id: uidEntry(),
+    user,
+    type: action,
+    timestamp: new Date().toISOString(),
+    lat: pos.lat != null ? +pos.lat.toFixed(6) : null,
+    lng: pos.lng != null ? +pos.lng.toFixed(6) : null,
+    accuracy: pos.accuracy != null ? Math.round(pos.accuracy) : null
+  };
+  const merged = (log.entries || []).concat([entry]);
+  try {
+    await saveClocksLog(merged, log.sha);
+    if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[CLOCKS_FILENAME];
+    toast('Clocked ' + action + ' ✓');
+    renderGlobalClockWidget();
+  } catch (e) {
+    toast('Clock save failed: ' + e.message, 'error');
+  }
+}
+
+// ─── MANAGE HOURS MODAL (override) ─────────────────────────────
+// Lets any signed-in user edit / delete / add clock entries. Every
+// change is stamped with editedBy + editedAt so we keep an audit trail.
+let MANAGE_HOURS_STATE = { sha: null, entries: [], filter: { user: '', date: '' } };
+
+async function openManageHoursModal() {
+  const modal = document.getElementById('manageHoursModal');
+  if (!modal) return;
+  modal.classList.add('open');
+  await refreshManageHours();
+}
+function closeManageHoursModal() {
+  const modal = document.getElementById('manageHoursModal');
+  if (modal) modal.classList.remove('open');
+}
+
+async function refreshManageHours() {
+  const list = document.getElementById('manageHoursList');
+  if (!list) return;
+  list.innerHTML = '<p style="color:var(--grey);font-size:12px;">Loading…</p>';
+  try {
+    const log = await loadClocksLog();
+    MANAGE_HOURS_STATE.sha = log.sha;
+    MANAGE_HOURS_STATE.entries = log.entries.slice();
+  } catch (e) {
+    list.innerHTML = '<p style="color:var(--red);">Could not load: ' + e.message + '</p>';
+    return;
+  }
+  renderManageHoursList();
+}
+
+function renderManageHoursList() {
+  const list = document.getElementById('manageHoursList');
+  if (!list) return;
+  const f = MANAGE_HOURS_STATE.filter;
+  const userF = (f.user || '').trim().toLowerCase();
+  const dateF = (f.date || '').trim();
+  const rows = MANAGE_HOURS_STATE.entries
+    .filter(e => !userF || (e.user || '').toLowerCase().includes(userF))
+    .filter(e => !dateF || (e.timestamp || '').slice(0, 10) === dateF)
+    .slice()
+    .sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+  if (!rows.length) {
+    list.innerHTML = '<p style="color:var(--grey);font-size:12px;font-style:italic;">No entries match.</p>';
+    return;
+  }
+  list.innerHTML = '<div class="hours-row" style="border-bottom:1px solid var(--border);font-weight:700;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--grey);">' +
+    '<div>Type</div><div>User</div><div>When</div><div>Distance</div><div></div><div></div></div>' +
+    rows.map(e => {
+      const editedTag = e.editedBy ? '<div class="hr-edited">edited by ' + (e.editedBy || '').replace(/</g,'&lt;') + ' ' + fmtClockDateTime(e.editedAt) + '</div>' : '';
+      const localDt = e.timestamp ? new Date(e.timestamp).toISOString().slice(0, 16) : '';
+      return '<div class="hours-row" data-id="' + e.id + '">' +
+        '<select class="hr-type ' + e.type + '" data-field="type">' +
+          '<option value="in"' + (e.type === 'in' ? ' selected' : '') + '>IN</option>' +
+          '<option value="out"' + (e.type === 'out' ? ' selected' : '') + '>OUT</option>' +
+        '</select>' +
+        '<input class="hr-user" data-field="user" value="' + (e.user || '').replace(/"/g,'&quot;') + '">' +
+        '<input type="datetime-local" data-field="timestamp" value="' + localDt + '">' +
+        '<div style="font-size:11px;color:var(--text-muted);">' + (e.lat != null ? (e.lat.toFixed(4) + ',' + e.lng.toFixed(4)) : '—') + '</div>' +
+        '<button class="hr-btn" onclick="saveHourEdit(\'' + e.id + '\')">Save</button>' +
+        '<button class="hr-btn danger" onclick="deleteHourEntry(\'' + e.id + '\')">Delete</button>' +
+        editedTag +
+        '</div>';
+    }).join('');
+}
+
+function onHoursFilterChange() {
+  MANAGE_HOURS_STATE.filter.user = document.getElementById('hoursFilterUser').value;
+  MANAGE_HOURS_STATE.filter.date = document.getElementById('hoursFilterDate').value;
+  renderManageHoursList();
+}
+
+async function saveHourEdit(id) {
+  const row = document.querySelector('.hours-row[data-id="' + id + '"]');
+  if (!row) return;
+  const type = row.querySelector('[data-field=type]').value;
+  const user = row.querySelector('[data-field=user]').value.trim();
+  const tsLocal = row.querySelector('[data-field=timestamp]').value;
+  if (!user || !tsLocal) { toast('User and time are required', 'error'); return; }
+  const timestamp = new Date(tsLocal).toISOString();
+  // Pull fresh, mutate, save
+  let log;
+  try { log = await loadClocksLog(); }
+  catch (e) { toast('Could not load: ' + e.message, 'error'); return; }
+  const editor = getUser() || 'unknown';
+  const editedAt = new Date().toISOString();
+  const updated = log.entries.map(e => e.id === id
+    ? Object.assign({}, e, { type, user, timestamp, editedBy: editor, editedAt })
+    : e);
+  try {
+    await saveClocksLog(updated, log.sha);
+    toast('Entry updated');
+    await refreshManageHours();
+    renderGlobalClockWidget();
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+async function deleteHourEntry(id) {
+  if (!confirm('Delete this clock entry? This cannot be undone.')) return;
+  let log;
+  try { log = await loadClocksLog(); }
+  catch (e) { toast('Could not load: ' + e.message, 'error'); return; }
+  const updated = log.entries.filter(e => e.id !== id);
+  try {
+    await saveClocksLog(updated, log.sha);
+    toast('Entry deleted');
+    await refreshManageHours();
+    renderGlobalClockWidget();
+  } catch (e) {
+    toast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+async function addManualHourEntry() {
+  const user = (document.getElementById('addHourUser').value || '').trim();
+  const type = document.getElementById('addHourType').value;
+  const tsLocal = document.getElementById('addHourWhen').value;
+  if (!user || !tsLocal) { toast('Name and time are required', 'error'); return; }
+  let log;
+  try { log = await loadClocksLog(); }
+  catch (e) { toast('Could not load: ' + e.message, 'error'); return; }
+  const editor = getUser() || 'unknown';
+  const entry = {
+    id: uidEntry(),
+    user, type,
+    timestamp: new Date(tsLocal).toISOString(),
+    lat: null, lng: null, accuracy: null,
+    editedBy: editor + ' (manual entry)',
+    editedAt: new Date().toISOString()
+  };
+  const merged = log.entries.concat([entry]);
+  try {
+    await saveClocksLog(merged, log.sha);
+    toast('Entry added');
+    document.getElementById('addHourUser').value = '';
+    document.getElementById('addHourWhen').value = '';
+    await refreshManageHours();
+    renderGlobalClockWidget();
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
 }
 
 async function quickClockAction(filename) {
