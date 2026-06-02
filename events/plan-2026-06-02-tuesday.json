@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-02-tuesday",
-  "savedAt": "2026-06-02T23:23:07.470Z",
+  "savedAt": "2026-06-02T23:23:11.147Z",
   "savedBy": "Ae",
   "form": {
     "title": "Tuesday😬",
@@ -39,9 +39,9 @@
         "priority": "medium",
         "dueTime": "10:30",
         "eventLink": "",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "Ae",
+        "doneAt": "2026-06-02T23:23:10.786Z"
       },
       {
         "label": "Take trailers out of Simmo ",
