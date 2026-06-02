@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-02T15:57:36.543Z",
+  "savedAt": "2026-06-02T15:58:17.151Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -106,21 +106,17 @@
     "_serviceWindows": [
       {
         "id": "sw_xkzfoom",
-        "name": "Lunch",
-        "start": "12:00",
-        "end": "14:30"
-      },
-      {
-        "id": "sw_4s5wor1",
-        "name": "Dinner",
-        "start": "18:00",
-        "end": "21:00"
+        "name": "Breakfast Coffee & Pastries",
+        "start": "09:15",
+        "end": "12:30"
       }
     ],
     "_menu": {
       "Caffe Duomo 2": []
     },
-    "_crewRoster": {},
+    "_crewRoster": {
+      "Caffe Duomo 2": []
+    },
     "_staffAllocations": [],
     "_truckSafetyChecks": {
       "Loaded Burger": [],
@@ -143,6 +139,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T15:57:35.236Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T15:58:07.710Z"
       }
     },
     "_crewChecklists": {
