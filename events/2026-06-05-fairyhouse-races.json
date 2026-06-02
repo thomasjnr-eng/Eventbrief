@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T16:32:15.650Z",
+  "savedAt": "2026-06-02T16:33:19.994Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -65,11 +65,11 @@
     "prePaidNotes": "",
     "voucherDetails": "",
     "posNotes": "",
-    "foodCovers": "",
+    "foodCovers": "300",
     "coffeeCovers": "",
     "icecreamCovers": "",
-    "deliveryDate": "",
-    "coldChain": "",
+    "deliveryDate": "2026-06-04",
+    "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "",
     "eventManager": "",
@@ -113,7 +113,23 @@
       }
     ],
     "_iceVansNeedPower": false,
-    "_stockStatuses": [],
+    "_stockStatuses": [
+      {
+        "truck": "Fried Chicken Truck",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "Pitt Bros BBQ",
+        "status": "Not yet",
+        "notes": ""
+      },
+      {
+        "truck": "231-D",
+        "status": "Not yet",
+        "notes": ""
+      }
+    ],
     "_serviceWindows": [
       {
         "id": "sw_xkzfoom",
@@ -123,7 +139,9 @@
       }
     ],
     "_menu": {
-      "Vespa Cart #1": []
+      "Fried Chicken Truck": [],
+      "Pitt Bros BBQ": [],
+      "231-D": []
     },
     "_crewRoster": {},
     "_staffAllocations": [],
@@ -143,6 +161,10 @@
       "step3": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:32:10.609Z"
+      },
+      "step4": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:33:16.695Z"
       }
     },
     "_crewChecklists": {
