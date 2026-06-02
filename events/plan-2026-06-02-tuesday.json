@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-02-tuesday",
-  "savedAt": "2026-06-02T23:23:11.147Z",
+  "savedAt": "2026-06-02T23:23:13.546Z",
   "savedBy": "Ae",
   "form": {
     "title": "Tuesday😬",
@@ -29,9 +29,9 @@
         "priority": "medium",
         "dueTime": "12:00",
         "eventLink": "",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "Ae",
+        "doneAt": "2026-06-02T23:23:12.997Z"
       },
       {
         "label": "Count stock in RDS",
