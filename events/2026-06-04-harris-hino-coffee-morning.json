@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-02T15:54:21.175Z",
+  "savedAt": "2026-06-02T15:55:44.206Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,8 +47,8 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "We provide + remove bags",
     "waterNotes": "",
-    "commercialClient": "",
-    "commercialClientRef": "",
+    "commercialClient": "Other (specify in notes)",
+    "commercialClientRef": "Harris Group",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
@@ -57,11 +57,11 @@
     "revShareBasis": "",
     "revShareSettlement": "",
     "revShareNotes": "",
-    "prePaidCovers": "",
+    "prePaidCovers": "60",
     "prePaidPrice": "",
-    "prePaidTotal": "",
+    "prePaidTotal": "1200",
     "minSpend": "",
-    "prePaidMenu": "",
+    "prePaidMenu": "Coffee & Pastry for 60 people",
     "prePaidNotes": "",
     "voucherDetails": "",
     "posNotes": "",
@@ -85,8 +85,13 @@
     "_power": [
       "We provide generator"
     ],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Pre-paid meals / meal deal",
+      "Free at point of sale"
+    ],
+    "_pos": [
+      "Client vouchers accepted"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -125,6 +130,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T15:54:18.714Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T15:55:31.032Z"
       }
     },
     "_crewChecklists": {
