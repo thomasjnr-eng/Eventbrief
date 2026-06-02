@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "type": "clocks",
+  "savedAt": "2026-06-02T22:45:25.823Z",
+  "entries": [
+    {
+      "id": "clk_mpx877pa_1rtfxe",
+      "user": "TOB",
+      "type": "in",
+      "timestamp": "2026-06-02T22:45:25.823Z",
+      "lat": 53.279467,
+      "lng": -6.344271,
+      "accuracy": 20
+    }
+  ]
+}
