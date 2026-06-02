@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-02T15:26:58.208Z",
+  "savedAt": "2026-06-02T15:27:15.972Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -128,7 +128,10 @@
       "Loaded Burger": [],
       "Zambrero": []
     },
-    "_crewRoster": {},
+    "_crewRoster": {
+      "Loaded Burger": [],
+      "Zambrero": []
+    },
     "_staffAllocations": [],
     "_truckSafetyChecks": {},
     "_signatures": [],
