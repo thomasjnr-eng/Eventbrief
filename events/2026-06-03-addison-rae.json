@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-02T15:27:15.972Z",
+  "savedAt": "2026-06-02T15:28:18.629Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -72,9 +72,9 @@
     "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
+    "eventManager": "Thomas ",
+    "opsLead": "Robo",
+    "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
     "opsNotes": "",
@@ -94,7 +94,9 @@
       "Client vouchers accepted",
       "Card only"
     ],
-    "_safety": [],
+    "_safety": [
+      "Fire risk assessment completed"
+    ],
     "_isScattered": false,
     "_tradingDays": [],
     "_iceVansNeedPower": false,
@@ -132,8 +134,24 @@
       "Loaded Burger": [],
       "Zambrero": []
     },
-    "_staffAllocations": [],
-    "_truckSafetyChecks": {},
+    "_staffAllocations": [
+      {
+        "truck": "Loaded Burger",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Zambrero",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      }
+    ],
+    "_truckSafetyChecks": {
+      "Loaded Burger": [],
+      "Zambrero": []
+    },
     "_signatures": [],
     "_changeLog": {
       "step1": {
@@ -151,6 +169,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T15:26:56.800Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T15:28:13.186Z"
       }
     },
     "_crewChecklists": {
