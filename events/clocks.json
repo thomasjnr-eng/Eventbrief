@@ -1,6 +1,16 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-06-02T22:46:16.847Z",
-  "entries": []
+  "savedAt": "2026-06-02T23:04:24.942Z",
+  "entries": [
+    {
+      "id": "clk_mpx8vmnh_uo0va7",
+      "user": "TOB",
+      "type": "in",
+      "timestamp": "2026-06-02T23:04:24.941Z",
+      "lat": 53.279423,
+      "lng": -6.344354,
+      "accuracy": 20
+    }
+  ]
 }
