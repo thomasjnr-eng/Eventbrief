@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-08-beyond-the-pale-crew-catering",
-  "savedAt": "2026-06-02T16:47:54.175Z",
+  "savedAt": "2026-06-02T16:52:58.790Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -32,14 +32,14 @@
     "venueAddress": "Glendalough Estate, Co. Wicklow",
     "accessNotes": "",
     "otherUnits": "",
-    "pitchRef": "",
+    "pitchRef": "Backstage ",
     "pitchSize": "",
-    "groundSurface": "",
+    "groundSurface": "Gravel",
     "vehicleLayout": "",
     "pitchNotes": "",
     "cableRun": "",
     "powerNotes": "",
-    "dieselSource": "",
+    "dieselSource": "Venue provides ",
     "dieselResponsible": "",
     "dieselNotes": "",
     "waterSource": "",
@@ -79,8 +79,12 @@
     "clientInstructions": "",
     "opsNotes": "",
     "postEventNotes": "",
-    "_fleet": [],
-    "_power": [],
+    "_fleet": [
+      "Camile Thai"
+    ],
+    "_power": [
+      "Client/venue provides power"
+    ],
     "_revenue": [],
     "_pos": [],
     "_safety": [],
@@ -144,9 +148,130 @@
       "step1": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:47:53.326Z"
+      },
+      "step2": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:49:47.407Z"
       }
     },
-    "_crewChecklists": {},
+    "_crewChecklists": {
+      "Camile Thai": {
+        "items": [
+          {
+            "label": "Arrived on site",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: all food covered / stored / disposed",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "End-of-trade: truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          }
+        ]
+      }
+    },
     "_signOffs": []
   }
 }
