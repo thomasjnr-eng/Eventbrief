@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T16:21:18.946Z",
+  "savedAt": "2026-06-02T16:24:51.325Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -28,8 +28,8 @@
     "loadOutTime": "19:30",
     "loadNotes": "",
     "attendance": "",
-    "venueName": "",
-    "venueAddress": "",
+    "venueName": "Fairyhouse Racecourse ",
+    "venueAddress": "Fairyhouse Racecourse, Ratoath, Meath",
     "accessNotes": "",
     "otherUnits": "",
     "pitchRef": "Serving into Stretch Tent ",
@@ -94,14 +94,14 @@
     "_tradingDays": [
       {
         "date": "2026-06-05",
-        "startTime": "12:00",
-        "endTime": "19:00",
+        "startTime": "15:30",
+        "endTime": "20:30",
         "notes": ""
       },
       {
         "date": "2026-06-12",
-        "startTime": "12:00",
-        "endTime": "19:00",
+        "startTime": "15:30",
+        "endTime": "20:30",
         "notes": ""
       }
     ],
@@ -127,7 +127,7 @@
     "_changeLog": {
       "step1": {
         "user": "Thomas O'Brien",
-        "at": "2026-06-02T16:19:01.953Z"
+        "at": "2026-06-02T16:24:29.838Z"
       },
       "step2": {
         "user": "Thomas O'Brien",
