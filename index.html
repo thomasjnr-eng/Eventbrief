@@ -1093,6 +1093,58 @@ body {
   color: var(--sage);
 }
 .home-events-meta { font-size: 11px; color: var(--grey); }
+
+/* ─── TODAY CLOCK STRIP (top of home, big Clock In/Out per event) ─── */
+.today-clock-strip {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--sage);
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.tcs-head {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: var(--sage);
+  margin-bottom: 10px;
+}
+.tcs-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+.tcs-card:first-of-type { border-top: none; }
+.tcs-name { font-size: 15px; font-weight: 700; color: var(--white); }
+.tcs-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.tcs-meta .tcs-state.in  { color: #2d7a49; font-weight: 700; }
+.tcs-meta .tcs-state.out { color: #b07a10; font-weight: 700; }
+.tcs-btn {
+  background: var(--sage);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 12px 20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tcs-btn:hover { background: var(--sage-dark); }
+.tcs-btn.out { background: #b07a10; }
+.tcs-btn.out:hover { background: #8c6210; }
+.tcs-btn.disabled { background: #aaa; cursor: not-allowed; }
+.tcs-empty { color: var(--text-muted); font-size: 12px; font-style: italic; }
+@media (max-width: 480px) {
+  .tcs-card { grid-template-columns: 1fr; }
+  .tcs-btn { width: 100%; }
+}
+
 .home-events-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -2043,6 +2095,8 @@ body {
     <div class="home-greet">Welcome back<span id="homeGreetUser"></span></div>
     <div class="home-date" id="homeDate"></div>
   </div>
+
+  <div id="todayClockStrip" class="today-clock-strip" style="display:none;"></div>
 
   <div id="actionRequired" class="action-required" style="display:none;"></div>
 
@@ -7036,8 +7090,142 @@ async function renderHome() {
   renderOpsTracker();
   await renderActionRequired();
   await renderHomePies();
+  await renderTodayClockStrip();
   await renderHomeEvents();
   await renderHomePlans();
+}
+
+// ─── TODAY CLOCK STRIP ─────────────────────────────────────────
+// Shows today's events at the top of the home page with a big
+// Clock In / Out button per event. Crew don't have to drill into a
+// brief to clock on. Operates on the event JSON directly via the
+// Worker so it stays independent of whatever's loaded in the form.
+function eventWindowIncludesToday(form, todayStr) {
+  if (!form) return false;
+  const dates = [];
+  if (form.loadInDate) dates.push(form.loadInDate);
+  if (form.loadOutDate) dates.push(form.loadOutDate);
+  if (form.eventStartDate) dates.push(form.eventStartDate);
+  if (form.eventFinishDate) dates.push(form.eventFinishDate);
+  if (Array.isArray(form._tradingDays)) form._tradingDays.forEach(d => { if (d && d.date) dates.push(d.date); });
+  if (!dates.length) return false;
+  const minD = dates.reduce((a, b) => (a < b ? a : b));
+  const maxD = dates.reduce((a, b) => (a > b ? a : b));
+  return minD <= todayStr && todayStr <= maxD;
+}
+
+async function renderTodayClockStrip() {
+  const strip = document.getElementById('todayClockStrip');
+  if (!strip) return;
+  if (!getPasscode()) { strip.style.display = 'none'; return; }
+  let filenames = [];
+  try { filenames = await listEventFilenames(); } catch (e) { strip.style.display = 'none'; return; }
+  filenames = filenames.filter(isEventFile);
+  if (!filenames.length) { strip.style.display = 'none'; return; }
+  const events = await Promise.all(filenames.map(getEventByFilename));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = today.toISOString().slice(0, 10);
+  const onToday = (events || []).filter(Boolean).filter(ev => eventWindowIncludesToday(ev.form, todayStr));
+  if (!onToday.length) { strip.style.display = 'none'; return; }
+  onToday.sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+
+  const user = getUser() || '';
+  const cards = onToday.map(ev => {
+    const f = ev.form || {};
+    const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+    const venue = (f.venueName || '').replace(/</g, '&lt;');
+    const entries = Array.isArray(f._clockEntries) ? f._clockEntries : [];
+    let myLast = null;
+    for (let i = entries.length - 1; i >= 0; i--) { if (entries[i].user === user) { myLast = entries[i]; break; } }
+    const clockedIn = !!(myLast && myLast.type === 'in');
+    const action = clockedIn ? 'out' : 'in';
+    const btnLabel = action === 'in' ? '🕐 Clock In' : '🚪 Clock Out';
+    const btnClass = action === 'in' ? '' : 'out';
+    const stateClass = clockedIn ? 'in' : 'out';
+    const stateText = clockedIn ? 'CLOCKED IN' : 'NOT ON SITE';
+    const venueStatus = (f._venuePin && f._venuePin.lat != null)
+      ? ('📍 ' + (venue || 'pinned') + ' · ' + (f._venuePin.radius || 200) + 'm geofence')
+      : '<span style="color:#b07a10;">⚠ Venue not pinned — open the brief to pin it</span>';
+    const canClock = !!user && f._venuePin && f._venuePin.lat != null;
+    const btn = canClock
+      ? '<button class="tcs-btn ' + btnClass + '" onclick="quickClockAction(\'' + ev._filename.replace(/'/g, "\\'") + '\')">' + btnLabel + '</button>'
+      : '<button class="tcs-btn disabled" disabled>' + btnLabel + '</button>';
+    return '<div class="tcs-card">' +
+      '<div><div class="tcs-name">' + name + '</div>' +
+      '<div class="tcs-meta">' + venueStatus + ' &middot; <span class="tcs-state ' + stateClass + '">' + stateText + '</span></div></div>' +
+      btn +
+      '</div>';
+  }).join('');
+
+  const userLine = user
+    ? 'Signed in as <strong>' + user.replace(/</g, '&lt;') + '</strong>'
+    : '<span style="color:#b07a10;">Set your name in Settings before clocking in</span>';
+
+  strip.innerHTML =
+    '<div class="tcs-head">🕐 ON SITE TODAY &middot; <span style="font-family:Lato,sans-serif;font-size:11px;letter-spacing:0;color:var(--text-muted);font-weight:400;">' + userLine + '</span></div>' +
+    cards;
+  strip.style.display = 'block';
+}
+
+async function quickClockAction(filename) {
+  const user = getUser();
+  if (!user) { toast('Set your name in Settings first', 'error'); openSettingsModal(); return; }
+  if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[filename];
+  let ev;
+  try { ev = await getEventByFilename(filename); }
+  catch (e) { toast('Could not load event: ' + e.message, 'error'); return; }
+  if (!ev || !ev.form) { toast('Event not found', 'error'); return; }
+  const venue = ev.form._venuePin;
+  if (!venue || venue.lat == null) { toast('Venue not pinned for this event — open the brief and set it in Step 1', 'error'); return; }
+
+  const entries = Array.isArray(ev.form._clockEntries) ? ev.form._clockEntries.slice() : [];
+  let myLast = null;
+  for (let i = entries.length - 1; i >= 0; i--) { if (entries[i].user === user) { myLast = entries[i]; break; } }
+  const action = (myLast && myLast.type === 'in') ? 'out' : 'in';
+
+  toast('Getting your location…');
+  let pos;
+  try { pos = await getCurrentPos(); }
+  catch (e) { toast('Location denied: ' + (e.message || e.code || 'unknown'), 'error'); return; }
+
+  const dist = haversineMeters(venue.lat, venue.lng, pos.lat, pos.lng);
+  const radius = venue.radius || DEFAULT_GEOFENCE_RADIUS;
+  const within = dist <= radius;
+  let reason = '';
+  if (!within) {
+    const r = prompt('You\'re ' + Math.round(dist) + 'm from ' + (ev.form.venueName || 'the venue') + ' (' + radius + 'm geofence). Add a short reason to clock ' + action + ' anyway:');
+    if (r === null) return;
+    if (!r.trim()) { toast('A reason is required outside the geofence', 'error'); return; }
+    reason = r.trim();
+  }
+
+  const entry = {
+    user, type: action,
+    timestamp: new Date().toISOString(),
+    lat: +pos.lat.toFixed(6), lng: +pos.lng.toFixed(6),
+    distance: Math.round(dist), withinFence: within, reason
+  };
+  entries.push(entry);
+  ev.form._clockEntries = entries;
+
+  // PUT directly via the Worker so we don't disturb the form view.
+  const payload = { version: 1, id: filename.replace(/\.json$/, ''), savedAt: new Date().toISOString(), form: ev.form };
+  const body = { event: payload };
+  if (ev._sha) body.sha = ev._sha;
+  try {
+    const res = await apiCall('/events/' + encodeURIComponent(filename), { method: 'PUT', body: JSON.stringify(body) });
+    if (!res.ok) {
+      const txt = await res.text().catch(() => '');
+      toast('Clock save failed (' + res.status + ')', 'error');
+      console.error('clock save', res.status, txt);
+      return;
+    }
+    if (eventsCache.byName) delete eventsCache.byName[filename];
+    toast('Clocked ' + action + (within ? ' ✓' : ' (outside fence)'));
+    renderTodayClockStrip();
+  } catch (e) {
+    toast('Clock save failed: ' + e.message, 'error');
+  }
 }
 
 function pieSvg(percent, color) {
