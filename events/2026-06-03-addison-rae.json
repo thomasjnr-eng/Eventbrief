@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-02T15:20:48.948Z",
+  "savedAt": "2026-06-02T15:26:24.415Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,15 +47,15 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "Venue provides bins",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Aiken Promotions",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
     "pitchFeeNotes": "",
-    "revSharePct": "",
-    "revShareBasis": "",
-    "revShareSettlement": "",
+    "revSharePct": "20",
+    "revShareBasis": "Net takings",
+    "revShareSettlement": "Bank transfer within 7 days",
     "revShareNotes": "",
     "prePaidCovers": "",
     "prePaidPrice": "",
@@ -63,7 +63,7 @@
     "minSpend": "",
     "prePaidMenu": "",
     "prePaidNotes": "",
-    "voucherDetails": "",
+    "voucherDetails": "Crew Vouchers to be invoiced after ",
     "posNotes": "",
     "foodCovers": "",
     "coffeeCovers": "",
@@ -86,8 +86,14 @@
     "_power": [
       "We provide generator"
     ],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Revenue share / percentage"
+    ],
+    "_pos": [
+      "Client / venue POS system",
+      "Client vouchers accepted",
+      "Card only"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -120,6 +126,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T15:20:42.170Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T15:26:20.696Z"
       }
     },
     "_crewChecklists": {
