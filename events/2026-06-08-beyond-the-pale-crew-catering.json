@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-08-beyond-the-pale-crew-catering",
-  "savedAt": "2026-06-02T16:58:07.512Z",
+  "savedAt": "2026-06-02T16:58:16.262Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -72,9 +72,9 @@
     "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
+    "eventManager": "Thomas ",
+    "opsLead": "Robo",
+    "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
     "opsNotes": "",
@@ -159,11 +159,16 @@
     "_crewRoster": {
       "Camile Thai": []
     },
-    "_staffAllocations": [],
+    "_staffAllocations": [
+      {
+        "truck": "Camile Thai",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      }
+    ],
     "_truckSafetyChecks": {
-      "Fried Chicken Truck": [],
-      "Pitt Bros BBQ": [],
-      "231-D": []
+      "Camile Thai": []
     },
     "_signatures": [],
     "_changeLog": {
@@ -186,6 +191,10 @@
       "step5": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:57:41.241Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:58:12.388Z"
       }
     },
     "_crewChecklists": {
