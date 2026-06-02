@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-slicey-pizza-activation",
-  "savedAt": "2026-06-02T16:07:21.154Z",
+  "savedAt": "2026-06-02T16:08:08.155Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,8 +47,8 @@
     "wasteDisposal": "",
     "solidWaste": "",
     "waterNotes": "",
-    "commercialClient": "",
-    "commercialClientRef": "",
+    "commercialClient": "Other (specify in notes)",
+    "commercialClientRef": "Slicey",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
@@ -115,6 +115,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:03:48.841Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:08:02.381Z"
       }
     },
     "_crewChecklists": {
