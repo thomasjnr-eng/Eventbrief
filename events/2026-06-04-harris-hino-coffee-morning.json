@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-02T15:55:44.206Z",
+  "savedAt": "2026-06-02T15:57:36.543Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -66,11 +66,11 @@
     "voucherDetails": "",
     "posNotes": "",
     "foodCovers": "",
-    "coffeeCovers": "",
+    "coffeeCovers": "60",
     "icecreamCovers": "",
     "deliveryDate": "",
     "coldChain": "",
-    "stockNotes": "",
+    "stockNotes": "Pastries delivered to the cafe at 7am",
     "menuNotes": "",
     "eventManager": "",
     "opsLead": "",
@@ -96,7 +96,13 @@
     "_isScattered": false,
     "_tradingDays": [],
     "_iceVansNeedPower": false,
-    "_stockStatuses": [],
+    "_stockStatuses": [
+      {
+        "truck": "Caffe Duomo 2",
+        "status": "Partial",
+        "notes": ""
+      }
+    ],
     "_serviceWindows": [
       {
         "id": "sw_xkzfoom",
@@ -112,8 +118,7 @@
       }
     ],
     "_menu": {
-      "Loaded Burger": [],
-      "Zambrero": []
+      "Caffe Duomo 2": []
     },
     "_crewRoster": {},
     "_staffAllocations": [],
@@ -134,6 +139,10 @@
       "step3": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T15:55:31.032Z"
+      },
+      "step4": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T15:57:35.236Z"
       }
     },
     "_crewChecklists": {
