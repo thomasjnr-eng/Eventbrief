@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T16:33:42.014Z",
+  "savedAt": "2026-06-02T16:34:49.030Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -72,9 +72,9 @@
     "coldChain": "Stock storage van required",
     "stockNotes": "",
     "menuNotes": "",
-    "eventManager": "",
-    "opsLead": "",
-    "leadChef": "",
+    "eventManager": "Thomas ",
+    "opsLead": "Robo",
+    "leadChef": "Simon",
     "staffNotes": "",
     "clientInstructions": "",
     "opsNotes": "",
@@ -148,9 +148,30 @@
       "Pitt Bros BBQ": [],
       "231-D": []
     },
-    "_staffAllocations": [],
+    "_staffAllocations": [
+      {
+        "truck": "Fried Chicken Truck",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "Pitt Bros BBQ",
+        "minimum": 4,
+        "count": 0,
+        "notes": ""
+      },
+      {
+        "truck": "231-D",
+        "minimum": 1,
+        "count": 0,
+        "notes": ""
+      }
+    ],
     "_truckSafetyChecks": {
-      "Vespa Cart #1": []
+      "Fried Chicken Truck": [],
+      "Pitt Bros BBQ": [],
+      "231-D": []
     },
     "_signatures": [],
     "_changeLog": {
@@ -173,6 +194,10 @@
       "step5": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:33:37.225Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:33:51.733Z"
       }
     },
     "_crewChecklists": {
