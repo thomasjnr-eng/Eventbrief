@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-slicey-pizza-activation",
-  "savedAt": "2026-06-02T16:09:24.648Z",
+  "savedAt": "2026-06-02T16:09:36.014Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -72,8 +72,8 @@
     "coldChain": "",
     "stockNotes": "",
     "menuNotes": "",
-    "eventManager": "",
-    "opsLead": "",
+    "eventManager": "Simon",
+    "opsLead": "Robo",
     "leadChef": "",
     "staffNotes": "",
     "clientInstructions": "",
@@ -110,9 +110,16 @@
     "_crewRoster": {
       "Vespa Cart #1": []
     },
-    "_staffAllocations": [],
+    "_staffAllocations": [
+      {
+        "truck": "Vespa Cart #1",
+        "minimum": 1,
+        "count": 0,
+        "notes": ""
+      }
+    ],
     "_truckSafetyChecks": {
-      "Caffe Duomo 2": []
+      "Vespa Cart #1": []
     },
     "_signatures": [],
     "_changeLog": {
@@ -131,6 +138,10 @@
       "step5": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:09:19.666Z"
+      },
+      "step6": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:09:29.078Z"
       }
     },
     "_crewChecklists": {
