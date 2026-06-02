@@ -771,6 +771,37 @@ body {
 .header-btn:hover { border-color: var(--sage); color: var(--sage); }
 .header-btn.primary { background: var(--sage); color: #111; border-color: var(--sage); }
 .header-btn.primary:hover { background: var(--sage-dark); border-color: var(--sage-dark); }
+.hdr-menu { position: relative; display: inline-block; }
+.hdr-menu-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  min-width: 180px;
+  padding: 4px;
+  display: none;
+  z-index: 200;
+}
+.hdr-menu.open .hdr-menu-list { display: block; }
+.hdr-menu-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+.hdr-menu-list button:hover { background: var(--bg-input); color: var(--sage); }
 .icon-btn {
   background: transparent;
   border: 1px solid var(--border);
@@ -1973,8 +2004,13 @@ body {
     <div class="header-actions">
       <span class="user-indicator" id="userIndicator" style="display:none;"></span>
       <span class="draft-indicator" id="draftIndicator"></span>
-      <button class="header-btn primary" onclick="newBrief()">+ New Brief</button>
-      <button class="header-btn" onclick="newPlan()">+ Day Plan</button>
+      <div class="hdr-menu" id="createMenuWrap">
+        <button class="header-btn primary" type="button" onclick="toggleCreateMenu(event)">+ Create new ▾</button>
+        <div class="hdr-menu-list" id="createMenuList" role="menu">
+          <button type="button" role="menuitem" onclick="closeCreateMenu(); newBrief();">📋 New Brief</button>
+          <button type="button" role="menuitem" onclick="closeCreateMenu(); newPlan();">📝 New Day Plan</button>
+        </div>
+      </div>
       <button class="header-btn" id="btnEvents" onclick="openEventsModal()">Load Brief</button>
       <button class="header-btn" id="btnBulk" onclick="openBulkModal()">Import</button>
       <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
@@ -6033,6 +6069,24 @@ function setBriefState(state) {
   const el = document.getElementById('step1Title');
   if (el) el.textContent = (briefState === 'continued' ? 'Continued' : 'New Brief') + ' — Event Overview';
 }
+
+// ─── HEADER "CREATE NEW" DROPDOWN ─────────────────────────────
+function toggleCreateMenu(e) {
+  if (e) e.stopPropagation();
+  const wrap = document.getElementById('createMenuWrap');
+  if (!wrap) return;
+  wrap.classList.toggle('open');
+}
+function closeCreateMenu() {
+  const wrap = document.getElementById('createMenuWrap');
+  if (wrap) wrap.classList.remove('open');
+}
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('createMenuWrap');
+  if (!wrap || !wrap.classList.contains('open')) return;
+  if (!wrap.contains(e.target)) closeCreateMenu();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCreateMenu(); });
 
 function newBrief() {
   const cur = collectFormData();
