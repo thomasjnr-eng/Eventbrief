@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-02-tuesday",
-  "savedAt": "2026-06-02T23:23:13.546Z",
+  "savedAt": "2026-06-02T23:23:16.107Z",
   "savedBy": "Ae",
   "form": {
     "title": "Tuesday😬",
@@ -19,9 +19,9 @@
         "priority": "medium",
         "dueTime": "12:30",
         "eventLink": "",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "Ae",
+        "doneAt": "2026-06-02T23:23:15.643Z"
       },
       {
         "label": "Plug in fridge vans and switch generators on for a couple hours ",
