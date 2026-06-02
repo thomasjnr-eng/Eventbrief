@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "id": "2026-06-08-beyond-the-pale-crew-catering",
+  "savedAt": "2026-06-02T16:47:54.175Z",
+  "form": {
+    "planTitle": "",
+    "planDate": "",
+    "planStart": "",
+    "planEnd": "",
+    "planLead": "",
+    "planAssigned": "",
+    "planNotes": "",
+    "eventName": "Beyond the Pale - Crew Catering",
+    "bookingStatus": "Confirmed",
+    "clientName": "Fuel",
+    "clientType": "Private",
+    "contactName": "Fiona McGinn ",
+    "contactPhone": "0876477580",
+    "contactEmail": "fiona@fuelhq.ie",
+    "onsiteContact": "",
+    "loadInDate": "2026-06-06",
+    "loadInTime": "12:30",
+    "eventStartDate": "",
+    "eventStartTime": "",
+    "eventFinishDate": "",
+    "eventFinishTime": "",
+    "loadOutDate": "2026-06-15",
+    "loadOutTime": "10:30",
+    "loadNotes": "",
+    "attendance": "",
+    "venueName": "Glendalough Estate, Co. Wicklow",
+    "venueAddress": "Glendalough Estate, Co. Wicklow",
+    "accessNotes": "",
+    "otherUnits": "",
+    "pitchRef": "",
+    "pitchSize": "",
+    "groundSurface": "",
+    "vehicleLayout": "",
+    "pitchNotes": "",
+    "cableRun": "",
+    "powerNotes": "",
+    "dieselSource": "",
+    "dieselResponsible": "",
+    "dieselNotes": "",
+    "waterSource": "",
+    "waterVolume": "",
+    "wasteDisposal": "",
+    "solidWaste": "",
+    "waterNotes": "",
+    "commercialClient": "",
+    "commercialClientRef": "",
+    "pitchFeeAmount": "",
+    "pitchFeeType": "",
+    "pitchFeePayableTo": "",
+    "pitchFeeNotes": "",
+    "revSharePct": "",
+    "revShareBasis": "",
+    "revShareSettlement": "",
+    "revShareNotes": "",
+    "prePaidCovers": "",
+    "prePaidPrice": "",
+    "prePaidTotal": "",
+    "minSpend": "",
+    "prePaidMenu": "",
+    "prePaidNotes": "",
+    "voucherDetails": "",
+    "posNotes": "",
+    "foodCovers": "",
+    "coffeeCovers": "",
+    "icecreamCovers": "",
+    "deliveryDate": "",
+    "coldChain": "",
+    "stockNotes": "",
+    "menuNotes": "",
+    "eventManager": "",
+    "opsLead": "",
+    "leadChef": "",
+    "staffNotes": "",
+    "clientInstructions": "",
+    "opsNotes": "",
+    "postEventNotes": "",
+    "_fleet": [],
+    "_power": [],
+    "_revenue": [],
+    "_pos": [],
+    "_safety": [],
+    "_isScattered": true,
+    "_tradingDays": [
+      {
+        "date": "2026-06-08",
+        "startTime": "09:30",
+        "endTime": "17:30",
+        "notes": "Crew - Breakfast/Lunch"
+      },
+      {
+        "date": "2026-06-09",
+        "startTime": "09:30",
+        "endTime": "17:30",
+        "notes": "Crew - Breakfast/Lunch"
+      },
+      {
+        "date": "2026-06-10",
+        "startTime": "09:30",
+        "endTime": "17:30",
+        "notes": "Crew - Breakfast/Lunch"
+      },
+      {
+        "date": "2026-06-11",
+        "startTime": "09:30",
+        "endTime": "17:30",
+        "notes": "Crew - Breakfast/Lunch"
+      },
+      {
+        "date": "2026-06-12",
+        "startTime": "09:30",
+        "endTime": "17:30",
+        "notes": "Crew, Backstage & Artist Catering "
+      }
+    ],
+    "_iceVansNeedPower": false,
+    "_stockStatuses": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_xkzfoom",
+        "name": "Raceday",
+        "start": "15:00",
+        "end": "20:30"
+      }
+    ],
+    "_menu": {
+      "Fried Chicken Truck": [],
+      "Pitt Bros BBQ": [],
+      "231-D": []
+    },
+    "_crewRoster": {},
+    "_staffAllocations": [],
+    "_truckSafetyChecks": {
+      "Fried Chicken Truck": [],
+      "Pitt Bros BBQ": [],
+      "231-D": []
+    },
+    "_signatures": [],
+    "_changeLog": {
+      "step1": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:47:53.326Z"
+      }
+    },
+    "_crewChecklists": {},
+    "_signOffs": []
+  }
+}
