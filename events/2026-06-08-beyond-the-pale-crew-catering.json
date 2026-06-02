@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-08-beyond-the-pale-crew-catering",
-  "savedAt": "2026-06-02T16:55:10.097Z",
+  "savedAt": "2026-06-02T16:58:07.512Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -136,15 +136,29 @@
     "_serviceWindows": [
       {
         "id": "sw_xkzfoom",
-        "name": "Raceday",
-        "start": "15:00",
-        "end": "20:30"
+        "name": "Breakfast",
+        "start": "09:00",
+        "end": "10:30"
+      },
+      {
+        "id": "sw_ninxong",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:00"
+      },
+      {
+        "id": "sw_o7w0w9i",
+        "name": "Dinner",
+        "start": "17:00",
+        "end": "18:00"
       }
     ],
     "_menu": {
       "Camile Thai": []
     },
-    "_crewRoster": {},
+    "_crewRoster": {
+      "Camile Thai": []
+    },
     "_staffAllocations": [],
     "_truckSafetyChecks": {
       "Fried Chicken Truck": [],
@@ -168,6 +182,10 @@
       "step4": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:55:07.752Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:57:41.241Z"
       }
     },
     "_crewChecklists": {
