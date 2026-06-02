@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T16:21:05.180Z",
+  "savedAt": "2026-06-02T16:21:18.946Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -47,7 +47,7 @@
     "wasteDisposal": "On-site drain available",
     "solidWaste": "Venue provides bins",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Levy",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
@@ -132,6 +132,10 @@
       "step2": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:21:03.683Z"
+      },
+      "step3": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:21:08.967Z"
       }
     },
     "_crewChecklists": {
