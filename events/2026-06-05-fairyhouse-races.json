@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T16:27:53.944Z",
+  "savedAt": "2026-06-02T16:32:15.650Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -53,8 +53,8 @@
     "pitchFeeType": "",
     "pitchFeePayableTo": "",
     "pitchFeeNotes": "",
-    "revSharePct": "",
-    "revShareBasis": "",
+    "revSharePct": "20",
+    "revShareBasis": "Net takings",
     "revShareSettlement": "",
     "revShareNotes": "",
     "prePaidCovers": "",
@@ -87,8 +87,15 @@
     "_power": [
       "We provide generator"
     ],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Revenue share / percentage",
+      "Cash / card trading"
+    ],
+    "_pos": [
+      "Client / venue POS system",
+      "Client vouchers accepted",
+      "Card only"
+    ],
     "_safety": [],
     "_isScattered": true,
     "_tradingDays": [
@@ -135,7 +142,7 @@
       },
       "step3": {
         "user": "Thomas O'Brien",
-        "at": "2026-06-02T16:21:08.967Z"
+        "at": "2026-06-02T16:32:10.609Z"
       }
     },
     "_crewChecklists": {
