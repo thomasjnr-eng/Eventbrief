@@ -2,8 +2,8 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-02-tuesday",
-  "savedAt": "2026-06-01T19:50:00.019Z",
-  "savedBy": "TOB",
+  "savedAt": "2026-06-02T23:23:01.829Z",
+  "savedBy": "Ae",
   "form": {
     "title": "Tuesday😬",
     "planDate": "2026-06-02",
@@ -69,9 +69,9 @@
         "priority": "high",
         "dueTime": "09:30",
         "eventLink": "",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "Ae",
+        "doneAt": "2026-06-02T23:22:59.272Z"
       }
     ]
   }
