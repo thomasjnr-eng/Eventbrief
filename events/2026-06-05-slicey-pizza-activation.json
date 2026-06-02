@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-slicey-pizza-activation",
-  "savedAt": "2026-06-02T16:08:16.749Z",
+  "savedAt": "2026-06-02T16:09:24.648Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -99,15 +99,17 @@
     "_serviceWindows": [
       {
         "id": "sw_xkzfoom",
-        "name": "Breakfast Coffee & Pastries",
-        "start": "09:15",
-        "end": "12:30"
+        "name": "Activation",
+        "start": "10:00",
+        "end": "15:00"
       }
     ],
     "_menu": {
       "Vespa Cart #1": []
     },
-    "_crewRoster": {},
+    "_crewRoster": {
+      "Vespa Cart #1": []
+    },
     "_staffAllocations": [],
     "_truckSafetyChecks": {
       "Caffe Duomo 2": []
@@ -125,6 +127,10 @@
       "step3": {
         "user": "Thomas O'Brien",
         "at": "2026-06-02T16:08:02.381Z"
+      },
+      "step5": {
+        "user": "Thomas O'Brien",
+        "at": "2026-06-02T16:09:19.666Z"
       }
     },
     "_crewChecklists": {
