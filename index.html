@@ -448,6 +448,76 @@ body {
 .brief-dir-btn:hover { opacity: 0.9; }
 @media print { .brief-directions { display: none; } }
 
+/* ─── BRIEF CLOCK-IN / CLOCK-OUT CARD ─── */
+.brief-clock-card {
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-left: 4px solid #5a7a4f;
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+}
+.bcc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.bcc-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  color: #5a7a4f;
+}
+.bcc-user { font-size: 12px; color: #555; }
+.bcc-user strong { color: #111; }
+.bcc-pin { font-size: 12px; color: #555; margin-bottom: 10px; }
+.bcc-pin.unset { color: #b07a10; font-weight: 700; }
+.bcc-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.bcc-btn {
+  background: #5a7a4f; color: #fff;
+  border: none; border-radius: 3px;
+  padding: 12px 22px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+.bcc-btn:hover { background: #466e3a; }
+.bcc-btn.out { background: #b07a10; }
+.bcc-btn.out:hover { background: #8c6210; }
+.bcc-btn.disabled { background: #ccc; cursor: not-allowed; }
+.bcc-state {
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #999;
+}
+.bcc-state.in  { color: #2d7a49; font-weight: 700; }
+.bcc-state.out { color: #999; }
+.bcc-log {
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  font-size: 12px;
+}
+.bcc-log-item {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0ece6;
+  align-items: baseline;
+}
+.bcc-log-item:last-child { border-bottom: none; }
+.bcc-log-item .bli-type.in  { color: #2d7a49; font-weight: 700; }
+.bcc-log-item .bli-type.out { color: #b07a10; font-weight: 700; }
+.bcc-log-item .bli-user { color: #111; font-weight: 700; }
+.bcc-log-item .bli-time { color: #555; font-size: 11px; white-space: nowrap; }
+.bcc-log-item .bli-meta { grid-column: 2 / 4; color: #888; font-size: 11px; font-style: italic; }
+.bcc-log-empty { color: #999; font-style: italic; font-size: 12px; }
+@media print { .bcc-actions { display: none; } }
+
 .brief-section {
   margin-bottom: 24px;
   /* Allow long sections to flow across pages — forcing avoid on these
@@ -2209,6 +2279,27 @@ body {
     </div>
   </div>
 
+  <div class="card">
+    <div class="card-title">📍 Venue Pin (Clock-In Geofence)</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Pin the venue's GPS location so ops crew can clock in/out automatically when on site. Default radius is 200&nbsp;m — increase for large grounds.</p>
+    <div class="grid-3" style="margin-bottom:10px;">
+      <div class="field" style="grid-column: span 2;">
+        <label>Pinned location</label>
+        <input type="text" id="venuePinLabel" placeholder="Not pinned yet" readonly>
+      </div>
+      <div class="field">
+        <label>Radius (m)</label>
+        <input type="number" id="venueRadius" min="20" max="2000" step="10" placeholder="200" onchange="onVenueRadiusChange()">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button type="button" class="btn btn-secondary" onclick="pinVenueFromAddress()" style="font-size:12px;padding:8px 14px;">📍 Auto-pin from address</button>
+      <button type="button" class="btn btn-secondary" onclick="pinVenueFromGPS()" style="font-size:12px;padding:8px 14px;">📡 Use my current location</button>
+      <button type="button" class="btn btn-secondary" onclick="clearVenuePin()" style="font-size:12px;padding:8px 14px;">Clear</button>
+    </div>
+    <div id="venuePinStatus" style="margin-top:10px;font-size:12px;color:var(--grey);"></div>
+  </div>
+
   <div class="nav-bar">
     <div></div>
     <div style="display:flex;gap:10px;align-items:center;">
@@ -3439,6 +3530,260 @@ function collectTruckSafety() {
     out[truck] = checked;
   });
   return out;
+}
+
+// ─── VENUE PIN + CLOCK-IN GEOFENCE ──────────────────────────────
+// VENUE_PIN: { lat, lng, formatted, source, radius } — set per event.
+// CLOCK_ENTRIES: append-only log of [{ user, type, timestamp, lat, lng,
+//   distance, withinFence, reason }]. Each crew member self-clocks; if
+//   they're outside the geofence they must add a short reason.
+let VENUE_PIN = null;
+let CLOCK_ENTRIES = [];
+const DEFAULT_GEOFENCE_RADIUS = 200;
+
+function haversineMeters(lat1, lng1, lat2, lng2) {
+  const toRad = x => x * Math.PI / 180;
+  const R = 6371000;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function getCurrentPos(opts) {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) return reject(new Error('Geolocation not supported on this device'));
+    navigator.geolocation.getCurrentPosition(
+      p => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, accuracy: p.coords.accuracy }),
+      e => reject(e),
+      Object.assign({ enableHighAccuracy: true, timeout: 12000, maximumAge: 5000 }, opts || {})
+    );
+  });
+}
+
+function venueRadius() {
+  const inp = document.getElementById('venueRadius');
+  let r = inp ? parseInt(inp.value, 10) : NaN;
+  if (!Number.isFinite(r) || r < 20) r = (VENUE_PIN && VENUE_PIN.radius) || DEFAULT_GEOFENCE_RADIUS;
+  return r;
+}
+
+function renderVenuePinStatus() {
+  const label = document.getElementById('venuePinLabel');
+  const status = document.getElementById('venuePinStatus');
+  const radiusInp = document.getElementById('venueRadius');
+  if (label) label.value = VENUE_PIN && VENUE_PIN.lat != null
+    ? (VENUE_PIN.formatted || (VENUE_PIN.lat.toFixed(5) + ', ' + VENUE_PIN.lng.toFixed(5)))
+    : '';
+  if (radiusInp && (!radiusInp.value || radiusInp.value === '0')) {
+    radiusInp.value = (VENUE_PIN && VENUE_PIN.radius) || DEFAULT_GEOFENCE_RADIUS;
+  }
+  if (status) {
+    if (VENUE_PIN && VENUE_PIN.lat != null) {
+      const r = venueRadius();
+      const src = VENUE_PIN.source === 'google' ? 'Google Maps'
+                : VENUE_PIN.source === 'nominatim' ? 'OpenStreetMap'
+                : VENUE_PIN.source === 'gps' ? 'GPS capture'
+                : 'manual';
+      status.innerHTML = '✓ Pinned at <strong>' + VENUE_PIN.lat.toFixed(5) + ', ' + VENUE_PIN.lng.toFixed(5) + '</strong> · ' + r + 'm radius · <em>via ' + src + '</em>';
+      status.style.color = '#2d7a49';
+    } else {
+      status.innerHTML = 'Not pinned yet — crew can\'t clock in until you tap one of the buttons above.';
+      status.style.color = '';
+    }
+  }
+}
+
+async function pinVenueFromAddress() {
+  const addr = ((val('venueName') || '') + ' ' + (val('venueAddress') || '')).trim();
+  if (!addr) { toast('Add a venue name or address first', 'error'); return; }
+  toast('Looking up address…');
+  try {
+    const res = await apiCall('/geocode', { method: 'POST', body: JSON.stringify({ address: addr }) });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      toast('Geocode failed (' + res.status + '): ' + (d.error || d.message || 'unknown'), 'error');
+      return;
+    }
+    const d = await res.json();
+    VENUE_PIN = { lat: d.lat, lng: d.lng, formatted: d.formatted, source: d.source, radius: venueRadius() };
+    renderVenuePinStatus();
+    toast('Pinned ✓ (' + d.source + ')');
+    if (typeof recordChange === 'function') recordChange();
+    if (typeof autoSaveDraft === 'function') autoSaveDraft();
+  } catch (e) {
+    if (e.message === 'NO_PASSCODE') { openSettingsModal(); return; }
+    toast('Geocode failed: ' + e.message, 'error');
+  }
+}
+
+async function pinVenueFromGPS() {
+  toast('Getting your location…');
+  try {
+    const p = await getCurrentPos();
+    VENUE_PIN = { lat: p.lat, lng: p.lng, formatted: p.lat.toFixed(5) + ', ' + p.lng.toFixed(5), source: 'gps', radius: venueRadius() };
+    renderVenuePinStatus();
+    toast('Pinned to current location ✓ (±' + Math.round(p.accuracy) + 'm)');
+    if (typeof recordChange === 'function') recordChange();
+    if (typeof autoSaveDraft === 'function') autoSaveDraft();
+  } catch (e) {
+    toast('Location denied or unavailable: ' + (e.message || e.code), 'error');
+  }
+}
+
+function clearVenuePin() {
+  VENUE_PIN = null;
+  renderVenuePinStatus();
+  if (typeof recordChange === 'function') recordChange();
+  if (typeof autoSaveDraft === 'function') autoSaveDraft();
+}
+
+function onVenueRadiusChange() {
+  if (VENUE_PIN) {
+    VENUE_PIN.radius = venueRadius();
+    renderVenuePinStatus();
+  }
+}
+
+// ─── CLOCK CARD on the generated brief ─────────────────────────
+function lastClockEntryFor(user) {
+  for (let i = CLOCK_ENTRIES.length - 1; i >= 0; i--) {
+    if (CLOCK_ENTRIES[i].user === user) return CLOCK_ENTRIES[i];
+  }
+  return null;
+}
+
+function userIsClockedIn(user) {
+  const last = lastClockEntryFor(user);
+  return !!(last && last.type === 'in');
+}
+
+function fmtClockStamp(iso) {
+  if (!iso) return '';
+  try {
+    return new Date(iso).toLocaleString('en-IE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+  } catch (e) { return iso; }
+}
+
+function renderBriefClockCard() {
+  const user = (typeof getUser === 'function' && getUser()) || '';
+  const pinSet = !!(VENUE_PIN && VENUE_PIN.lat != null);
+  const r = pinSet ? (VENUE_PIN.radius || DEFAULT_GEOFENCE_RADIUS) : DEFAULT_GEOFENCE_RADIUS;
+  const myAction = userIsClockedIn(user) ? 'out' : 'in';
+  const btnLabel = myAction === 'in' ? '🕐 Clock In' : '🚪 Clock Out';
+  const btnClass = myAction === 'in' ? '' : 'out';
+  const state = myAction === 'in' ? 'NOT CLOCKED IN' : 'CLOCKED IN';
+  const stateClass = myAction === 'in' ? 'out' : 'in';
+
+  const pinLine = pinSet
+    ? '<div class="bcc-pin">📍 Venue pinned · ' + r + 'm geofence · <em>' + (VENUE_PIN.formatted || '').replace(/</g, '&lt;') + '</em></div>'
+    : '<div class="bcc-pin unset">⚠ Venue not pinned — set it in Step&nbsp;1 before crew can clock in.</div>';
+
+  const userLine = user
+    ? '<div class="bcc-user">You: <strong>' + user.replace(/</g, '&lt;') + '</strong> &middot; <span class="bcc-state ' + stateClass + '">' + state + '</span></div>'
+    : '<div class="bcc-user" style="color:#b07a10;">Set your name in Settings to clock in.</div>';
+
+  const btn = (pinSet && user)
+    ? '<button type="button" class="bcc-btn ' + btnClass + '" onclick="onClockClick()">' + btnLabel + '</button>'
+    : '<button type="button" class="bcc-btn disabled" disabled>' + btnLabel + '</button>';
+
+  const recent = CLOCK_ENTRIES.slice().reverse().slice(0, 20);
+  const log = recent.length
+    ? recent.map(e => {
+        const meta = (!e.withinFence ? '⚠ ' + e.distance + 'm outside fence' + (e.reason ? ' — ' + e.reason : '') : '');
+        return '<div class="bcc-log-item">' +
+          '<div class="bli-type ' + e.type + '">' + (e.type === 'in' ? 'IN' : 'OUT') + '</div>' +
+          '<div class="bli-user">' + (e.user || '').replace(/</g, '&lt;') + '</div>' +
+          '<div class="bli-time">' + fmtClockStamp(e.timestamp) + '</div>' +
+          (meta ? '<div class="bli-meta">' + meta.replace(/</g, '&lt;') + '</div>' : '') +
+          '</div>';
+      }).join('')
+    : '<div class="bcc-log-empty">No clock-ins yet for this event.</div>';
+
+  return '<div class="brief-clock-card" id="briefClockCard">' +
+    '<div class="bcc-head">' +
+      '<div class="bcc-title">🕐 ON-SITE CLOCK IN / OUT</div>' +
+      userLine +
+    '</div>' +
+    pinLine +
+    '<div class="bcc-actions">' + btn + '</div>' +
+    '<div class="bcc-log" id="briefClockLog">' + log + '</div>' +
+    '</div>';
+}
+
+function refreshClockCard() {
+  const host = document.getElementById('briefClockCard');
+  if (!host) return;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = renderBriefClockCard();
+  if (wrap.firstChild) host.replaceWith(wrap.firstChild);
+}
+
+async function onClockClick() {
+  const user = (typeof getUser === 'function' && getUser()) || '';
+  if (!user) { toast('Set your name in Settings first', 'error'); openSettingsModal(); return; }
+  if (!VENUE_PIN || VENUE_PIN.lat == null) { toast('Venue not pinned — set it in Step 1 first', 'error'); return; }
+  const action = userIsClockedIn(user) ? 'out' : 'in';
+
+  toast('Getting your location…');
+  let pos;
+  try { pos = await getCurrentPos(); }
+  catch (e) { toast('Location denied: ' + (e.message || e.code || 'unknown'), 'error'); return; }
+
+  const dist = haversineMeters(VENUE_PIN.lat, VENUE_PIN.lng, pos.lat, pos.lng);
+  const radius = VENUE_PIN.radius || DEFAULT_GEOFENCE_RADIUS;
+  const within = dist <= radius;
+
+  let reason = '';
+  if (!within) {
+    const r = prompt('You\'re ' + Math.round(dist) + 'm from the venue (' + radius + 'm geofence). Add a short reason to clock ' + action + ' anyway:');
+    if (r === null) return;
+    if (!r.trim()) { toast('A reason is required to clock ' + action + ' outside the geofence', 'error'); return; }
+    reason = r.trim();
+  }
+
+  const entry = {
+    user,
+    type: action,
+    timestamp: new Date().toISOString(),
+    lat: +pos.lat.toFixed(6),
+    lng: +pos.lng.toFixed(6),
+    distance: Math.round(dist),
+    withinFence: within,
+    reason
+  };
+
+  // Pull the freshest entries from the server before saving, so two crew
+  // members clocking in seconds apart don't overwrite each other.
+  try {
+    const data = collectFormDataLight ? collectFormDataLight() : collectFormData();
+    const filename = eventIdFor(data) + '.json';
+    if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[filename];
+    const latest = await getEventByFilename(filename);
+    if (latest && latest.form && Array.isArray(latest.form._clockEntries)) {
+      const seen = new Set();
+      const merged = [];
+      [...latest.form._clockEntries, ...CLOCK_ENTRIES, entry].forEach(e => {
+        const k = (e.user || '') + '|' + (e.timestamp || '') + '|' + (e.type || '');
+        if (!seen.has(k)) { seen.add(k); merged.push(e); }
+      });
+      CLOCK_ENTRIES = merged;
+    } else {
+      CLOCK_ENTRIES = CLOCK_ENTRIES.concat([entry]);
+    }
+  } catch (e) {
+    // Server unreachable — keep the entry locally and try to save anyway.
+    CLOCK_ENTRIES = CLOCK_ENTRIES.concat([entry]);
+  }
+  refreshClockCard();
+
+  if (typeof saveEvent === 'function') {
+    try { await saveEvent({ silent: true }); toast('Clocked ' + action + (within ? ' ✓' : ' (outside fence)')); }
+    catch (e) { toast('Clocked locally — couldn\'t sync to server (' + e.message + ')', 'error'); }
+  } else {
+    toast('Clocked ' + action);
+  }
 }
 
 // ─── MENU & SERVICE TIMES (per-truck items, event-wide windows) ─
@@ -4716,6 +5061,8 @@ function generateBrief() {
         '</div>';
     })() : ''}
 
+    ${renderBriefClockCard()}
+
     ${isCrew && fleet.length ? (() => {
       const progress = crewProgressFor(CREW_CHECKLISTS);
       const overallColor = progress.percent === 100 ? '#4a9a5c' : progress.percent >= 50 ? '#c89a4a' : '#c0392b';
@@ -5655,6 +6002,9 @@ function newBrief() {
   CREW_ROSTER = {};
   SERVICE_WINDOWS = [];
   MENU = {};
+  VENUE_PIN = null;
+  CLOCK_ENTRIES = [];
+  renderVenuePinStatus();
   // Reset scattered toggle
   const sc = document.getElementById('isScattered');
   if (sc) { sc.checked = false; toggleScattered(); }
@@ -5979,6 +6329,10 @@ function collectFormData() {
   syncMenuFromDOM();
   data._serviceWindows = SERVICE_WINDOWS;
   data._menu = MENU;
+  // Geofence: keep radius in sync with the Step 1 input
+  if (VENUE_PIN) VENUE_PIN.radius = venueRadius();
+  data._venuePin = VENUE_PIN;
+  data._clockEntries = CLOCK_ENTRIES;
   syncRosterFromDOM();
   data._crewRoster = CREW_ROSTER;
   // Legacy back-compat summary
@@ -6040,6 +6394,12 @@ function populateForm(data) {
   MENU = (data._menu && typeof data._menu === 'object') ? data._menu : {};
   renderServiceWindows();
   renderMenu(MENU);
+  // Venue pin + clock entries
+  VENUE_PIN = (data._venuePin && typeof data._venuePin === 'object' && data._venuePin.lat != null) ? data._venuePin : null;
+  CLOCK_ENTRIES = Array.isArray(data._clockEntries) ? data._clockEntries.slice() : [];
+  const radInp = document.getElementById('venueRadius');
+  if (radInp) radInp.value = (VENUE_PIN && VENUE_PIN.radius) || DEFAULT_GEOFENCE_RADIUS;
+  renderVenuePinStatus();
   // Migrate _staffAllocations → _crewRoster if loading an older event
   if (data._crewRoster && typeof data._crewRoster === 'object') {
     CREW_ROSTER = data._crewRoster;

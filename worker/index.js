@@ -14,6 +14,9 @@
 //   ANTHROPIC_API_KEY  (optional) Claude API key for the Import screenshot
 //                      extraction. If unset, /extract returns a 503 telling
 //                      the user to add the key in Settings.
+//   GOOGLE_MAPS_API_KEY (optional) Google Geocoding API key. If unset, the
+//                      /geocode route falls back to OpenStreetMap Nominatim
+//                      (free, low volume only).
 
 const corsHeaders = (origin) => ({
   'Access-Control-Allow-Origin': origin || '*',
@@ -49,6 +52,16 @@ export default {
       }
       if (path === '/extract' && request.method === 'POST') {
         return await extractFromImage(await request.json(), env, origin);
+      }
+      if (path === '/geocode' && (request.method === 'POST' || request.method === 'GET')) {
+        let address;
+        if (request.method === 'POST') {
+          const body = await request.json().catch(() => ({}));
+          address = body.address;
+        } else {
+          address = url.searchParams.get('address');
+        }
+        return await geocodeAddress(address, env, origin);
       }
       const m = path.match(/^\/events\/(.+)$/);
       if (m) {
@@ -204,6 +217,54 @@ async function extractFromImage(payload, env, origin) {
     return json({ error: 'parse_failed', raw: text }, 502, origin);
   }
   return json({ events: Array.isArray(parsed.events) ? parsed.events : [] }, 200, origin);
+}
+
+// ─── GEOCODING ───────────────────────────────────────────────
+// Converts a free-text address to lat/lng so the frontend can
+// draw a geofence and check whether crew clock-ins are on site.
+// Prefers Google Geocoding API when GOOGLE_MAPS_API_KEY is set
+// (accurate, low-cost), falling back to Nominatim (free, but low
+// volume only — they ask ≤1 req/sec and a real User-Agent).
+async function geocodeAddress(address, env, origin) {
+  if (!address || !String(address).trim()) {
+    return json({ error: 'address required' }, 400, origin);
+  }
+  const q = String(address).trim();
+  if (env.GOOGLE_MAPS_API_KEY) {
+    try {
+      const r = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(q) + '&key=' + env.GOOGLE_MAPS_API_KEY);
+      if (r.ok) {
+        const d = await r.json();
+        const hit = d.results && d.results[0];
+        if (hit && hit.geometry && hit.geometry.location) {
+          return json({
+            lat: hit.geometry.location.lat,
+            lng: hit.geometry.location.lng,
+            formatted: hit.formatted_address,
+            source: 'google'
+          }, 200, origin);
+        }
+      }
+    } catch (e) {
+      // fall through to Nominatim
+    }
+  }
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(q) + '&format=json&limit=1&addressdetails=0', {
+      headers: { 'User-Agent': 'obrien-brief-worker (ops@obrieneventcatering.com)' }
+    });
+    if (!r.ok) return json({ error: 'nominatim_' + r.status }, 502, origin);
+    const d = await r.json();
+    if (!d.length) return json({ error: 'no_results' }, 404, origin);
+    return json({
+      lat: parseFloat(d[0].lat),
+      lng: parseFloat(d[0].lon),
+      formatted: d[0].display_name,
+      source: 'nominatim'
+    }, 200, origin);
+  } catch (e) {
+    return json({ error: 'geocode_unreachable', detail: e.message }, 502, origin);
+  }
 }
 
 // UTF-8 safe base64 (atob/btoa in Workers handle Latin-1 only)
