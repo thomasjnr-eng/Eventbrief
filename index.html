@@ -2121,8 +2121,14 @@ body {
   <div class="welcome-card">
     <div class="welcome-logo">O'<span>Brien</span> Event Catering</div>
     <div class="welcome-title">Event Briefs</div>
-    <div class="welcome-sub">Enter your name and the team passcode. Your name is used to attribute changes per section.</div>
+    <div class="welcome-sub">Set your name, role and the team passcode. The dashboard tailors itself to your role.</div>
     <input type="text" class="welcome-input" id="welcomeName" placeholder="Your name (e.g. Tom O'Brien)" autocomplete="off">
+    <select class="welcome-input" id="welcomeRole">
+      <option value="crew">Crew Member</option>
+      <option value="truck_lead">Truck Lead</option>
+      <option value="ops_lead">Ops Lead</option>
+      <option value="manager">Manager</option>
+    </select>
     <input type="password" class="welcome-input" id="welcomePasscode" placeholder="Team passcode" autocomplete="off" onkeydown="if(event.key==='Enter') submitWelcomePasscode()">
     <div class="welcome-error" id="welcomeError"></div>
     <button class="welcome-submit" id="welcomeSubmit" onclick="submitWelcomePasscode()">Continue</button>
@@ -2178,9 +2184,19 @@ body {
     <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
     <div class="modal-title">Settings</div>
     <div class="modal-body">
-      <p><strong style="color:var(--white);">Signed in as</strong> <span id="settingsUser" style="color:var(--sage);">—</span></p>
-      <div class="modal-actions" style="justify-content:flex-start;margin-top:6px;margin-bottom:18px;">
+      <p><strong style="color:var(--white);">Signed in as</strong> <span id="settingsUser" style="color:var(--sage);">—</span> <span style="color:var(--text-muted);font-size:12px;">· <span id="settingsRoleLabel">Crew Member</span></span></p>
+      <div class="modal-actions" style="justify-content:flex-start;margin-top:6px;margin-bottom:14px;">
         <button class="btn btn-secondary" onclick="signOut()" style="font-size:13px;padding:8px 16px;">Sign out / switch user</button>
+      </div>
+      <div class="field" style="margin-bottom:18px;">
+        <label>Your Role</label>
+        <select id="settingsRoleSelect" onchange="onRoleSelectChange(this.value)">
+          <option value="crew">Crew Member</option>
+          <option value="truck_lead">Truck Lead</option>
+          <option value="ops_lead">Ops Lead</option>
+          <option value="manager">Manager (requires manager code)</option>
+        </select>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Your dashboard tailors itself to your role. Pick the closest one — only Manager needs the code below.</p>
       </div>
       <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
       <p><strong style="color:var(--white);">Appearance</strong></p>
@@ -2332,9 +2348,9 @@ body {
 
   <div id="globalClockWidget" class="global-clock-widget" style="display:none;"></div>
 
-  <div id="onClockBox" class="on-clock-box" style="display:none;"></div>
+  <div id="onClockBox" class="on-clock-box" data-role-min="manager" style="display:none;"></div>
 
-  <div id="actionRequired" class="action-required" style="display:none;"></div>
+  <div id="actionRequired" class="action-required" data-role-min="ops_lead" style="display:none;"></div>
 
   <div id="dashboard" class="dashboard"></div>
   <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
@@ -6141,6 +6157,26 @@ function addToCalendar() {
 const WORKER_URL = 'https://obrien-brief-api.thomasjnr.workers.dev';
 const PASSCODE_KEY = 'obrien_brief_passcode';
 const USER_KEY = 'obrien_brief_user';
+const ROLE_KEY = 'obrien_brief_role';
+
+// Roles, in increasing order of access. The dashboard hides cards that
+// don't apply to a role. Manager is the only role that needs the manager
+// code on top — self-declared manager just gets the ops_lead view until
+// they unlock manager mode in Settings.
+const ROLES = ['crew', 'truck_lead', 'ops_lead', 'manager'];
+const ROLE_LABELS = {
+  crew: 'Crew Member',
+  truck_lead: 'Truck Lead',
+  ops_lead: 'Ops Lead',
+  manager: 'Manager'
+};
+function getRole() { return localStorage.getItem(ROLE_KEY) || 'crew'; }
+function setRole(r) {
+  if (!ROLES.includes(r)) r = 'crew';
+  localStorage.setItem(ROLE_KEY, r);
+}
+function roleRank(r) { return Math.max(0, ROLES.indexOf(r || getRole())); }
+function roleAtLeast(min) { return roleRank(getRole()) >= roleRank(min); }
 const DRAFT_KEY = 'obrien_brief_draft';
 const THEME_KEY = 'obrien_brief_theme';
 
@@ -6542,12 +6578,23 @@ async function submitWelcomePasscode() {
     }
     setUser(name);
     setPasscode(code);
+    const roleSel = document.getElementById('welcomeRole');
+    const pickedRole = roleSel ? roleSel.value : 'crew';
+    // Manager role can't be self-assigned at sign-in — they must unlock
+    // with the manager code in Settings. Default new managers to ops_lead
+    // so they still get the elevated dashboard until they unlock.
+    setRole(pickedRole === 'manager' ? 'ops_lead' : pickedRole);
     closeWelcomeOverlay();
     btn.disabled = false; btn.textContent = 'Continue';
     nameInp.value = ''; codeInp.value = '';
     showHome();
     checkDoubleBooking();
-    toast('Welcome, ' + name);
+    if (pickedRole === 'manager') {
+      toast('Welcome, ' + name + '. Unlock manager mode in Settings.');
+      openSettingsModal();
+    } else {
+      toast('Welcome, ' + name);
+    }
   } catch (e) {
     showWelcomeError('Network error — try again. (' + e.message + ')');
     btn.disabled = false; btn.textContent = 'Continue';
@@ -6564,6 +6611,7 @@ function openSettingsModal() {
   if (u) u.textContent = getUser() || '— (not signed in)';
   refreshThemeButtons();
   refreshManagerBadge();
+  refreshRoleControls();
   const ls = document.getElementById('settingsLastSync');
   if (ls) {
     const s = cacheLastSynced();
@@ -7388,6 +7436,7 @@ async function renderHomePlans() {
 
 // ─── HOME VIEW RENDERING ──────────────────────────────────────
 async function renderHome() {
+  renderRoleVisibility();
   const greetEl = document.getElementById('homeGreetUser');
   if (greetEl) {
     const u = getUser();
@@ -7553,11 +7602,14 @@ async function unlockManagerMode() {
     if (res.status === 401) { toast('Manager code rejected', 'error'); return; }
     if (!res.ok) { toast('Verification failed (' + res.status + ')', 'error'); return; }
     localStorage.setItem(MANAGER_KEY, '1');
+    setRole('manager');
     document.getElementById('managerCodeInput').value = '';
     refreshManagerBadge();
+    refreshRoleControls();
     renderGlobalClockWidget();
     renderOnClockBox();
     renderHomePies();
+    renderRoleVisibility();
     toast('Manager mode unlocked ✓');
   } catch (e) {
     if (e.message === 'NO_PASSCODE') { toast('Set the team passcode first', 'error'); return; }
@@ -7566,11 +7618,55 @@ async function unlockManagerMode() {
 }
 function lockManagerMode() {
   localStorage.removeItem(MANAGER_KEY);
+  setRole('ops_lead');
   refreshManagerBadge();
+  refreshRoleControls();
   renderGlobalClockWidget();
   renderOnClockBox();
   renderHomePies();
+  renderRoleVisibility();
   toast('Manager mode locked');
+}
+
+// Re-render every role-tagged element so a role change instantly hides
+// or reveals the right cards on the home dashboard.
+function renderRoleVisibility() {
+  const role = getRole();
+  const rank = roleRank(role);
+  document.querySelectorAll('[data-role-min]').forEach(el => {
+    const minRank = roleRank(el.getAttribute('data-role-min'));
+    el.style.display = rank >= minRank ? '' : 'none';
+  });
+}
+
+function refreshRoleControls() {
+  const sel = document.getElementById('settingsRoleSelect');
+  if (sel) sel.value = getRole();
+  const lbl = document.getElementById('settingsRoleLabel');
+  if (lbl) lbl.textContent = ROLE_LABELS[getRole()] || 'Crew Member';
+}
+
+function onRoleSelectChange(newRole) {
+  if (newRole === 'manager') {
+    // Manager is gated by the manager code below — refuse to self-promote.
+    if (!isManager()) {
+      toast('Use the Manager Code below to unlock manager mode', 'error');
+      const sel = document.getElementById('settingsRoleSelect');
+      if (sel) sel.value = getRole();
+      const inp = document.getElementById('managerCodeInput');
+      if (inp) inp.focus();
+      return;
+    }
+  } else if (isManager()) {
+    // Stepping down from manager: clear the unlock flag too.
+    localStorage.removeItem(MANAGER_KEY);
+    refreshManagerBadge();
+  }
+  setRole(newRole);
+  refreshRoleControls();
+  renderRoleVisibility();
+  renderHome();
+  toast('Role set: ' + (ROLE_LABELS[newRole] || newRole));
 }
 
 function uidEntry() { return 'clk_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
