@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-02T15:28:18.629Z",
+  "savedAt": "2026-06-03T16:13:02.759Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -31,6 +31,8 @@
     "venueName": "Royal Hospital Kilmainham",
     "venueAddress": "Royal Hosital Kilmainham, Kilmainham, Dublin 8",
     "accessNotes": "",
+    "venuePinLabel": "",
+    "venueRadius": "200",
     "otherUnits": "",
     "pitchRef": "Bottom of the hill",
     "pitchSize": "",
@@ -130,6 +132,8 @@
       "Loaded Burger": [],
       "Zambrero": []
     },
+    "_venuePin": null,
+    "_clockEntries": [],
     "_crewRoster": {
       "Loaded Burger": [],
       "Zambrero": []
