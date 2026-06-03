@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-03T14:58:02.561Z",
+  "savedAt": "2026-06-03T14:58:05.570Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -185,9 +185,9 @@
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T14:58:05.338Z",
             "assignedTo": null
           },
           {
