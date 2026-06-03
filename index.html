@@ -776,6 +776,47 @@ body {
 .header-btn.clock { background: var(--sage); color: #fff; border-color: var(--sage); }
 .header-btn.clock:hover { background: var(--sage-dark); border-color: var(--sage-dark); }
 
+/* ─── PRIMARY NAV BAR (sticky strip under the header, visible to all) ─── */
+.primary-nav {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  position: sticky;
+  top: 60px; /* sits directly below the sticky header */
+  z-index: 90;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.pnav-btn {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--white);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.12s;
+}
+.pnav-btn:hover { border-color: var(--sage); color: var(--sage); }
+.pnav-btn.clock { background: var(--sage); color: #fff; border-color: var(--sage); }
+.pnav-btn.clock:hover { background: var(--sage-dark); border-color: var(--sage-dark); color: #fff; }
+.pnav-btn.damage { border-color: #c0392b; color: #c0392b; }
+.pnav-btn.damage:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
+@media (max-width: 600px) {
+  .primary-nav { gap: 4px; padding: 6px 8px; top: 56px; }
+  .pnav-label { display: none; }
+  .pnav-btn { font-size: 18px; padding: 8px 12px; }
+}
+
 /* ─── DAMAGE REPORTS HOME BOX (manager only) ─── */
 .damage-reports-box {
   background: var(--bg-card);
@@ -2373,12 +2414,18 @@ body {
       </div>
       <button class="header-btn" id="btnEvents" data-role-any="ops_lead,manager" onclick="openEventsModal()">Load Brief</button>
       <button class="header-btn" id="btnBulk" data-role-any="ops_lead,manager" onclick="openBulkModal()">Import</button>
-      <button class="header-btn clock" id="btnQuickClock" onclick="globalClockAction()" title="Clock in or out">🕐 Clock</button>
-      <button class="header-btn damage" id="btnReportDamage" onclick="openReportDamageModal()" title="Report damage or a fault">🛠 Report</button>
       <button class="icon-btn indicator" id="btnSettings" data-role-min="ops_lead" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
   </div>
 </header>
+
+<nav class="primary-nav" id="primaryNav">
+  <button type="button" class="pnav-btn" onclick="showHome()">🏠<span class="pnav-label"> Home</span></button>
+  <button type="button" class="pnav-btn clock" onclick="globalClockAction()" title="Clock in / out">🕐<span class="pnav-label"> Clock</span></button>
+  <button type="button" class="pnav-btn" onclick="navToEvents()">📅<span class="pnav-label"> Events</span></button>
+  <button type="button" class="pnav-btn" onclick="navToPlans()">📋<span class="pnav-label"> Plans</span></button>
+  <button type="button" class="pnav-btn damage" onclick="openReportDamageModal()" title="Report damage or a fault">🛠<span class="pnav-label"> Report</span></button>
+</nav>
 
 <!-- ─── SETTINGS MODAL ─── -->
 <div class="modal-overlay" id="settingsModal" onclick="if(event.target===this) closeSettingsModal()">
@@ -2590,11 +2637,12 @@ body {
     <div class="home-date" id="homeDate"></div>
   </div>
 
-  <div class="home-pies" id="homePies" data-role-min="manager"></div>
+  <div id="todayFocus" class="focus-card" style="display:none;"></div>
 
   <div id="globalClockWidget" class="global-clock-widget" style="display:none;"></div>
 
-  <div id="todayFocus" class="focus-card" style="display:none;"></div>
+  <div class="home-pies" id="homePies" data-role-min="manager"></div>
+
   <div id="thisWeekCard" class="focus-card week" style="display:none;"></div>
 
   <div id="onClockBox" class="on-clock-box" data-role-min="manager" style="display:none;"></div>
@@ -2613,7 +2661,7 @@ body {
     <div id="homePlansGrid" class="home-events-grid"></div>
   </div>
 
-  <div class="home-events-section" data-role-min="ops_lead">
+  <div class="home-events-section">
     <div class="home-events-head">
       <span class="home-events-title">Upcoming Events</span>
       <span class="home-events-meta" id="homeEventsMeta"></span>
@@ -6611,6 +6659,28 @@ function setBriefState(state) {
   briefState = (state === 'continued') ? 'continued' : 'new';
   const el = document.getElementById('step1Title');
   if (el) el.textContent = (briefState === 'continued' ? 'Continued' : 'New Brief') + ' — Event Overview';
+}
+
+// ─── PRIMARY NAV (top-of-screen) ───────────────────────────────
+// Scroll to a section on the home view. If the user isn't on home,
+// navigate there first, then scroll once the layout settles.
+function navToEvents() {
+  const target = document.getElementById('homeEventsGrid')
+              || document.getElementById('todayFocus');
+  navHomeAndScroll(target);
+}
+function navToPlans() {
+  const target = document.getElementById('homePlansGrid');
+  navHomeAndScroll(target);
+}
+function navHomeAndScroll(target) {
+  const home = document.getElementById('home-view');
+  const onHome = home && home.style.display !== 'none';
+  if (!onHome) { showHome(); }
+  setTimeout(() => {
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, onHome ? 0 : 250);
 }
 
 // ─── HEADER "CREATE NEW" DROPDOWN ─────────────────────────────
