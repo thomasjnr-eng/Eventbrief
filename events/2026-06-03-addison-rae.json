@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:15:40.528Z",
+  "savedAt": "2026-06-03T16:15:43.218Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -233,9 +233,9 @@
           },
           {
             "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:15:42.801Z",
             "assignedTo": null
           },
           {
