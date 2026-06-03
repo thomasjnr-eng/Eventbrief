@@ -714,6 +714,8 @@ body {
 .ops-check-row input[type=checkbox] { width: 18px; height: 18px; accent-color: #4a9a5c; cursor: pointer; }
 .ops-check-row.done { background: #e8f5ee; border-color: #b8d8c2; }
 .ops-check-row.done .ops-label { color: #2d7a49; text-decoration: line-through; }
+.ops-check-row.haccp-row { background: #fff5f5; border-color: #c0392b; border-left: 3px solid #c0392b; font-weight: 700; }
+.ops-check-row.haccp-row.done { background: #e8f5ee; border-color: #4a9a5c; border-left: 3px solid #4a9a5c; }
 .ops-label { flex: 1; }
 
 @media print {
@@ -3556,7 +3558,9 @@ function goStep(n) {
 // ─── CREW CHECKLISTS (Ops mode) ───────────────────────────────
 // Per-truck day-of operational checks. Lives on each saved event as
 // _crewChecklists: { TruckName: { items: [{label, done, doneBy, doneAt}] }}
-const CREW_CHECKLIST_DEFAULTS = [
+// Two phases — every truck gets both, per trading day. The HACCP item
+// is the mandatory first closing check (post-Dublin-Tech-Summit fix).
+const CREW_OPEN_DEFAULTS = [
   'Arrived on site',
   'Pitched / parked correctly',
   'Power connected & tested',
@@ -3567,13 +3571,23 @@ const CREW_CHECKLIST_DEFAULTS = [
   'Menu boards / signage up',
   'POS / payment system tested',
   'Stock checked & loaded',
+  'Cold-chain temperatures recorded (start of trade)',
   'Pre-trade brief from event lead complete',
-  'Ready to trade',
-  'End-of-trade: cash counted & secured',
-  'End-of-trade: bins emptied & site clean',
-  'End-of-trade: all food covered / stored / disposed',
-  'End-of-trade: truck securely closed & locked'
+  'Ready to trade'
 ];
+const CREW_CLOSE_DEFAULTS = [
+  'HACCP plan followed in closing procedure',
+  'All food covered / stored / refrigerated correctly',
+  'Cold-chain temperatures recorded (end of trade)',
+  'Surfaces cleaned & sanitised',
+  'Bins emptied & site clean',
+  'Cash counted & secured',
+  'POS / payment system reconciled',
+  'Equipment powered down (fryers, grills, etc.)',
+  'Waste & water tanks emptied (if applicable)',
+  'Truck securely closed & locked'
+];
+const CREW_CHECKLIST_DEFAULTS = CREW_OPEN_DEFAULTS.concat(CREW_CLOSE_DEFAULTS);
 let CREW_CHECKLISTS = {};
 let SIGN_OFFS = [];
 
@@ -3589,27 +3603,110 @@ function signOffForDate(dateStr) {
   return SIGN_OFFS.find(s => s.forDate === dateStr) || null;
 }
 
+// Returns YYYY-MM-DD[] for every day the trucks will be on site —
+// trading days for scattered events, the start→finish range otherwise.
+function currentTradingDayList() {
+  const isScat = (document.getElementById('isScattered') || {}).checked;
+  if (isScat && typeof getTradingDays === 'function') {
+    const days = getTradingDays();
+    if (days && days.length) {
+      return days.map(d => d && d.date).filter(Boolean).sort();
+    }
+  }
+  const start = val('eventStartDate') || val('loadInDate');
+  const end = val('eventFinishDate') || val('eventStartDate') || start;
+  if (!start) return ['unscheduled'];
+  const s = new Date(start);
+  const e = new Date(end || start);
+  if (isNaN(s.getTime())) return ['unscheduled'];
+  const out = [];
+  const cur = new Date(s);
+  cur.setHours(0, 0, 0, 0);
+  const stop = isNaN(e.getTime()) || e < s ? new Date(s) : new Date(e);
+  stop.setHours(0, 0, 0, 0);
+  while (cur <= stop) {
+    out.push(cur.toISOString().slice(0, 10));
+    cur.setDate(cur.getDate() + 1);
+    if (out.length > 60) break; // safety stop
+  }
+  return out;
+}
+
+// Heuristic for migrating older flat checklists: items prefixed with
+// "End-of-trade:" or matching a current close default are closing.
+function inferPhase(label) {
+  if (!label) return 'open';
+  if (/^end-of-trade/i.test(label)) return 'close';
+  if (CREW_CLOSE_DEFAULTS.includes(label)) return 'close';
+  // Older labels we re-named on the way through:
+  if (/food (covered|covered\s*\/|stored|disposed)/i.test(label)) return 'close';
+  if (/cash counted/i.test(label)) return 'close';
+  if (/bins emptied/i.test(label)) return 'close';
+  if (/truck (securely )?(closed|locked)/i.test(label)) return 'close';
+  if (/haccp/i.test(label)) return 'close';
+  return 'open';
+}
+// Normalise a few legacy labels onto the new close defaults so we don't
+// end up with both the old and new wording in the same list.
+function normaliseLegacyLabel(label) {
+  if (!label) return label;
+  if (/^end-of-trade:\s*all food/i.test(label)) return 'All food covered / stored / refrigerated correctly';
+  if (/^end-of-trade:\s*cash counted/i.test(label)) return 'Cash counted & secured';
+  if (/^end-of-trade:\s*bins emptied/i.test(label)) return 'Bins emptied & site clean';
+  if (/^end-of-trade:\s*truck/i.test(label)) return 'Truck securely closed & locked';
+  return label;
+}
+
 function ensureCrewChecklists() {
   if (!CREW_CHECKLISTS || typeof CREW_CHECKLISTS !== 'object') CREW_CHECKLISTS = {};
   const selectedTrucks = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
+  const days = currentTradingDayList();
+  const firstDay = days[0] || 'unscheduled';
   selectedTrucks.forEach(truck => {
-    if (!CREW_CHECKLISTS[truck]) {
-      CREW_CHECKLISTS[truck] = {
-        items: CREW_CHECKLIST_DEFAULTS.map(label => ({ label, done: false, doneBy: null, doneAt: null, assignedTo: null }))
-      };
-    } else {
-      // Add any new default items not already on this truck's list (defaults grew)
-      const have = new Set((CREW_CHECKLISTS[truck].items || []).map(i => i.label));
-      CREW_CHECKLIST_DEFAULTS.forEach(label => {
-        if (!have.has(label)) {
-          CREW_CHECKLISTS[truck].items.push({ label, done: false, doneBy: null, doneAt: null, assignedTo: null });
+    if (!CREW_CHECKLISTS[truck]) CREW_CHECKLISTS[truck] = { items: [] };
+    const items = CREW_CHECKLISTS[truck].items;
+    // Migrate older items in place: tag with phase + date, normalise label
+    items.forEach(i => {
+      if (!i.phase) i.phase = inferPhase(i.label);
+      if (!i.date) i.date = firstDay;
+      i.label = normaliseLegacyLabel(i.label);
+    });
+    // Top up: every (date, phase, label) combo from the defaults
+    days.forEach(date => {
+      CREW_OPEN_DEFAULTS.forEach(label => {
+        if (!items.find(i => i.label === label && i.date === date && i.phase === 'open')) {
+          items.push({ label, phase: 'open', date, done: false, doneBy: null, doneAt: null, assignedTo: null });
         }
       });
-    }
+      CREW_CLOSE_DEFAULTS.forEach(label => {
+        if (!items.find(i => i.label === label && i.date === date && i.phase === 'close')) {
+          items.push({ label, phase: 'close', date, done: false, doneBy: null, doneAt: null, assignedTo: null });
+        }
+      });
+    });
+    // Dedupe: same (date, phase, label) appearing more than once collapses
+    const seen = new Set();
+    CREW_CHECKLISTS[truck].items = items.filter(i => {
+      const k = (i.date || '') + '|' + (i.phase || '') + '|' + (i.label || '');
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
   });
   // Drop entries for trucks no longer selected
   const sel = new Set(selectedTrucks);
   Object.keys(CREW_CHECKLISTS).forEach(t => { if (!sel.has(t)) delete CREW_CHECKLISTS[t]; });
+}
+
+function groupCrewItems(items) {
+  const byDate = {};
+  (items || []).forEach((it, idx) => {
+    const d = it.date || 'unscheduled';
+    const p = it.phase || 'open';
+    if (!byDate[d]) byDate[d] = { open: [], close: [] };
+    byDate[d][p].push({ item: it, idx });
+  });
+  return byDate;
 }
 
 function setCrewChecklists(obj) {
@@ -5737,29 +5834,55 @@ function generateBrief() {
       } else {
         signOffBanner = '<div style="background:#fff5f5;border-left:3px solid #c0392b;padding:10px 14px;border-radius:0 3px 3px 0;margin-bottom:14px;font-size:12px;color:#111;"><strong>⚠ No end-of-day sign-off yet for this event.</strong> Ops lead signs off when the team\'s done so the record names who locked up.</div>';
       }
+      const renderCheckRow = (it, idx, truckName) => {
+        const meta = it.done && it.doneBy ? ' <span style="color:#666;font-size:11px;">— ' + (it.doneBy || '').replace(/</g,'&lt;') + ', ' + formatRelativeTime(it.doneAt) + '</span>' : '';
+        const assignMeta = !it.done && it.assignedTo ? ' <span style="color:#b07a10;font-size:11px;font-weight:700;">→ ' + (it.assignedTo || '').replace(/</g,'&lt;') + '</span>' : '';
+        const escTruck = truckName.replace(/"/g, '&quot;');
+        const isHaccp = /^haccp/i.test(it.label || '');
+        return '<label class="ops-check-row' + (it.done ? ' done' : '') + (isHaccp ? ' haccp-row' : '') + '" data-truck="' + escTruck + '" data-idx="' + idx + '">' +
+          '<input type="checkbox" ' + (it.done ? 'checked' : '') + ' onchange="tickCrewItem(\'' + escTruck.replace(/'/g, "\\'") + '\', ' + idx + ', this.checked)">' +
+          '<span class="ops-label">' + (isHaccp ? '⚠ ' : '') + it.label + meta + assignMeta + '</span>' +
+          '</label>';
+      };
       const trucksHtml = fleet.map(u => {
         const list = CREW_CHECKLISTS[u.name];
         if (!list) return '';
         const items = list.items || [];
         const tDone = items.filter(i => i.done).length;
         const tPct = items.length ? Math.round((tDone / items.length) * 100) : 0;
-        const rows = items.map((it, idx) => {
-          const meta = it.done && it.doneBy ? ' <span style="color:#666;font-size:11px;">— ' + (it.doneBy || '').replace(/</g,'&lt;') + ', ' + formatRelativeTime(it.doneAt) + '</span>' : '';
-          const assignMeta = !it.done && it.assignedTo ? ' <span style="color:#b07a10;font-size:11px;font-weight:700;">→ ' + (it.assignedTo || '').replace(/</g,'&lt;') + '</span>' : '';
-          const escTruck = u.name.replace(/"/g, '&quot;');
-          return '<label class="ops-check-row' + (it.done ? ' done' : '') + '" data-truck="' + escTruck + '" data-idx="' + idx + '">' +
-            '<input type="checkbox" ' + (it.done ? 'checked' : '') + ' onchange="tickCrewItem(\'' + escTruck.replace(/'/g, "\\'") + '\', ' + idx + ', this.checked)">' +
-            '<span class="ops-label">' + it.label + meta + assignMeta + '</span>' +
-            '</label>';
-        }).join('');
         const barColor = tPct === 100 ? '#4a9a5c' : tPct >= 50 ? '#c89a4a' : '#c0392b';
+        const grouped = groupCrewItems(items);
+        const dateKeys = Object.keys(grouped).sort();
+        const multiDay = dateKeys.length > 1;
+        const dayBlocks = dateKeys.map((date, di) => {
+          const open = grouped[date].open || [];
+          const close = grouped[date].close || [];
+          const openDone = open.filter(x => x.item.done).length;
+          const closeDone = close.filter(x => x.item.done).length;
+          const openClass = openDone === open.length ? '#2d7a49' : (openDone > 0 ? '#b07a10' : '#777');
+          const closeAllDone = closeDone === close.length;
+          const closeClass = closeAllDone ? '#2d7a49' : '#c0392b';
+          const dayLabel = date === 'unscheduled' ? 'Procedures' : (formatDate(date) || date);
+          const dayHeader = multiDay
+            ? '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:13px;letter-spacing:0.1em;color:#5a7a4f;margin:' + (di === 0 ? '0' : '14px') + ' 0 6px 0;border-bottom:1px solid #ddd;padding-bottom:4px;">DAY ' + (di + 1) + ' &middot; ' + dayLabel.toUpperCase() + '</div>'
+            : '';
+          return dayHeader +
+            '<details ' + (di === 0 ? 'open' : '') + ' style="margin-top:6px;">' +
+              '<summary style="cursor:pointer;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:' + openClass + ';font-weight:700;padding:4px 0;">▸ Opening Procedure (' + openDone + '/' + open.length + ')</summary>' +
+              '<div class="ops-checks" style="margin-top:4px;">' + open.map(x => renderCheckRow(x.item, x.idx, u.name)).join('') + '</div>' +
+            '</details>' +
+            '<details ' + (!closeAllDone ? 'open' : '') + ' style="margin-top:6px;">' +
+              '<summary style="cursor:pointer;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:' + closeClass + ';font-weight:700;padding:4px 0;">▸ Closing Procedure &mdash; HACCP critical (' + closeDone + '/' + close.length + ')</summary>' +
+              '<div class="ops-checks" style="margin-top:4px;">' + close.map(x => renderCheckRow(x.item, x.idx, u.name)).join('') + '</div>' +
+            '</details>';
+        }).join('');
         return '<div class="ops-truck-card">' +
           '<div class="ops-truck-head">' +
             '<div class="ops-truck-name">' + u.name + '</div>' +
             '<div class="ops-truck-pct" style="color:' + barColor + ';">' + tDone + '/' + items.length + ' · ' + tPct + '%</div>' +
           '</div>' +
           '<div class="ops-bar"><div class="ops-bar-fill" style="width:' + tPct + '%;background:' + barColor + ';"></div></div>' +
-          '<div class="ops-checks">' + rows + '</div>' +
+          dayBlocks +
           '</div>';
       }).join('');
       const signLog = SIGN_OFFS.length
