@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-03T16:11:24.561Z",
+  "savedAt": "2026-06-03T16:11:28.740Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -220,9 +220,9 @@
           },
           {
             "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T16:11:28.433Z",
             "assignedTo": null
           },
           {
