@@ -807,7 +807,11 @@ body {
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
+.pnav-btn .pnav-ico { font-size: 0.85em; }
 .pnav-btn:hover { border-color: var(--sage); color: var(--sage); }
 .pnav-btn.clock { background: var(--sage); color: #fff; border-color: var(--sage); }
 .pnav-btn.clock:hover { background: var(--sage-dark); border-color: var(--sage-dark); color: #fff; }
@@ -815,8 +819,8 @@ body {
 .pnav-btn.damage:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
 @media (max-width: 600px) {
   .primary-nav { gap: 4px; padding: 6px 8px; top: 56px; }
-  .pnav-label { display: none; }
-  .pnav-btn { font-size: 18px; padding: 8px 12px; }
+  .pnav-btn { font-size: 11px; padding: 6px 10px; gap: 4px; }
+  .pnav-btn .pnav-ico { font-size: 0.95em; }
 }
 
 /* ─── DAMAGE REPORTS HOME BOX (manager only) ─── */
@@ -1327,7 +1331,23 @@ body {
   margin-bottom: 18px;
 }
 .focus-card.week { border-left: 4px solid var(--sage); }
-.focus-card:not(.week) { border-left: 4px solid #b07a10; }
+.focus-card.plan { border-left: 4px solid #4a6e8c; }
+.focus-card:not(.week):not(.plan) { border-left: 4px solid #b07a10; }
+.today-plan-task {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-top: 6px;
+  font-size: 13px;
+  align-items: center;
+  color: var(--white);
+}
+.today-plan-task.done { background: #e8f5ee; border-color: #b8d8c2; color: #2d7a49; text-decoration: line-through; }
+.today-plan-task .tpt-prio { font-size: 11px; font-weight: 700; }
+.today-plan-task .tpt-meta { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 .focus-head {
   display: flex;
   justify-content: space-between;
@@ -2422,11 +2442,11 @@ body {
 </header>
 
 <nav class="primary-nav" id="primaryNav">
-  <button type="button" class="pnav-btn" onclick="showHome()">🏠<span class="pnav-label"> Home</span></button>
-  <button type="button" class="pnav-btn clock" onclick="globalClockAction()" title="Clock in / out">🕐<span class="pnav-label"> Clock</span></button>
-  <button type="button" class="pnav-btn" onclick="navToEvents()">📅<span class="pnav-label"> Events</span></button>
-  <button type="button" class="pnav-btn" onclick="navToPlans()">📋<span class="pnav-label"> Plans</span></button>
-  <button type="button" class="pnav-btn damage" onclick="openReportDamageModal()" title="Report damage or a fault">🛠<span class="pnav-label"> Report</span></button>
+  <button type="button" class="pnav-btn" onclick="showHome()"><span class="pnav-ico">🏠</span><span class="pnav-label">Home</span></button>
+  <button type="button" class="pnav-btn clock" onclick="globalClockAction()" title="Clock in / out"><span class="pnav-ico">🕐</span><span class="pnav-label">Clock In / Out</span></button>
+  <button type="button" class="pnav-btn" onclick="navToEvents()"><span class="pnav-ico">📅</span><span class="pnav-label">Events</span></button>
+  <button type="button" class="pnav-btn" onclick="navToPlans()"><span class="pnav-ico">📋</span><span class="pnav-label">Day Plans</span></button>
+  <button type="button" class="pnav-btn damage" onclick="openReportDamageModal()" title="Report damage or a fault"><span class="pnav-ico">🛠</span><span class="pnav-label">Report Damage</span></button>
 </nav>
 
 <!-- ─── SETTINGS MODAL ─── -->
@@ -2643,17 +2663,16 @@ body {
 
   <div id="globalClockWidget" class="global-clock-widget" style="display:none;"></div>
 
-  <div class="home-pies" id="homePies" data-role-min="manager"></div>
-
   <div id="thisWeekCard" class="focus-card week" style="display:none;"></div>
+
+  <div id="todayPlanCard" class="focus-card plan" style="display:none;"></div>
+
+  <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
+
+  <div class="home-pies" id="homePies" data-role-min="manager"></div>
 
   <div id="onClockBox" class="on-clock-box" data-role-min="manager" style="display:none;"></div>
   <div id="damageReportsBox" class="damage-reports-box" data-role-any="manager,maintenance_manager" style="display:none;"></div>
-
-  <div id="actionRequired" class="action-required" data-role-min="ops_lead" style="display:none;"></div>
-
-  <div id="dashboard" class="dashboard"></div>
-  <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
 
   <div class="home-events-section">
     <div class="home-events-head">
@@ -2670,6 +2689,18 @@ body {
     </div>
     <div id="homeEventsGrid" class="home-events-grid"></div>
   </div>
+
+  <div class="home-events-section" data-role-any="ops_lead,manager">
+    <div class="home-events-head">
+      <span class="home-events-title">Past Events Archive</span>
+      <span class="home-events-meta" id="pastEventsMeta"></span>
+    </div>
+    <div id="pastEventsGrid" class="home-events-grid"></div>
+  </div>
+
+  <div id="actionRequired" class="action-required" data-role-min="ops_lead" style="display:none;"></div>
+
+  <div id="dashboard" class="dashboard"></div>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -7906,16 +7937,21 @@ async function renderHome() {
     const d = new Date();
     dateEl.textContent = d.toLocaleDateString('en-IE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
   }
-  renderDashboard();
-  renderOpsTracker();
-  await renderActionRequired();
-  await renderHomePies();
+  // Priority order: today's event → this week → today's day plan →
+  // ops tracker → manager metrics → operational boxes → upcoming lists →
+  // past archive → action required (low priority now).
   await renderGlobalClockWidget();
   await renderTodayAndWeek();
+  await renderTodayPlanFocus();
+  renderOpsTracker();
+  await renderHomePies();
   renderOnClockBox();
   renderDamageReportsBox();
-  await renderHomeEvents();
   await renderHomePlans();
+  await renderHomeEvents();
+  await renderPastEvents();
+  await renderActionRequired();
+  renderDashboard();
 }
 
 // ─── TODAY + THIS WEEK FOCUS CARDS ─────────────────────────────
@@ -7954,6 +7990,110 @@ function countOutstandingChecks(form) {
     items.forEach(it => { total++; if (!it.done) outstanding++; });
   });
   return { outstanding, total };
+}
+
+// Today's day plan — surfaced separately from the upcoming-plans list
+// so it's right at the top of the dashboard.
+async function renderTodayPlanFocus() {
+  const host = document.getElementById('todayPlanCard');
+  if (!host) return;
+  if (!getPasscode()) { host.style.display = 'none'; return; }
+  let filenames = [];
+  try { filenames = await listEventFilenames(); }
+  catch (e) { host.style.display = 'none'; return; }
+  const planFiles = filenames.filter(isPlanFile);
+  if (!planFiles.length) { host.style.display = 'none'; return; }
+  const plans = (await Promise.all(planFiles.map(getEventByFilename))).filter(Boolean);
+  const todayStr = todayIso();
+  const todays = plans.filter(p => p.form && p.form.planDate === todayStr);
+  if (!todays.length) { host.style.display = 'none'; return; }
+  todays.sort((a, b) => (a.form.startTime || '').localeCompare(b.form.startTime || ''));
+
+  const blocks = todays.map(p => {
+    const f = p.form || {};
+    const tasks = Array.isArray(f.tasks) ? f.tasks.slice().sort((a, b) => {
+      const po = { high: 0, medium: 1, low: 2 };
+      const pa = po[a.priority] ?? 1, pb = po[b.priority] ?? 1;
+      if (pa !== pb) return pa - pb;
+      return (a.dueTime || '99:99').localeCompare(b.dueTime || '99:99');
+    }) : [];
+    const done = tasks.filter(t => t.done).length;
+    const fname = (p._filename || '').replace(/'/g, "\\'");
+    const title = (f.title || 'Untitled').replace(/</g, '&lt;');
+    const window = (f.startTime || f.endTime) ? (f.startTime || '?') + ' – ' + (f.endTime || '?') : '';
+    const lead = f.lead ? '👤 ' + (f.lead || '').replace(/</g, '&lt;') : '';
+    return '<div style="padding:8px 0;border-top:1px solid var(--border);">' +
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;">' +
+        '<div><div class="te-name">' + title + '</div>' +
+        '<div class="te-meta">' + [window, lead, done + '/' + tasks.length + ' tasks done'].filter(Boolean).join(' · ') + '</div></div>' +
+        '<button class="te-btn" onclick="loadPlan(\'' + fname + '\')">Open Plan →</button>' +
+      '</div>' +
+      tasks.slice(0, 6).map(t => {
+        const prio = t.priority === 'high' ? '🔴' : (t.priority === 'low' ? '⚪' : '🟠');
+        const dueTxt = t.dueTime ? formatTime(t.dueTime) : '';
+        const assigned = t.assignedTo ? ' · ' + (t.assignedTo || '').replace(/</g, '&lt;') : '';
+        return '<div class="today-plan-task' + (t.done ? ' done' : '') + '">' +
+          '<span class="tpt-prio">' + prio + '</span>' +
+          '<span>' + (t.label || '').replace(/</g, '&lt;') + '</span>' +
+          '<span class="tpt-meta">' + dueTxt + assigned + '</span>' +
+          '</div>';
+      }).join('') +
+      (tasks.length > 6 ? '<div style="font-size:11px;color:var(--text-muted);margin-top:6px;font-style:italic;">+ ' + (tasks.length - 6) + ' more · open plan to see all</div>' : '') +
+      '</div>';
+  }).join('');
+
+  host.innerHTML = '<div class="focus-head">' +
+    '<div class="focus-title">📋 TODAY\'S DAY PLAN <span class="focus-sub">' + new Date().toLocaleDateString('en-IE', { weekday: 'short', day: '2-digit', month: 'short' }) + '</span></div>' +
+    '</div>' + blocks;
+  host.style.display = 'block';
+}
+
+// Past events archive — ops_lead + manager only. Loads anything whose
+// last trading date is before today, newest first.
+async function renderPastEvents() {
+  const host = document.getElementById('pastEventsGrid');
+  const meta = document.getElementById('pastEventsMeta');
+  if (!host) return;
+  if (!roleAtLeast('ops_lead')) { host.innerHTML = ''; if (meta) meta.textContent = ''; return; }
+  if (!getPasscode()) { host.innerHTML = '<div class="home-events-empty">Sign in to see past events.</div>'; if (meta) meta.textContent = ''; return; }
+  let filenames = [];
+  try { filenames = await listEventFilenames(); }
+  catch (e) { host.innerHTML = '<div class="home-events-empty">Couldn\'t load archive: ' + e.message + '</div>'; return; }
+  filenames = filenames.filter(isEventFile);
+  if (!filenames.length) { host.innerHTML = '<div class="home-events-empty">No events on file yet.</div>'; return; }
+  const events = (await Promise.all(filenames.map(getEventByFilename))).filter(Boolean);
+  const todayStr = todayIso();
+  function latestDate(form) {
+    const dates = [];
+    if (form.eventFinishDate) dates.push(form.eventFinishDate);
+    if (form.eventStartDate) dates.push(form.eventStartDate);
+    if (form.loadOutDate) dates.push(form.loadOutDate);
+    if (Array.isArray(form._tradingDays)) form._tradingDays.forEach(d => { if (d && d.date) dates.push(d.date); });
+    if (!dates.length) return '';
+    return dates.reduce((a, b) => (a > b ? a : b));
+  }
+  const past = events.filter(ev => {
+    const latest = latestDate(ev.form);
+    return latest && latest < todayStr;
+  });
+  past.sort((a, b) => (latestDate(b.form) || '').localeCompare(latestDate(a.form) || ''));
+  if (meta) meta.textContent = past.length + ' event' + (past.length !== 1 ? 's' : '') + ' archived';
+  if (!past.length) { host.innerHTML = '<div class="home-events-empty">No past events yet.</div>'; return; }
+  host.innerHTML = past.slice(0, 60).map(ev => {
+    const f = ev.form || {};
+    const date = latestDate(f);
+    const comp = computeEventCompleteness(f);
+    const filename = (ev._filename || '').replace(/'/g, "\\'");
+    const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+    const venue = (f.venueName || '').replace(/</g, '&lt;');
+    const client = (f.commercialClient || '').replace(/</g, '&lt;');
+    return '<div class="home-event-card" onclick="loadEvent(\'' + filename + '\')">' +
+      '<div class="he-date">' + formatDate(date) + '</div>' +
+      '<div class="he-name">' + name + '</div>' +
+      '<div class="he-venue">' + (venue || '—') + (client ? ' · ' + client : '') + '</div>' +
+      '<div style="font-size:11px;color:var(--text-muted);margin-top:8px;">Brief was ' + comp.percent + '% complete</div>' +
+      '</div>';
+  }).join('');
 }
 
 async function renderTodayAndWeek() {
