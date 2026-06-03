@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:11:51.688Z",
+  "savedAt": "2026-06-03T19:11:53.224Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -302,23 +302,23 @@
           },
           {
             "label": "Waste containers in place",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:52.408Z",
             "assignedTo": null
           },
           {
             "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:52.656Z",
             "assignedTo": null
           },
           {
             "label": "Hand wash station set up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:53.008Z",
             "assignedTo": null
           },
           {
