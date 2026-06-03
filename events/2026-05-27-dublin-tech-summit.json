@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:11:10.632Z",
+  "savedAt": "2026-06-03T19:11:12.123Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -738,16 +738,16 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:11.435Z",
             "assignedTo": null
           },
           {
             "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:11.866Z",
             "assignedTo": null
           },
           {
