@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:10:54.496Z",
+  "savedAt": "2026-06-03T19:10:56.168Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -541,9 +541,9 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:10:54.700Z",
             "assignedTo": null
           },
           {
@@ -555,9 +555,9 @@
           },
           {
             "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:10:55.958Z",
             "assignedTo": null
           },
           {
