@@ -870,6 +870,20 @@ body {
 .drb-row:hover { background: var(--bg-input); }
 .drb-unit { font-size: 14px; font-weight: 700; color: var(--white); }
 .drb-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.drb-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+.drb-flag { margin-top: 4px; }
+.drb-booked {
+  display: inline-block;
+  background: #fff3e6;
+  color: #b07a10;
+  border: 1px solid #e0b370;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
 .drb-status {
   font-size: 11px;
   font-weight: 700;
@@ -8894,15 +8908,58 @@ async function renderDamageReportsBox() {
   const open = reports.filter(r => r.status !== 'fixed');
   const recent = reports.slice(0, 8);
 
+  // Map every unit name → upcoming bookings in the next 14 days, so each
+  // damage row can flag whether that unit is about to be sent out.
+  const fleetBookings = {};
+  try {
+    const names = (await listEventFilenames()).filter(isEventFile);
+    const events = (await Promise.all(names.map(getEventByFilename))).filter(Boolean);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().slice(0, 10);
+    const horizon = new Date(today); horizon.setDate(horizon.getDate() + 14);
+    const horizonStr = horizon.toISOString().slice(0, 10);
+    events.forEach(ev => {
+      const d = getEventDate(ev.form);
+      if (!d || d < todayStr || d > horizonStr) return;
+      (ev.form._fleet || []).forEach(u => {
+        const key = (u || '').toLowerCase().trim();
+        if (!key) return;
+        (fleetBookings[key] = fleetBookings[key] || []).push({
+          name: ev.form.eventName || '(unnamed)',
+          date: d,
+          venue: ev.form.venueName || ''
+        });
+      });
+    });
+  } catch (e) { /* offline / fail — flags simply won't show */ }
+
+  function bookingFlagHtml(unit) {
+    const key = (unit || '').toLowerCase().trim();
+    const bookings = fleetBookings[key] || [];
+    if (!bookings.length) return '';
+    bookings.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    const next = bookings[0];
+    const days = Math.round((new Date(next.date) - new Date(new Date().toISOString().slice(0, 10))) / 86400000);
+    const when = days <= 0 ? 'TODAY' : (days === 1 ? 'tomorrow' : 'in ' + days + ' days');
+    const more = bookings.length > 1 ? ' &middot; +' + (bookings.length - 1) + ' more' : '';
+    const label = (next.name || '').replace(/</g, '&lt;');
+    return '<span class="drb-booked" title="Booked for ' + label + ' on ' + (formatDate(next.date) || next.date) + '">⚠ BOOKED ' + when + ' &middot; ' + label + more + '</span>';
+  }
+
   const rows = recent.length
     ? recent.map(r => {
         const at = r.reportedAt ? new Date(r.reportedAt).toLocaleString('en-IE', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '—';
+        const desc = (r.description || '').replace(/\s+/g, ' ').trim();
+        const descShort = desc.length > 140 ? desc.slice(0, 137).replace(/</g, '&lt;') + '…' : desc.replace(/</g, '&lt;');
+        const flag = bookingFlagHtml(r.unit);
         return '<div class="drb-row" onclick="openDamageDetailsModal(\'' + r.id + '\')">' +
           '<div>' +
             '<div class="drb-unit">' +
               '<span class="drb-sev ' + r.severity + '">' + (r.severity || 'major').toUpperCase() + '</span>' +
               (r.unit || 'Unknown unit').replace(/</g,'&lt;') +
             '</div>' +
+            (flag ? '<div class="drb-flag">' + flag + '</div>' : '') +
+            (descShort ? '<div class="drb-desc">' + descShort + '</div>' : '') +
             '<div class="drb-meta">' + (r.reportedBy || '').replace(/</g,'&lt;') + ' &middot; ' + at + ' &middot; ' + ((r.photos || []).length) + ' photo' + (((r.photos||[]).length) !== 1 ? 's' : '') + '</div>' +
           '</div>' +
           '<span class="drb-status ' + r.status + '">' + (DAMAGE_STATUS_LABELS[r.status] || 'New') + '</span>' +
