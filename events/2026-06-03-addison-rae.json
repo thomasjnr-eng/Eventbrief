@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:22:54.003Z",
+  "savedAt": "2026-06-03T16:26:06.472Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -329,57 +329,57 @@
           {
             "label": "Waste containers in place",
             "done": true,
-            "doneBy": "Soc",
-            "doneAt": "2026-06-03T16:22:19.143Z",
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:17:33.160Z",
             "assignedTo": null
           },
           {
             "label": "Fire equipment laid out & accessible",
             "done": true,
-            "doneBy": "Soc",
-            "doneAt": "2026-06-03T16:22:24.151Z",
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:17:37.652Z",
             "assignedTo": null
           },
           {
             "label": "Hand wash station set up",
             "done": true,
-            "doneBy": "Soc",
-            "doneAt": "2026-06-03T16:22:32.386Z",
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:17:41.379Z",
             "assignedTo": null
           },
           {
             "label": "Menu boards / signage up",
             "done": true,
-            "doneBy": "Soc",
-            "doneAt": "2026-06-03T16:22:53.368Z",
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:17:46.869Z",
             "assignedTo": null
           },
           {
             "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:17:50.465Z",
             "assignedTo": null
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:17:54.742Z",
             "assignedTo": null
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:17:58.565Z",
             "assignedTo": null
           },
           {
             "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:18:02.729Z",
             "assignedTo": null
           },
           {
