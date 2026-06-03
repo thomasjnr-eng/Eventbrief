@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T19:35:32.987Z",
+  "savedAt": "2026-06-03T19:35:35.048Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -319,9 +319,9 @@
           },
           {
             "label": "Truck securely closed & locked",
-            "done": true,
-            "doneBy": "TOB",
-            "doneAt": "2026-06-03T19:35:26.035Z",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-02"
@@ -339,9 +339,9 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-06-02",
-            "done": true,
-            "doneBy": "TOB",
-            "doneAt": "2026-06-03T19:35:32.705Z",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null
           },
           {
