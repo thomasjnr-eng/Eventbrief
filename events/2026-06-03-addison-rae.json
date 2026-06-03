@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:16:48.247Z",
+  "savedAt": "2026-06-03T16:16:52.099Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -254,9 +254,9 @@
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T16:16:51.856Z",
             "assignedTo": null
           },
           {
