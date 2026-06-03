@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T19:35:09.449Z",
+  "savedAt": "2026-06-03T19:35:24.964Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -310,9 +310,9 @@
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:35:24.503Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-02"
