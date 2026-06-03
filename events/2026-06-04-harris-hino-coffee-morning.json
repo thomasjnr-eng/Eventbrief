@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-03T14:58:12.607Z",
+  "savedAt": "2026-06-03T14:58:15.921Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -206,9 +206,9 @@
           },
           {
             "label": "Hand wash station set up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T14:58:15.601Z",
             "assignedTo": null
           },
           {
