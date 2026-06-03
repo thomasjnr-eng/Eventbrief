@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-02T10:14:09.954Z",
+  "savedAt": "2026-06-03T19:01:34.566Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -31,6 +31,8 @@
     "venueName": "RDS Ring 3",
     "venueAddress": "RDS Anglesea road",
     "accessNotes": "",
+    "venuePinLabel": "",
+    "venueRadius": "200",
     "otherUnits": "",
     "pitchRef": "Ring 3, hall 1 and hall 4",
     "pitchSize": "",
@@ -176,6 +178,8 @@
       "Off Beat Donuts": [],
       "Pitt Bros BBQ": []
     },
+    "_venuePin": null,
+    "_clockEntries": [],
     "_crewRoster": {
       "Angelo's Pizza": [],
       "Thindi": [],
