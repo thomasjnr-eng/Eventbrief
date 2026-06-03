@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-04-thursday",
-  "savedAt": "2026-06-03T22:36:03.326Z",
+  "savedAt": "2026-06-03T22:39:26.647Z",
   "savedBy": "SOC",
   "form": {
     "title": "Thursday",
@@ -54,7 +54,7 @@
         "doneAt": null
       },
       {
-        "label": "Collect box body + generator",
+        "label": "Collect box body ",
         "assignedTo": "Simon, Oisín ",
         "priority": "medium",
         "dueTime": "12:00",
@@ -67,8 +67,28 @@
         "label": "Build Slicey gear into box body ",
         "assignedTo": "Simon, Oisín ",
         "priority": "medium",
-        "dueTime": "13:30",
+        "dueTime": "15:00",
         "eventLink": "Slicey Pizza Activation (05 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Wrap up Harris/Hino",
+        "assignedTo": "Simon, Oisín ",
+        "priority": "medium",
+        "dueTime": "12:30",
+        "eventLink": "Harris/Hino Coffee Morning (04 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect generator",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "13:30",
+        "eventLink": "",
         "done": false,
         "doneBy": null,
         "doneAt": null
