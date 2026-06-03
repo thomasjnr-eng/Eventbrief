@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:22:19.626Z",
+  "savedAt": "2026-06-03T16:22:24.420Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -335,9 +335,9 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T16:22:24.151Z",
             "assignedTo": null
           },
           {
