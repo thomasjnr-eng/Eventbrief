@@ -1107,6 +1107,18 @@ body {
   font-size: 11px;
   color: var(--grey);
 }
+/* Stat tile — used for "Hours this week" etc. in place of an SVG pie */
+.home-pie.stat-tile { justify-content: center; }
+.home-pie.stat-tile .stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--heading);
+}
+.home-pie.stat-tile .stat-unit { font-size: 18px; color: var(--text-muted); margin-left: 4px; }
+.home-pie.stat-tile.actionable { cursor: pointer; transition: border-color 0.15s; border: 1px solid var(--border); border-radius: 6px; }
+.home-pie.stat-tile.actionable:hover { border-color: var(--sage); }
 
 .home-events-section {
   margin-top: 24px;
@@ -2316,13 +2328,13 @@ body {
     <div class="home-date" id="homeDate"></div>
   </div>
 
+  <div class="home-pies" id="homePies"></div>
+
   <div id="globalClockWidget" class="global-clock-widget" style="display:none;"></div>
 
   <div id="onClockBox" class="on-clock-box" style="display:none;"></div>
 
   <div id="actionRequired" class="action-required" style="display:none;"></div>
-
-  <div class="home-pies" id="homePies"></div>
 
   <div id="dashboard" class="dashboard"></div>
   <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
@@ -7487,6 +7499,7 @@ async function unlockManagerMode() {
     refreshManagerBadge();
     renderGlobalClockWidget();
     renderOnClockBox();
+    renderHomePies();
     toast('Manager mode unlocked ✓');
   } catch (e) {
     if (e.message === 'NO_PASSCODE') { toast('Set the team passcode first', 'error'); return; }
@@ -7498,6 +7511,7 @@ function lockManagerMode() {
   refreshManagerBadge();
   renderGlobalClockWidget();
   renderOnClockBox();
+  renderHomePies();
   toast('Manager mode locked');
 }
 
@@ -8051,6 +8065,47 @@ async function renderHomePies() {
     '<div class="home-pie">' + pieSvg(avg, briefColor) + '<div class="home-pie-label">Brief Readiness</div><div class="home-pie-sub2">avg across ' + upcoming30.length + ' upcoming event' + (upcoming30.length !== 1 ? 's' : '') + ' (30d)</div></div>' +
     '<div class="home-pie">' + pieSvg(crewPct, crewColor) + '<div class="home-pie-label">Crew Today / Tmrw</div><div class="home-pie-sub2">' + (totalChecks ? doneChecks + ' of ' + totalChecks + ' checks · ' + liveEvents.length + ' event' + (liveEvents.length !== 1 ? 's' : '') : 'No events on site') + '</div></div>' +
     '<div class="home-pie">' + pieSvg(weekPct, weekColor) + '<div class="home-pie-label">This Week Fully Briefed</div><div class="home-pie-sub2">' + weekReady + ' of ' + thisWeek.length + ' event' + (thisWeek.length !== 1 ? 's' : '') + ' at 100%</div></div>';
+
+  // Manager-only: Hours This Week tile, sourced from clocks.json.
+  if (isManager()) appendHoursThisWeekTile();
+}
+
+async function appendHoursThisWeekTile() {
+  const host = document.getElementById('homePies');
+  if (!host) return;
+  // Compute current week (Mon 00:00 → next Mon 00:00, local time)
+  const now = new Date();
+  const monday = new Date(now); monday.setHours(0, 0, 0, 0);
+  const dow = (monday.getDay() + 6) % 7;
+  monday.setDate(monday.getDate() - dow);
+  const nextMonday = new Date(monday); nextMonday.setDate(nextMonday.getDate() + 7);
+  let log;
+  try { log = await loadClocksLog(); }
+  catch (e) { return; }
+  const shifts = pairShiftsForWeek(log.entries, monday, nextMonday);
+  let totalH = 0;
+  const usersWithHours = new Set();
+  shifts.forEach(s => {
+    if (s.inEntry && s.outEntry) {
+      const h = (new Date(s.outEntry.timestamp) - new Date(s.inEntry.timestamp)) / 3600000;
+      if (h > 0) { totalH += h; usersWithHours.add(s.user); }
+    } else if (s.inEntry && !s.outEntry) {
+      // Currently clocked in — count time so far
+      const h = (Date.now() - new Date(s.inEntry.timestamp)) / 3600000;
+      if (h > 0) { totalH += h; usersWithHours.add(s.user); }
+    }
+  });
+  const weekLabel = monday.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) +
+    ' – ' + new Date(nextMonday.getTime() - 1).toLocaleDateString('en-IE', { day: '2-digit', month: 'short' });
+  const tile = document.createElement('div');
+  tile.className = 'home-pie stat-tile actionable';
+  tile.title = 'Manager only · click to open Manage Hours';
+  tile.onclick = openManageHoursModal;
+  tile.innerHTML =
+    '<div><span class="stat-num">' + totalH.toFixed(1) + '</span><span class="stat-unit">h</span></div>' +
+    '<div class="home-pie-label">Hours This Week</div>' +
+    '<div class="home-pie-sub2">' + usersWithHours.size + ' crew · ' + weekLabel + '</div>';
+  host.appendChild(tile);
 }
 
 async function renderHomeEvents() {
