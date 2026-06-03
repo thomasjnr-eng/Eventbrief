@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:21:15.649Z",
+  "savedAt": "2026-06-03T16:22:19.626Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -328,9 +328,9 @@
           },
           {
             "label": "Waste containers in place",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T16:22:19.143Z",
             "assignedTo": null
           },
           {
