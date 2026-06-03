@@ -3428,10 +3428,68 @@ function tickCrewItem(truck, idx, checked) {
   item.done = !!checked;
   item.doneBy = checked ? (getUser() || 'Anonymous') : null;
   item.doneAt = checked ? new Date().toISOString() : null;
-  // Re-render the brief to refresh progress
-  generateBrief();
-  // Push to Worker silently (saveEvent handles passcode/missing-name gracefully)
+  // Update the visible row + counters in place so the page doesn't
+  // scroll back to the top every time someone ticks a box.
+  updateCrewTickInPlace(truck, idx);
   autoSave();
+}
+
+// In-place DOM update for a single crew checklist tick — keeps scroll
+// position and focus stable on a long checklist.
+function updateCrewTickInPlace(truck, idx) {
+  const list = CREW_CHECKLISTS[truck];
+  if (!list) return;
+  const items = list.items || [];
+  const item = items[idx];
+  if (!item) return;
+  const truckSel = truck.replace(/"/g, '\\"');
+  // 1. Toggle the row(s) — may exist in brief output AND ops view
+  document.querySelectorAll('.ops-check-row[data-truck="' + truckSel + '"][data-idx="' + idx + '"]').forEach(row => {
+    row.classList.toggle('done', !!item.done);
+    const cb = row.querySelector('input[type="checkbox"]');
+    if (cb && cb.checked !== !!item.done) cb.checked = !!item.done;
+    const labelEl = row.querySelector('.ops-label');
+    if (labelEl) {
+      const meta = item.done && item.doneBy
+        ? ' <span style="color:#666;font-size:11px;">— ' + (item.doneBy || '').replace(/</g, '&lt;') + ', ' + formatRelativeTime(item.doneAt) + '</span>'
+        : '';
+      const assignMeta = !item.done && item.assignedTo
+        ? ' <span style="color:#b07a10;font-size:11px;font-weight:700;">→ ' + (item.assignedTo || '').replace(/</g, '&lt;') + '</span>'
+        : '';
+      labelEl.innerHTML = (item.label || '') + meta + assignMeta;
+    }
+  });
+  // 2. Per-truck progress
+  const tDone = items.filter(i => i.done).length;
+  const tPct = items.length ? Math.round((tDone / items.length) * 100) : 0;
+  const tColor = tPct === 100 ? '#4a9a5c' : tPct >= 50 ? '#c89a4a' : '#c0392b';
+  document.querySelectorAll('.ops-truck-card').forEach(card => {
+    const nameEl = card.querySelector('.ops-truck-name');
+    if (!nameEl || nameEl.textContent !== truck) return;
+    const pctEl = card.querySelector('.ops-truck-pct');
+    if (pctEl) {
+      pctEl.textContent = tDone + '/' + items.length + ' · ' + tPct + '%';
+      pctEl.style.color = tColor;
+    }
+    const fillEl = card.querySelector('.ops-bar-fill');
+    if (fillEl) {
+      fillEl.style.width = tPct + '%';
+      fillEl.style.background = tColor;
+    }
+  });
+  // 3. Overall progress in the Day-Of Checklist section header
+  if (typeof crewProgressFor === 'function') {
+    const overall = crewProgressFor(CREW_CHECKLISTS);
+    const overallColor = overall.percent === 100 ? '#4a9a5c' : overall.percent >= 50 ? '#c89a4a' : '#c0392b';
+    document.querySelectorAll('.brief-section-head').forEach(head => {
+      if (!/DAY-OF CHECKLIST/i.test(head.textContent)) return;
+      const span = head.querySelector('span');
+      if (span) {
+        span.style.color = overallColor;
+        span.textContent = overall.doneItems + '/' + overall.totalItems + ' · ' + overall.percent + '%';
+      }
+    });
+  }
 }
 
 // ─── BULK IMPORT ──────────────────────────────────────────────
