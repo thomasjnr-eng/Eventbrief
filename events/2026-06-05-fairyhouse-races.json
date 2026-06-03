@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-02T19:43:18.867Z",
+  "savedAt": "2026-06-03T16:15:38.039Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -31,6 +31,8 @@
     "venueName": "Fairyhouse Racecourse ",
     "venueAddress": "Fairyhouse Racecourse, Ratoath, Meath",
     "accessNotes": "",
+    "venuePinLabel": "",
+    "venueRadius": "200",
     "otherUnits": "",
     "pitchRef": "Serving into Stretch Tent, Parade Ring",
     "pitchSize": "",
@@ -143,6 +145,8 @@
       "Pitt Bros BBQ": [],
       "231-D": []
     },
+    "_venuePin": null,
+    "_clockEntries": [],
     "_crewRoster": {
       "Fried Chicken Truck": [],
       "Pitt Bros BBQ": [],
