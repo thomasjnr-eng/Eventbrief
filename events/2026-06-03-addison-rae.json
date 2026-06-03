@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:28:11.962Z",
+  "savedAt": "2026-06-03T16:28:40.706Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -377,9 +377,9 @@
           },
           {
             "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T16:28:40.211Z",
             "assignedTo": null
           },
           {
