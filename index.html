@@ -773,6 +773,8 @@ body {
 .header-btn.primary:hover { background: var(--sage-dark); border-color: var(--sage-dark); }
 .header-btn.damage { background: #c0392b; color: #fff; border-color: #c0392b; }
 .header-btn.damage:hover { background: #a02d22; border-color: #a02d22; }
+.header-btn.clock { background: var(--sage); color: #fff; border-color: var(--sage); }
+.header-btn.clock:hover { background: var(--sage-dark); border-color: var(--sage-dark); }
 
 /* ─── DAMAGE REPORTS HOME BOX (manager only) ─── */
 .damage-reports-box {
@@ -2324,7 +2326,7 @@ body {
 </div>
 
 <header class="app-header">
-  <div class="logo" onclick="showHome()" title="Home" style="cursor:pointer;">O'<span>Brien</span> Event Catering</div>
+  <div class="logo" id="appLogo" onclick="showHome()" title="Home (long-press for Settings)" style="cursor:pointer;user-select:none;">O'<span>Brien</span> Event Catering</div>
   <div style="display:flex;align-items:center;gap:14px;">
     <div class="step-nav-wrap">
     <div class="step-indicator">
@@ -2358,8 +2360,9 @@ body {
       </div>
       <button class="header-btn" id="btnEvents" data-role-min="ops_lead" onclick="openEventsModal()">Load Brief</button>
       <button class="header-btn" id="btnBulk" data-role-min="ops_lead" onclick="openBulkModal()">Import</button>
+      <button class="header-btn clock" id="btnQuickClock" onclick="globalClockAction()" title="Clock in or out">🕐 Clock</button>
       <button class="header-btn damage" id="btnReportDamage" onclick="openReportDamageModal()" title="Report damage or a fault">🛠 Report</button>
-      <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
+      <button class="icon-btn indicator" id="btnSettings" data-role-min="ops_lead" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
   </div>
 </header>
@@ -9734,6 +9737,28 @@ document.addEventListener('DOMContentLoaded', function() {
   if (bd) bd.value = today;
   refreshSettingsIndicator();
   refreshUserIndicator();
+  // Long-press the logo (≥800ms) to open Settings — escape hatch for
+  // crew whose role hides the gear icon.
+  const logo = document.getElementById('appLogo');
+  if (logo) {
+    let pressTimer = null;
+    let pressFired = false;
+    const startPress = () => {
+      pressFired = false;
+      pressTimer = setTimeout(() => { pressFired = true; openSettingsModal(); }, 800);
+    };
+    const endPress = () => {
+      if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+    };
+    logo.addEventListener('mousedown', startPress);
+    logo.addEventListener('touchstart', startPress, { passive: true });
+    logo.addEventListener('mouseup', endPress);
+    logo.addEventListener('mouseleave', endPress);
+    logo.addEventListener('touchend', endPress);
+    logo.addEventListener('touchcancel', endPress);
+    // Swallow the click that follows a long-press so we don't also navigate home
+    logo.addEventListener('click', (e) => { if (pressFired) { e.preventDefault(); e.stopPropagation(); pressFired = false; } }, true);
+  }
   updateStepEditorIndicators();
   updateStepColors();
   ['loadInDate', 'loadOutDate', 'eventStartDate', 'eventFinishDate', 'loadInTime', 'loadOutTime'].forEach(id => {
