@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-02T15:58:31.847Z",
+  "savedAt": "2026-06-03T14:57:53.128Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -31,6 +31,8 @@
     "venueName": "Harris/Hino",
     "venueAddress": "Harris Group, Naas Rd, Dublin 12",
     "accessNotes": "",
+    "venuePinLabel": "",
+    "venueRadius": "200",
     "otherUnits": "",
     "pitchRef": "In Showroom",
     "pitchSize": "",
@@ -114,6 +116,8 @@
     "_menu": {
       "Caffe Duomo 2": []
     },
+    "_venuePin": null,
+    "_clockEntries": [],
     "_crewRoster": {
       "Caffe Duomo 2": []
     },
@@ -160,9 +164,9 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T14:57:52.767Z",
             "assignedTo": null
           },
           {
