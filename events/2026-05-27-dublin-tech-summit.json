@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:10:56.168Z",
+  "savedAt": "2026-06-03T19:10:58.063Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -562,23 +562,23 @@
           },
           {
             "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:10:56.393Z",
             "assignedTo": null
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:10:56.993Z",
             "assignedTo": null
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:10:57.825Z",
             "assignedTo": null
           },
           {
