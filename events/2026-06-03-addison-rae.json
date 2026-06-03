@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:22:24.420Z",
+  "savedAt": "2026-06-03T16:22:32.648Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -342,9 +342,9 @@
           },
           {
             "label": "Hand wash station set up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T16:22:32.386Z",
             "assignedTo": null
           },
           {
