@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-04-thursday",
-  "savedAt": "2026-06-03T22:35:08.008Z",
+  "savedAt": "2026-06-03T22:36:03.326Z",
   "savedBy": "SOC",
   "form": {
     "title": "Thursday",
@@ -15,7 +15,7 @@
     "tasks": [
       {
         "label": "Unload fridge vans - RDS",
-        "assignedTo": "",
+        "assignedTo": "All",
         "priority": "medium",
         "dueTime": "09:30",
         "eventLink": "Addison Rae  (03 Jun 2026)",
@@ -25,7 +25,7 @@
       },
       {
         "label": "Build Fairyhouse fridge van ",
-        "assignedTo": "",
+        "assignedTo": "All",
         "priority": "medium",
         "dueTime": "10:00",
         "eventLink": "",
@@ -35,7 +35,7 @@
       },
       {
         "label": "Fridge Van Temp Records - RDS",
-        "assignedTo": "",
+        "assignedTo": "Simon",
         "priority": "medium",
         "dueTime": "10:30",
         "eventLink": "Addison Rae  (03 Jun 2026)",
