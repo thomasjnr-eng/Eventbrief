@@ -1191,6 +1191,109 @@ body {
 }
 
 /* ─── ON-CLOCK BOX (manager only — who's currently working) ─── */
+/* ─── FOCUSED CARDS: TODAY + THIS WEEK ─── */
+.focus-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.focus-card.week { border-left: 4px solid var(--sage); }
+.focus-card:not(.week) { border-left: 4px solid #b07a10; }
+.focus-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+.focus-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  color: var(--heading);
+}
+.focus-title .focus-sub {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0;
+  font-weight: 400;
+  margin-left: 8px;
+}
+.focus-empty { color: var(--text-muted); font-size: 13px; font-style: italic; padding: 6px 0; }
+
+.today-event {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  align-items: center;
+}
+.today-event:first-of-type { border-top: none; padding-top: 4px; }
+.te-name { font-size: 17px; font-weight: 700; color: var(--white); }
+.te-meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+.te-checks {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.te-checks.green { color: #2d7a49; }
+.te-checks.amber { color: #b07a10; }
+.te-checks.red   { color: #c0392b; }
+.te-btn {
+  background: var(--sage);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 11px 18px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.te-btn:hover { background: var(--sage-dark); }
+
+/* Compact "This Week" list */
+.week-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 70px auto;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--border);
+  align-items: center;
+  cursor: pointer;
+}
+.week-row:first-of-type { border-top: none; }
+.week-row:hover { background: var(--bg-input); }
+.week-row .wr-day {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--sage);
+}
+.week-row .wr-name { font-size: 13px; color: var(--white); font-weight: 700; }
+.week-row .wr-venue { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.week-row .wr-pct {
+  font-size: 11px;
+  text-align: right;
+  font-weight: 700;
+}
+.week-row .wr-pct.full { color: #2d7a49; }
+.week-row .wr-pct.part { color: #b07a10; }
+.week-row .wr-pct.thin { color: #c0392b; }
+.week-row .wr-chev { color: var(--text-muted); font-size: 14px; }
+@media (max-width: 480px) {
+  .today-event { grid-template-columns: 1fr; }
+  .te-btn { width: 100%; }
+  .week-row { grid-template-columns: 60px 1fr auto; gap: 6px; }
+  .week-row .wr-pct { display: none; }
+}
+
 .on-clock-box {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -2348,6 +2451,9 @@ body {
 
   <div id="globalClockWidget" class="global-clock-widget" style="display:none;"></div>
 
+  <div id="todayFocus" class="focus-card" style="display:none;"></div>
+  <div id="thisWeekCard" class="focus-card week" style="display:none;"></div>
+
   <div id="onClockBox" class="on-clock-box" data-role-min="manager" style="display:none;"></div>
 
   <div id="actionRequired" class="action-required" data-role-min="ops_lead" style="display:none;"></div>
@@ -2355,7 +2461,7 @@ body {
   <div id="dashboard" class="dashboard"></div>
   <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
 
-  <div class="home-events-section">
+  <div class="home-events-section" data-role-min="ops_lead">
     <div class="home-events-head">
       <span class="home-events-title">Upcoming Day Plans</span>
       <span class="home-events-meta" id="homePlansMeta"></span>
@@ -2363,7 +2469,7 @@ body {
     <div id="homePlansGrid" class="home-events-grid"></div>
   </div>
 
-  <div class="home-events-section">
+  <div class="home-events-section" data-role-min="ops_lead">
     <div class="home-events-head">
       <span class="home-events-title">Upcoming Events</span>
       <span class="home-events-meta" id="homeEventsMeta"></span>
@@ -7452,9 +7558,161 @@ async function renderHome() {
   await renderActionRequired();
   await renderHomePies();
   await renderGlobalClockWidget();
+  await renderTodayAndWeek();
   renderOnClockBox();
   await renderHomeEvents();
   await renderHomePlans();
+}
+
+// ─── TODAY + THIS WEEK FOCUS CARDS ─────────────────────────────
+// Crew, truck leads and ops leads open the app to see what they need
+// to action right now — not metrics or long-range planning. Today's
+// card shows every event whose date window covers today, with the
+// outstanding-check count per event. This Week shows the rest of the
+// week (Mon–Sun including today) in a compact tappable list.
+
+function eventCoversDate(form, dateStr) {
+  if (!form || !dateStr) return false;
+  const dates = [];
+  if (form.loadInDate) dates.push(form.loadInDate);
+  if (form.loadOutDate) dates.push(form.loadOutDate);
+  if (form.eventStartDate) dates.push(form.eventStartDate);
+  if (form.eventFinishDate) dates.push(form.eventFinishDate);
+  if (Array.isArray(form._tradingDays)) form._tradingDays.forEach(d => { if (d && d.date) dates.push(d.date); });
+  if (!dates.length) return false;
+  const minD = dates.reduce((a, b) => (a < b ? a : b));
+  const maxD = dates.reduce((a, b) => (a > b ? a : b));
+  return minD <= dateStr && dateStr <= maxD;
+}
+
+function checksBand(outstanding) {
+  if (outstanding === 0) return 'green';
+  if (outstanding <= 5) return 'amber';
+  return 'red';
+}
+
+function countOutstandingChecks(form) {
+  let outstanding = 0, total = 0;
+  const lists = form && form._crewChecklists;
+  if (!lists) return { outstanding, total };
+  Object.keys(lists).forEach(truck => {
+    const items = (lists[truck] && lists[truck].items) || [];
+    items.forEach(it => { total++; if (!it.done) outstanding++; });
+  });
+  return { outstanding, total };
+}
+
+async function renderTodayAndWeek() {
+  const todayHost = document.getElementById('todayFocus');
+  const weekHost  = document.getElementById('thisWeekCard');
+  if (!todayHost || !weekHost) return;
+  if (!getPasscode()) { todayHost.style.display = 'none'; weekHost.style.display = 'none'; return; }
+
+  let filenames = [];
+  try { filenames = await listEventFilenames(); }
+  catch (e) { todayHost.style.display = 'none'; weekHost.style.display = 'none'; return; }
+  filenames = filenames.filter(isEventFile);
+  if (!filenames.length) { todayHost.style.display = 'none'; weekHost.style.display = 'none'; return; }
+
+  const events = (await Promise.all(filenames.map(getEventByFilename))).filter(Boolean);
+
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const todayStr = now.toISOString().slice(0, 10);
+  // Monday of this week + the following Sunday (inclusive)
+  const dow = (now.getDay() + 6) % 7;
+  const weekStart = new Date(now); weekStart.setDate(weekStart.getDate() - dow);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+  const weekStartStr = weekStart.toISOString().slice(0, 10);
+  const weekEndStr   = weekEnd.toISOString().slice(0, 10);
+
+  const todayEvents = events.filter(ev => eventCoversDate(ev.form, todayStr));
+  const weekEvents = events.filter(ev => {
+    if (eventCoversDate(ev.form, todayStr)) return false; // today is shown above
+    // Pick any event whose primary date or trading window falls in this week
+    const main = getEventDate(ev.form);
+    if (main && main >= weekStartStr && main <= weekEndStr) return true;
+    if (Array.isArray(ev.form._tradingDays)) {
+      return ev.form._tradingDays.some(d => d && d.date && d.date >= weekStartStr && d.date <= weekEndStr);
+    }
+    return false;
+  });
+  weekEvents.sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+
+  // ─── TODAY ───
+  const todayDateLabel = now.toLocaleDateString('en-IE', { weekday: 'short', day: '2-digit', month: 'short' });
+  if (todayEvents.length) {
+    todayHost.innerHTML = '<div class="focus-head">' +
+      '<div class="focus-title">TODAY <span class="focus-sub">' + todayDateLabel + '</span></div>' +
+      '</div>' +
+      todayEvents.map(ev => {
+        const f = ev.form || {};
+        const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+        const venue = (f.venueName || '').replace(/</g, '&lt;');
+        const tradeWindow = (f.eventStartTime && f.eventFinishTime)
+          ? (formatTime(f.eventStartTime) + ' – ' + formatTime(f.eventFinishTime))
+          : '';
+        const loadIn = f.loadInDate === todayStr && f.loadInTime ? ' · load-in ' + formatTime(f.loadInTime) : '';
+        const { outstanding, total } = countOutstandingChecks(f);
+        const band = checksBand(outstanding);
+        const checksLine = total
+          ? '<div class="te-checks ' + band + '">' +
+            (outstanding === 0 ? '✓ All ' + total + ' checks done' :
+              outstanding + ' check' + (outstanding !== 1 ? 's' : '') + ' outstanding of ' + total) +
+            '</div>'
+          : '<div class="te-checks" style="color:var(--text-muted);">No crew checks set yet</div>';
+        const fname = (ev._filename || '').replace(/'/g, "\\'");
+        return '<div class="today-event">' +
+          '<div>' +
+            '<div class="te-name">' + name + '</div>' +
+            '<div class="te-meta">' +
+              (venue ? '📍 ' + venue : '') +
+              (tradeWindow ? (venue ? ' · ' : '') + '⏰ ' + tradeWindow : '') +
+              (loadIn ? loadIn : '') +
+            '</div>' +
+            checksLine +
+          '</div>' +
+          '<button class="te-btn" onclick="loadEvent(\'' + fname + '\')">Open Brief →</button>' +
+          '</div>';
+      }).join('');
+    todayHost.style.display = 'block';
+  } else {
+    todayHost.innerHTML = '<div class="focus-head"><div class="focus-title">TODAY <span class="focus-sub">' + todayDateLabel + '</span></div></div>' +
+      '<div class="focus-empty">Nothing on today. Enjoy the quiet.</div>';
+    todayHost.style.display = 'block';
+  }
+
+  // ─── THIS WEEK ───
+  if (weekEvents.length) {
+    weekHost.innerHTML = '<div class="focus-head">' +
+      '<div class="focus-title">THIS WEEK <span class="focus-sub">' +
+        weekStart.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) + ' – ' +
+        weekEnd.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) +
+      '</span></div>' +
+      '</div>' +
+      weekEvents.map(ev => {
+        const f = ev.form || {};
+        const d = getEventDate(f);
+        const dt = d ? new Date(d) : null;
+        const dayLabel = dt ? dt.toLocaleDateString('en-IE', { weekday: 'short', day: '2-digit' }) : '—';
+        const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+        const venue = (f.venueName || '').replace(/</g, '&lt;');
+        const comp = computeEventCompleteness(f);
+        const pctClass = comp.percent === 100 ? 'full' : (comp.percent >= 60 ? 'part' : 'thin');
+        const fname = (ev._filename || '').replace(/'/g, "\\'");
+        return '<div class="week-row" onclick="loadEvent(\'' + fname + '\')">' +
+          '<div class="wr-day">' + dayLabel + '</div>' +
+          '<div><div class="wr-name">' + name + '</div>' +
+          (venue ? '<div class="wr-venue">' + venue + '</div>' : '') +
+          '</div>' +
+          '<div class="wr-pct ' + pctClass + '">' + comp.percent + '%</div>' +
+          '<div class="wr-chev">›</div>' +
+          '</div>';
+      }).join('');
+    weekHost.style.display = 'block';
+  } else {
+    // Hide entirely if there's literally nothing else this week
+    weekHost.style.display = 'none';
+  }
 }
 
 // ─── ON-CLOCK BOX (manager-only — who's currently working) ─────
