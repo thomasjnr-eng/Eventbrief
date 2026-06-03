@@ -796,12 +796,12 @@ body {
 .pnav-btn {
   flex: 0 0 auto;
   background: transparent;
-  border: 1.5px solid var(--border);
+  border: 1px solid var(--border);
   color: var(--white);
-  border-radius: 999px;
-  padding: 8px 14px;
+  border-radius: 4px;
+  padding: 5px 9px;
   font-family: 'Lato', sans-serif;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -809,18 +809,18 @@ body {
   transition: all 0.12s;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  line-height: 1.3;
 }
-.pnav-btn .pnav-ico { font-size: 0.85em; }
+.pnav-btn .pnav-ico { font-size: 0.9em; }
 .pnav-btn:hover { border-color: var(--sage); color: var(--sage); }
 .pnav-btn.clock { background: var(--sage); color: #fff; border-color: var(--sage); }
 .pnav-btn.clock:hover { background: var(--sage-dark); border-color: var(--sage-dark); color: #fff; }
 .pnav-btn.damage { border-color: #c0392b; color: #c0392b; }
 .pnav-btn.damage:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
 @media (max-width: 600px) {
-  .primary-nav { gap: 4px; padding: 6px 8px; top: 56px; }
-  .pnav-btn { font-size: 11px; padding: 6px 10px; gap: 4px; }
-  .pnav-btn .pnav-ico { font-size: 0.95em; }
+  .primary-nav { gap: 3px; padding: 5px 6px; top: 56px; }
+  .pnav-btn { font-size: 10px; padding: 4px 7px; gap: 3px; }
 }
 
 /* ─── DAMAGE REPORTS HOME BOX (manager only) ─── */
