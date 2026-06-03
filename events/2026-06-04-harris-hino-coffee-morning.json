@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-03T16:11:32.793Z",
+  "savedAt": "2026-06-03T16:11:46.025Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -241,9 +241,9 @@
           },
           {
             "label": "Ready to trade",
-            "done": true,
-            "doneBy": "Soc",
-            "doneAt": "2026-06-03T16:11:32.493Z",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null
           },
           {
