@@ -2314,6 +2314,7 @@ body {
       <option value="crew">Crew Member</option>
       <option value="truck_lead">Truck Lead</option>
       <option value="ops_lead">Ops Lead</option>
+      <option value="maintenance_manager">Maintenance Manager</option>
       <option value="manager">Manager</option>
     </select>
     <input type="password" class="welcome-input" id="welcomePasscode" placeholder="Team passcode" autocomplete="off" onkeydown="if(event.key==='Enter') submitWelcomePasscode()">
@@ -2351,15 +2352,15 @@ body {
     <div class="header-actions">
       <span class="user-indicator" id="userIndicator" style="display:none;"></span>
       <span class="draft-indicator" id="draftIndicator"></span>
-      <div class="hdr-menu" id="createMenuWrap" data-role-min="ops_lead">
+      <div class="hdr-menu" id="createMenuWrap" data-role-any="ops_lead,manager">
         <button class="header-btn primary" type="button" onclick="toggleCreateMenu(event)">+ Create new ▾</button>
         <div class="hdr-menu-list" id="createMenuList" role="menu">
           <button type="button" role="menuitem" onclick="closeCreateMenu(); newBrief();">📋 New Brief</button>
           <button type="button" role="menuitem" onclick="closeCreateMenu(); newPlan();">📝 New Day Plan</button>
         </div>
       </div>
-      <button class="header-btn" id="btnEvents" data-role-min="ops_lead" onclick="openEventsModal()">Load Brief</button>
-      <button class="header-btn" id="btnBulk" data-role-min="ops_lead" onclick="openBulkModal()">Import</button>
+      <button class="header-btn" id="btnEvents" data-role-any="ops_lead,manager" onclick="openEventsModal()">Load Brief</button>
+      <button class="header-btn" id="btnBulk" data-role-any="ops_lead,manager" onclick="openBulkModal()">Import</button>
       <button class="header-btn clock" id="btnQuickClock" onclick="globalClockAction()" title="Clock in or out">🕐 Clock</button>
       <button class="header-btn damage" id="btnReportDamage" onclick="openReportDamageModal()" title="Report damage or a fault">🛠 Report</button>
       <button class="icon-btn indicator" id="btnSettings" data-role-min="ops_lead" title="Settings" onclick="openSettingsModal()">⚙</button>
@@ -2383,6 +2384,7 @@ body {
           <option value="crew">Crew Member</option>
           <option value="truck_lead">Truck Lead</option>
           <option value="ops_lead">Ops Lead</option>
+          <option value="maintenance_manager">Maintenance Manager</option>
           <option value="manager">Manager (requires manager code)</option>
         </select>
         <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Your dashboard tailors itself to your role. Pick the closest one — only Manager needs the code below.</p>
@@ -2584,14 +2586,14 @@ body {
   <div id="thisWeekCard" class="focus-card week" style="display:none;"></div>
 
   <div id="onClockBox" class="on-clock-box" data-role-min="manager" style="display:none;"></div>
-  <div id="damageReportsBox" class="damage-reports-box" data-role-min="manager" style="display:none;"></div>
+  <div id="damageReportsBox" class="damage-reports-box" data-role-any="manager,maintenance_manager" style="display:none;"></div>
 
   <div id="actionRequired" class="action-required" data-role-min="ops_lead" style="display:none;"></div>
 
   <div id="dashboard" class="dashboard"></div>
   <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
 
-  <div class="home-events-section" data-role-min="ops_lead">
+  <div class="home-events-section" data-role-any="ops_lead,manager">
     <div class="home-events-head">
       <span class="home-events-title">Upcoming Day Plans</span>
       <span class="home-events-meta" id="homePlansMeta"></span>
@@ -3449,7 +3451,7 @@ body {
   </div>
 
   <div class="brief-actions">
-    <button class="btn btn-secondary nav-icon" data-role-min="ops_lead" onclick="backToForm()">←<span class="nav-txt"> Edit Brief</span></button>
+    <button class="btn btn-secondary nav-icon" data-role-any="ops_lead,manager" onclick="backToForm()">←<span class="nav-txt"> Edit Brief</span></button>
     <div style="display:flex;gap:6px;align-items:center;background:#222;padding:4px;border-radius:3px;">
       <button class="btn btn-secondary" id="modeFullBtn" onclick="setBriefMode('full')" style="font-size:12px;padding:7px 14px;">Full</button>
       <button class="btn btn-secondary" id="modeCrewBtn" onclick="setBriefMode('crew')" style="font-size:12px;padding:7px 14px;">Crew</button>
@@ -6399,11 +6401,12 @@ const ROLE_KEY = 'obrien_brief_role';
 // don't apply to a role. Manager is the only role that needs the manager
 // code on top — self-declared manager just gets the ops_lead view until
 // they unlock manager mode in Settings.
-const ROLES = ['crew', 'truck_lead', 'ops_lead', 'manager'];
+const ROLES = ['crew', 'truck_lead', 'ops_lead', 'maintenance_manager', 'manager'];
 const ROLE_LABELS = {
   crew: 'Crew Member',
   truck_lead: 'Truck Lead',
   ops_lead: 'Ops Lead',
+  maintenance_manager: 'Maintenance Manager',
   manager: 'Manager'
 };
 function getRole() { return localStorage.getItem(ROLE_KEY) || 'crew'; }
@@ -7184,8 +7187,8 @@ function showHome() {
   window.scrollTo(0, 0);
 }
 function showBriefEdit() {
-  // Crew and truck leads have no business in the editor; bounce them home.
-  if (!roleAtLeast('ops_lead')) { showHome(); toast('Briefs are view-only for your role', 'error'); return; }
+  // Only ops_lead + manager can use the editor. Everyone else bounces home.
+  if (!canEditBriefs()) { showHome(); toast('Briefs are view-only for your role', 'error'); return; }
   document.getElementById('home-view').style.display = 'none';
   document.getElementById('brief-edit-view').style.display = 'block';
   const planEdit = document.getElementById('plan-edit-view');
@@ -8031,6 +8034,28 @@ function renderRoleVisibility() {
     const minRank = roleRank(el.getAttribute('data-role-min'));
     el.style.display = rank >= minRank ? '' : 'none';
   });
+  // data-role-any="role1,role2,…" — show only when the current role is
+  // one of the listed ones. Used for non-hierarchical features (e.g.
+  // damage management is for manager + maintenance_manager but NOT
+  // ops_lead, even though ops_lead has a lower rank).
+  document.querySelectorAll('[data-role-any]').forEach(el => {
+    const allowed = (el.getAttribute('data-role-any') || '').split(',').map(s => s.trim()).filter(Boolean);
+    el.style.display = allowed.includes(role) ? '' : 'none';
+  });
+}
+
+// Capability check used by the damage area: manager (with unlock) OR
+// maintenance_manager (self-declared). Kept separate from isManager()
+// so payroll / clock-watch stay manager-only.
+function canManageDamage() {
+  return getRole() === 'maintenance_manager' || isManager();
+}
+
+// Brief authoring is for ops_lead + manager only. Maintenance managers
+// can view briefs (read-only) so they can see checklists / venues, but
+// they don't author them.
+function canEditBriefs() {
+  return getRole() === 'ops_lead' || isManager();
 }
 
 function refreshRoleControls() {
@@ -8060,6 +8085,7 @@ function onRoleSelectChange(newRole) {
   refreshRoleControls();
   renderRoleVisibility();
   renderHome();
+  renderDamageReportsBox();
   toast('Role set: ' + (ROLE_LABELS[newRole] || newRole));
 }
 
@@ -8242,7 +8268,7 @@ async function submitDamageReport() {
 async function renderDamageReportsBox() {
   const box = document.getElementById('damageReportsBox');
   if (!box) return;
-  if (!isManager() || !getPasscode()) { box.style.display = 'none'; return; }
+  if (!canManageDamage() || !getPasscode()) { box.style.display = 'none'; return; }
   let log;
   try { log = await loadDamageReports(); }
   catch (e) { box.style.display = 'none'; return; }
@@ -8279,7 +8305,7 @@ async function renderDamageReportsBox() {
 }
 
 async function openDamageDetailsModal(id) {
-  if (!isManager()) { toast('Manager mode required', 'error'); return; }
+  if (!canManageDamage()) { toast('Manager or maintenance role required', 'error'); return; }
   const log = await loadDamageReports();
   const r = (log.reports || []).find(x => x.id === id);
   if (!r) { toast('Report not found', 'error'); return; }
@@ -9626,9 +9652,10 @@ async function getEventByFilename(name) {
 }
 
 async function loadEvent(filename) {
-  // Crew and truck leads never edit briefs — open straight to the
-  // finalised brief view instead of the form.
-  if (!roleAtLeast('ops_lead')) return loadEventToBrief(filename);
+  // Only ops_lead + manager can edit a brief. Everyone else (crew,
+  // truck leads, maintenance managers) opens straight into the
+  // finalised brief view.
+  if (!canEditBriefs()) return loadEventToBrief(filename);
   try {
     const ev = await getEventByFilename(filename);
     if (!ev) { toast('Could not load event', 'error'); return; }
