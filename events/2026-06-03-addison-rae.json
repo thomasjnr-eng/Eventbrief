@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:17:17.815Z",
+  "savedAt": "2026-06-03T16:17:24.867Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -275,9 +275,9 @@
           },
           {
             "label": "End-of-trade: bins emptied & site clean",
-            "done": true,
-            "doneBy": "Ae",
-            "doneAt": "2026-06-03T16:17:17.497Z",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null
           },
           {
