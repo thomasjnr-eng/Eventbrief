@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-03T14:58:09.276Z",
+  "savedAt": "2026-06-03T14:58:12.607Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -199,9 +199,9 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T14:58:12.201Z",
             "assignedTo": null
           },
           {
