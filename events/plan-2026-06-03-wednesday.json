@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-03-wednesday",
-  "savedAt": "2026-06-03T09:51:39.896Z",
+  "savedAt": "2026-06-03T10:03:25.276Z",
   "savedBy": "SOC",
   "form": {
     "title": "Wednesday 😅",
@@ -19,9 +19,9 @@
         "priority": "medium",
         "dueTime": "10:30",
         "eventLink": "Addison Rae  (03 Jun 2026)",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "SOC",
+        "doneAt": "2026-06-03T10:03:24.732Z"
       },
       {
         "label": "Wash Coffee Unit",
