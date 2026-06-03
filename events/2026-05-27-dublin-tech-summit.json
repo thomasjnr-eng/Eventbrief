@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:12:12.777Z",
+  "savedAt": "2026-06-03T19:12:14.610Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -474,30 +474,30 @@
           },
           {
             "label": "End-of-trade: cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:13.440Z",
             "assignedTo": null
           },
           {
             "label": "End-of-trade: bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:13.738Z",
             "assignedTo": null
           },
           {
             "label": "End-of-trade: all food covered / stored / disposed",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:14.223Z",
             "assignedTo": null
           },
           {
             "label": "End-of-trade: truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:14.588Z",
             "assignedTo": null
           }
         ]
