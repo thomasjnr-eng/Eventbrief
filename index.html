@@ -8479,6 +8479,30 @@ function renderRoleVisibility() {
     const allowed = (el.getAttribute('data-role-any') || '').split(',').map(s => s.trim()).filter(Boolean);
     el.style.display = allowed.includes(role) ? '' : 'none';
   });
+  applyRoleSpecificLayout();
+}
+
+// Maintenance managers care about damage above everything else — move
+// the damage reports box to sit right under the welcome banner, above
+// even Today. Other roles get the default position.
+function applyRoleSpecificLayout() {
+  const home = document.getElementById('home-view');
+  const damage = document.getElementById('damageReportsBox');
+  if (!home || !damage) return;
+  const welcome = home.querySelector('.home-welcome');
+  if (!welcome) return;
+  if (getRole() === 'maintenance_manager') {
+    if (welcome.nextElementSibling !== damage) {
+      welcome.parentNode.insertBefore(damage, welcome.nextElementSibling);
+    }
+  } else {
+    // Default slot: right after the On the Clock box, sitting alongside
+    // the other manager-only operational cards.
+    const onClock = document.getElementById('onClockBox');
+    if (onClock && onClock.nextElementSibling !== damage) {
+      onClock.parentNode.insertBefore(damage, onClock.nextElementSibling);
+    }
+  }
 }
 
 // Capability check used by the damage area: manager (with unlock) OR
