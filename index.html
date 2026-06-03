@@ -2267,15 +2267,15 @@ body {
     <div class="header-actions">
       <span class="user-indicator" id="userIndicator" style="display:none;"></span>
       <span class="draft-indicator" id="draftIndicator"></span>
-      <div class="hdr-menu" id="createMenuWrap">
+      <div class="hdr-menu" id="createMenuWrap" data-role-min="ops_lead">
         <button class="header-btn primary" type="button" onclick="toggleCreateMenu(event)">+ Create new ▾</button>
         <div class="hdr-menu-list" id="createMenuList" role="menu">
           <button type="button" role="menuitem" onclick="closeCreateMenu(); newBrief();">📋 New Brief</button>
           <button type="button" role="menuitem" onclick="closeCreateMenu(); newPlan();">📝 New Day Plan</button>
         </div>
       </div>
-      <button class="header-btn" id="btnEvents" onclick="openEventsModal()">Load Brief</button>
-      <button class="header-btn" id="btnBulk" onclick="openBulkModal()">Import</button>
+      <button class="header-btn" id="btnEvents" data-role-min="ops_lead" onclick="openEventsModal()">Load Brief</button>
+      <button class="header-btn" id="btnBulk" data-role-min="ops_lead" onclick="openBulkModal()">Import</button>
       <button class="icon-btn indicator" id="btnSettings" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
   </div>
@@ -3319,7 +3319,7 @@ body {
   </div>
 
   <div class="brief-actions">
-    <button class="btn btn-secondary nav-icon" onclick="backToForm()">←<span class="nav-txt"> Edit Brief</span></button>
+    <button class="btn btn-secondary nav-icon" data-role-min="ops_lead" onclick="backToForm()">←<span class="nav-txt"> Edit Brief</span></button>
     <div style="display:flex;gap:6px;align-items:center;background:#222;padding:4px;border-radius:3px;">
       <button class="btn btn-secondary" id="modeFullBtn" onclick="setBriefMode('full')" style="font-size:12px;padding:7px 14px;">Full</button>
       <button class="btn btn-secondary" id="modeCrewBtn" onclick="setBriefMode('crew')" style="font-size:12px;padding:7px 14px;">Crew</button>
@@ -7054,6 +7054,8 @@ function showHome() {
   window.scrollTo(0, 0);
 }
 function showBriefEdit() {
+  // Crew and truck leads have no business in the editor; bounce them home.
+  if (!roleAtLeast('ops_lead')) { showHome(); toast('Briefs are view-only for your role', 'error'); return; }
   document.getElementById('home-view').style.display = 'none';
   document.getElementById('brief-edit-view').style.display = 'block';
   const planEdit = document.getElementById('plan-edit-view');
@@ -9147,6 +9149,9 @@ async function getEventByFilename(name) {
 }
 
 async function loadEvent(filename) {
+  // Crew and truck leads never edit briefs — open straight to the
+  // finalised brief view instead of the form.
+  if (!roleAtLeast('ops_lead')) return loadEventToBrief(filename);
   try {
     const ev = await getEventByFilename(filename);
     if (!ev) { toast('Could not load event', 'error'); return; }
@@ -9157,6 +9162,30 @@ async function loadEvent(filename) {
     showBriefEdit();
     goStep(1);
     toast('Loaded ' + (ev.form.eventName || filename));
+  } catch (e) {
+    toast('Load failed: ' + e.message, 'error');
+  }
+}
+
+// Opens an event read-only: populates the form state behind the scenes
+// (so generateBrief can read it) and jumps straight to the rendered
+// brief output. Used for any role below ops_lead.
+async function loadEventToBrief(filename) {
+  try {
+    const ev = await getEventByFilename(filename);
+    if (!ev) { toast('Could not load event', 'error'); return; }
+    populateForm(ev.form);
+    clearDraft();
+    setBriefState('continued');
+    closeEventsModal();
+    // Hide the form view, then render and show the brief
+    const formApp = document.getElementById('form-app');
+    if (formApp) formApp.style.display = 'none';
+    const home = document.getElementById('home-view');
+    if (home) home.style.display = 'none';
+    const planEdit = document.getElementById('plan-edit-view');
+    if (planEdit) planEdit.style.display = 'none';
+    generateBrief();
   } catch (e) {
     toast('Load failed: ' + e.message, 'error');
   }
