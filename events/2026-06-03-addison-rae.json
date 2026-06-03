@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T23:50:27.312Z",
+  "savedAt": "2026-06-03T23:50:29.272Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -530,9 +530,9 @@
           },
           {
             "label": "Truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T23:50:29.085Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-02"
