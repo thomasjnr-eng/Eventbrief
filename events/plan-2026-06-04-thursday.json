@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-04-thursday",
-  "savedAt": "2026-06-03T22:39:26.647Z",
+  "savedAt": "2026-06-03T22:40:22.966Z",
   "savedBy": "SOC",
   "form": {
     "title": "Thursday",
@@ -10,7 +10,7 @@
     "startTime": "09:30",
     "endTime": "17:30",
     "lead": "Robo",
-    "assigned": "Robo, Anto, Oisín",
+    "assigned": "Robo, Anto, Oisín, Simon",
     "notes": "",
     "tasks": [
       {
