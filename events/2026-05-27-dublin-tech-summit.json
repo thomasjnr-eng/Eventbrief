@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:11:50.205Z",
+  "savedAt": "2026-06-03T19:11:51.688Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -281,23 +281,23 @@
           },
           {
             "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:51.601Z",
             "assignedTo": null
           },
           {
             "label": "Power connected & tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:51.352Z",
             "assignedTo": null
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:11:50.866Z",
             "assignedTo": null
           },
           {
