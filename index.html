@@ -10369,12 +10369,17 @@ document.addEventListener('DOMContentLoaded', function() {
   showHome();
   // Background-sync the full event cache so offline read works
   if (getPasscode()) syncAllEventsToCache().catch(() => {});
-  // Deep-link from a shared URL: ?event=<filename> or ?plan=<filename>
+  // Deep-link from a shared URL: ?event=<filename> or ?plan=<filename>.
+  // We consume the param once, then strip it from the URL so pull-to-
+  // refresh doesn't keep reopening the same brief.
   setTimeout(() => {
     if (!getPasscode()) return;
     const params = new URLSearchParams(window.location.search);
     const evP = params.get('event');
     const plP = params.get('plan');
+    if (evP || plP) {
+      try { history.replaceState({}, '', window.location.pathname); } catch (e) {}
+    }
     if (evP) { loadEvent(evP).catch(() => {}); }
     else if (plP) { loadPlan(plP).catch(() => {}); }
   }, 300);
