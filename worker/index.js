@@ -66,6 +66,17 @@ export default {
         }
         return await geocodeAddress(address, env, origin);
       }
+      if (path === '/reverse-geocode' && (request.method === 'POST' || request.method === 'GET')) {
+        let lat, lng;
+        if (request.method === 'POST') {
+          const body = await request.json().catch(() => ({}));
+          lat = body.lat; lng = body.lng;
+        } else {
+          lat = parseFloat(url.searchParams.get('lat'));
+          lng = parseFloat(url.searchParams.get('lng'));
+        }
+        return await reverseGeocode(lat, lng, env, origin);
+      }
       if (path === '/verify-manager' && request.method === 'POST') {
         const body = await request.json().catch(() => ({}));
         const code = body && body.code;
@@ -274,6 +285,40 @@ async function geocodeAddress(address, env, origin) {
     }, 200, origin);
   } catch (e) {
     return json({ error: 'geocode_unreachable', detail: e.message }, 502, origin);
+  }
+}
+
+// ─── REVERSE GEOCODING ────────────────────────────────────────
+// Given a lat/lng (from a clock-in entry), returns a human-readable
+// place name. Same provider-preference pattern as /geocode.
+async function reverseGeocode(lat, lng, env, origin) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return json({ error: 'lat and lng required' }, 400, origin);
+  }
+  if (env.GOOGLE_MAPS_API_KEY) {
+    try {
+      const r = await fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + env.GOOGLE_MAPS_API_KEY);
+      if (r.ok) {
+        const d = await r.json();
+        const hit = d.results && d.results[0];
+        if (hit) {
+          return json({ formatted: hit.formatted_address, source: 'google' }, 200, origin);
+        }
+      }
+    } catch (e) {
+      // fall through
+    }
+  }
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=18&addressdetails=0', {
+      headers: { 'User-Agent': 'obrien-brief-worker (ops@obrieneventcatering.com)' }
+    });
+    if (!r.ok) return json({ error: 'nominatim_' + r.status }, 502, origin);
+    const d = await r.json();
+    if (!d || !d.display_name) return json({ error: 'no_results' }, 404, origin);
+    return json({ formatted: d.display_name, source: 'nominatim' }, 200, origin);
+  } catch (e) {
+    return json({ error: 'revgeo_unreachable', detail: e.message }, 502, origin);
   }
 }
 

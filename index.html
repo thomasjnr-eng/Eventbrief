@@ -1178,6 +1178,78 @@ body {
   .gcw-btn { width: 100%; }
 }
 
+/* ─── ON-CLOCK BOX (manager only — who's currently working) ─── */
+.on-clock-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid #2d7a49;
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.ocb-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.ocb-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: #2d7a49;
+}
+.ocb-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+.ocb-refresh {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--grey);
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+}
+.ocb-refresh:hover { border-color: var(--sage); color: var(--sage); }
+.ocb-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+  align-items: center;
+}
+.ocb-row:first-of-type { border-top: none; }
+.ocb-user { font-size: 14px; font-weight: 700; color: var(--white); }
+.ocb-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.ocb-meta .ocb-dur { color: #2d7a49; font-weight: 700; }
+.ocb-loc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.ocb-loc a {
+  color: var(--sage);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--sage);
+}
+.ocb-loc a:hover { text-decoration: none; border-bottom-style: solid; }
+.ocb-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #2d7a49;
+  margin-right: 4px;
+  animation: ocb-pulse 1.8s infinite;
+}
+@keyframes ocb-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(45, 122, 73, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(45, 122, 73, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(45, 122, 73, 0); }
+}
+.ocb-empty { font-size: 12px; color: var(--text-muted); font-style: italic; padding: 6px 0; }
+
 /* ─── MANAGE HOURS MODAL ─── */
 .hours-row {
   display: grid;
@@ -2245,6 +2317,8 @@ body {
   </div>
 
   <div id="globalClockWidget" class="global-clock-widget" style="display:none;"></div>
+
+  <div id="onClockBox" class="on-clock-box" style="display:none;"></div>
 
   <div id="actionRequired" class="action-required" style="display:none;"></div>
 
@@ -7259,8 +7333,130 @@ async function renderHome() {
   await renderActionRequired();
   await renderHomePies();
   await renderGlobalClockWidget();
+  renderOnClockBox();
   await renderHomeEvents();
   await renderHomePlans();
+}
+
+// ─── ON-CLOCK BOX (manager-only — who's currently working) ─────
+// Lists every crew member whose last entry in clocks.json is type 'in'.
+// For each, shows how long they've been on the clock and the nearest
+// known address (reverse-geocoded via the Worker, cached in localStorage
+// so we don't pay for repeat lookups of the same coords).
+const REVGEO_CACHE_KEY = 'obrien_brief_revgeo_cache_v1';
+let REVGEO_CACHE = null;
+function revgeoCacheLoad() {
+  if (REVGEO_CACHE) return REVGEO_CACHE;
+  try { REVGEO_CACHE = JSON.parse(localStorage.getItem(REVGEO_CACHE_KEY) || '{}'); }
+  catch (e) { REVGEO_CACHE = {}; }
+  return REVGEO_CACHE;
+}
+function revgeoCacheKey(lat, lng) {
+  // Round to ~11m precision so we don't re-lookup tiny GPS jitter
+  return lat.toFixed(4) + ',' + lng.toFixed(4);
+}
+function revgeoCacheGet(lat, lng) {
+  const c = revgeoCacheLoad();
+  return c[revgeoCacheKey(lat, lng)] || null;
+}
+function revgeoCacheSet(lat, lng, formatted) {
+  const c = revgeoCacheLoad();
+  c[revgeoCacheKey(lat, lng)] = formatted;
+  try { localStorage.setItem(REVGEO_CACHE_KEY, JSON.stringify(c)); } catch (e) {}
+}
+async function reverseGeocode(lat, lng) {
+  if (lat == null || lng == null) return null;
+  const cached = revgeoCacheGet(lat, lng);
+  if (cached) return cached;
+  try {
+    const res = await apiCall('/reverse-geocode', { method: 'POST', body: JSON.stringify({ lat, lng }) });
+    if (!res.ok) return null;
+    const d = await res.json();
+    if (d && d.formatted) {
+      revgeoCacheSet(lat, lng, d.formatted);
+      return d.formatted;
+    }
+  } catch (e) { /* offline / failed — return null */ }
+  return null;
+}
+
+let ON_CLOCK_TIMER = null;
+async function renderOnClockBox() {
+  const box = document.getElementById('onClockBox');
+  if (!box) return;
+  // Manager-only
+  if (!isManager() || !getPasscode()) {
+    box.style.display = 'none';
+    if (ON_CLOCK_TIMER) { clearInterval(ON_CLOCK_TIMER); ON_CLOCK_TIMER = null; }
+    return;
+  }
+  let log;
+  try { log = await loadClocksLog(); }
+  catch (e) { box.style.display = 'none'; return; }
+  // Latest entry per user
+  const latestByUser = {};
+  (log.entries || []).forEach(e => {
+    if (!e || !e.user || !e.timestamp) return;
+    const prev = latestByUser[e.user];
+    if (!prev || e.timestamp > prev.timestamp) latestByUser[e.user] = e;
+  });
+  const onClock = Object.values(latestByUser).filter(e => e.type === 'in');
+  onClock.sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''));
+
+  const rows = onClock.length
+    ? onClock.map(e => {
+        const since = e.timestamp ? new Date(e.timestamp) : null;
+        const dur = since ? fmtDuration(Date.now() - since.getTime()) : '—';
+        const sinceTxt = since ? since.toLocaleString('en-IE', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' }) : '—';
+        const cachedAddr = (e.lat != null && e.lng != null) ? revgeoCacheGet(e.lat, e.lng) : null;
+        const mapUrl = (e.lat != null && e.lng != null)
+          ? 'https://www.google.com/maps/search/?api=1&query=' + e.lat + ',' + e.lng
+          : null;
+        const locLine = mapUrl
+          ? '<div class="ocb-loc" data-lat="' + e.lat + '" data-lng="' + e.lng + '">📍 ' +
+            '<a href="' + mapUrl + '" target="_blank" rel="noopener" class="ocb-addr">' + (cachedAddr ? cachedAddr.replace(/</g, '&lt;') : (e.lat.toFixed(4) + ', ' + e.lng.toFixed(4))) + '</a>' +
+            ' &middot; <a href="' + mapUrl + '" target="_blank" rel="noopener">Open in Maps ↗</a>' +
+            (e.accuracy ? ' <span style="color:var(--text-muted);">±' + e.accuracy + 'm</span>' : '') +
+            '</div>'
+          : '<div class="ocb-loc" style="color:var(--text-muted);">📍 No GPS recorded</div>';
+        return '<div class="ocb-row">' +
+          '<div>' +
+            '<div class="ocb-user"><span class="ocb-dot"></span>' + (e.user || '').replace(/</g, '&lt;') + '</div>' +
+            '<div class="ocb-meta">In since ' + sinceTxt + ' &middot; <span class="ocb-dur">' + dur + '</span></div>' +
+            locLine +
+          '</div>' +
+          '<div></div>' +
+          '</div>';
+      }).join('')
+    : '<div class="ocb-empty">No one on the clock right now.</div>';
+
+  box.innerHTML =
+    '<div class="ocb-head">' +
+      '<div>' +
+        '<div class="ocb-title">👥 ON THE CLOCK</div>' +
+        '<div class="ocb-count">' + onClock.length + ' crew member' + (onClock.length === 1 ? '' : 's') + ' working now &middot; auto-refreshes every 60s</div>' +
+      '</div>' +
+      '<button class="ocb-refresh" onclick="renderOnClockBox()">↻ Refresh</button>' +
+    '</div>' +
+    rows;
+  box.style.display = 'block';
+
+  // Kick off (cheap, cached) reverse-geocodes for any rows without a cached address
+  onClock.forEach(async e => {
+    if (e.lat == null || e.lng == null) return;
+    if (revgeoCacheGet(e.lat, e.lng)) return;
+    const formatted = await reverseGeocode(e.lat, e.lng);
+    if (!formatted) return;
+    const row = box.querySelector('.ocb-loc[data-lat="' + e.lat + '"][data-lng="' + e.lng + '"] .ocb-addr');
+    if (row) row.textContent = formatted;
+  });
+
+  // Auto-refresh durations + state every minute
+  if (ON_CLOCK_TIMER) clearInterval(ON_CLOCK_TIMER);
+  ON_CLOCK_TIMER = setInterval(() => {
+    if (document.getElementById('home-view').style.display === 'none') return;
+    renderOnClockBox();
+  }, 60000);
 }
 
 // ─── GLOBAL CLOCK IN / OUT ─────────────────────────────────────
@@ -7290,6 +7486,7 @@ async function unlockManagerMode() {
     document.getElementById('managerCodeInput').value = '';
     refreshManagerBadge();
     renderGlobalClockWidget();
+    renderOnClockBox();
     toast('Manager mode unlocked ✓');
   } catch (e) {
     if (e.message === 'NO_PASSCODE') { toast('Set the team passcode first', 'error'); return; }
@@ -7300,6 +7497,7 @@ function lockManagerMode() {
   localStorage.removeItem(MANAGER_KEY);
   refreshManagerBadge();
   renderGlobalClockWidget();
+  renderOnClockBox();
   toast('Manager mode locked');
 }
 
