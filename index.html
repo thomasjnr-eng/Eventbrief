@@ -778,6 +778,28 @@ body {
 .header-btn.clock { background: var(--sage); color: #fff; border-color: var(--sage); }
 .header-btn.clock:hover { background: var(--sage-dark); border-color: var(--sage-dark); }
 
+/* ─── HOME FOOTER (settings escape hatch, visible to all) ─── */
+.home-footer {
+  text-align: center;
+  padding: 40px 0 28px;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.footer-settings-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 3px;
+  padding: 9px 18px;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.footer-settings-btn:hover { border-color: var(--sage); color: var(--sage); }
+.home-footer-hint { margin-top: 8px; font-size: 11px; color: var(--text-muted); }
+
 /* ─── PRIMARY NAV BAR (sticky strip under the header, visible to all) ─── */
 .primary-nav {
   display: flex;
@@ -2506,6 +2528,16 @@ body {
         <button class="btn btn-secondary" onclick="lockManagerMode()" style="font-size:13px;padding:8px 16px;">Lock</button>
         <button class="btn btn-primary" onclick="unlockManagerMode()" style="font-size:13px;padding:8px 16px;">Unlock Manager Mode</button>
       </div>
+
+      <div id="forceSignOutSection" data-role-min="manager" style="margin-top:22px;">
+        <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
+        <p><strong style="color:var(--white);">Force Sign-Outs</strong></p>
+        <p>Sign somebody out of every device they're using — they'll need to re-enter their name and the team passcode. Useful when a phone is lost, someone leaves the team, or a device needs to be reset.</p>
+        <div class="modal-actions" style="justify-content:flex-start;margin-top:8px;margin-bottom:12px;">
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="renderForceSignOutPanel()">↻ Refresh list</button>
+        </div>
+        <div id="forceSignOutList" style="max-height:40vh;overflow:auto;"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2701,6 +2733,11 @@ body {
   <div id="actionRequired" class="action-required" data-role-min="ops_lead" style="display:none;"></div>
 
   <div id="dashboard" class="dashboard"></div>
+
+  <div class="home-footer">
+    <button class="footer-settings-btn" onclick="openSettingsModal()">⚙ Settings &amp; Sign out</button>
+    <div class="home-footer-hint" id="homeFooterHint"></div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -6803,6 +6840,7 @@ function signOut() {
   if (!confirm('Sign out? You will need to re-enter your name and the team passcode on next visit.')) return;
   clearUser();
   clearPasscode();
+  clearSignInTime();
   closeSettingsModal();
   openWelcomeOverlay();
 }
@@ -7053,6 +7091,7 @@ async function submitWelcomePasscode() {
     }
     setUser(name);
     setPasscode(code);
+    setSignInTime();
     const roleSel = document.getElementById('welcomeRole');
     const pickedRole = roleSel ? roleSel.value : 'crew';
     // Manager role can't be self-assigned at sign-in — they must unlock
@@ -7087,6 +7126,7 @@ function openSettingsModal() {
   refreshThemeButtons();
   refreshManagerBadge();
   refreshRoleControls();
+  if (isManager()) renderForceSignOutPanel();
   const ls = document.getElementById('settingsLastSync');
   if (ls) {
     const s = cacheLastSynced();
@@ -7455,7 +7495,8 @@ let CURRENT_PLAN_FILENAME = null;
 function isPlanFile(name) { return typeof name === 'string' && name.startsWith('plan-'); }
 function isClocksFile(name) { return name === 'clocks.json'; }
 function isDamageFile(name) { return name === 'damage-reports.json'; }
-function isEventFile(name) { return typeof name === 'string' && !name.startsWith('plan-') && !isClocksFile(name) && !isDamageFile(name); }
+function isForceSignOutsFile(name) { return name === 'force-signouts.json'; }
+function isEventFile(name) { return typeof name === 'string' && !name.startsWith('plan-') && !isClocksFile(name) && !isDamageFile(name) && !isForceSignOutsFile(name); }
 
 async function populateUpcomingEventsDatalist() {
   const dl = document.getElementById('upcomingEventsList');
@@ -7927,6 +7968,13 @@ async function renderHomePlans() {
 // ─── HOME VIEW RENDERING ──────────────────────────────────────
 async function renderHome() {
   renderRoleVisibility();
+  // Check whether a manager has queued a forced sign-out for us
+  checkForceSignOut();
+  const hint = document.getElementById('homeFooterHint');
+  if (hint) {
+    const u = getUser();
+    hint.textContent = u ? ('Signed in as ' + u + ' · ' + (ROLE_LABELS[getRole()] || 'Ops Team Member')) : '';
+  }
   const greetEl = document.getElementById('homeGreetUser');
   if (greetEl) {
     const u = getUser();
@@ -8487,6 +8535,141 @@ function fmtDuration(ms) {
 // report (with photos); the manager dashboard surfaces open reports and
 // lets the maintenance lead update status + attach repair photos.
 const DAMAGE_FILENAME = 'damage-reports.json';
+const FORCE_SIGNOUTS_FILENAME = 'force-signouts.json';
+const SIGN_IN_AT_KEY = 'obrien_brief_signed_in_at';
+
+function setSignInTime() { localStorage.setItem(SIGN_IN_AT_KEY, new Date().toISOString()); }
+function getSignInTime() { return localStorage.getItem(SIGN_IN_AT_KEY) || ''; }
+function clearSignInTime() { localStorage.removeItem(SIGN_IN_AT_KEY); }
+
+async function loadForceSignOuts() {
+  if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[FORCE_SIGNOUTS_FILENAME];
+  try {
+    const res = await apiCall('/events/' + encodeURIComponent(FORCE_SIGNOUTS_FILENAME));
+    if (res.status === 404) return { sha: null, entries: [] };
+    if (!res.ok) throw new Error('force_' + res.status);
+    const meta = await res.json();
+    return { sha: meta.sha, entries: Array.isArray(meta.event && meta.event.entries) ? meta.event.entries : [] };
+  } catch (e) {
+    if (e.message === 'NO_PASSCODE' || e.message === 'BAD_PASSCODE') return { sha: null, entries: [] };
+    return { sha: null, entries: [] };
+  }
+}
+
+async function saveForceSignOuts(entries, sha) {
+  const payload = { version: 1, type: 'force_signouts', savedAt: new Date().toISOString(), entries };
+  const body = { event: payload };
+  if (sha) body.sha = sha;
+  const res = await apiCall('/events/' + encodeURIComponent(FORCE_SIGNOUTS_FILENAME), {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error('force_save_' + res.status);
+  return await res.json();
+}
+
+// Called on every renderHome (and on initial load). If a manager has
+// queued a force sign-out for the current user with a timestamp newer
+// than our local sign-in moment, drop the local credentials and bounce
+// to the welcome screen.
+let _forceSignOutCheckInFlight = false;
+async function checkForceSignOut() {
+  if (_forceSignOutCheckInFlight) return;
+  _forceSignOutCheckInFlight = true;
+  try {
+    const user = getUser();
+    if (!user || !getPasscode()) return;
+    const signedInAt = getSignInTime() || '';
+    const log = await loadForceSignOuts();
+    const entry = (log.entries || []).find(e => e && e.user === user && (!signedInAt || e.at > signedInAt));
+    if (entry) {
+      const by = entry.by ? ' by ' + entry.by : '';
+      toast('Signed out' + by, 'error');
+      setTimeout(() => {
+        clearPasscode();
+        clearSignInTime();
+        localStorage.removeItem('obrien_brief_user');
+        localStorage.removeItem(MANAGER_KEY);
+        localStorage.removeItem('obrien_brief_role');
+        openWelcomeOverlay();
+      }, 1200);
+    }
+  } catch (e) {
+    // offline / network — skip silently
+  } finally {
+    _forceSignOutCheckInFlight = false;
+  }
+}
+
+async function forceSignOutUser(username) {
+  if (!isManager()) { toast('Manager mode required', 'error'); return; }
+  if (!username) return;
+  if (!confirm('Force "' + username + '" to sign out on all their devices? They\'ll need to enter the team passcode again.')) return;
+  try {
+    const log = await loadForceSignOuts();
+    const me = getUser() || 'manager';
+    const at = new Date().toISOString();
+    const others = (log.entries || []).filter(e => e && e.user !== username);
+    const merged = others.concat([{ user: username, at, by: me }]);
+    await saveForceSignOuts(merged, log.sha);
+    toast('"' + username + '" will be signed out on next refresh');
+    renderForceSignOutPanel();
+  } catch (e) {
+    toast('Force sign-out failed: ' + e.message, 'error');
+  }
+}
+
+async function clearForceSignOutForUser(username) {
+  try {
+    const log = await loadForceSignOuts();
+    const others = (log.entries || []).filter(e => e && e.user !== username);
+    await saveForceSignOuts(others, log.sha);
+    toast('Cleared force-out for "' + username + '"');
+    renderForceSignOutPanel();
+  } catch (e) { toast('Clear failed: ' + e.message, 'error'); }
+}
+
+// Manager panel inside Settings: list everyone who's clocked in
+// recently (from clocks.json) with a force-out button per user.
+async function renderForceSignOutPanel() {
+  const host = document.getElementById('forceSignOutList');
+  if (!host) return;
+  host.innerHTML = '<p style="font-size:12px;color:var(--grey);">Loading…</p>';
+  try {
+    const clocks = await loadClocksLog();
+    const force = await loadForceSignOuts();
+    const forcedSet = new Map((force.entries || []).map(e => [e.user, e]));
+    const seen = new Map();
+    (clocks.entries || []).forEach(e => {
+      if (!e || !e.user) return;
+      const prev = seen.get(e.user);
+      if (!prev || (e.timestamp || '') > (prev.timestamp || '')) seen.set(e.user, e);
+    });
+    const users = [...seen.values()].sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+    if (!users.length) {
+      host.innerHTML = '<p style="font-size:12px;color:var(--grey);font-style:italic;">No users have clocked in yet — there\'s no-one to force out.</p>';
+      return;
+    }
+    host.innerHTML = users.map(u => {
+      const forced = forcedSet.get(u.user);
+      const last = u.timestamp ? new Date(u.timestamp).toLocaleString('en-IE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+      const userEsc = (u.user || '').replace(/'/g, "\\'");
+      const label = (u.user || '').replace(/</g, '&lt;');
+      const right = forced
+        ? '<button class="btn btn-secondary" style="font-size:11px;padding:6px 10px;" onclick="clearForceSignOutForUser(\'' + userEsc + '\')">Clear force-out</button>'
+        : '<button class="btn btn-secondary danger" style="font-size:11px;padding:6px 10px;border-color:#5a2a2a;color:#ff8c8c;" onclick="forceSignOutUser(\'' + userEsc + '\')">Force sign-out</button>';
+      return '<div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;">' +
+        '<div><strong style="color:var(--white);">' + label + '</strong>' +
+        '<div style="color:var(--text-muted);font-size:11px;margin-top:2px;">Last activity: ' + last +
+        (forced ? ' &middot; <span style="color:#c0392b;font-weight:700;">⚠ Forced out ' + new Date(forced.at).toLocaleString('en-IE') + (forced.by ? ' by ' + forced.by : '') + '</span>' : '') +
+        '</div></div>' + right + '</div>';
+    }).join('');
+  } catch (e) {
+    host.innerHTML = '<p style="font-size:12px;color:var(--red);">Could not load: ' + e.message + '</p>';
+  }
+}
+
+
 const DAMAGE_STATUSES = ['new', 'in_progress', 'fixed'];
 const DAMAGE_STATUS_LABELS = { new: 'New', in_progress: 'In Progress', fixed: 'Fixed' };
 let DAMAGE_PHOTOS_PENDING = []; // photos attached to the new-report form
@@ -10143,6 +10326,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (bd) bd.value = today;
   refreshSettingsIndicator();
   refreshUserIndicator();
+  // Poll for manager-issued forced sign-outs every 60s
+  setInterval(() => { checkForceSignOut(); }, 60000);
   // Long-press the logo (≥800ms) to open Settings — escape hatch for
   // crew whose role hides the gear icon.
   const logo = document.getElementById('appLogo');
