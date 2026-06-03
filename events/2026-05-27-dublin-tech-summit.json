@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:12:14.610Z",
+  "savedAt": "2026-06-03T19:15:26.412Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1083,6 +1083,14 @@
         ]
       }
     },
-    "_signOffs": []
+    "_signOffs": [
+      {
+        "forDate": "2026-06-02",
+        "signedBy": "TOB",
+        "signedAt": "2026-06-03T19:15:25.729Z",
+        "notes": "Major HACCP Event - No Closing Procedure followed. ",
+        "itemsTouched": []
+      }
+    ]
   }
 }
