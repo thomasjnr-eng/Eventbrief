@@ -1622,6 +1622,18 @@ body {
 .plan-task-row.prio-low { border-left-color: var(--border); }
 .plan-task-row:last-child { border-bottom: none; }
 .plan-task-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--sage); cursor: pointer; }
+
+/* Read-only mode for ops-team / truck-lead / maintenance-manager. Only
+   the task tick boxes stay interactive; edit-only buttons disappear. */
+#plan-edit-view.read-only .edit-only { display: none !important; }
+#plan-edit-view.read-only input[readonly],
+#plan-edit-view.read-only select[disabled],
+#plan-edit-view.read-only textarea[readonly] {
+  background: var(--bg-input);
+  opacity: 0.85;
+  cursor: default;
+}
+#plan-edit-view.read-only .plan-task-remove { display: none !important; }
 .plan-task-row input[type=text],
 .plan-task-row input[type=time],
 .plan-task-row select {
@@ -2311,7 +2323,7 @@ body {
     <div class="welcome-sub">Set your name, role and the team passcode. The dashboard tailors itself to your role.</div>
     <input type="text" class="welcome-input" id="welcomeName" placeholder="Your name (e.g. Tom O'Brien)" autocomplete="off">
     <select class="welcome-input" id="welcomeRole">
-      <option value="crew">Crew Member</option>
+      <option value="crew">Ops Team Member</option>
       <option value="truck_lead">Truck Lead</option>
       <option value="ops_lead">Ops Lead</option>
       <option value="maintenance_manager">Maintenance Manager</option>
@@ -2381,7 +2393,7 @@ body {
       <div class="field" style="margin-bottom:18px;">
         <label>Your Role</label>
         <select id="settingsRoleSelect" onchange="onRoleSelectChange(this.value)">
-          <option value="crew">Crew Member</option>
+          <option value="crew">Ops Team Member</option>
           <option value="truck_lead">Truck Lead</option>
           <option value="ops_lead">Ops Lead</option>
           <option value="maintenance_manager">Maintenance Manager</option>
@@ -2593,7 +2605,7 @@ body {
   <div id="dashboard" class="dashboard"></div>
   <div id="opsTracker" class="ops-tracker" style="display:none;"></div>
 
-  <div class="home-events-section" data-role-any="ops_lead,manager">
+  <div class="home-events-section">
     <div class="home-events-head">
       <span class="home-events-title">Upcoming Day Plans</span>
       <span class="home-events-meta" id="homePlansMeta"></span>
@@ -2653,7 +2665,7 @@ body {
       <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Add tasks the crew need to complete. Each row is tickable — once you've saved the plan, anyone on the team can open it and tick items off as they go.</p>
       <datalist id="upcomingEventsList"></datalist>
       <div id="planTasksList"></div>
-      <button type="button" class="btn btn-secondary" onclick="addPlanTask()" style="margin-top:8px;font-size:12px;padding:8px 14px;">+ Add Task</button>
+      <button type="button" id="addPlanTaskBtn" class="btn btn-secondary edit-only" onclick="addPlanTask()" style="margin-top:8px;font-size:12px;padding:8px 14px;">+ Add Task</button>
     </div>
 
     <div class="card">
@@ -2667,10 +2679,10 @@ body {
     <div class="nav-bar">
       <button class="btn btn-secondary nav-icon" onclick="showHome()">←<span class="nav-txt"> Cancel</span></button>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
-        <button class="btn btn-secondary danger nav-icon" id="planDeleteBtn" onclick="deleteCurrentPlan()" style="display:none;font-size:14px;padding:12px 18px;border-color:#5a2a2a;color:#ff8c8c;">🗑<span class="nav-txt"> Delete</span></button>
+        <button class="btn btn-secondary danger nav-icon edit-only" id="planDeleteBtn" onclick="deleteCurrentPlan()" style="display:none;font-size:14px;padding:12px 18px;border-color:#5a2a2a;color:#ff8c8c;">🗑<span class="nav-txt"> Delete</span></button>
         <button class="btn btn-secondary nav-icon" onclick="savePlanAsPdf()" style="font-size:14px;padding:12px 18px;">📄<span class="nav-txt"> Save PDF</span></button>
         <button class="btn btn-secondary nav-icon" onclick="sharePlanWhatsApp()" style="font-size:14px;padding:12px 18px;">💬<span class="nav-txt"> WhatsApp</span></button>
-        <button class="btn btn-green" onclick="savePlan()" style="font-size:18px;padding:14px 36px;">Save Plan ✓</button>
+        <button class="btn btn-green edit-only" onclick="savePlan()" style="font-size:18px;padding:14px 36px;">Save Plan ✓</button>
       </div>
     </div>
   </div>
@@ -6403,7 +6415,7 @@ const ROLE_KEY = 'obrien_brief_role';
 // they unlock manager mode in Settings.
 const ROLES = ['crew', 'truck_lead', 'ops_lead', 'maintenance_manager', 'manager'];
 const ROLE_LABELS = {
-  crew: 'Crew Member',
+  crew: 'Ops Team Member',
   truck_lead: 'Truck Lead',
   ops_lead: 'Ops Lead',
   maintenance_manager: 'Maintenance Manager',
@@ -7245,6 +7257,7 @@ async function populateUpcomingEventsDatalist() {
 }
 
 function newPlan() {
+  if (!canEditPlans()) { toast('Only ops lead / manager can create day plans', 'error'); return; }
   CURRENT_PLAN_FILENAME = null;
   PLAN_TASKS = [];
   document.getElementById('planTitleLabel').textContent = 'New Day Plan';
@@ -7256,11 +7269,16 @@ function newPlan() {
   document.getElementById('planAssigned').value = '';
   document.getElementById('planNotes').value = '';
   document.getElementById('planDeleteBtn').style.display = 'none';
+  applyPlanReadOnly();
   renderPlanTasks();
   showPlanEdit();
 }
 
 function addPlanTask(label, assignedTo, done, doneBy, doneAt, priority, dueTime, eventLink) {
+  if (!canEditPlans() && arguments.length === 0) {
+    toast('Only ops lead / manager can add tasks', 'error');
+    return;
+  }
   PLAN_TASKS.push({
     label: label || '',
     assignedTo: assignedTo || '',
@@ -7274,6 +7292,7 @@ function addPlanTask(label, assignedTo, done, doneBy, doneAt, priority, dueTime,
   renderPlanTasks();
 }
 function removePlanTask(idx) {
+  if (!canEditPlans()) { toast('Only ops lead / manager can remove tasks', 'error'); return; }
   PLAN_TASKS.splice(idx, 1);
   renderPlanTasks();
 }
@@ -7296,11 +7315,14 @@ function sortedPlanTaskIndexes() {
 function renderPlanTasks() {
   const list = document.getElementById('planTasksList');
   if (!list) return;
+  const ro = !canEditPlans();
   if (!PLAN_TASKS.length) {
-    list.innerHTML = '<div style="color:var(--grey);font-size:12px;font-style:italic;padding:8px 0;">No tasks yet. Click + Add Task below to start.</div>';
+    list.innerHTML = '<div style="color:var(--grey);font-size:12px;font-style:italic;padding:8px 0;">' + (ro ? 'No tasks on this plan yet.' : 'No tasks yet. Click + Add Task below to start.') + '</div>';
     return;
   }
   const order = sortedPlanTaskIndexes();
+  const roAttr = ro ? ' readonly' : '';
+  const disAttr = ro ? ' disabled' : '';
   list.innerHTML = order.map(idx => {
     const t = PLAN_TASKS[idx];
     const escLabel = (t.label || '').replace(/"/g, '&quot;');
@@ -7312,16 +7334,16 @@ function renderPlanTasks() {
     const escLink = (t.eventLink || '').replace(/"/g, '&quot;');
     return '<div class="plan-task-row prio-' + prio + (t.done ? ' done' : '') + '" data-idx="' + idx + '">' +
       '<input type="checkbox" ' + checked + ' onchange="onPlanTaskToggle(' + idx + ', this.checked)">' +
-      '<input type="text" data-field="label" value="' + escLabel + '" placeholder="Task description" oninput="PLAN_TASKS[' + idx + '].label = this.value">' +
-      '<select data-field="priority" onchange="PLAN_TASKS[' + idx + '].priority = this.value; renderPlanTasks();">' +
+      '<input type="text" data-field="label" value="' + escLabel + '" placeholder="Task description"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].label = this.value">' +
+      '<select data-field="priority"' + disAttr + ' onchange="PLAN_TASKS[' + idx + '].priority = this.value; renderPlanTasks();">' +
         '<option value="high"' + (prio === 'high' ? ' selected' : '') + '>🔴 High</option>' +
         '<option value="medium"' + (prio === 'medium' ? ' selected' : '') + '>🟠 Medium</option>' +
         '<option value="low"' + (prio === 'low' ? ' selected' : '') + '>⚪ Low</option>' +
       '</select>' +
-      '<input type="time" data-field="dueTime" value="' + due + '" title="Due time (optional)" oninput="PLAN_TASKS[' + idx + '].dueTime = this.value">' +
-      '<input type="text" data-field="assignedTo" value="' + escAssigned + '" placeholder="Assigned to" oninput="PLAN_TASKS[' + idx + '].assignedTo = this.value">' +
-      '<button type="button" class="plan-task-remove" onclick="removePlanTask(' + idx + ')" title="Remove">&times;</button>' +
-      '<input class="task-event-link" list="upcomingEventsList" data-field="eventLink" value="' + escLink + '" placeholder="Linked event (pick from list) or note — leave blank if neither" oninput="PLAN_TASKS[' + idx + '].eventLink = this.value">' +
+      '<input type="time" data-field="dueTime" value="' + due + '" title="Due time (optional)"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].dueTime = this.value">' +
+      '<input type="text" data-field="assignedTo" value="' + escAssigned + '" placeholder="Assigned to"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].assignedTo = this.value">' +
+      (ro ? '' : '<button type="button" class="plan-task-remove" onclick="removePlanTask(' + idx + ')" title="Remove">&times;</button>') +
+      '<input class="task-event-link" list="upcomingEventsList" data-field="eventLink" value="' + escLink + '" placeholder="Linked event (pick from list) or note — leave blank if neither"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].eventLink = this.value">' +
       '</div>' + meta;
   }).join('');
 }
@@ -7590,7 +7612,8 @@ async function loadPlan(filename) {
     if (!ev || !ev.form) { toast('Could not load plan', 'error'); return; }
     CURRENT_PLAN_FILENAME = filename;
     const f = ev.form;
-    document.getElementById('planTitleLabel').textContent = 'Day Plan · ' + (f.title || 'Untitled');
+    const ro = !canEditPlans();
+    document.getElementById('planTitleLabel').textContent = (ro ? 'View Plan · ' : 'Day Plan · ') + (f.title || 'Untitled');
     document.getElementById('planTitle').value = f.title || '';
     document.getElementById('planDate').value = f.planDate || '';
     document.getElementById('planStart').value = f.startTime || '';
@@ -7599,8 +7622,9 @@ async function loadPlan(filename) {
     document.getElementById('planAssigned').value = f.assigned || '';
     document.getElementById('planNotes').value = f.notes || '';
     PLAN_TASKS = Array.isArray(f.tasks) ? f.tasks.map(t => Object.assign({}, t)) : [];
+    applyPlanReadOnly();
     renderPlanTasks();
-    document.getElementById('planDeleteBtn').style.display = 'inline-flex';
+    document.getElementById('planDeleteBtn').style.display = (ro ? 'none' : 'inline-flex');
     showPlanEdit();
   } catch (e) {
     toast('Load failed: ' + e.message, 'error');
@@ -8056,6 +8080,28 @@ function canManageDamage() {
 // they don't author them.
 function canEditBriefs() {
   return getRole() === 'ops_lead' || isManager();
+}
+
+// Day-plan authoring is also for ops_lead + manager only. Everyone else
+// (ops team members, truck leads, maintenance managers) can OPEN a
+// plan but only to tick boxes — names, times, assignees, etc. stay
+// read-only.
+function canEditPlans() {
+  return getRole() === 'ops_lead' || isManager();
+}
+
+function applyPlanReadOnly() {
+  const view = document.getElementById('plan-edit-view');
+  if (!view) return;
+  const ro = !canEditPlans();
+  view.classList.toggle('read-only', ro);
+  ['planTitle', 'planDate', 'planStart', 'planEnd', 'planLead', 'planAssigned', 'planNotes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if ('readOnly' in el) el.readOnly = ro;
+    else el.disabled = ro;
+  });
+  if (typeof renderPlanTasks === 'function') renderPlanTasks();
 }
 
 function refreshRoleControls() {
