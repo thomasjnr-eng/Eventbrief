@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:12:00.848Z",
+  "savedAt": "2026-06-03T19:12:02.586Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -896,30 +896,30 @@
           },
           {
             "label": "Hand wash station set up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:00.898Z",
             "assignedTo": null
           },
           {
             "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:01.696Z",
             "assignedTo": null
           },
           {
             "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:01.929Z",
             "assignedTo": null
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:12:02.194Z",
             "assignedTo": null
           },
           {
