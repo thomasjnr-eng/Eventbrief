@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T16:28:02.417Z",
+  "savedAt": "2026-06-03T16:28:05.662Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -363,9 +363,9 @@
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Soc",
+            "doneAt": "2026-06-03T16:28:05.300Z",
             "assignedTo": null
           },
           {
