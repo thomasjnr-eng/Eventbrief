@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T18:42:59.529Z",
+  "savedAt": "2026-06-03T18:43:02.326Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -268,16 +268,16 @@
           },
           {
             "label": "End-of-trade: cash counted & secured",
-            "done": true,
-            "doneBy": "TOB",
-            "doneAt": "2026-06-03T18:42:59.162Z",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null
           },
           {
             "label": "End-of-trade: bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T18:43:00.294Z",
             "assignedTo": null
           },
           {
