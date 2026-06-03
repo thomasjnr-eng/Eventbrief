@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-dublin-tech-summit",
-  "savedAt": "2026-06-03T19:01:34.566Z",
+  "savedAt": "2026-06-03T19:10:51.455Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -506,9 +506,9 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-03T19:10:51.230Z",
             "assignedTo": null
           },
           {
