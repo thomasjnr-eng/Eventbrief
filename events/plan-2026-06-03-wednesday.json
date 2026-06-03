@@ -2,8 +2,8 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-03-wednesday",
-  "savedAt": "2026-06-02T17:31:30.419Z",
-  "savedBy": "Thomas O'Brien",
+  "savedAt": "2026-06-03T09:51:39.896Z",
+  "savedBy": "SOC",
   "form": {
     "title": "Wednesday 😅",
     "planDate": "2026-06-03",
@@ -29,9 +29,9 @@
         "priority": "medium",
         "dueTime": "10:30",
         "eventLink": "Harris/Hino Coffee Morning (04 Jun 2026)",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "SOC",
+        "doneAt": "2026-06-03T09:51:38.707Z"
       },
       {
         "label": "Drop Coffee & Generator to Harris & Setup",
