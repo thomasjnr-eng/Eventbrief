@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T23:50:16.559Z",
+  "savedAt": "2026-06-03T23:50:25.208Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -384,9 +384,9 @@
             "label": "Waste & water tanks emptied (if applicable)",
             "phase": "close",
             "date": "2026-06-02",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T23:50:17.270Z",
             "assignedTo": null
           }
         ]
@@ -512,9 +512,9 @@
           },
           {
             "label": "Bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-03T23:50:25.009Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-02"
