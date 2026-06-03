@@ -7370,6 +7370,35 @@ async function renderOpsTracker() {
   const weekDate = new Date(today); weekDate.setDate(weekDate.getDate() + 7);
   const weekStr = fmtIso(weekDate);
 
+  // Filter to "mine" for ops team members + truck leads. Ops leads,
+  // maintenance managers and managers still see the whole picture.
+  const showMineOnly = !roleAtLeast('ops_lead');
+  const user = (getUser() || '').toLowerCase().trim();
+  const userOnTruck = (form, truck) => {
+    if (!user) return false;
+    const roster = (form && form._crewRoster) || {};
+    const members = roster[truck] || [];
+    return members.some(m => ((m && m.name) || '').toLowerCase().trim() === user);
+  };
+  // Roster-filtered version of crewProgressFor — only counts items on
+  // trucks the current user is rostered on.
+  function progressForUser(form) {
+    const lists = (form && form._crewChecklists) || {};
+    const trucks = Object.keys(lists);
+    if (!showMineOnly) return crewProgressFor(lists);
+    let total = 0, done = 0;
+    const perTruck = {};
+    let count = 0;
+    trucks.forEach(t => {
+      if (!userOnTruck(form, t)) return;
+      const items = (lists[t].items || []);
+      const tDone = items.filter(i => i.done).length;
+      perTruck[t] = { total: items.length, done: tDone, percent: items.length ? Math.round((tDone / items.length) * 100) : 0 };
+      total += items.length; done += tDone; count++;
+    });
+    return { trucks: count, totalItems: total, doneItems: done, percent: total ? Math.round((done / total) * 100) : 0, perTruck };
+  }
+
   const items = (events || []).filter(Boolean).filter(ev => {
     const d = getEventDate(ev.form);
     if (!d || d < todayStr || d > weekStr) return false;
@@ -7377,8 +7406,8 @@ async function renderOpsTracker() {
   }).map(ev => ({
     ev,
     date: getEventDate(ev.form),
-    progress: crewProgressFor(ev.form._crewChecklists || {})
-  }));
+    progress: progressForUser(ev.form)
+  })).filter(i => !showMineOnly || i.progress.totalItems > 0);
 
   if (!items.length) { tracker.style.display = 'none'; return; }
   items.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
@@ -7397,7 +7426,9 @@ async function renderOpsTracker() {
     const venue = (f.venueName || '').replace(/</g, '&lt;');
     const pct = i.progress.percent;
     const col = pct === 100 ? '#4a9a5c' : pct >= 50 ? '#c89a4a' : '#c0392b';
-    const truckChips = (f._fleet || []).map(t => {
+    // Only show truck chips the user is on (when filtering)
+    const truckList = (f._fleet || []).filter(t => !showMineOnly || userOnTruck(f, t));
+    const truckChips = truckList.map(t => {
       const pt = i.progress.perTruck[t];
       if (!pt) return '';
       const cls = pt.percent === 100 ? 'green' : pt.percent >= 50 ? 'amber' : 'red';
@@ -7414,9 +7445,10 @@ async function renderOpsTracker() {
       '</div>';
   }).join('');
 
+  const title = showMineOnly ? 'Ops Tracker · Your Trucks This Week' : 'Ops Tracker · This Week';
   tracker.innerHTML =
     '<div class="ops-tracker-head" onclick="toggleOpsTracker()">' +
-      '<span class="ops-tracker-title">Ops Tracker · This Week</span>' +
+      '<span class="ops-tracker-title">' + title + '</span>' +
       '<span class="ops-tracker-summary">' + summary + '</span>' +
       '<span class="ops-tracker-chevron">▾</span>' +
     '</div>' +
