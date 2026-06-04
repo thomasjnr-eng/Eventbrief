@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:38.092Z",
+  "savedAt": "2026-06-04T20:36:40.731Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -460,36 +460,36 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:39.261Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
           },
           {
             "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:40.222Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
           },
           {
             "label": "Power connected & tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:40.456Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:40.637Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
