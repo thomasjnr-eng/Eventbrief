@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:36.261Z",
+  "savedAt": "2026-06-04T20:36:38.092Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -422,36 +422,36 @@
             "label": "Surfaces cleaned & sanitised",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:36.413Z",
             "assignedTo": null
           },
           {
             "label": "POS / payment system reconciled",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:36.629Z",
             "assignedTo": null
           },
           {
             "label": "Equipment powered down (fryers, grills, etc.)",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:37.612Z",
             "assignedTo": null
           },
           {
             "label": "Waste & water tanks emptied (if applicable)",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:37.840Z",
             "assignedTo": null
           }
         ]
