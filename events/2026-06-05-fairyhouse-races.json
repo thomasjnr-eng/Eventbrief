@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-04T15:02:44.449Z",
+  "savedAt": "2026-06-04T15:02:52.760Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -636,9 +636,9 @@
           },
           {
             "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:02:45.437Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
@@ -654,9 +654,9 @@
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:02:52.335Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
