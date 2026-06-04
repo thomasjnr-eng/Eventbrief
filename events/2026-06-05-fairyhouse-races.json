@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-04T15:02:52.760Z",
+  "savedAt": "2026-06-04T15:02:54.986Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -663,9 +663,9 @@
           },
           {
             "label": "Waste containers in place",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:02:54.457Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
