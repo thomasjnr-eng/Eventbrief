@@ -3674,8 +3674,23 @@ let CREW_CHECKLISTS = {};
 let SIGN_OFFS = [];
 
 function todayIso() {
-  const d = new Date(); d.setHours(0, 0, 0, 0);
-  return d.toISOString().slice(0, 10);
+  // Local-date YYYY-MM-DD. Using toISOString would silently roll back
+  // a day when the local timezone is east of UTC (e.g. BST/IST in summer)
+  // because midnight local is the previous day in UTC.
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+// Convert any Date to a local YYYY-MM-DD string. Always prefer this
+// over toISOString().slice(0,10) for date-only comparisons.
+function localIso(d) {
+  d = d || new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
 }
 function lastSignOff() {
   if (!SIGN_OFFS.length) return null;
@@ -3707,7 +3722,7 @@ function currentTradingDayList() {
   const stop = isNaN(e.getTime()) || e < s ? new Date(s) : new Date(e);
   stop.setHours(0, 0, 0, 0);
   while (cur <= stop) {
-    out.push(cur.toISOString().slice(0, 10));
+    out.push(localIso(cur));
     cur.setDate(cur.getDate() + 1);
     if (out.length > 60) break; // safety stop
   }
@@ -7379,7 +7394,7 @@ async function renderOpsTracker() {
 
   const events = await Promise.all(filenames.map(getEventByFilename));
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const fmtIso = (d) => d.toISOString().slice(0, 10);
+  const fmtIso = (d) => localIso(d);
   const todayStr = fmtIso(today);
   const weekDate = new Date(today); weekDate.setDate(weekDate.getDate() + 7);
   const weekStr = fmtIso(weekDate);
@@ -7553,7 +7568,7 @@ async function populateUpcomingEventsDatalist() {
   if (!filenames.length) { dl.innerHTML = ''; return; }
   const events = await Promise.all(filenames.map(getEventByFilename));
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = localIso(today);
   const upcoming = events.filter(Boolean).filter(ev => {
     const d = getEventDate(ev.form);
     return d && d >= todayStr;
@@ -7573,7 +7588,7 @@ function newPlan() {
   PLAN_TASKS = [];
   document.getElementById('planTitleLabel').textContent = 'New Day Plan';
   document.getElementById('planTitle').value = '';
-  document.getElementById('planDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('planDate').value = localIso();
   document.getElementById('planStart').value = '';
   document.getElementById('planEnd').value = '';
   document.getElementById('planLead').value = getUser() || '';
@@ -7977,7 +7992,7 @@ async function renderHomePlans() {
   }
   const events = await Promise.all(planNames.map(getEventByFilename));
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = localIso(today);
   const upcoming = (events || []).filter(Boolean).filter(p => (p.form.planDate || '') >= todayStr);
   upcoming.sort((a, b) => (a.form.planDate || '').localeCompare(b.form.planDate || ''));
 
@@ -8205,13 +8220,13 @@ async function renderTodayAndWeek() {
   const events = (await Promise.all(filenames.map(getEventByFilename))).filter(Boolean);
 
   const now = new Date(); now.setHours(0, 0, 0, 0);
-  const todayStr = now.toISOString().slice(0, 10);
+  const todayStr = localIso(now);
   // Monday of this week + the following Sunday (inclusive)
   const dow = (now.getDay() + 6) % 7;
   const weekStart = new Date(now); weekStart.setDate(weekStart.getDate() - dow);
   const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
-  const weekStartStr = weekStart.toISOString().slice(0, 10);
-  const weekEndStr   = weekEnd.toISOString().slice(0, 10);
+  const weekStartStr = localIso(weekStart);
+  const weekEndStr   = localIso(weekEnd);
 
   const todayEvents = events.filter(ev => eventCoversDate(ev.form, todayStr));
   const weekEvents = events.filter(ev => {
@@ -8918,9 +8933,9 @@ async function renderDamageReportsBox() {
     const names = (await listEventFilenames()).filter(isEventFile);
     const events = (await Promise.all(names.map(getEventByFilename))).filter(Boolean);
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const todayStr = today.toISOString().slice(0, 10);
+    const todayStr = localIso(today);
     const horizon = new Date(today); horizon.setDate(horizon.getDate() + 14);
-    const horizonStr = horizon.toISOString().slice(0, 10);
+    const horizonStr = localIso(horizon);
     events.forEach(ev => {
       const d = getEventDate(ev.form);
       if (!d || d < todayStr || d > horizonStr) return;
@@ -8942,7 +8957,7 @@ async function renderDamageReportsBox() {
     if (!bookings.length) return '';
     bookings.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
     const next = bookings[0];
-    const days = Math.round((new Date(next.date) - new Date(new Date().toISOString().slice(0, 10))) / 86400000);
+    const days = Math.round((new Date(next.date) - new Date(localIso())) / 86400000);
     const when = days <= 0 ? 'TODAY' : (days === 1 ? 'tomorrow' : 'in ' + days + ' days');
     const more = bookings.length > 1 ? ' &middot; +' + (bookings.length - 1) + ' more' : '';
     const label = (next.name || '').replace(/</g, '&lt;');
@@ -9288,7 +9303,7 @@ async function refreshManageHours() {
     const dow = (d.getDay() + 6) % 7; // 0 = Monday
     d.setDate(d.getDate() - dow);
     d.setHours(0, 0, 0, 0);
-    wkInput.value = d.toISOString().slice(0, 10);
+    wkInput.value = localIso(d);
   }
   renderManageHoursList();
 }
@@ -9372,7 +9387,7 @@ async function exportClocksWeekCSV(overrideStartStr) {
     const tIn  = s.inEntry  ? new Date(s.inEntry.timestamp)  : null;
     const tOut = s.outEntry ? new Date(s.outEntry.timestamp) : null;
     const refT = tIn || tOut;
-    const date = refT ? refT.toISOString().slice(0, 10) : '';
+    const date = refT ? localIso(refT) : '';
     const fmtT = (d) => d ? d.toTimeString().slice(0, 5) : '';
     let hours = '';
     const notes = [];
@@ -9418,7 +9433,7 @@ function exportThisWeekHoursCSV() {
   const monday = new Date(now); monday.setHours(0, 0, 0, 0);
   const dow = (monday.getDay() + 6) % 7; // 0 = Monday
   monday.setDate(monday.getDate() - dow);
-  const startStr = monday.toISOString().slice(0, 10);
+  const startStr = localIso(monday);
   exportClocksWeekCSV(startStr);
 }
 
@@ -9626,13 +9641,13 @@ async function renderHomePies() {
   const valid = events.filter(Boolean);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = localIso(today);
   const weekDate = new Date(today); weekDate.setDate(weekDate.getDate() + 7);
-  const weekStr = weekDate.toISOString().slice(0, 10);
+  const weekStr = localIso(weekDate);
   const monthDate = new Date(today); monthDate.setDate(monthDate.getDate() + 30);
-  const monthStr = monthDate.toISOString().slice(0, 10);
+  const monthStr = localIso(monthDate);
   const tomorrowDate = new Date(today); tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  const tomorrowStr = tomorrowDate.toISOString().slice(0, 10);
+  const tomorrowStr = localIso(tomorrowDate);
 
   const upcoming30 = valid.filter(ev => {
     const d = getEventDate(ev.form);
@@ -9743,7 +9758,7 @@ async function renderHomeEvents() {
   filenames = filenames.filter(isEventFile);
   const events = await Promise.all(filenames.map(getEventByFilename));
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = localIso(today);
   const upcoming = (events || []).filter(Boolean).filter(ev => {
     const d = getEventDate(ev.form);
     return d && d >= todayStr;
@@ -9815,11 +9830,11 @@ async function computeActionRequired() {
 
   const now = new Date();
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = localIso(today);
   const d1 = new Date(today); d1.setDate(d1.getDate() + 1);
-  const d1Str = d1.toISOString().slice(0, 10);
+  const d1Str = localIso(d1);
   const d3 = new Date(today); d3.setDate(d3.getDate() + 3);
-  const d3Str = d3.toISOString().slice(0, 10);
+  const d3Str = localIso(d3);
 
   const actions = [];
 
@@ -9977,7 +9992,7 @@ async function renderDashboard() {
   const valid = events.filter(Boolean);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const fmtIso = (d) => d.toISOString().slice(0, 10);
+  const fmtIso = (d) => localIso(d);
   const todayStr = fmtIso(today);
   const weekDate = new Date(today); weekDate.setDate(weekDate.getDate() + 7);
   const weekStr = fmtIso(weekDate);
