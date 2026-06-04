@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-04T15:02:23.638Z",
+  "savedAt": "2026-06-04T15:02:44.449Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -627,9 +627,9 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:02:44.141Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
