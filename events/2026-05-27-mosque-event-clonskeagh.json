@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:50.876Z",
+  "savedAt": "2026-06-04T20:37:09.217Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1512,6 +1512,14 @@
         ]
       }
     },
-    "_signOffs": []
+    "_signOffs": [
+      {
+        "forDate": "2026-06-04",
+        "signedBy": "Ae",
+        "signedAt": "2026-06-04T20:37:08.767Z",
+        "notes": "",
+        "itemsTouched": []
+      }
+    ]
   }
 }
