@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-03-wednesday",
-  "savedAt": "2026-06-04T13:25:36.756Z",
+  "savedAt": "2026-06-04T13:25:50.683Z",
   "savedBy": "TOB",
   "form": {
     "title": "Wednesday 😅",
@@ -39,9 +39,9 @@
         "priority": "medium",
         "dueTime": "12:00",
         "eventLink": "Harris/Hino Coffee Morning (04 Jun 2026)",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "TOB",
+        "doneAt": "2026-06-04T13:25:50.231Z"
       },
       {
         "label": "Go to Kilmainham and prepare ",
