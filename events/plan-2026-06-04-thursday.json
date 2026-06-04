@@ -2,8 +2,8 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-04-thursday",
-  "savedAt": "2026-06-04T12:39:22.752Z",
-  "savedBy": "SOC",
+  "savedAt": "2026-06-04T20:37:41.372Z",
+  "savedBy": "Ae",
   "form": {
     "title": "Thursday",
     "planDate": "2026-06-04",
@@ -69,9 +69,9 @@
         "priority": "medium",
         "dueTime": "15:00",
         "eventLink": "Slicey Pizza Activation (05 Jun 2026)",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "Ae",
+        "doneAt": "2026-06-04T20:37:40.972Z"
       },
       {
         "label": "Wrap up Harris/Hino",
