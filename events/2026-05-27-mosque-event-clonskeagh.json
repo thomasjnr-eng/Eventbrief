@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:45.714Z",
+  "savedAt": "2026-06-04T20:36:47.632Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -568,36 +568,36 @@
           },
           {
             "label": "Cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:46.948Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "Bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:47.178Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:47.396Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "Truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:47.610Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
