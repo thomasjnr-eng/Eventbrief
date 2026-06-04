@@ -8401,7 +8401,10 @@ async function renderOnClockBox() {
         '<div class="ocb-title">👥 ON THE CLOCK</div>' +
         '<div class="ocb-count">' + onClock.length + ' crew member' + (onClock.length === 1 ? '' : 's') + ' working now &middot; auto-refreshes every 60s</div>' +
       '</div>' +
-      '<button class="ocb-refresh" onclick="renderOnClockBox()">↻ Refresh</button>' +
+      '<div style="display:flex;gap:6px;align-items:center;">' +
+        '<button class="ocb-refresh" onclick="exportThisWeekHoursCSV()" title="Download this week\'s hours CSV (Mon&ndash;Sun)">📊 Run Report</button>' +
+        '<button class="ocb-refresh" onclick="renderOnClockBox()">↻ Refresh</button>' +
+      '</div>' +
     '</div>' +
     rows;
   box.style.display = 'block';
@@ -9347,10 +9350,13 @@ function csvEscape(s) {
   return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
 
-async function exportClocksWeekCSV() {
+async function exportClocksWeekCSV(overrideStartStr) {
   if (!isManager()) { toast('Manager mode required', 'error'); return; }
-  const wkInputEl = document.getElementById('exportWeekStart');
-  const startStr = wkInputEl && wkInputEl.value;
+  let startStr = overrideStartStr;
+  if (!startStr) {
+    const wkInputEl = document.getElementById('exportWeekStart');
+    startStr = wkInputEl && wkInputEl.value;
+  }
   if (!startStr) { toast('Pick the Monday of the week to export', 'error'); return; }
   const weekStart = new Date(startStr + 'T00:00:00');
   const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -9403,6 +9409,17 @@ async function exportClocksWeekCSV() {
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
   toast('Exported ' + shifts.length + ' shift' + (shifts.length !== 1 ? 's' : '') + ' (' + totalHours.toFixed(2) + 'h)');
+}
+
+// Run-report shortcut from the On the Clock card: figures out this
+// week's Monday and exports without going through the modal.
+function exportThisWeekHoursCSV() {
+  const now = new Date();
+  const monday = new Date(now); monday.setHours(0, 0, 0, 0);
+  const dow = (monday.getDay() + 6) % 7; // 0 = Monday
+  monday.setDate(monday.getDate() - dow);
+  const startStr = monday.toISOString().slice(0, 10);
+  exportClocksWeekCSV(startStr);
 }
 
 function renderManageHoursList() {
