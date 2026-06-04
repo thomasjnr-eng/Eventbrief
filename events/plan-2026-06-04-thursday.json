@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-04-thursday",
-  "savedAt": "2026-06-04T20:37:46.494Z",
+  "savedAt": "2026-06-04T20:37:49.053Z",
   "savedBy": "Ae",
   "form": {
     "title": "Thursday",
@@ -89,9 +89,9 @@
         "priority": "medium",
         "dueTime": "13:30",
         "eventLink": "",
-        "done": true,
-        "doneBy": "Ae",
-        "doneAt": "2026-06-04T20:37:46.112Z"
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
       }
     ]
   }
