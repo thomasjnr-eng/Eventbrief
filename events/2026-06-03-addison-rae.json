@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-03T23:50:29.272Z",
+  "savedAt": "2026-06-04T12:38:02.610Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -339,9 +339,9 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-06-02",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "SOC",
+            "doneAt": "2026-06-04T12:38:02.395Z",
             "assignedTo": null
           },
           {
