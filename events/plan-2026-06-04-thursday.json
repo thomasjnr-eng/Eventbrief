@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-04-thursday",
-  "savedAt": "2026-06-04T20:37:59.692Z",
+  "savedAt": "2026-06-04T20:38:02.333Z",
   "savedBy": "Ae",
   "form": {
     "title": "Thursday",
@@ -29,9 +29,9 @@
         "priority": "medium",
         "dueTime": "10:00",
         "eventLink": "",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "Ae",
+        "doneAt": "2026-06-04T20:38:01.912Z"
       },
       {
         "label": "Fridge Van Temp Records - RDS",
