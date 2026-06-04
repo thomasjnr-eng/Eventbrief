@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-04T15:01:56.276Z",
+  "savedAt": "2026-06-04T15:02:11.640Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -236,9 +236,9 @@
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:01:57.157Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
@@ -254,9 +254,9 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:02:11.321Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
