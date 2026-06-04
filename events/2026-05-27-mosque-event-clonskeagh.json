@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:35:25.211Z",
+  "savedAt": "2026-06-04T20:35:26.955Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1248,18 +1248,18 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:25.271Z",
             "assignedTo": null
           },
           {
             "label": "Cold-chain temperatures recorded (end of trade)",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:26.552Z",
             "assignedTo": null
           },
           {
