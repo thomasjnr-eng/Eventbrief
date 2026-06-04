@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-04T12:38:09.930Z",
+  "savedAt": "2026-06-04T12:38:32.331Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -366,9 +366,9 @@
             "label": "POS / payment system reconciled",
             "phase": "close",
             "date": "2026-06-02",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "SOC",
+            "doneAt": "2026-06-04T12:38:10.827Z",
             "assignedTo": null
           },
           {
@@ -595,9 +595,9 @@
             "label": "Waste & water tanks emptied (if applicable)",
             "phase": "close",
             "date": "2026-06-02",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "SOC",
+            "doneAt": "2026-06-04T12:38:32.058Z",
             "assignedTo": null
           }
         ]
