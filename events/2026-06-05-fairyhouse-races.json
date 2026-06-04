@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-03T16:17:32.144Z",
+  "savedAt": "2026-06-04T15:01:45.400Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -209,6 +209,215 @@
         "items": [
           {
             "label": "Arrived on site",
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:01:45.138Z",
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "All food covered / stored / refrigerated correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Cold-chain temperatures recorded (start of trade)",
+            "phase": "open",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "HACCP plan followed in closing procedure",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold-chain temperatures recorded (end of trade)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Surfaces cleaned & sanitised",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system reconciled",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Equipment powered down (fryers, grills, etc.)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste & water tanks emptied (if applicable)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Arrived on site",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -216,6 +425,8 @@
           },
           {
             "label": "Pitched / parked correctly",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -223,6 +434,8 @@
           },
           {
             "label": "Power connected & tested",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -230,6 +443,8 @@
           },
           {
             "label": "Water connected (if applicable)",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -237,6 +452,8 @@
           },
           {
             "label": "Waste containers in place",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -244,6 +461,8 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -251,6 +470,8 @@
           },
           {
             "label": "Hand wash station set up",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -258,6 +479,8 @@
           },
           {
             "label": "Menu boards / signage up",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -265,6 +488,8 @@
           },
           {
             "label": "POS / payment system tested",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -272,6 +497,17 @@
           },
           {
             "label": "Stock checked & loaded",
+            "phase": "open",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold-chain temperatures recorded (start of trade)",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -279,6 +515,8 @@
           },
           {
             "label": "Pre-trade brief from event lead complete",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -286,34 +524,98 @@
           },
           {
             "label": "Ready to trade",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: cash counted & secured",
+            "label": "HACCP plan followed in closing procedure",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: bins emptied & site clean",
+            "label": "All food covered / stored / refrigerated correctly",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: all food covered / stored / disposed",
+            "label": "Cold-chain temperatures recorded (end of trade)",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: truck securely closed & locked",
+            "label": "Surfaces cleaned & sanitised",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Bins emptied & site clean",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cash counted & secured",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system reconciled",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Equipment powered down (fryers, grills, etc.)",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste & water tanks emptied (if applicable)",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Truck securely closed & locked",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -328,10 +630,221 @@
             "done": false,
             "doneBy": null,
             "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "All food covered / stored / refrigerated correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Cold-chain temperatures recorded (start of trade)",
+            "phase": "open",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "HACCP plan followed in closing procedure",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold-chain temperatures recorded (end of trade)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Surfaces cleaned & sanitised",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system reconciled",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Equipment powered down (fryers, grills, etc.)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste & water tanks emptied (if applicable)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Arrived on site",
+            "phase": "open",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null
           },
           {
             "label": "Pitched / parked correctly",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -339,6 +852,8 @@
           },
           {
             "label": "Power connected & tested",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -346,6 +861,8 @@
           },
           {
             "label": "Water connected (if applicable)",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -353,6 +870,8 @@
           },
           {
             "label": "Waste containers in place",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -360,6 +879,8 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -367,6 +888,8 @@
           },
           {
             "label": "Hand wash station set up",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -374,6 +897,8 @@
           },
           {
             "label": "Menu boards / signage up",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -381,6 +906,8 @@
           },
           {
             "label": "POS / payment system tested",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -388,6 +915,17 @@
           },
           {
             "label": "Stock checked & loaded",
+            "phase": "open",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold-chain temperatures recorded (start of trade)",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -395,6 +933,8 @@
           },
           {
             "label": "Pre-trade brief from event lead complete",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -402,34 +942,98 @@
           },
           {
             "label": "Ready to trade",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: cash counted & secured",
+            "label": "HACCP plan followed in closing procedure",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: bins emptied & site clean",
+            "label": "All food covered / stored / refrigerated correctly",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: all food covered / stored / disposed",
+            "label": "Cold-chain temperatures recorded (end of trade)",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: truck securely closed & locked",
+            "label": "Surfaces cleaned & sanitised",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Bins emptied & site clean",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cash counted & secured",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system reconciled",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Equipment powered down (fryers, grills, etc.)",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste & water tanks emptied (if applicable)",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Truck securely closed & locked",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -444,10 +1048,221 @@
             "done": false,
             "doneBy": null,
             "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Pitched / parked correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Power connected & tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Water connected (if applicable)",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Waste containers in place",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Fire equipment laid out & accessible",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Hand wash station set up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Menu boards / signage up",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "POS / payment system tested",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Stock checked & loaded",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Pre-trade brief from event lead complete",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Ready to trade",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "open",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Cash counted & secured",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Bins emptied & site clean",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "All food covered / stored / refrigerated correctly",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Truck securely closed & locked",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null,
+            "phase": "close",
+            "date": "2026-06-05"
+          },
+          {
+            "label": "Cold-chain temperatures recorded (start of trade)",
+            "phase": "open",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "HACCP plan followed in closing procedure",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold-chain temperatures recorded (end of trade)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Surfaces cleaned & sanitised",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system reconciled",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Equipment powered down (fryers, grills, etc.)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste & water tanks emptied (if applicable)",
+            "phase": "close",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Arrived on site",
+            "phase": "open",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null
           },
           {
             "label": "Pitched / parked correctly",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -455,6 +1270,8 @@
           },
           {
             "label": "Power connected & tested",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -462,6 +1279,8 @@
           },
           {
             "label": "Water connected (if applicable)",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -469,6 +1288,8 @@
           },
           {
             "label": "Waste containers in place",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -476,6 +1297,8 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -483,6 +1306,8 @@
           },
           {
             "label": "Hand wash station set up",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -490,6 +1315,8 @@
           },
           {
             "label": "Menu boards / signage up",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -497,6 +1324,8 @@
           },
           {
             "label": "POS / payment system tested",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -504,6 +1333,17 @@
           },
           {
             "label": "Stock checked & loaded",
+            "phase": "open",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold-chain temperatures recorded (start of trade)",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -511,6 +1351,8 @@
           },
           {
             "label": "Pre-trade brief from event lead complete",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
@@ -518,34 +1360,98 @@
           },
           {
             "label": "Ready to trade",
+            "phase": "open",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: cash counted & secured",
+            "label": "HACCP plan followed in closing procedure",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: bins emptied & site clean",
+            "label": "All food covered / stored / refrigerated correctly",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: all food covered / stored / disposed",
+            "label": "Cold-chain temperatures recorded (end of trade)",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
           },
           {
-            "label": "End-of-trade: truck securely closed & locked",
+            "label": "Surfaces cleaned & sanitised",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Bins emptied & site clean",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cash counted & secured",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "POS / payment system reconciled",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Equipment powered down (fryers, grills, etc.)",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Waste & water tanks emptied (if applicable)",
+            "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Truck securely closed & locked",
+            "phase": "close",
+            "date": "2026-06-12",
             "done": false,
             "doneBy": null,
             "doneAt": null,
