@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-04T15:01:45.400Z",
+  "savedAt": "2026-06-04T15:01:56.276Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -218,9 +218,9 @@
           },
           {
             "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:01:46.677Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
@@ -245,9 +245,9 @@
           },
           {
             "label": "Waste containers in place",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-04T15:01:55.916Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
