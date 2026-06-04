@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:35:17.388Z",
+  "savedAt": "2026-06-04T20:35:20.278Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1165,27 +1165,27 @@
           },
           {
             "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:18.366Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:18.662Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:19.981Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
