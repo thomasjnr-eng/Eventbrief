@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-03-wednesday",
-  "savedAt": "2026-06-04T13:25:50.683Z",
+  "savedAt": "2026-06-04T13:25:52.421Z",
   "savedBy": "TOB",
   "form": {
     "title": "Wednesday 😅",
@@ -49,9 +49,9 @@
         "priority": "medium",
         "dueTime": "13:30",
         "eventLink": "Addison Rae  (03 Jun 2026)",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "TOB",
+        "doneAt": "2026-06-04T13:25:51.181Z"
       },
       {
         "label": "Run to Fairyhouse with units",
@@ -59,9 +59,9 @@
         "priority": "medium",
         "dueTime": "17:30",
         "eventLink": "Fairyhouse Races  (05 Jun 2026)",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "TOB",
+        "doneAt": "2026-06-04T13:25:52.134Z"
       },
       {
         "label": "Breakdown Kilmainham ",
