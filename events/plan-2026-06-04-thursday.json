@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-04-thursday",
-  "savedAt": "2026-06-03T22:40:22.966Z",
+  "savedAt": "2026-06-04T12:39:22.752Z",
   "savedBy": "SOC",
   "form": {
     "title": "Thursday",
@@ -19,9 +19,9 @@
         "priority": "medium",
         "dueTime": "09:30",
         "eventLink": "Addison Rae  (03 Jun 2026)",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "SOC",
+        "doneAt": "2026-06-04T12:39:22.350Z"
       },
       {
         "label": "Build Fairyhouse fridge van ",
