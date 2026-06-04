@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:01.150Z",
+  "savedAt": "2026-06-04T20:36:03.331Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -788,27 +788,27 @@
           },
           {
             "label": "Bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:01.265Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:01.580Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "Truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:03.063Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
@@ -826,9 +826,9 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:03.310Z",
             "assignedTo": null
           },
           {
