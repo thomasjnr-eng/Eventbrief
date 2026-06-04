@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:16.079Z",
+  "savedAt": "2026-06-04T20:36:18.884Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1421,27 +1421,27 @@
           },
           {
             "label": "Bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:16.142Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:16.492Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "Truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:17.010Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
@@ -1459,27 +1459,27 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:17.512Z",
             "assignedTo": null
           },
           {
             "label": "Cold-chain temperatures recorded (end of trade)",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:18.472Z",
             "assignedTo": null
           },
           {
             "label": "Surfaces cleaned & sanitised",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:18.843Z",
             "assignedTo": null
           },
           {
