@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:05.441Z",
+  "savedAt": "2026-06-04T20:36:07.737Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -871,9 +871,9 @@
             "label": "Waste & water tanks emptied (if applicable)",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:06.326Z",
             "assignedTo": null
           }
         ]
@@ -1304,9 +1304,9 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:07.466Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
