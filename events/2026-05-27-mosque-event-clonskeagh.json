@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:36:34.235Z",
+  "savedAt": "2026-06-04T20:36:36.261Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -375,18 +375,18 @@
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:34.664Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
           },
           {
             "label": "Truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:34.998Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
@@ -404,18 +404,18 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:35.929Z",
             "assignedTo": null
           },
           {
             "label": "Cold-chain temperatures recorded (end of trade)",
             "phase": "close",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:36.192Z",
             "assignedTo": null
           },
           {
