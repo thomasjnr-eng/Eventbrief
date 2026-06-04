@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-27-mosque-event-clonskeagh",
-  "savedAt": "2026-06-04T20:35:58.565Z",
+  "savedAt": "2026-06-04T20:36:01.150Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -761,27 +761,27 @@
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:58.582Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
           },
           {
             "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:59.520Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-27"
           },
           {
             "label": "Cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:36:00.800Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-27"
@@ -817,9 +817,9 @@
             "label": "Cold-chain temperatures recorded (start of trade)",
             "phase": "open",
             "date": "2026-05-27",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-04T20:35:59.748Z",
             "assignedTo": null
           },
           {
