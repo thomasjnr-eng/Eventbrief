@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:22:26.756Z",
+  "savedAt": "2026-06-05T15:22:31.107Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -2001,9 +2001,9 @@
             "label": "Food probe present & calibrated",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:27.621Z",
             "assignedTo": null
           },
           {
@@ -2046,9 +2046,9 @@
             "label": "Wet-chem extinguisher in date (fryer units)",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:30.764Z",
             "assignedTo": null
           },
           {
