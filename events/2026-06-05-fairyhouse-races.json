@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-04T20:30:58.210Z",
+  "savedAt": "2026-06-05T12:19:30.282Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -227,9 +227,9 @@
           },
           {
             "label": "Power connected & tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:19:29.205Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
@@ -615,6 +615,276 @@
           {
             "label": "Truck securely closed & locked",
             "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Food probe present & calibrated",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hot water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "First aid kit present & in date",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire extinguishers (CO₂ + Powder) in service date",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Wet-chem extinguisher in date (fryer units)",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire blanket present & accessible",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Single-use gloves stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Probe wipes / alcohol wipes stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand sanitiser stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Sanitiser & detergent stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand-wash basin: soap + paper towels stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Allergen information displayed for customers",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cleaning schedule / log started for the day",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Lidded bins in place — pest control evidence checked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Food probe present & calibrated",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hot water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "First aid kit present & in date",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire extinguishers (CO₂ + Powder) in service date",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Wet-chem extinguisher in date (fryer units)",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire blanket present & accessible",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Single-use gloves stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Probe wipes / alcohol wipes stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand sanitiser stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Sanitiser & detergent stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand-wash basin: soap + paper towels stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Allergen information displayed for customers",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cleaning schedule / log started for the day",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Lidded bins in place — pest control evidence checked",
+            "phase": "compliance",
             "date": "2026-06-12",
             "done": false,
             "doneBy": null,
@@ -1038,6 +1308,276 @@
             "doneBy": null,
             "doneAt": null,
             "assignedTo": null
+          },
+          {
+            "label": "Food probe present & calibrated",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hot water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "First aid kit present & in date",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire extinguishers (CO₂ + Powder) in service date",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Wet-chem extinguisher in date (fryer units)",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire blanket present & accessible",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Single-use gloves stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Probe wipes / alcohol wipes stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand sanitiser stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Sanitiser & detergent stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand-wash basin: soap + paper towels stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Allergen information displayed for customers",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cleaning schedule / log started for the day",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Lidded bins in place — pest control evidence checked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Food probe present & calibrated",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hot water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "First aid kit present & in date",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire extinguishers (CO₂ + Powder) in service date",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Wet-chem extinguisher in date (fryer units)",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire blanket present & accessible",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Single-use gloves stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Probe wipes / alcohol wipes stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand sanitiser stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Sanitiser & detergent stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand-wash basin: soap + paper towels stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Allergen information displayed for customers",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cleaning schedule / log started for the day",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Lidded bins in place — pest control evidence checked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
           }
         ]
       },
@@ -1451,6 +1991,276 @@
           {
             "label": "Truck securely closed & locked",
             "phase": "close",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Food probe present & calibrated",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hot water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "First aid kit present & in date",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire extinguishers (CO₂ + Powder) in service date",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Wet-chem extinguisher in date (fryer units)",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire blanket present & accessible",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Single-use gloves stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Probe wipes / alcohol wipes stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand sanitiser stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Sanitiser & detergent stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand-wash basin: soap + paper towels stocked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Allergen information displayed for customers",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cleaning schedule / log started for the day",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Lidded bins in place — pest control evidence checked",
+            "phase": "compliance",
+            "date": "2026-06-05",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Food probe present & calibrated",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hot water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cold water working at hand-wash basin",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "First aid kit present & in date",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire extinguishers (CO₂ + Powder) in service date",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Wet-chem extinguisher in date (fryer units)",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Fire blanket present & accessible",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Single-use gloves stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Probe wipes / alcohol wipes stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand sanitiser stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Sanitiser & detergent stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Hand-wash basin: soap + paper towels stocked",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Allergen information displayed for customers",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Cleaning schedule / log started for the day",
+            "phase": "compliance",
+            "date": "2026-06-12",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
+            "assignedTo": null
+          },
+          {
+            "label": "Lidded bins in place — pest control evidence checked",
+            "phase": "compliance",
             "date": "2026-06-12",
             "done": false,
             "doneBy": null,
