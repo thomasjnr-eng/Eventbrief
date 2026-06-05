@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:21:01.948Z",
+  "savedAt": "2026-06-05T12:21:06.263Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1331,9 +1331,9 @@
             "label": "Cold water working at hand-wash basin",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:02.349Z",
             "assignedTo": null
           },
           {
@@ -1349,18 +1349,18 @@
             "label": "Fire extinguishers (CO₂ + Powder) in service date",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:04.300Z",
             "assignedTo": null
           },
           {
             "label": "Wet-chem extinguisher in date (fryer units)",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:05.335Z",
             "assignedTo": null
           },
           {
