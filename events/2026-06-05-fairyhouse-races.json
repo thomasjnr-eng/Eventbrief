@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:22:31.107Z",
+  "savedAt": "2026-06-05T15:22:34.144Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -2064,9 +2064,9 @@
             "label": "Single-use gloves stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:33.434Z",
             "assignedTo": null
           },
           {
