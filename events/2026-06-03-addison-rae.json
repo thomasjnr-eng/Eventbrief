@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-05T19:15:31.389Z",
+  "savedAt": "2026-06-05T19:15:33.148Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -402,18 +402,18 @@
             "label": "Pitched / parked correctly",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:15:31.727Z",
             "assignedTo": null
           },
           {
             "label": "Power connected & tested",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:15:32.742Z",
             "assignedTo": null
           },
           {
