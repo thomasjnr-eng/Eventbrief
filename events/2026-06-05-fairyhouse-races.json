@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T21:16:41.236Z",
+  "savedAt": "2026-06-05T21:16:45.535Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -625,9 +625,9 @@
             "label": "Food probe present & calibrated",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T21:16:45.316Z",
             "assignedTo": null
           },
           {
