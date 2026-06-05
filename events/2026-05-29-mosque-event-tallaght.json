@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:11:46.412Z",
+  "savedAt": "2026-06-05T19:11:48.045Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -331,18 +331,18 @@
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:46.714Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
           },
           {
             "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:47.212Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
@@ -387,9 +387,9 @@
             "label": "Cold-chain temperatures recorded (start of trade)",
             "phase": "open",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:47.744Z",
             "assignedTo": null
           },
           {
