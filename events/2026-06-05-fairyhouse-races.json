@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T21:16:57.270Z",
+  "savedAt": "2026-06-05T21:17:00.673Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -317,9 +317,9 @@
           },
           {
             "label": "Cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T21:17:00.397Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-05"
