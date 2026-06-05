@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:20:07.655Z",
+  "savedAt": "2026-06-05T12:20:13.017Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -715,9 +715,9 @@
             "label": "Sanitiser & detergent stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:20:11.229Z",
             "assignedTo": null
           },
           {
