@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T21:16:48.801Z",
+  "savedAt": "2026-06-05T21:16:55.253Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -742,9 +742,9 @@
             "label": "Cleaning schedule / log started for the day",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T21:16:55.053Z",
             "assignedTo": null
           },
           {
