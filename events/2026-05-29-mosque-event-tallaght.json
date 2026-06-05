@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:13:02.203Z",
+  "savedAt": "2026-06-05T19:13:04.102Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1056,27 +1056,27 @@
             "label": "POS / payment system reconciled",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:02.502Z",
             "assignedTo": null
           },
           {
             "label": "Equipment powered down (fryers, grills, etc.)",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:03.233Z",
             "assignedTo": null
           },
           {
             "label": "Waste & water tanks emptied (if applicable)",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:03.915Z",
             "assignedTo": null
           }
         ]
