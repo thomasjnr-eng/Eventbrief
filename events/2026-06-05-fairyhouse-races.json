@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:21:25.296Z",
+  "savedAt": "2026-06-05T12:21:35.074Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1241,9 +1241,9 @@
             "label": "Cold-chain temperatures recorded (end of trade)",
             "phase": "close",
             "date": "2026-06-12",
-            "done": true,
-            "doneBy": "Robert Mahon",
-            "doneAt": "2026-06-05T12:21:24.361Z",
+            "done": false,
+            "doneBy": null,
+            "doneAt": null,
             "assignedTo": null
           },
           {
@@ -1585,9 +1585,9 @@
         "items": [
           {
             "label": "Arrived on site",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:34.180Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
