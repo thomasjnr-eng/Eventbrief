@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:12:12.756Z",
+  "savedAt": "2026-06-05T19:12:14.892Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -533,27 +533,27 @@
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:13.206Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
           },
           {
             "label": "Pre-trade brief from event lead complete",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:13.904Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
           },
           {
             "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:14.618Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
