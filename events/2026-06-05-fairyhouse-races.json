@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:20:00.014Z",
+  "savedAt": "2026-06-05T12:20:04.330Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -688,18 +688,18 @@
             "label": "Single-use gloves stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:20:00.537Z",
             "assignedTo": null
           },
           {
             "label": "Probe wipes / alcohol wipes stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:20:03.621Z",
             "assignedTo": null
           },
           {
