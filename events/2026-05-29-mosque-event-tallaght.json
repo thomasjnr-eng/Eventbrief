@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:12:27.844Z",
+  "savedAt": "2026-06-05T19:12:38.089Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -616,27 +616,27 @@
             "label": "Cold-chain temperatures recorded (end of trade)",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:28.217Z",
             "assignedTo": null
           },
           {
             "label": "Surfaces cleaned & sanitised",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:28.951Z",
             "assignedTo": null
           },
           {
             "label": "POS / payment system reconciled",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:37.790Z",
             "assignedTo": null
           },
           {
