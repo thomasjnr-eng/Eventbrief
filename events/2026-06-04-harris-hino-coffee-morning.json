@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-05T00:22:00.151Z",
+  "savedAt": "2026-06-05T00:22:04.709Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -290,18 +290,18 @@
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:22:00.341Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-03"
           },
           {
             "label": "Truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:22:00.957Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-03"
@@ -319,9 +319,9 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:22:03.659Z",
             "assignedTo": null
           },
           {
