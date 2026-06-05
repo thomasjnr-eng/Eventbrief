@@ -3640,8 +3640,12 @@ function goStep(n) {
 // ─── CREW CHECKLISTS (Ops mode) ───────────────────────────────
 // Per-truck day-of operational checks. Lives on each saved event as
 // _crewChecklists: { TruckName: { items: [{label, done, doneBy, doneAt}] }}
-// Two phases — every truck gets both, per trading day. The HACCP item
-// is the mandatory first closing check (post-Dublin-Tech-Summit fix).
+// Three phases — every truck gets open + compliance + close, per
+// trading day. The HACCP item is the mandatory first closing check
+// (post-Dublin-Tech-Summit fix). The compliance phase is the
+// start-of-day food-safety / HACCP gate (probe, hot+cold water, first
+// aid, fire kit in date, gloves, probe wipes, sanitiser, allergen info,
+// cleaning log started).
 const CREW_OPEN_DEFAULTS = [
   'Arrived on site',
   'Pitched / parked correctly',
@@ -3657,6 +3661,23 @@ const CREW_OPEN_DEFAULTS = [
   'Pre-trade brief from event lead complete',
   'Ready to trade'
 ];
+const CREW_COMPLIANCE_DEFAULTS = [
+  'Food probe present & calibrated',
+  'Hot water working at hand-wash basin',
+  'Cold water working at hand-wash basin',
+  'First aid kit present & in date',
+  'Fire extinguishers (CO₂ + Powder) in service date',
+  'Wet-chem extinguisher in date (fryer units)',
+  'Fire blanket present & accessible',
+  'Single-use gloves stocked',
+  'Probe wipes / alcohol wipes stocked',
+  'Hand sanitiser stocked',
+  'Sanitiser & detergent stocked',
+  'Hand-wash basin: soap + paper towels stocked',
+  'Allergen information displayed for customers',
+  'Cleaning schedule / log started for the day',
+  'Lidded bins in place — pest control evidence checked'
+];
 const CREW_CLOSE_DEFAULTS = [
   'HACCP plan followed in closing procedure',
   'All food covered / stored / refrigerated correctly',
@@ -3669,7 +3690,7 @@ const CREW_CLOSE_DEFAULTS = [
   'Waste & water tanks emptied (if applicable)',
   'Truck securely closed & locked'
 ];
-const CREW_CHECKLIST_DEFAULTS = CREW_OPEN_DEFAULTS.concat(CREW_CLOSE_DEFAULTS);
+const CREW_CHECKLIST_DEFAULTS = CREW_OPEN_DEFAULTS.concat(CREW_COMPLIANCE_DEFAULTS).concat(CREW_CLOSE_DEFAULTS);
 let CREW_CHECKLISTS = {};
 let SIGN_OFFS = [];
 
@@ -3735,12 +3756,13 @@ function inferPhase(label) {
   if (!label) return 'open';
   if (/^end-of-trade/i.test(label)) return 'close';
   if (CREW_CLOSE_DEFAULTS.includes(label)) return 'close';
+  if (CREW_COMPLIANCE_DEFAULTS.includes(label)) return 'compliance';
   // Older labels we re-named on the way through:
   if (/food (covered|covered\s*\/|stored|disposed)/i.test(label)) return 'close';
   if (/cash counted/i.test(label)) return 'close';
   if (/bins emptied/i.test(label)) return 'close';
   if (/truck (securely )?(closed|locked)/i.test(label)) return 'close';
-  if (/haccp/i.test(label)) return 'close';
+  if (/haccp.*closing/i.test(label)) return 'close';
   return 'open';
 }
 // Normalise a few legacy labels onto the new close defaults so we don't
@@ -3775,6 +3797,11 @@ function ensureCrewChecklists() {
           items.push({ label, phase: 'open', date, done: false, doneBy: null, doneAt: null, assignedTo: null });
         }
       });
+      CREW_COMPLIANCE_DEFAULTS.forEach(label => {
+        if (!items.find(i => i.label === label && i.date === date && i.phase === 'compliance')) {
+          items.push({ label, phase: 'compliance', date, done: false, doneBy: null, doneAt: null, assignedTo: null });
+        }
+      });
       CREW_CLOSE_DEFAULTS.forEach(label => {
         if (!items.find(i => i.label === label && i.date === date && i.phase === 'close')) {
           items.push({ label, phase: 'close', date, done: false, doneBy: null, doneAt: null, assignedTo: null });
@@ -3800,7 +3827,8 @@ function groupCrewItems(items) {
   (items || []).forEach((it, idx) => {
     const d = it.date || 'unscheduled';
     const p = it.phase || 'open';
-    if (!byDate[d]) byDate[d] = { open: [], close: [] };
+    if (!byDate[d]) byDate[d] = { open: [], compliance: [], close: [] };
+    if (!byDate[d][p]) byDate[d][p] = [];
     byDate[d][p].push({ item: it, idx });
   });
   return byDate;
@@ -5953,10 +5981,14 @@ function generateBrief() {
         const multiDay = dateKeys.length > 1;
         const dayBlocks = dateKeys.map((date, di) => {
           const open = grouped[date].open || [];
+          const comp = grouped[date].compliance || [];
           const close = grouped[date].close || [];
           const openDone = open.filter(x => x.item.done).length;
+          const compDone = comp.filter(x => x.item.done).length;
           const closeDone = close.filter(x => x.item.done).length;
           const openClass = openDone === open.length ? '#2d7a49' : (openDone > 0 ? '#b07a10' : '#777');
+          const compAllDone = compDone === comp.length;
+          const compClass = compAllDone ? '#2d7a49' : '#3d6b8c';
           const closeAllDone = closeDone === close.length;
           const closeClass = closeAllDone ? '#2d7a49' : '#c0392b';
           const dayLabel = date === 'unscheduled' ? 'Procedures' : (formatDate(date) || date);
@@ -5968,6 +6000,11 @@ function generateBrief() {
               '<summary style="cursor:pointer;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:' + openClass + ';font-weight:700;padding:4px 0;">▸ Opening Procedure (' + openDone + '/' + open.length + ')</summary>' +
               '<div class="ops-checks" style="margin-top:4px;">' + open.map(x => renderCheckRow(x.item, x.idx, u.name)).join('') + '</div>' +
             '</details>' +
+            (comp.length ? (
+            '<details ' + (!compAllDone && di === 0 ? 'open' : '') + ' style="margin-top:6px;">' +
+              '<summary style="cursor:pointer;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:' + compClass + ';font-weight:700;padding:4px 0;">▸ Food Safety &amp; HACCP Compliance (' + compDone + '/' + comp.length + ')</summary>' +
+              '<div class="ops-checks" style="margin-top:4px;">' + comp.map(x => renderCheckRow(x.item, x.idx, u.name)).join('') + '</div>' +
+            '</details>') : '') +
             '<details ' + (!closeAllDone ? 'open' : '') + ' style="margin-top:6px;">' +
               '<summary style="cursor:pointer;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:' + closeClass + ';font-weight:700;padding:4px 0;">▸ Closing Procedure &mdash; HACCP critical (' + closeDone + '/' + close.length + ')</summary>' +
               '<div class="ops-checks" style="margin-top:4px;">' + close.map(x => renderCheckRow(x.item, x.idx, u.name)).join('') + '</div>' +
