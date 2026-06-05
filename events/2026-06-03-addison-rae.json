@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-05T19:15:46.247Z",
+  "savedAt": "2026-06-05T19:15:47.915Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -411,18 +411,18 @@
             "label": "Power connected & tested",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:15:46.986Z",
             "assignedTo": null
           },
           {
             "label": "Water connected (if applicable)",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:15:47.669Z",
             "assignedTo": null
           },
           {
