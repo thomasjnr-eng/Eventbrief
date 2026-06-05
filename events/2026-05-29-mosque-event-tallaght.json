@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:11:51.565Z",
+  "savedAt": "2026-06-05T19:11:53.619Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -396,18 +396,18 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:52.521Z",
             "assignedTo": null
           },
           {
             "label": "Cold-chain temperatures recorded (end of trade)",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:53.273Z",
             "assignedTo": null
           },
           {
