@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:13:28.775Z",
+  "savedAt": "2026-06-05T19:13:33.455Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1293,6 +1293,14 @@
         ]
       }
     },
-    "_signOffs": []
+    "_signOffs": [
+      {
+        "forDate": "2026-06-05",
+        "signedBy": "Ae",
+        "signedAt": "2026-06-05T19:13:33.173Z",
+        "notes": "",
+        "itemsTouched": []
+      }
+    ]
   }
 }
