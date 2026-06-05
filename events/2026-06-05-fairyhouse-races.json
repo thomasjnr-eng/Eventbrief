@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:22:10.966Z",
+  "savedAt": "2026-06-05T15:22:12.876Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1630,18 +1630,18 @@
           },
           {
             "label": "Fire equipment laid out & accessible",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:11.938Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
           },
           {
             "label": "Hand wash station set up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:12.550Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
