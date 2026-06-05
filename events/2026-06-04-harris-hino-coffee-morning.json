@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-05T00:21:48.733Z",
+  "savedAt": "2026-06-05T00:21:55.596Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -272,9 +272,9 @@
           },
           {
             "label": "Cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:21:55.109Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-03"
