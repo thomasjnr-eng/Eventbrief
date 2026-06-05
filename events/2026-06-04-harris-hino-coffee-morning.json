@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-05T00:22:08.759Z",
+  "savedAt": "2026-06-05T00:22:25.997Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -372,6 +372,14 @@
         ]
       }
     },
-    "_signOffs": []
+    "_signOffs": [
+      {
+        "forDate": "2026-06-04",
+        "signedBy": "TOB",
+        "signedAt": "2026-06-05T00:22:25.311Z",
+        "notes": "Invoice tomorrow ",
+        "itemsTouched": []
+      }
+    ]
   }
 }
