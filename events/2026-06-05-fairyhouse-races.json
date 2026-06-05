@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T21:17:32.690Z",
+  "savedAt": "2026-06-05T21:17:34.789Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1023,9 +1023,9 @@
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T21:17:34.479Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-05"
