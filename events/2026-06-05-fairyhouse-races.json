@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:21:06.263Z",
+  "savedAt": "2026-06-05T12:21:10.747Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1367,18 +1367,18 @@
             "label": "Fire blanket present & accessible",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:06.808Z",
             "assignedTo": null
           },
           {
             "label": "Single-use gloves stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:09.775Z",
             "assignedTo": null
           },
           {
