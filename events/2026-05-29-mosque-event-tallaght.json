@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:13:21.217Z",
+  "savedAt": "2026-06-05T19:13:22.812Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1202,18 +1202,18 @@
           },
           {
             "label": "Bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:21.723Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-29"
           },
           {
             "label": "All food covered / stored / refrigerated correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:22.572Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-29"
