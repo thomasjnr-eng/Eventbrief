@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-05T00:21:55.596Z",
+  "savedAt": "2026-06-05T00:22:00.151Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -281,9 +281,9 @@
           },
           {
             "label": "Bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:21:58.959Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-03"
