@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:20:46.579Z",
+  "savedAt": "2026-06-05T12:21:01.948Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1322,9 +1322,9 @@
             "label": "Hot water working at hand-wash basin",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:01.409Z",
             "assignedTo": null
           },
           {
