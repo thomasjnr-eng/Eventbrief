@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-05T00:21:44.404Z",
+  "savedAt": "2026-06-05T00:21:48.733Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -263,9 +263,9 @@
           },
           {
             "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:21:44.657Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-03"
@@ -310,9 +310,9 @@
             "label": "Cold-chain temperatures recorded (start of trade)",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:21:48.424Z",
             "assignedTo": null
           },
           {
