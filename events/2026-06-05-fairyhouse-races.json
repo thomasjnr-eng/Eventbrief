@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T21:17:04.522Z",
+  "savedAt": "2026-06-05T21:17:11.823Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -382,9 +382,9 @@
             "label": "Surfaces cleaned & sanitised",
             "phase": "close",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T21:17:11.531Z",
             "assignedTo": null
           },
           {
