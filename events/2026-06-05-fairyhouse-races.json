@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:22:36.086Z",
+  "savedAt": "2026-06-05T15:22:40.593Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -2100,18 +2100,18 @@
             "label": "Hand-wash basin: soap + paper towels stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:39.004Z",
             "assignedTo": null
           },
           {
             "label": "Allergen information displayed for customers",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:40.062Z",
             "assignedTo": null
           },
           {
