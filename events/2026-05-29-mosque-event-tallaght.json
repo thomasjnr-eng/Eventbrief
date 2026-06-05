@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:12:57.924Z",
+  "savedAt": "2026-06-05T19:13:00.555Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1009,9 +1009,9 @@
           },
           {
             "label": "Truck securely closed & locked",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:58.442Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-29"
@@ -1029,9 +1029,9 @@
             "label": "HACCP plan followed in closing procedure",
             "phase": "close",
             "date": "2026-05-29",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:00.304Z",
             "assignedTo": null
           },
           {
