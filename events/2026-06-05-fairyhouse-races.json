@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:22:18.521Z",
+  "savedAt": "2026-06-05T15:22:24.387Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1684,9 +1684,9 @@
           },
           {
             "label": "Ready to trade",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:20.065Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
@@ -2037,9 +2037,9 @@
             "label": "Fire extinguishers (CO₂ + Powder) in service date",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:24.029Z",
             "assignedTo": null
           },
           {
