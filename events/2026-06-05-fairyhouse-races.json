@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:21:10.622Z",
+  "savedAt": "2026-06-05T15:21:34.159Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -960,9 +960,9 @@
           },
           {
             "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:21:33.478Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
