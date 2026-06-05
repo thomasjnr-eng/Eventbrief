@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T21:17:23.099Z",
+  "savedAt": "2026-06-05T21:17:28.237Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1439,9 +1439,9 @@
             "label": "Lidded bins in place — pest control evidence checked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T21:17:27.993Z",
             "assignedTo": null
           },
           {
