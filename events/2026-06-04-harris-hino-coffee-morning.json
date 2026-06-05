@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-04-harris-hino-coffee-morning",
-  "savedAt": "2026-06-05T00:22:06.618Z",
+  "savedAt": "2026-06-05T00:22:08.759Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -355,18 +355,18 @@
             "label": "Equipment powered down (fryers, grills, etc.)",
             "phase": "close",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:22:07.008Z",
             "assignedTo": null
           },
           {
             "label": "Waste & water tanks emptied (if applicable)",
             "phase": "close",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "TOB",
+            "doneAt": "2026-06-05T00:22:08.560Z",
             "assignedTo": null
           }
         ]
