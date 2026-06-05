@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:22:34.144Z",
+  "savedAt": "2026-06-05T15:22:36.086Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -2082,9 +2082,9 @@
             "label": "Hand sanitiser stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:22:35.676Z",
             "assignedTo": null
           },
           {
