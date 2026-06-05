@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:12:50.213Z",
+  "savedAt": "2026-06-05T19:12:52.269Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -937,9 +937,9 @@
           },
           {
             "label": "Menu boards / signage up",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:50.718Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
@@ -955,9 +955,9 @@
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:12:52.050Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
