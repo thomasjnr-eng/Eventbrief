@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-03-addison-rae",
-  "savedAt": "2026-06-05T19:15:52.185Z",
+  "savedAt": "2026-06-05T19:15:53.877Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -474,27 +474,27 @@
             "label": "Stock checked & loaded",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:15:52.445Z",
             "assignedTo": null
           },
           {
             "label": "Cold-chain temperatures recorded (start of trade)",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:15:53.130Z",
             "assignedTo": null
           },
           {
             "label": "Pre-trade brief from event lead complete",
             "phase": "open",
             "date": "2026-06-03",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:15:53.676Z",
             "assignedTo": null
           },
           {
