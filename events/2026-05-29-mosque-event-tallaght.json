@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:11:38.683Z",
+  "savedAt": "2026-06-05T19:11:40.807Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -250,27 +250,27 @@
           },
           {
             "label": "Pitched / parked correctly",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:39.074Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
           },
           {
             "label": "Power connected & tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:39.708Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:40.504Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
