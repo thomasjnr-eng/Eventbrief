@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:19:55.303Z",
+  "savedAt": "2026-06-05T12:20:00.014Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -670,18 +670,18 @@
             "label": "Wet-chem extinguisher in date (fryer units)",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:19:56.412Z",
             "assignedTo": null
           },
           {
             "label": "Fire blanket present & accessible",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:19:57.979Z",
             "assignedTo": null
           },
           {
