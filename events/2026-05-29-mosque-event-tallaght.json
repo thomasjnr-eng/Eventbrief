@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:13:10.060Z",
+  "savedAt": "2026-06-05T19:13:12.326Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1112,18 +1112,18 @@
           },
           {
             "label": "Water connected (if applicable)",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:11.239Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
           },
           {
             "label": "Waste containers in place",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:13:12.051Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-05-29"
