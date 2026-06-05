@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T21:17:00.673Z",
+  "savedAt": "2026-06-05T21:17:02.378Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -326,9 +326,9 @@
           },
           {
             "label": "Bins emptied & site clean",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T21:17:02.051Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-06-05"
