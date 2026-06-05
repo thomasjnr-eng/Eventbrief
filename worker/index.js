@@ -20,6 +20,13 @@
 //   MANAGER_CODE       Secret code the manager (Tom) enters once in Settings
 //                      to unlock the override + payroll-export views.
 //                      Without it set, /verify-manager always returns 401.
+//   EMAIL_TO           Recipient address for the day-plan email. Defaults to
+//                      operations@obrieneventcatering.com when unset.
+//   EMAIL_FROM         "From" address. MUST be on a domain whose SPF +
+//                      _mailchannels TXT records authorise this worker
+//                      account to send via MailChannels — see README.
+//                      Without it the route returns 503.
+//   EMAIL_FROM_NAME    (optional) Friendly sender name.
 
 const corsHeaders = (origin) => ({
   'Access-Control-Allow-Origin': origin || '*',
@@ -76,6 +83,10 @@ export default {
           lng = parseFloat(url.searchParams.get('lng'));
         }
         return await reverseGeocode(lat, lng, env, origin);
+      }
+      if (path === '/email-plan' && request.method === 'POST') {
+        const body = await request.json().catch(() => ({}));
+        return await emailPlanViaMailChannels(body, env, origin);
       }
       if (path === '/verify-manager' && request.method === 'POST') {
         const body = await request.json().catch(() => ({}));
@@ -319,6 +330,53 @@ async function reverseGeocode(lat, lng, env, origin) {
     return json({ formatted: d.display_name, source: 'nominatim' }, 200, origin);
   } catch (e) {
     return json({ error: 'revgeo_unreachable', detail: e.message }, 502, origin);
+  }
+}
+
+// ─── EMAIL DAY PLAN via MailChannels ─────────────────────────
+// Sends a "Tomorrows Day Plan" email to env.EMAIL_TO whenever the
+// frontend POSTs /email-plan. Uses MailChannels (free transactional
+// email service for Cloudflare Workers). Requires DNS setup on the
+// "from" domain — SPF allowing MailChannels and a _mailchannels TXT
+// record naming this Cloudflare account id. Without it MailChannels
+// returns 401/403.
+async function emailPlanViaMailChannels(payload, env, origin) {
+  if (!env.EMAIL_FROM) {
+    return json({ error: 'email_disabled', message: "EMAIL_FROM not configured on the Worker. Set EMAIL_FROM (and optionally EMAIL_TO + EMAIL_FROM_NAME) as variables in Cloudflare, plus the SPF + _mailchannels DNS records on the sending domain." }, 503, origin);
+  }
+  const to = env.EMAIL_TO || 'operations@obrieneventcatering.com';
+  const from = env.EMAIL_FROM;
+  const fromName = env.EMAIL_FROM_NAME || "O'Brien Brief Planner";
+  const subject = (payload && payload.subject) || 'Tomorrows Day Plan';
+  const html = (payload && payload.html) || '';
+  const text = (payload && payload.text) || '';
+  if (!html && !text) return json({ error: 'empty_body' }, 400, origin);
+
+  const content = [];
+  // MailChannels requires text/plain to appear before text/html
+  if (text) content.push({ type: 'text/plain', value: text });
+  if (html) content.push({ type: 'text/html',  value: html });
+
+  const mailReq = {
+    personalizations: [{ to: [{ email: to }] }],
+    from: { email: from, name: fromName },
+    subject,
+    content
+  };
+
+  try {
+    const r = await fetch('https://api.mailchannels.net/tx/v1/send', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(mailReq)
+    });
+    if (!r.ok) {
+      const errText = await r.text().catch(() => '');
+      return json({ error: 'mailchannels_' + r.status, detail: errText }, 502, origin);
+    }
+    return json({ ok: true }, 200, origin);
+  } catch (e) {
+    return json({ error: 'email_unreachable', detail: e.message }, 502, origin);
   }
 }
 

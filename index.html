@@ -7916,6 +7916,70 @@ async function sharePlanWhatsApp() {
   window.open(waUrl, '_blank');
 }
 
+// Email a plan to operations on every manual save. Recipient + sender
+// are configured on the Worker (env.EMAIL_TO / EMAIL_FROM), so we
+// pass only the content here.
+async function sendPlanEmail(data) {
+  if (!data || !data.title) return;
+  const fmtT = (t) => (t && typeof formatTime === 'function') ? formatTime(t) : (t || '');
+  const dateLabel = data.planDate ? (typeof formatDate === 'function' ? formatDate(data.planDate) : data.planDate) : '';
+  const html = planToPrintableHtml(data);
+  // Plain-text fallback for clients that block HTML.
+  const tasks = (data.tasks || []).slice().sort((a, b) => {
+    const o = { high: 0, medium: 1, low: 2 };
+    const pa = o[a.priority] ?? 1, pb = o[b.priority] ?? 1;
+    if (pa !== pb) return pa - pb;
+    return (a.dueTime || '99:99').localeCompare(b.dueTime || '99:99');
+  });
+  const textLines = [
+    data.title,
+    [dateLabel, (data.startTime || data.endTime) ? (fmtT(data.startTime) + ' – ' + fmtT(data.endTime)) : ''].filter(Boolean).join(' · '),
+    data.lead ? 'Lead: ' + data.lead : '',
+    data.assigned ? 'Assigned: ' + data.assigned : '',
+    '',
+  ].filter(l => l !== '');
+  tasks.forEach(t => {
+    const tick = t.done ? '[x]' : '[ ]';
+    const prio = t.priority === 'high' ? '!! ' : (t.priority === 'low' ? '· ' : '! ');
+    const bits = [];
+    if (t.dueTime) bits.push(fmtT(t.dueTime));
+    if (t.assignedTo) bits.push(t.assignedTo);
+    textLines.push(tick + ' ' + prio + (t.label || '(no description)') + (bits.length ? ' — ' + bits.join(', ') : ''));
+  });
+  if (data.notes) {
+    textLines.push('');
+    textLines.push('Notes:');
+    textLines.push(data.notes);
+  }
+  textLines.push('');
+  textLines.push('— sent automatically by the O\'Brien Brief planner');
+
+  try {
+    const res = await apiCall('/email-plan', {
+      method: 'POST',
+      body: JSON.stringify({
+        subject: 'Tomorrows Day Plan',
+        html, text: textLines.join('\n'),
+        planTitle: data.title, planDate: data.planDate
+      })
+    });
+    if (res.status === 503) {
+      toast('Plan saved — email not configured on the Worker yet', 'error');
+      return;
+    }
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      toast('Plan saved — email failed (' + res.status + ')', 'error');
+      console.error('plan email failed:', errText);
+      return;
+    }
+    toast('Plan emailed to operations ✓');
+  } catch (e) {
+    if (e.message === 'NO_PASSCODE') return;
+    toast('Plan saved — email failed: ' + e.message, 'error');
+  }
+}
+
 async function savePlan(opts) {
   opts = opts || {};
   const silent = opts.silent === true;
@@ -7961,6 +8025,9 @@ async function savePlan(opts) {
     eventsCache.byName = {};
     if (!silent) {
       toast(sha ? 'Plan updated' : 'Plan saved');
+      // Fire-and-forget email to operations on every manual save.
+      // Silent (tick-only auto-saves) don't trigger to avoid spam.
+      sendPlanEmail(data).catch(() => {});
       showHome();
     }
   } catch (e) {
