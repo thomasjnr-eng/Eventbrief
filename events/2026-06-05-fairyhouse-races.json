@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:21:14.932Z",
+  "savedAt": "2026-06-05T12:21:21.588Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1421,9 +1421,9 @@
             "label": "Allergen information displayed for customers",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:20.617Z",
             "assignedTo": null
           },
           {
