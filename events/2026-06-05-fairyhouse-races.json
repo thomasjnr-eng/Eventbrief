@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T15:21:34.159Z",
+  "savedAt": "2026-06-05T15:21:37.932Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -969,18 +969,18 @@
           },
           {
             "label": "POS / payment system tested",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:21:35.826Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
           },
           {
             "label": "Stock checked & loaded",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T15:21:37.308Z",
             "assignedTo": null,
             "phase": "open",
             "date": "2026-06-05"
