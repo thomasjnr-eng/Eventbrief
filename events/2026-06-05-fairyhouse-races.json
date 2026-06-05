@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-05-fairyhouse-races",
-  "savedAt": "2026-06-05T12:21:10.747Z",
+  "savedAt": "2026-06-05T12:21:14.932Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -1385,36 +1385,36 @@
             "label": "Probe wipes / alcohol wipes stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:11.123Z",
             "assignedTo": null
           },
           {
             "label": "Hand sanitiser stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:12.422Z",
             "assignedTo": null
           },
           {
             "label": "Sanitiser & detergent stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:13.813Z",
             "assignedTo": null
           },
           {
             "label": "Hand-wash basin: soap + paper towels stocked",
             "phase": "compliance",
             "date": "2026-06-05",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Robert Mahon",
+            "doneAt": "2026-06-05T12:21:14.919Z",
             "assignedTo": null
           },
           {
