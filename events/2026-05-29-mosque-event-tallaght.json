@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-05-29-mosque-event-tallaght",
-  "savedAt": "2026-06-05T19:11:48.045Z",
+  "savedAt": "2026-06-05T19:11:49.648Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -349,9 +349,9 @@
           },
           {
             "label": "Cash counted & secured",
-            "done": false,
-            "doneBy": null,
-            "doneAt": null,
+            "done": true,
+            "doneBy": "Ae",
+            "doneAt": "2026-06-05T19:11:49.310Z",
             "assignedTo": null,
             "phase": "close",
             "date": "2026-05-29"
