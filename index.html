@@ -884,6 +884,67 @@ body {
   border-radius: 3px;
   text-transform: uppercase;
 }
+
+/* ─── COMPLIANCE FOLDERS BOX (officer + manager) ─── */
+.compliance-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid #6e5b89;
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.cmpl-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; gap: 10px; }
+.cmpl-title { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.14em; color: #6e5b89; }
+.cmpl-count { font-size: 11px; color: var(--text-muted); }
+.cmpl-event {
+  border-top: 1px solid var(--border);
+  padding: 10px 0 6px;
+}
+.cmpl-event:first-of-type { border-top: none; padding-top: 0; }
+.cmpl-event-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  margin-bottom: 6px;
+}
+.cmpl-event-name { font-size: 14px; font-weight: 700; color: var(--white); }
+.cmpl-event-date { font-size: 11px; color: var(--text-muted); }
+.cmpl-trucks {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 4px;
+}
+.cmpl-truck {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--bg-input);
+  color: var(--white);
+  transition: all 0.12s;
+}
+.cmpl-truck:hover { border-color: #6e5b89; }
+.cmpl-truck.ready { background: #e3f0e3; color: #2d6a37; border-color: #4a9a5c; }
+.cmpl-truck.partial { background: #fff4d6; color: #b07a10; border-color: #e0b370; }
+.cmpl-truck .dot { width: 8px; height: 8px; border-radius: 50%; background: #c0392b; display: inline-block; }
+.cmpl-truck.ready .dot { background: #4a9a5c; }
+.cmpl-truck.partial .dot { background: #b07a10; }
+.cmpl-doc-row {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  font-size: 13px;
+  color: var(--white);
+  cursor: pointer;
+}
+.cmpl-doc-row:hover { background: var(--bg-input); }
+.cmpl-doc-row.done { background: #e8f5ee; color: #2d7a49; text-decoration: line-through; }
+.cmpl-doc-row input[type=checkbox] { width: 16px; height: 16px; accent-color: #4a9a5c; cursor: pointer; }
+.cmpl-doc-meta { font-size: 10px; color: var(--text-muted); margin-top: 2px; display: block; }
 .drb-status {
   font-size: 11px;
   font-weight: 700;
@@ -2426,6 +2487,7 @@ body {
       <option value="truck_lead">Truck Lead</option>
       <option value="ops_lead">Ops Lead</option>
       <option value="maintenance_manager">Maintenance Manager</option>
+      <option value="compliance_officer">Compliance Officer</option>
       <option value="manager">Manager</option>
     </select>
     <input type="password" class="welcome-input" id="welcomePasscode" placeholder="Team passcode" autocomplete="off" onkeydown="if(event.key==='Enter') submitWelcomePasscode()">
@@ -2502,6 +2564,7 @@ body {
           <option value="truck_lead">Truck Lead</option>
           <option value="ops_lead">Ops Lead</option>
           <option value="maintenance_manager">Maintenance Manager</option>
+          <option value="compliance_officer">Compliance Officer</option>
           <option value="manager">Manager (requires manager code)</option>
         </select>
         <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Your dashboard tailors itself to your role. Pick the closest one — only Manager needs the code below.</p>
@@ -2680,6 +2743,15 @@ body {
   </div>
 </div>
 
+<!-- ─── COMPLIANCE FOLDER MODAL (per truck, per event) ─── -->
+<div class="modal-overlay" id="complianceFolderModal" onclick="if(event.target===this) closeComplianceFolderModal()">
+  <div class="modal-content" style="max-width:680px;">
+    <button class="modal-close" onclick="closeComplianceFolderModal()">&times;</button>
+    <div class="modal-title" id="complianceFolderTitle">Compliance Folder</div>
+    <div class="modal-body" id="complianceFolderBody"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- ─── END-OF-DAY SIGN-OFF MODAL ─── -->
@@ -2719,6 +2791,7 @@ body {
 
   <div id="onClockBox" class="on-clock-box" data-role-min="manager" style="display:none;"></div>
   <div id="damageReportsBox" class="damage-reports-box" data-role-any="manager,maintenance_manager" style="display:none;"></div>
+  <div id="complianceBox" class="compliance-box" data-role-any="manager,compliance_officer" style="display:none;"></div>
 
   <div class="home-events-section">
     <div class="home-events-head">
@@ -6827,12 +6900,13 @@ const ROLE_KEY = 'obrien_brief_role';
 // don't apply to a role. Manager is the only role that needs the manager
 // code on top — self-declared manager just gets the ops_lead view until
 // they unlock manager mode in Settings.
-const ROLES = ['crew', 'truck_lead', 'ops_lead', 'maintenance_manager', 'manager'];
+const ROLES = ['crew', 'truck_lead', 'ops_lead', 'maintenance_manager', 'compliance_officer', 'manager'];
 const ROLE_LABELS = {
   crew: 'Ops Team Member',
   truck_lead: 'Truck Lead',
   ops_lead: 'Ops Lead',
   maintenance_manager: 'Maintenance Manager',
+  compliance_officer: 'Compliance Officer',
   manager: 'Manager'
 };
 function getRole() { return localStorage.getItem(ROLE_KEY) || 'crew'; }
@@ -8276,6 +8350,7 @@ async function renderHome() {
   await renderHomePies();
   renderOnClockBox();
   renderDamageReportsBox();
+  renderComplianceBox();
   await renderHomePlans();
   await renderHomeEvents();
   await renderPastEvents();
@@ -8694,6 +8769,7 @@ async function unlockManagerMode() {
     renderOnClockBox();
     renderHomePies();
     renderDamageReportsBox();
+    renderComplianceBox();
     renderRoleVisibility();
     toast('Manager mode unlocked ✓');
   } catch (e) {
@@ -8710,6 +8786,7 @@ function lockManagerMode() {
   renderOnClockBox();
   renderHomePies();
   renderDamageReportsBox();
+  renderComplianceBox();
   renderRoleVisibility();
   toast('Manager mode locked');
 }
@@ -8762,6 +8839,12 @@ function applyRoleSpecificLayout() {
 // so payroll / clock-watch stay manager-only.
 function canManageDamage() {
   return getRole() === 'maintenance_manager' || isManager();
+}
+
+// Compliance officer + manager can build and tick the per-truck
+// compliance folder checklist on every event.
+function canManageCompliance() {
+  return getRole() === 'compliance_officer' || isManager();
 }
 
 // Brief authoring is for ops_lead + manager only. Maintenance managers
@@ -8821,6 +8904,7 @@ function onRoleSelectChange(newRole) {
   renderRoleVisibility();
   renderHome();
   renderDamageReportsBox();
+  renderComplianceBox();
   toast('Role set: ' + (ROLE_LABELS[newRole] || newRole));
 }
 
@@ -9133,6 +9217,197 @@ async function submitDamageReport() {
   } finally {
     btn.disabled = false; btn.textContent = oldLabel;
   }
+}
+
+// ─── COMPLIANCE FOLDERS ───────────────────────────────────────
+// Per-event, per-truck folder checklist owned by the compliance
+// officer (also visible to manager). State lives directly on each
+// event JSON under form._complianceFolders so it travels with the
+// brief and shows up wherever the event is loaded.
+const COMPLIANCE_DOC_DEFAULTS = [
+  'EHO / FBO registration on file',
+  'Public liability insurance certificate current',
+  'HACCP plan reviewed & on file',
+  'Allergen matrix current',
+  'Risk assessment & method statement',
+  'Cleaning schedule on file',
+  'Pest control records up to date',
+  'Gas safety certificate (where applicable)',
+  'PAT / electrical safety records current',
+  'Fire equipment service records current',
+  'Crew Food Safety Level 2 certificates on file',
+  'Allergen training records on file'
+];
+
+function defaultComplianceItems() {
+  return COMPLIANCE_DOC_DEFAULTS.map(label => ({ label, done: false, doneBy: null, doneAt: null }));
+}
+function complianceProgress(folder) {
+  const items = (folder && folder.items) || [];
+  const total = items.length;
+  const done = items.filter(i => i.done).length;
+  return { total, done, percent: total ? Math.round((done / total) * 100) : 0 };
+}
+
+async function renderComplianceBox() {
+  const box = document.getElementById('complianceBox');
+  if (!box) return;
+  if (!canManageCompliance() || !getPasscode()) { box.style.display = 'none'; return; }
+  let filenames = [];
+  try { filenames = await listEventFilenames(); }
+  catch (e) { box.style.display = 'none'; return; }
+  filenames = filenames.filter(isEventFile);
+  if (!filenames.length) { box.style.display = 'none'; return; }
+  const events = (await Promise.all(filenames.map(getEventByFilename))).filter(Boolean);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayStr = localIso(today);
+  const horizon = new Date(today); horizon.setDate(horizon.getDate() + 60);
+  const horizonStr = localIso(horizon);
+  const upcoming = events.filter(ev => {
+    const d = getEventDate(ev.form);
+    return d && d >= todayStr && d <= horizonStr && (ev.form._fleet || []).length;
+  }).sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+  if (!upcoming.length) { box.style.display = 'none'; return; }
+
+  let totalTrucks = 0, readyTrucks = 0;
+  const eventBlocks = upcoming.map(ev => {
+    const f = ev.form || {};
+    const fleet = f._fleet || [];
+    const folders = f._complianceFolders || {};
+    const filenameEsc = (ev._filename || '').replace(/'/g, "\\'");
+    const truckChips = fleet.map(t => {
+      totalTrucks++;
+      const folder = folders[t] || { items: [] };
+      const p = complianceProgress(folder);
+      let cls = 'pending';
+      if (p.total && p.done === p.total) { cls = 'ready'; readyTrucks++; }
+      else if (p.done > 0) cls = 'partial';
+      const escT = t.replace(/"/g, '&quot;').replace(/'/g, "\\'");
+      return '<button class="cmpl-truck ' + cls + '" onclick="openComplianceFolderModal(\'' + filenameEsc + '\', \'' + escT + '\')"><span class="dot"></span>' + t.replace(/</g, '&lt;') + (p.total ? ' &middot; ' + p.done + '/' + p.total : '') + '</button>';
+    }).join('');
+    return '<div class="cmpl-event">' +
+      '<div class="cmpl-event-head">' +
+        '<div class="cmpl-event-name">' + (f.eventName || '(unnamed)').replace(/</g, '&lt;') + '</div>' +
+        '<div class="cmpl-event-date">' + formatDate(getEventDate(f)) + ' &middot; ' + fleet.length + ' truck' + (fleet.length === 1 ? '' : 's') + '</div>' +
+      '</div>' +
+      '<div class="cmpl-trucks">' + truckChips + '</div>' +
+    '</div>';
+  }).join('');
+
+  box.innerHTML =
+    '<div class="cmpl-head">' +
+      '<div>' +
+        '<div class="cmpl-title">📁 COMPLIANCE FOLDERS</div>' +
+        '<div class="cmpl-count">' + readyTrucks + '/' + totalTrucks + ' truck folder' + (totalTrucks === 1 ? '' : 's') + ' ready across ' + upcoming.length + ' upcoming event' + (upcoming.length === 1 ? '' : 's') + ' &middot; tap a truck to open its folder</div>' +
+      '</div>' +
+      '<button class="ocb-refresh" onclick="renderComplianceBox()">↻ Refresh</button>' +
+    '</div>' +
+    eventBlocks;
+  box.style.display = 'block';
+}
+
+async function openComplianceFolderModal(filename, truck) {
+  if (!canManageCompliance()) { toast('Compliance role required', 'error'); return; }
+  let ev;
+  try {
+    if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[filename];
+    ev = await getEventByFilename(filename);
+  } catch (e) { toast('Could not load event: ' + e.message, 'error'); return; }
+  if (!ev || !ev.form) { toast('Event not found', 'error'); return; }
+  const f = ev.form;
+  f._complianceFolders = f._complianceFolders || {};
+  const folder = f._complianceFolders[truck] || (f._complianceFolders[truck] = { items: defaultComplianceItems() });
+  if (!Array.isArray(folder.items) || !folder.items.length) folder.items = defaultComplianceItems();
+
+  const title = document.getElementById('complianceFolderTitle');
+  const body = document.getElementById('complianceFolderBody');
+  const eventName = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+  title.innerHTML = '📁 ' + truck.replace(/</g, '&lt;') + ' <span style="font-size:12px;color:var(--text-muted);font-weight:400;letter-spacing:0;">· ' + eventName + ' · ' + formatDate(getEventDate(f)) + '</span>';
+
+  const rows = folder.items.map((item, idx) => {
+    const meta = item.done && item.doneBy
+      ? '<span class="cmpl-doc-meta">✓ ' + (item.doneBy || '').replace(/</g, '&lt;') + ' &middot; ' + formatRelativeTime(item.doneAt) + '</span>'
+      : '';
+    return '<label class="cmpl-doc-row' + (item.done ? ' done' : '') + '" data-idx="' + idx + '">' +
+      '<input type="checkbox" ' + (item.done ? 'checked' : '') + ' onchange="onComplianceTick(\'' + filename.replace(/'/g, "\\'") + '\', \'' + truck.replace(/"/g, '&quot;').replace(/'/g, "\\'") + '\', ' + idx + ', this.checked)">' +
+      '<div>' + item.label.replace(/</g, '&lt;') + meta + '</div>' +
+    '</label>';
+  }).join('');
+
+  const p = complianceProgress(folder);
+  body.innerHTML =
+    '<p style="font-size:12px;color:var(--grey);margin-bottom:14px;">Tick each document as it goes in the truck\'s compliance folder/wallet. Progress is saved straight to the event and visible on every device.</p>' +
+    '<div style="margin-bottom:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);">' + p.done + ' / ' + p.total + ' documents ready</div>' +
+    '<div id="complianceFolderList" data-filename="' + filename.replace(/"/g, '&quot;') + '" data-truck="' + truck.replace(/"/g, '&quot;') + '">' + rows + '</div>' +
+    '<hr style="border:0;border-top:1px solid var(--border);margin:14px 0;">' +
+    '<div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--grey);margin-bottom:8px;">Add custom document</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 90px;gap:8px;">' +
+      '<input id="cmplCustomLabel" placeholder="e.g. Truck-specific HACCP appendix">' +
+      '<button class="btn btn-primary" style="font-size:12px;padding:8px 12px;" onclick="addCustomComplianceItem(\'' + filename.replace(/'/g, "\\'") + '\', \'' + truck.replace(/"/g, '&quot;').replace(/'/g, "\\'") + '\')">+ Add</button>' +
+    '</div>';
+  document.getElementById('complianceFolderModal').classList.add('open');
+}
+function closeComplianceFolderModal() {
+  document.getElementById('complianceFolderModal').classList.remove('open');
+}
+
+async function onComplianceTick(filename, truck, idx, checked) {
+  try {
+    if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[filename];
+    const ev = await getEventByFilename(filename);
+    if (!ev || !ev.form) { toast('Event not found', 'error'); return; }
+    ev.form._complianceFolders = ev.form._complianceFolders || {};
+    const folder = ev.form._complianceFolders[truck] || { items: defaultComplianceItems() };
+    if (!Array.isArray(folder.items) || !folder.items.length) folder.items = defaultComplianceItems();
+    if (!folder.items[idx]) return;
+    folder.items[idx].done = !!checked;
+    folder.items[idx].doneBy = checked ? (getUser() || 'Anonymous') : null;
+    folder.items[idx].doneAt = checked ? new Date().toISOString() : null;
+    ev.form._complianceFolders[truck] = folder;
+    await persistEventForm(filename, ev);
+    // Re-open the modal with refreshed state, refresh home counter
+    openComplianceFolderModal(filename, truck);
+    renderComplianceBox();
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+async function addCustomComplianceItem(filename, truck) {
+  const label = (document.getElementById('cmplCustomLabel').value || '').trim();
+  if (!label) { toast('Enter a label', 'error'); return; }
+  try {
+    if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[filename];
+    const ev = await getEventByFilename(filename);
+    if (!ev || !ev.form) { toast('Event not found', 'error'); return; }
+    ev.form._complianceFolders = ev.form._complianceFolders || {};
+    const folder = ev.form._complianceFolders[truck] || { items: defaultComplianceItems() };
+    if (!Array.isArray(folder.items) || !folder.items.length) folder.items = defaultComplianceItems();
+    folder.items.push({ label, done: false, doneBy: null, doneAt: null });
+    ev.form._complianceFolders[truck] = folder;
+    await persistEventForm(filename, ev);
+    openComplianceFolderModal(filename, truck);
+    renderComplianceBox();
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+// Shared write-back: re-puts the event JSON via the Worker keeping
+// the original sha so concurrent edits get a 409 rather than silently
+// clobbering. Used by every compliance tick.
+async function persistEventForm(filename, ev) {
+  const payload = {
+    version: 1,
+    id: filename.replace(/\.json$/, ''),
+    savedAt: new Date().toISOString(),
+    form: ev.form
+  };
+  const body = { event: payload };
+  if (ev._sha) body.sha = ev._sha;
+  const res = await apiCall('/events/' + encodeURIComponent(filename), { method: 'PUT', body: JSON.stringify(body) });
+  if (!res.ok) throw new Error('save_' + res.status);
+  if (eventsCache.byName) delete eventsCache.byName[filename];
 }
 
 async function renderDamageReportsBox() {
