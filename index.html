@@ -3364,6 +3364,12 @@ body {
   </div>
 
   <div class="card">
+    <div class="card-title">📦 Stock &amp; Load-In Checklist (Per Truck)</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Type each item that needs to be packed for the truck on its own line. They'll appear as tickable checks in the crew's brief under a "Stock &amp; Load-In" group, so ops can tick them off as they pack.</p>
+    <div id="stockLoadContainer"></div>
+  </div>
+
+  <div class="card">
     <div class="card-title">📦 Supplier Order Deadlines</div>
     <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Cut-off times for our regular suppliers. Once an event date is set above, deadlines auto-calculate so you can see what's about to expire.</p>
     <div id="supplierDeadlinesContainer"></div>
@@ -3632,7 +3638,7 @@ function goStep(n) {
   const stepSelect = document.getElementById('stepSelect');
   if (stepSelect) stepSelect.value = String(n);
   window.scrollTo(0,0);
-  if (n === 4) { renderStockOrderRows(); renderSupplierDeadlines(); }
+  if (n === 4) { renderStockOrderRows(); renderStockLoadRows(STOCK_LOAD_ITEMS); renderSupplierDeadlines(); }
   if (n === 5) { renderServiceWindows(); renderMenu(); }
   if (n === 6) { renderCrewRoster(); renderTruckSafetyRows(); }
 }
@@ -3692,6 +3698,7 @@ const CREW_CLOSE_DEFAULTS = [
 ];
 const CREW_CHECKLIST_DEFAULTS = CREW_OPEN_DEFAULTS.concat(CREW_COMPLIANCE_DEFAULTS).concat(CREW_CLOSE_DEFAULTS);
 let CREW_CHECKLISTS = {};
+let STOCK_LOAD_ITEMS = {}; // { truck: [{ label, qty, done, doneBy, doneAt }] }
 let SIGN_OFFS = [];
 
 function todayIso() {
@@ -3757,6 +3764,7 @@ function inferPhase(label) {
   if (/^end-of-trade/i.test(label)) return 'close';
   if (CREW_CLOSE_DEFAULTS.includes(label)) return 'close';
   if (CREW_COMPLIANCE_DEFAULTS.includes(label)) return 'compliance';
+  // load items have no shared default — only the inline phase tag identifies them
   // Older labels we re-named on the way through:
   if (/food (covered|covered\s*\/|stored|disposed)/i.test(label)) return 'close';
   if (/cash counted/i.test(label)) return 'close';
@@ -3808,6 +3816,28 @@ function ensureCrewChecklists() {
         }
       });
     });
+    // Stock & load-in: ops-lead-defined items live in _stockLoadItems and
+    // materialise into the first trading day's load phase. Re-sync on
+    // every ensure call so removed lines disappear without losing ticks
+    // on the items that survived.
+    const loadFromSrc = (STOCK_LOAD_ITEMS && STOCK_LOAD_ITEMS[truck]) || [];
+    const loadDate = firstDay;
+    // Drop existing load items not in the new list (label match)
+    const wantLoadLabels = new Set(loadFromSrc.map(l => l.label));
+    CREW_CHECKLISTS[truck].items = items = items.filter(i => i.phase !== 'load' || wantLoadLabels.has(i.label));
+    loadFromSrc.forEach(line => {
+      const existing = items.find(i => i.phase === 'load' && i.label === line.label && i.date === loadDate);
+      if (existing) {
+        // Refresh qty in case it changed
+        existing.qty = line.qty;
+      } else {
+        items.push({
+          label: line.label, qty: line.qty || '',
+          phase: 'load', date: loadDate,
+          done: !!line.done, doneBy: line.doneBy || null, doneAt: line.doneAt || null, assignedTo: null
+        });
+      }
+    });
     // Dedupe: same (date, phase, label) appearing more than once collapses
     const seen = new Set();
     CREW_CHECKLISTS[truck].items = items.filter(i => {
@@ -3827,7 +3857,7 @@ function groupCrewItems(items) {
   (items || []).forEach((it, idx) => {
     const d = it.date || 'unscheduled';
     const p = it.phase || 'open';
-    if (!byDate[d]) byDate[d] = { open: [], compliance: [], close: [] };
+    if (!byDate[d]) byDate[d] = { load: [], open: [], compliance: [], close: [] };
     if (!byDate[d][p]) byDate[d][p] = [];
     byDate[d][p].push({ item: it, idx });
   });
@@ -5202,6 +5232,75 @@ function collectStockStatuses() {
   }));
 }
 
+// ─── STOCK & LOAD-IN (per-truck custom checklist) ─────────────
+// Ops lead types items (one per line, optional "x qty" suffix). On save
+// they materialise as phase='load' items in CREW_CHECKLISTS for the
+// first trading day, so they show up alongside Opening / Compliance /
+// Closing in the brief and crew tick them off as they pack.
+function parseLoadLines(text) {
+  return (text || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+}
+function renderStockLoadRows(preserve) {
+  const container = document.getElementById('stockLoadContainer');
+  if (!container) return;
+  const selected = [...document.querySelectorAll('.fleet-chip.selected')].map(c => c.dataset.val);
+  if (!selected.length) {
+    container.innerHTML = '<div class="stock-empty">Select trucks in Step 2 first &mdash; load-in lists appear per truck here.</div>';
+    return;
+  }
+  const existing = (preserve && typeof preserve === 'object') ? preserve : collectStockLoadFromDom();
+  container.innerHTML = selected.map(truck => {
+    const escTruck = truck.replace(/"/g, '&quot;');
+    const lines = existing[truck] || [];
+    const ticked = lines.filter(l => l.done).length;
+    const counter = lines.length ? ' &middot; <span style="color:' + (ticked === lines.length ? '#2d7a49' : 'var(--text-muted)') + ';">' + ticked + '/' + lines.length + ' ticked</span>' : '';
+    const text = (lines.map(l => (l.label || '') + (l.qty ? '  x ' + l.qty : '')).join('\n')).replace(/</g, '&lt;');
+    return '<div class="stock-load-row" data-truck="' + escTruck + '" style="margin-bottom:14px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--white);">' + truck + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);">' + lines.length + ' item' + (lines.length === 1 ? '' : 's') + counter + '</div>' +
+      '</div>' +
+      '<textarea class="stock-load-input" rows="4" placeholder="Beef patties x 80\nBrioche buns x 80\nBurger sauce\nLettuce\n…">' + text + '</textarea>' +
+      '</div>';
+  }).join('');
+}
+// Read what's currently in the DOM textareas (returns map of truck → items)
+function collectStockLoadFromDom() {
+  const out = {};
+  document.querySelectorAll('.stock-load-row').forEach(row => {
+    const truck = row.dataset.truck;
+    const txt = row.querySelector('.stock-load-input').value || '';
+    out[truck] = parseLoadLines(txt).map(line => {
+      // Optional "label x qty" syntax
+      const m = line.match(/^(.+?)\s+(?:x|×)\s*(\d+(?:\.\d+)?)\s*$/i);
+      if (m) return { label: m[1].trim(), qty: m[2].trim() };
+      return { label: line, qty: '' };
+    });
+  });
+  return out;
+}
+// Merge DOM-typed items into a {truck: items} structure that preserves
+// existing done/doneBy/doneAt from CREW_CHECKLISTS so re-saving doesn't
+// reset ticks.
+function collectStockLoadItems() {
+  const fromDom = collectStockLoadFromDom();
+  const merged = {};
+  Object.keys(fromDom).forEach(truck => {
+    const existingItems = ((CREW_CHECKLISTS[truck] && CREW_CHECKLISTS[truck].items) || []).filter(i => i.phase === 'load');
+    merged[truck] = fromDom[truck].map(line => {
+      const prev = existingItems.find(e => e.label === line.label);
+      return {
+        label: line.label,
+        qty: line.qty,
+        done: prev ? !!prev.done : false,
+        doneBy: prev ? prev.doneBy : null,
+        doneAt: prev ? prev.doneAt : null
+      };
+    });
+  });
+  return merged;
+}
+
 // ─── FLEET DATA ───────────────────────────────────────────────
 // Power Req. parsed from 2026 deadsheet by Power-cell fill colour.
 //   blue (FF8EAADB) = single phase, red (FFFF7E79/FFEA9999) = three phase.
@@ -5962,11 +6061,12 @@ function generateBrief() {
       const renderCheckRow = (it, idx, truckName) => {
         const meta = it.done && it.doneBy ? ' <span style="color:#666;font-size:11px;">— ' + (it.doneBy || '').replace(/</g,'&lt;') + ', ' + formatRelativeTime(it.doneAt) + '</span>' : '';
         const assignMeta = !it.done && it.assignedTo ? ' <span style="color:#b07a10;font-size:11px;font-weight:700;">→ ' + (it.assignedTo || '').replace(/</g,'&lt;') + '</span>' : '';
+        const qty = it.qty ? ' <span style="color:#5a7a4f;font-weight:700;">× ' + (String(it.qty) || '').replace(/</g,'&lt;') + '</span>' : '';
         const escTruck = truckName.replace(/"/g, '&quot;');
         const isHaccp = /^haccp/i.test(it.label || '');
         return '<label class="ops-check-row' + (it.done ? ' done' : '') + (isHaccp ? ' haccp-row' : '') + '" data-truck="' + escTruck + '" data-idx="' + idx + '">' +
           '<input type="checkbox" ' + (it.done ? 'checked' : '') + ' onchange="tickCrewItem(\'' + escTruck.replace(/'/g, "\\'") + '\', ' + idx + ', this.checked)">' +
-          '<span class="ops-label">' + (isHaccp ? '⚠ ' : '') + it.label + meta + assignMeta + '</span>' +
+          '<span class="ops-label">' + (isHaccp ? '⚠ ' : '') + it.label + qty + meta + assignMeta + '</span>' +
           '</label>';
       };
       const trucksHtml = fleet.map(u => {
@@ -5980,12 +6080,16 @@ function generateBrief() {
         const dateKeys = Object.keys(grouped).sort();
         const multiDay = dateKeys.length > 1;
         const dayBlocks = dateKeys.map((date, di) => {
+          const load = grouped[date].load || [];
           const open = grouped[date].open || [];
           const comp = grouped[date].compliance || [];
           const close = grouped[date].close || [];
+          const loadDone = load.filter(x => x.item.done).length;
           const openDone = open.filter(x => x.item.done).length;
           const compDone = comp.filter(x => x.item.done).length;
           const closeDone = close.filter(x => x.item.done).length;
+          const loadAllDone = loadDone === load.length;
+          const loadClass = load.length === 0 ? '#777' : loadAllDone ? '#2d7a49' : '#b07a10';
           const openClass = openDone === open.length ? '#2d7a49' : (openDone > 0 ? '#b07a10' : '#777');
           const compAllDone = compDone === comp.length;
           const compClass = compAllDone ? '#2d7a49' : '#3d6b8c';
@@ -5996,6 +6100,11 @@ function generateBrief() {
             ? '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:13px;letter-spacing:0.1em;color:#5a7a4f;margin:' + (di === 0 ? '0' : '14px') + ' 0 6px 0;border-bottom:1px solid #ddd;padding-bottom:4px;">DAY ' + (di + 1) + ' &middot; ' + dayLabel.toUpperCase() + '</div>'
             : '';
           return dayHeader +
+            (load.length ? (
+            '<details ' + (!loadAllDone && di === 0 ? 'open' : '') + ' style="margin-top:6px;">' +
+              '<summary style="cursor:pointer;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:' + loadClass + ';font-weight:700;padding:4px 0;">▸ Stock &amp; Load-In (' + loadDone + '/' + load.length + ')</summary>' +
+              '<div class="ops-checks" style="margin-top:4px;">' + load.map(x => renderCheckRow(x.item, x.idx, u.name)).join('') + '</div>' +
+            '</details>') : '') +
             '<details ' + (di === 0 ? 'open' : '') + ' style="margin-top:6px;">' +
               '<summary style="cursor:pointer;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:' + openClass + ';font-weight:700;padding:4px 0;">▸ Opening Procedure (' + openDone + '/' + open.length + ')</summary>' +
               '<div class="ops-checks" style="margin-top:4px;">' + open.map(x => renderCheckRow(x.item, x.idx, u.name)).join('') + '</div>' +
@@ -6979,6 +7088,7 @@ function newBrief() {
   setChangeLog({});
   SIGN_OFFS = [];
   CREW_ROSTER = {};
+  STOCK_LOAD_ITEMS = {};
   SERVICE_WINDOWS = [];
   MENU = {};
   VENUE_PIN = null;
@@ -7319,6 +7429,10 @@ function collectFormData() {
   const iceCb = document.getElementById('iceVansNeedPower');
   data._iceVansNeedPower = iceCb ? iceCb.checked : false;
   data._stockStatuses = collectStockStatuses();
+  // Pull DOM-typed stock load lines + merge with existing tick state
+  STOCK_LOAD_ITEMS = collectStockLoadItems();
+  data._stockLoadItems = STOCK_LOAD_ITEMS;
+  ensureCrewChecklists(); // re-materialise load items into CREW_CHECKLISTS
   syncServiceWindowsFromDOM();
   syncMenuFromDOM();
   data._serviceWindows = SERVICE_WINDOWS;
@@ -7383,6 +7497,8 @@ function populateForm(data) {
   updateRevenueCards();
   updatePowerSummary();
   renderStockOrderRows(data._stockStatuses);
+  STOCK_LOAD_ITEMS = (data._stockLoadItems && typeof data._stockLoadItems === 'object') ? data._stockLoadItems : {};
+  renderStockLoadRows(STOCK_LOAD_ITEMS);
   // Menu & service windows
   SERVICE_WINDOWS = Array.isArray(data._serviceWindows) ? data._serviceWindows.slice() : [];
   MENU = (data._menu && typeof data._menu === 'object') ? data._menu : {};
