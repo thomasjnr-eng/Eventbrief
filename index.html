@@ -2487,7 +2487,7 @@ body {
       <option value="truck_lead">Truck Lead</option>
       <option value="ops_lead">Ops Lead</option>
       <option value="maintenance_manager">Maintenance Manager</option>
-      <option value="compliance_officer">Compliance Officer</option>
+      <option value="compliance_officer">Compliance Manager</option>
       <option value="manager">Manager</option>
     </select>
     <input type="password" class="welcome-input" id="welcomePasscode" placeholder="Team passcode" autocomplete="off" onkeydown="if(event.key==='Enter') submitWelcomePasscode()">
@@ -2564,7 +2564,7 @@ body {
           <option value="truck_lead">Truck Lead</option>
           <option value="ops_lead">Ops Lead</option>
           <option value="maintenance_manager">Maintenance Manager</option>
-          <option value="compliance_officer">Compliance Officer</option>
+          <option value="compliance_officer">Compliance Manager</option>
           <option value="manager">Manager (requires manager code)</option>
         </select>
         <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Your dashboard tailors itself to your role. Pick the closest one — only Manager needs the code below.</p>
@@ -6906,7 +6906,7 @@ const ROLE_LABELS = {
   truck_lead: 'Truck Lead',
   ops_lead: 'Ops Lead',
   maintenance_manager: 'Maintenance Manager',
-  compliance_officer: 'Compliance Officer',
+  compliance_officer: 'Compliance Manager',
   manager: 'Manager'
 };
 function getRole() { return localStorage.getItem(ROLE_KEY) || 'crew'; }
@@ -9269,36 +9269,42 @@ async function renderComplianceBox() {
   }).sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
   if (!upcoming.length) { box.style.display = 'none'; return; }
 
-  let totalTrucks = 0, readyTrucks = 0;
+  // Read-only oversight view. She's running a paper-based wallet system
+  // for now and just needs to see what's coming, which trucks are on
+  // each event and a quick summary of the menu so she can prep the
+  // wallets in advance. Tapping a truck (or "Open brief") opens the
+  // read-only brief where she can drill into the full menu, HACCP
+  // compliance checklist and food-safety detail.
+  let totalTrucks = 0;
   const eventBlocks = upcoming.map(ev => {
     const f = ev.form || {};
     const fleet = f._fleet || [];
-    const folders = f._complianceFolders || {};
+    totalTrucks += fleet.length;
+    const menu = f._menu || {};
     const filenameEsc = (ev._filename || '').replace(/'/g, "\\'");
     const truckChips = fleet.map(t => {
-      totalTrucks++;
-      const folder = folders[t] || { items: [] };
-      const p = complianceProgress(folder);
-      let cls = 'pending';
-      if (p.total && p.done === p.total) { cls = 'ready'; readyTrucks++; }
-      else if (p.done > 0) cls = 'partial';
-      const escT = t.replace(/"/g, '&quot;').replace(/'/g, "\\'");
-      return '<button class="cmpl-truck ' + cls + '" onclick="openComplianceFolderModal(\'' + filenameEsc + '\', \'' + escT + '\')"><span class="dot"></span>' + t.replace(/</g, '&lt;') + (p.total ? ' &middot; ' + p.done + '/' + p.total : '') + '</button>';
+      const items = (menu[t] || []);
+      const tag = items.length ? ' &middot; ' + items.length + ' menu item' + (items.length === 1 ? '' : 's') : '';
+      return '<button class="cmpl-truck" onclick="loadEvent(\'' + filenameEsc + '\')" title="Tap to open the brief">' +
+        t.replace(/</g, '&lt;') + tag +
+      '</button>';
     }).join('');
+    const venue = f.venueName ? ' &middot; ' + f.venueName.replace(/</g, '&lt;') : '';
     return '<div class="cmpl-event">' +
       '<div class="cmpl-event-head">' +
         '<div class="cmpl-event-name">' + (f.eventName || '(unnamed)').replace(/</g, '&lt;') + '</div>' +
-        '<div class="cmpl-event-date">' + formatDate(getEventDate(f)) + ' &middot; ' + fleet.length + ' truck' + (fleet.length === 1 ? '' : 's') + '</div>' +
+        '<div class="cmpl-event-date">' + formatDate(getEventDate(f)) + venue + ' &middot; ' + fleet.length + ' truck' + (fleet.length === 1 ? '' : 's') + '</div>' +
       '</div>' +
       '<div class="cmpl-trucks">' + truckChips + '</div>' +
+      '<div style="margin-top:6px;font-size:11px;"><a onclick="loadEvent(\'' + filenameEsc + '\')" style="color:var(--sage);cursor:pointer;text-decoration:none;border-bottom:1px dotted var(--sage);">Open brief → menu, HACCP compliance checklist, allergen detail</a></div>' +
     '</div>';
   }).join('');
 
   box.innerHTML =
     '<div class="cmpl-head">' +
       '<div>' +
-        '<div class="cmpl-title">📁 COMPLIANCE FOLDERS</div>' +
-        '<div class="cmpl-count">' + readyTrucks + '/' + totalTrucks + ' truck folder' + (totalTrucks === 1 ? '' : 's') + ' ready across ' + upcoming.length + ' upcoming event' + (upcoming.length === 1 ? '' : 's') + ' &middot; tap a truck to open its folder</div>' +
+        '<div class="cmpl-title">📋 COMPLIANCE OVERVIEW</div>' +
+        '<div class="cmpl-count">' + upcoming.length + ' upcoming event' + (upcoming.length === 1 ? '' : 's') + ' &middot; ' + totalTrucks + ' truck' + (totalTrucks === 1 ? '' : 's') + ' to prep wallets for &middot; tap any truck to open its brief read-only</div>' +
       '</div>' +
       '<button class="ocb-refresh" onclick="renderComplianceBox()">↻ Refresh</button>' +
     '</div>' +
