@@ -2630,16 +2630,18 @@ body {
         <p style="font-size:11px;color:var(--grey);">Supported: <strong>📸 screenshots</strong> of emails / WhatsApps (auto-extracted via Claude), CSV / TSV files, Excel paste (tabs), <code>.ics</code> calendar exports, or one event per line.</p>
         <div id="bulkDrop" class="bulk-drop">
           <div id="bulkDropEmpty">
-            <div style="font-size:14px;color:var(--white);margin-bottom:6px;">Drop file or screenshot here</div>
-            <div style="font-size:11px;color:var(--grey);">or tap to choose</div>
+            <div style="font-size:14px;color:var(--white);margin-bottom:6px;">Drop files or screenshots here</div>
+            <div style="font-size:11px;color:var(--grey);">or tap to choose &middot; multiple images supported</div>
           </div>
-          <div id="bulkDropPreview" style="display:none;text-align:center;">
-            <img id="bulkPreviewImg" alt="" style="max-width:100%;max-height:220px;border-radius:4px;display:none;margin:0 auto;">
-            <div id="bulkPreviewName" style="margin-top:10px;font-size:13px;color:var(--white);font-weight:700;word-break:break-all;"></div>
-            <div id="bulkPreviewSize" style="font-size:11px;color:var(--grey);margin-top:2px;"></div>
-            <button type="button" onclick="event.stopPropagation();bulkClearFile()" style="margin-top:10px;background:transparent;border:1px solid var(--border);color:var(--grey);padding:5px 12px;border-radius:3px;font-size:11px;cursor:pointer;">× Remove</button>
+          <div id="bulkDropPreview" style="display:none;">
+            <div id="bulkPreviewGrid" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;"></div>
+            <div id="bulkPreviewSummary" style="margin-top:10px;font-size:12px;color:var(--text-muted);text-align:center;"></div>
+            <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
+              <button type="button" onclick="event.stopPropagation();bulkAddMoreFiles()" style="background:transparent;border:1px solid var(--border);color:var(--sage);padding:5px 12px;border-radius:3px;font-size:11px;cursor:pointer;">+ Add more</button>
+              <button type="button" onclick="event.stopPropagation();bulkClearFile()" style="background:transparent;border:1px solid var(--border);color:var(--grey);padding:5px 12px;border-radius:3px;font-size:11px;cursor:pointer;">× Clear all</button>
+            </div>
           </div>
-          <input type="file" id="bulkFile" accept=".csv,.tsv,.ics,image/*,text/*" style="display:none;">
+          <input type="file" id="bulkFile" accept=".csv,.tsv,.ics,image/*,text/*" multiple style="display:none;">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--grey);margin:14px 0;">— or —</div>
         <textarea id="bulkPaste" rows="6" placeholder="Paste here. Excel rows (tab-separated): &#10;Aviva Stadium  &#9;  2026-07-15&#10;Bord Gais Theatre  &#9;  2026-08-02"></textarea>
@@ -4191,15 +4193,24 @@ function openBulkModal() {
   // parsing/upload happens when the user taps the Upload button.
   const drop = document.getElementById('bulkDrop');
   const fileInput = document.getElementById('bulkFile');
-  drop.onclick = () => fileInput.click();
+  drop.onclick = (e) => {
+    // Don't re-trigger when the click bubbled up from the Add-more /
+    // Clear-all buttons inside the preview area.
+    if (e.target.closest('button')) return;
+    fileInput.click();
+  };
   drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('drag-over'); };
   drop.ondragleave = () => drop.classList.remove('drag-over');
   drop.ondrop = (e) => {
     e.preventDefault();
     drop.classList.remove('drag-over');
-    if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; bulkShowFilePreview(); }
+    if (e.dataTransfer.files.length) bulkAppendFiles(e.dataTransfer.files);
   };
-  fileInput.onchange = bulkShowFilePreview;
+  fileInput.onchange = (e) => {
+    bulkAppendFiles(e.target.files);
+    // Reset the input so picking the same file twice still fires onchange
+    e.target.value = '';
+  };
 }
 function closeBulkModal() {
   bulkClearFile();
@@ -4211,39 +4222,93 @@ function bulkBackToChoose() {
   document.getElementById('bulkProgress').style.display = 'none';
 }
 
-function bulkShowFilePreview() {
-  const fileInput = document.getElementById('bulkFile');
-  const file = fileInput.files && fileInput.files[0];
-  if (!file) { bulkClearFile(); return; }
-  document.getElementById('bulkDropEmpty').style.display = 'none';
-  document.getElementById('bulkDropPreview').style.display = 'block';
-  document.getElementById('bulkPreviewName').textContent = file.name;
-  const sizeKb = file.size < 1024 ? file.size + ' B' : (file.size < 1024 * 1024 ? Math.round(file.size / 1024) + ' KB' : (file.size / 1024 / 1024).toFixed(1) + ' MB');
-  document.getElementById('bulkPreviewSize').textContent = sizeKb + ' · ' + (file.type || 'unknown type');
-  const img = document.getElementById('bulkPreviewImg');
-  if (img.src) { try { URL.revokeObjectURL(img.src); } catch (e) {} }
-  if (/^image\//i.test(file.type)) {
-    img.src = URL.createObjectURL(file);
-    img.style.display = 'block';
-  } else {
-    img.src = '';
-    img.style.display = 'none';
+// Pending files for the bulk import. We keep our own list because
+// HTML FileList is immutable — we want per-file remove + drop-to-append.
+let BULK_PENDING_FILES = [];
+const BULK_PENDING_URLS = [];
+
+function bulkAppendFiles(files) {
+  if (!files || !files.length) return;
+  for (let i = 0; i < files.length; i++) {
+    BULK_PENDING_FILES.push(files[i]);
+  }
+  bulkShowFilePreview();
+}
+function bulkAddMoreFiles() {
+  document.getElementById('bulkFile').click();
+}
+function bulkRemoveFile(idx) {
+  BULK_PENDING_FILES.splice(idx, 1);
+  bulkShowFilePreview();
+}
+function bulkRevokeUrls() {
+  while (BULK_PENDING_URLS.length) {
+    try { URL.revokeObjectURL(BULK_PENDING_URLS.pop()); } catch (e) {}
   }
 }
+function fmtSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return Math.round(b / 1024) + ' KB';
+  return (b / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+function bulkShowFilePreview() {
+  if (!BULK_PENDING_FILES.length) { bulkClearFile(); return; }
+  document.getElementById('bulkDropEmpty').style.display = 'none';
+  document.getElementById('bulkDropPreview').style.display = 'block';
+  const grid = document.getElementById('bulkPreviewGrid');
+  bulkRevokeUrls();
+  grid.innerHTML = BULK_PENDING_FILES.map((file, i) => {
+    const escName = (file.name || '').replace(/</g, '&lt;');
+    const sizeStr = fmtSize(file.size);
+    let inner;
+    if (/^image\//i.test(file.type)) {
+      const url = URL.createObjectURL(file);
+      BULK_PENDING_URLS.push(url);
+      inner = '<img src="' + url + '" alt="" style="width:120px;height:120px;object-fit:cover;border-radius:4px;display:block;">';
+    } else {
+      inner = '<div style="width:120px;height:120px;display:flex;align-items:center;justify-content:center;border:1px dashed var(--border);border-radius:4px;background:var(--bg-input);font-size:32px;">📄</div>';
+    }
+    return '<div style="position:relative;text-align:center;width:120px;">' +
+      inner +
+      '<button type="button" onclick="event.stopPropagation();bulkRemoveFile(' + i + ')" title="Remove" style="position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:13px;line-height:1;cursor:pointer;">×</button>' +
+      '<div style="margin-top:4px;font-size:11px;color:var(--white);font-weight:700;word-break:break-all;line-height:1.2;">' + escName + '</div>' +
+      '<div style="font-size:10px;color:var(--grey);">' + sizeStr + '</div>' +
+    '</div>';
+  }).join('');
+  const sum = document.getElementById('bulkPreviewSummary');
+  const imgCount = BULK_PENDING_FILES.filter(f => /^image\//i.test(f.type)).length;
+  const totalBytes = BULK_PENDING_FILES.reduce((a, f) => a + f.size, 0);
+  sum.innerHTML = BULK_PENDING_FILES.length + ' file' + (BULK_PENDING_FILES.length === 1 ? '' : 's') +
+    (imgCount ? ' &middot; ' + imgCount + ' image' + (imgCount === 1 ? '' : 's') : '') +
+    ' &middot; ' + fmtSize(totalBytes) + ' total';
+}
 function bulkClearFile() {
+  BULK_PENDING_FILES = [];
+  bulkRevokeUrls();
   const fileInput = document.getElementById('bulkFile');
   if (fileInput) fileInput.value = '';
   const empty = document.getElementById('bulkDropEmpty');
   const preview = document.getElementById('bulkDropPreview');
   if (empty) empty.style.display = 'block';
   if (preview) preview.style.display = 'none';
-  const img = document.getElementById('bulkPreviewImg');
-  if (img && img.src) { try { URL.revokeObjectURL(img.src); } catch (e) {} img.src = ''; img.style.display = 'none'; }
+  const grid = document.getElementById('bulkPreviewGrid');
+  if (grid) grid.innerHTML = '';
+  const sum = document.getElementById('bulkPreviewSummary');
+  if (sum) sum.innerHTML = '';
 }
 function bulkParseInput() {
-  const file = document.getElementById('bulkFile').files[0];
-  if (file) {
-    if (/^image\//i.test(file.type)) { bulkExtractFromImage(file); return; }
+  const files = BULK_PENDING_FILES.slice();
+  if (files.length) {
+    const images = files.filter(f => /^image\//i.test(f.type));
+    const others = files.filter(f => !/^image\//i.test(f.type));
+    if (images.length) {
+      // Process every image — extract events from each, merge into one list
+      bulkExtractFromImages(images);
+      return;
+    }
+    // Text / CSV / ICS — single-file path is what the parser supports
+    const file = others[0];
     const reader = new FileReader();
     reader.onload = (e) => bulkParseText(e.target.result, file.name);
     reader.readAsText(file);
@@ -4252,6 +4317,86 @@ function bulkParseInput() {
     if (paste.trim()) bulkParseText(paste, null);
     else toast('Drop a file, screenshot, or paste content first', 'error');
   }
+}
+
+// Multi-image flow: send each image to Claude in sequence, merge the
+// extracted events into one list, then drop the user into the existing
+// review-and-import preview screen.
+async function bulkExtractFromImages(images) {
+  document.getElementById('bulkChoose').style.display = 'none';
+  document.getElementById('bulkPreview').style.display = 'none';
+  document.getElementById('bulkProgress').style.display = 'block';
+  const txt = document.getElementById('bulkProgressText');
+  const bar = document.getElementById('bulkProgressBar');
+  const total = images.length;
+  const merged = [];
+  const errors = [];
+  for (let i = 0; i < images.length; i++) {
+    const file = images[i];
+    const idx = i + 1;
+    txt.textContent = 'Image ' + idx + ' of ' + total + ' — reading…';
+    bar.style.width = Math.round((i / total) * 90) + '%';
+    let dataUrl;
+    try {
+      dataUrl = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result); r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    } catch (e) { errors.push(file.name + ': read failed'); continue; }
+    const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+    if (!match) { errors.push(file.name + ': not a valid image'); continue; }
+    const mediaType = match[1];
+    const imageBase64 = match[2];
+    txt.textContent = 'Image ' + idx + ' of ' + total + ' — sending to Claude…';
+    try {
+      const res = await apiCall('/extract', {
+        method: 'POST',
+        body: JSON.stringify({ imageBase64, mediaType })
+      });
+      if (res.status === 503) {
+        const data = await res.json().catch(() => ({}));
+        toast(data.message || 'Extraction not enabled — set ANTHROPIC_API_KEY on the Worker', 'error');
+        bulkBackToChoose();
+        return;
+      }
+      if (!res.ok) {
+        errors.push(file.name + ': extract failed (' + res.status + ')');
+        continue;
+      }
+      const data = await res.json();
+      (data.events || []).forEach(ev => merged.push({
+        eventName: ev.eventName || '',
+        eventStartDate: ev.eventStartDate || '',
+        venueName: ev.venueName || '',
+        clientName: ev.clientName || '',
+        _source: file.name
+      }));
+    } catch (e) {
+      if (e.message === 'NO_PASSCODE') { openSettingsModal(); bulkBackToChoose(); return; }
+      errors.push(file.name + ': ' + e.message);
+    }
+  }
+  bar.style.width = '100%';
+  if (!merged.length) {
+    const msg = errors.length
+      ? 'No events extracted. ' + errors.length + ' image' + (errors.length === 1 ? '' : 's') + ' failed.'
+      : 'No events found in any image — try clearer screenshots.';
+    toast(msg, 'error');
+    bulkBackToChoose();
+    return;
+  }
+  // Dedupe by (eventName + eventStartDate + venueName)
+  const seen = new Set();
+  BULK_PARSED = merged.filter(e => {
+    const k = (e.eventName || '').toLowerCase().trim() + '|' + (e.eventStartDate || '') + '|' + (e.venueName || '').toLowerCase().trim();
+    if (seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+  bulkShowPreview();
+  let okMsg = 'Extracted ' + BULK_PARSED.length + ' event' + (BULK_PARSED.length !== 1 ? 's' : '') + ' from ' + total + ' image' + (total !== 1 ? 's' : '');
+  if (errors.length) okMsg += ' (' + errors.length + ' failed)';
+  toast(okMsg);
 }
 
 async function bulkExtractFromImage(file) {
