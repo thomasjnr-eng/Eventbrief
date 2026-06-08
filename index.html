@@ -7432,9 +7432,32 @@ async function openEventsModal() {
     const filenames = allFilenames.filter(isEventFile);
     if (!filenames.length) { list.innerHTML = '<p style="color:var(--grey);">No saved events yet.</p>'; return; }
     const events = await Promise.all(filenames.map(getEventByFilename));
-    const sortedByStart = events.filter(Boolean).sort((a, b) => {
+    // Past events live in the Past Events Archive on the home dashboard.
+    // The Load Brief modal only shows events whose latest date is today
+    // or later, sorted with the next-due event at the top.
+    const todayStr = localIso(new Date());
+    function latestDate(form) {
+      const dates = [];
+      if (form.eventFinishDate) dates.push(form.eventFinishDate);
+      if (form.eventStartDate) dates.push(form.eventStartDate);
+      if (form.loadOutDate) dates.push(form.loadOutDate);
+      if (Array.isArray(form._tradingDays)) form._tradingDays.forEach(d => { if (d && d.date) dates.push(d.date); });
+      if (!dates.length) return '';
+      return dates.reduce((a, b) => (a > b ? a : b));
+    }
+    const upcoming = events.filter(Boolean).filter(ev => {
+      const latest = latestDate(ev.form);
+      // Keep undated events visible so unfinished briefs aren't lost
+      if (!latest) return true;
+      return latest >= todayStr;
+    });
+    if (!upcoming.length) {
+      list.innerHTML = '<p style="color:var(--grey);">No upcoming events to load. Older events live in the <strong>Past Events Archive</strong> on the home dashboard.</p>';
+      return;
+    }
+    const sortedByStart = upcoming.sort((a, b) => {
       const da = getEventDate(a.form) || ''; const db = getEventDate(b.form) || '';
-      return db.localeCompare(da);
+      return da.localeCompare(db);
     });
     list.innerHTML = sortedByStart.map(ev => {
       const f = ev.form || {};
@@ -7471,7 +7494,13 @@ async function openEventsModal() {
           '<button class="ev-btn" onclick="loadEvent(\'' + ev._filename + '\')">Load</button>' +
           '<button class="ev-btn danger" onclick="deleteEventConfirm(\'' + ev._filename + '\', \'' + escName.replace(/'/g, '\\\'') + '\')">Delete</button>' +
         '</div></div>';
-    }).join('');
+    }).join('') +
+    (function () {
+      const pastCount = events.filter(Boolean).length - upcoming.length;
+      return pastCount > 0
+        ? '<p style="color:var(--text-muted);font-size:11px;margin-top:14px;font-style:italic;">' + pastCount + ' past event' + (pastCount === 1 ? '' : 's') + ' archived &mdash; see the <strong>Past Events Archive</strong> on the home dashboard.</p>'
+        : '';
+    })();
   } catch (e) {
     const msg = e.message === 'BAD_PASSCODE'
       ? '⚠ Passcode rejected — your events are safe on the server. Re-enter the team passcode in Settings (⚙) to load them.'
@@ -10260,9 +10289,20 @@ async function renderHomeEvents() {
   const events = await Promise.all(filenames.map(getEventByFilename));
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const todayStr = localIso(today);
+  function latestDateFor(form) {
+    const dates = [];
+    if (form.eventFinishDate) dates.push(form.eventFinishDate);
+    if (form.eventStartDate) dates.push(form.eventStartDate);
+    if (form.loadOutDate) dates.push(form.loadOutDate);
+    if (Array.isArray(form._tradingDays)) form._tradingDays.forEach(d => { if (d && d.date) dates.push(d.date); });
+    if (!dates.length) return '';
+    return dates.reduce((a, b) => (a > b ? a : b));
+  }
   const upcoming = (events || []).filter(Boolean).filter(ev => {
-    const d = getEventDate(ev.form);
-    return d && d >= todayStr;
+    // Use the event's LAST date so a 3-day event that started yesterday
+    // stays "upcoming" until its final trading day passes.
+    const latest = latestDateFor(ev.form);
+    return latest && latest >= todayStr;
   });
   upcoming.sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
 
