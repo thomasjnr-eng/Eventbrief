@@ -1514,6 +1514,21 @@ body {
 }
 .week-row:first-of-type { border-top: none; }
 .week-row:hover { background: var(--bg-input); }
+.week-row.grouped {
+  grid-template-columns: 1fr 60px 14px;
+  padding: 8px 6px;
+}
+.week-day-group { margin-top: 10px; }
+.week-day-group:first-of-type { margin-top: 0; }
+.week-day-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--sage);
+  padding: 6px 0 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
 .week-row .wr-day {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 13px;
@@ -8976,40 +8991,47 @@ async function renderTodayAndWeek() {
     }
     return [...out];
   }
-  const weekRows = [];
+  // Group rows by date so a 3-day event reads as three short stanzas
+  // under their own day headers instead of three interleaved rows.
+  const byDate = {};
   weekEvents.forEach(ev => {
     const days = expandEventDays(ev.form);
     days.forEach(d => {
       if (d >= weekStartStr && d <= weekEndStr && d !== todayStr) {
-        weekRows.push({ ev, date: d });
+        (byDate[d] = byDate[d] || []).push(ev);
       }
     });
   });
-  weekRows.sort((a, b) => a.date.localeCompare(b.date));
-  if (weekRows.length) {
+  const dateKeys = Object.keys(byDate).sort();
+  if (dateKeys.length) {
     weekHost.innerHTML = '<div class="focus-head">' +
       '<div class="focus-title">THIS WEEK <span class="focus-sub">' +
         weekStart.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) + ' – ' +
         weekEnd.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) +
       '</span></div>' +
       '</div>' +
-      weekRows.map(({ ev, date: d }) => {
-        const f = ev.form || {};
-        const dt = d ? new Date(d + 'T00:00:00') : null;
-        const dayLabel = dt ? dt.toLocaleDateString('en-IE', { weekday: 'short', day: '2-digit' }) : '—';
-        const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
-        const venue = (f.venueName || '').replace(/</g, '&lt;');
-        const comp = computeEventCompleteness(f);
-        const pctClass = comp.percent === 100 ? 'full' : (comp.percent >= 60 ? 'part' : 'thin');
-        const fname = (ev._filename || '').replace(/'/g, "\\'");
-        return '<div class="week-row" onclick="loadEvent(\'' + fname + '\')">' +
-          '<div class="wr-day">' + dayLabel + '</div>' +
-          '<div><div class="wr-name">' + name + '</div>' +
-          (venue ? '<div class="wr-venue">' + venue + '</div>' : '') +
-          '</div>' +
-          '<div class="wr-pct ' + pctClass + '">' + comp.percent + '%</div>' +
-          '<div class="wr-chev">›</div>' +
-          '</div>';
+      dateKeys.map(d => {
+        const dt = new Date(d + 'T00:00:00');
+        const dayHeader = dt.toLocaleDateString('en-IE', { weekday: 'long', day: '2-digit', month: 'short' }).toUpperCase();
+        const rows = byDate[d].map(ev => {
+          const f = ev.form || {};
+          const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+          const venue = (f.venueName || '').replace(/</g, '&lt;');
+          const comp = computeEventCompleteness(f);
+          const pctClass = comp.percent === 100 ? 'full' : (comp.percent >= 60 ? 'part' : 'thin');
+          const fname = (ev._filename || '').replace(/'/g, "\\'");
+          return '<div class="week-row grouped" onclick="loadEvent(\'' + fname + '\')">' +
+            '<div><div class="wr-name">' + name + '</div>' +
+            (venue ? '<div class="wr-venue">' + venue + '</div>' : '') +
+            '</div>' +
+            '<div class="wr-pct ' + pctClass + '">' + comp.percent + '%</div>' +
+            '<div class="wr-chev">›</div>' +
+            '</div>';
+        }).join('');
+        return '<div class="week-day-group">' +
+          '<div class="week-day-header">' + dayHeader + '</div>' +
+          rows +
+        '</div>';
       }).join('');
     weekHost.style.display = 'block';
   } else {
