@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-06-09-tuesday",
+  "savedAt": "2026-06-08T22:03:47.375Z",
+  "savedBy": "Thomas O'Brien",
+  "form": {
+    "title": "Tuesday",
+    "planDate": "2026-06-09",
+    "startTime": "08:00",
+    "endTime": "18:30",
+    "lead": "Thomas O'Brien",
+    "assigned": "Robo, Anto, Serg, Simon, Cian M",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Drop Generator Back to GH",
+        "assignedTo": "Simon, Cian",
+        "priority": "medium",
+        "dueTime": "09:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Extinguishers, Signage, Packaging, Leads, Oil all gathered and brought to Cork",
+        "assignedTo": "Robo, Serg, Anto ",
+        "priority": "medium",
+        "dueTime": "11:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Equipment from All Stop Trading ",
+        "assignedTo": "Simon, Cian",
+        "priority": "medium",
+        "dueTime": "10:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Gather all Equipment Needed for Beyond The Pale",
+        "assignedTo": "Simon, Cian",
+        "priority": "medium",
+        "dueTime": "11:01",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Unload & Setup Beyond The Pale Marquee",
+        "assignedTo": "Simon, Cian ",
+        "priority": "medium",
+        "dueTime": "13:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Gather Extinguishers in RDS & Drop to Guardian Safety ",
+        "assignedTo": "Simon, Cian ",
+        "priority": "medium",
+        "dueTime": "16:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
