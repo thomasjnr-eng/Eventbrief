@@ -1649,6 +1649,119 @@ body {
   .hours-row { grid-template-columns: 1fr 1fr; gap: 6px; }
 }
 
+/* ─── LIST / CALENDAR VIEW TOGGLE ─── */
+.view-toggle {
+  display: inline-flex;
+  background: var(--bg-input);
+  border-radius: 4px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  gap: 2px;
+}
+.vt-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+.vt-btn:hover { color: var(--sage); }
+.vt-btn.on { background: var(--sage); color: #fff; }
+
+/* ─── EVENTS CALENDAR ─── */
+.home-events-calendar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px;
+}
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+.cal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: var(--heading);
+}
+.cal-nav {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 3px;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.cal-nav:hover { border-color: var(--sage); color: var(--sage); }
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-weekday {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 4px 0;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.cal-day {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  min-height: 78px;
+  padding: 5px 5px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+.cal-day.other-month { opacity: 0.35; }
+.cal-day.today { border-color: var(--sage); border-width: 2px; padding: 4px 4px 3px; }
+.cal-day.past { opacity: 0.6; }
+.cal-day-num { font-size: 11px; color: var(--white); font-weight: 700; }
+.cal-day.today .cal-day-num { color: var(--sage); }
+.cal-event {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--sage);
+  padding: 2px 5px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+.cal-event:hover { background: var(--sage-dark); }
+.cal-event.full { background: #2d7a49; }
+.cal-event.partial { background: #b07a10; }
+.cal-event.thin { background: #c0392b; }
+.cal-event-more { font-size: 9px; color: var(--text-muted); font-style: italic; }
+@media (max-width: 700px) {
+  .cal-day { min-height: 56px; padding: 3px; }
+  .cal-event { font-size: 9px; padding: 1px 3px; }
+  .cal-day-num { font-size: 10px; }
+}
+
 .home-events-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -2835,9 +2948,16 @@ body {
   <div class="home-events-section">
     <div class="home-events-head">
       <span class="home-events-title">Upcoming Events</span>
-      <span class="home-events-meta" id="homeEventsMeta"></span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="home-events-meta" id="homeEventsMeta"></span>
+        <div class="view-toggle">
+          <button type="button" id="viewToggleList" class="vt-btn on" onclick="setEventsView('list')">List</button>
+          <button type="button" id="viewToggleCal" class="vt-btn" onclick="setEventsView('calendar')">Calendar</button>
+        </div>
+      </span>
     </div>
     <div id="homeEventsGrid" class="home-events-grid"></div>
+    <div id="homeEventsCalendar" class="home-events-calendar" style="display:none;"></div>
   </div>
 
   <div class="home-events-section" data-role-any="ops_lead,manager">
@@ -10491,6 +10611,136 @@ async function appendHoursThisWeekTile() {
   host.appendChild(tile);
 }
 
+// ─── EVENTS LIST / CALENDAR TOGGLE + CALENDAR RENDER ─────────
+let EVENTS_VIEW_MODE = 'list';
+let CAL_MONTH_ANCHOR = null; // first day of the visible month
+
+function setEventsView(mode) {
+  EVENTS_VIEW_MODE = mode;
+  const list = document.getElementById('homeEventsGrid');
+  const cal  = document.getElementById('homeEventsCalendar');
+  const bL = document.getElementById('viewToggleList');
+  const bC = document.getElementById('viewToggleCal');
+  if (mode === 'calendar') {
+    list.style.display = 'none'; cal.style.display = 'block';
+    if (bL) bL.classList.remove('on'); if (bC) bC.classList.add('on');
+    renderEventsCalendar();
+  } else {
+    cal.style.display = 'none'; list.style.display = '';
+    if (bC) bC.classList.remove('on'); if (bL) bL.classList.add('on');
+  }
+}
+function calStartOfMonth(d) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+function calShiftMonth(delta) {
+  if (!CAL_MONTH_ANCHOR) CAL_MONTH_ANCHOR = calStartOfMonth(new Date());
+  CAL_MONTH_ANCHOR = new Date(CAL_MONTH_ANCHOR.getFullYear(), CAL_MONTH_ANCHOR.getMonth() + delta, 1);
+  renderEventsCalendar();
+}
+function calGoToday() {
+  CAL_MONTH_ANCHOR = calStartOfMonth(new Date());
+  renderEventsCalendar();
+}
+
+async function renderEventsCalendar() {
+  const host = document.getElementById('homeEventsCalendar');
+  if (!host) return;
+  if (!CAL_MONTH_ANCHOR) CAL_MONTH_ANCHOR = calStartOfMonth(new Date());
+  if (!getPasscode()) { host.innerHTML = '<div class="home-events-empty">Sign in to see the calendar.</div>'; return; }
+  let filenames = [];
+  try { filenames = (await listEventFilenames()).filter(isEventFile); }
+  catch (e) { host.innerHTML = '<div class="home-events-empty">Could not load events.</div>'; return; }
+  const events = (await Promise.all(filenames.map(getEventByFilename))).filter(Boolean);
+
+  // Build a map of YYYY-MM-DD → events touching that day
+  // (start, finish, every scattered trading day, plus every day in
+  // between start and finish if no trading days are listed).
+  const eventDates = {};
+  events.forEach(ev => {
+    const f = ev.form || {};
+    const dates = new Set();
+    if (Array.isArray(f._tradingDays) && f._tradingDays.length) {
+      f._tradingDays.forEach(d => { if (d && d.date) dates.add(d.date); });
+    } else if (f.eventStartDate) {
+      const start = new Date(f.eventStartDate + 'T00:00:00');
+      const end = new Date((f.eventFinishDate || f.eventStartDate) + 'T00:00:00');
+      const cur = new Date(start);
+      while (cur <= end) {
+        dates.add(localIso(cur));
+        cur.setDate(cur.getDate() + 1);
+        if (dates.size > 31) break;
+      }
+    } else if (f.eventDate) {
+      dates.add(f.eventDate);
+    }
+    dates.forEach(d => {
+      (eventDates[d] = eventDates[d] || []).push(ev);
+    });
+  });
+
+  const anchor = CAL_MONTH_ANCHOR;
+  const monthLabel = anchor.toLocaleDateString('en-IE', { month: 'long', year: 'numeric' });
+  const firstWeekday = (anchor.getDay() + 6) % 7; // Mon = 0
+  const daysInMonth = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0).getDate();
+  const cells = [];
+  // Trailing days from previous month
+  for (let i = firstWeekday - 1; i >= 0; i--) {
+    const d = new Date(anchor.getFullYear(), anchor.getMonth(), -i);
+    cells.push({ date: d, other: true });
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells.push({ date: new Date(anchor.getFullYear(), anchor.getMonth(), d), other: false });
+  }
+  // Pad to multiple of 7
+  while (cells.length % 7 !== 0) {
+    const last = cells[cells.length - 1].date;
+    const d = new Date(last); d.setDate(d.getDate() + 1);
+    cells.push({ date: d, other: d.getMonth() !== anchor.getMonth() });
+  }
+
+  const todayStr = localIso(new Date());
+  const cellHtml = cells.map(cell => {
+    const iso = localIso(cell.date);
+    const dayNum = cell.date.getDate();
+    const isToday = iso === todayStr;
+    const isPast = iso < todayStr;
+    const chips = (eventDates[iso] || []).slice(0, 3).map(ev => {
+      const f = ev.form || {};
+      const name = (f.eventName || '(unnamed)').replace(/"/g, '&quot;');
+      const filename = (ev._filename || '').replace(/'/g, "\\'");
+      const comp = (typeof computeEventCompleteness === 'function') ? computeEventCompleteness(f).percent : 0;
+      const cls = comp === 100 ? 'full' : comp >= 60 ? 'partial' : 'thin';
+      return '<button class="cal-event ' + cls + '" title="' + name + '" onclick="loadEvent(\'' + filename + '\')">' + name.replace(/&quot;/g, '"').replace(/</g, '&lt;') + '</button>';
+    }).join('');
+    const overflow = (eventDates[iso] || []).length - 3;
+    const overflowChip = overflow > 0 ? '<div class="cal-event-more">+' + overflow + ' more</div>' : '';
+    const cls = ['cal-day'];
+    if (cell.other) cls.push('other-month');
+    if (isToday) cls.push('today');
+    else if (isPast) cls.push('past');
+    return '<div class="' + cls.join(' ') + '">' +
+      '<div class="cal-day-num">' + dayNum + '</div>' +
+      chips +
+      overflowChip +
+    '</div>';
+  }).join('');
+
+  const weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+    .map(d => '<div class="cal-weekday">' + d + '</div>').join('');
+
+  host.innerHTML =
+    '<div class="cal-head">' +
+      '<button class="cal-nav" onclick="calShiftMonth(-1)">← Prev</button>' +
+      '<div style="display:flex;align-items:center;gap:8px;">' +
+        '<div class="cal-title">' + monthLabel + '</div>' +
+        '<button class="cal-nav" onclick="calGoToday()" style="font-size:11px;padding:3px 8px;">Today</button>' +
+      '</div>' +
+      '<button class="cal-nav" onclick="calShiftMonth(1)">Next →</button>' +
+    '</div>' +
+    '<div class="cal-grid">' + weekdays + cellHtml + '</div>';
+}
+
 async function renderHomeEvents() {
   const host = document.getElementById('homeEventsGrid');
   const meta = document.getElementById('homeEventsMeta');
@@ -10568,6 +10818,8 @@ async function renderHomeEvents() {
       '</div>' +
       '</div>';
   }).join('');
+  // Keep the calendar in sync if it's the active view
+  if (EVENTS_VIEW_MODE === 'calendar') renderEventsCalendar();
 }
 
 // ─── ACTION REQUIRED (proactive nudges across all upcoming events) ─────
