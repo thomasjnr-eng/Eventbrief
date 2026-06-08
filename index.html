@@ -2629,15 +2629,23 @@ body {
         <p>Drop a file or paste below to import one or more events at once. Each becomes a skeleton brief (name + date + venue + client populated, everything else blank). You complete the rest from <strong>Load Brief</strong>.</p>
         <p style="font-size:11px;color:var(--grey);">Supported: <strong>📸 screenshots</strong> of emails / WhatsApps (auto-extracted via Claude), CSV / TSV files, Excel paste (tabs), <code>.ics</code> calendar exports, or one event per line.</p>
         <div id="bulkDrop" class="bulk-drop">
-          <div style="font-size:14px;color:var(--white);margin-bottom:6px;">Drop file or screenshot here</div>
-          <div style="font-size:11px;color:var(--grey);">or tap to choose</div>
+          <div id="bulkDropEmpty">
+            <div style="font-size:14px;color:var(--white);margin-bottom:6px;">Drop file or screenshot here</div>
+            <div style="font-size:11px;color:var(--grey);">or tap to choose</div>
+          </div>
+          <div id="bulkDropPreview" style="display:none;text-align:center;">
+            <img id="bulkPreviewImg" alt="" style="max-width:100%;max-height:220px;border-radius:4px;display:none;margin:0 auto;">
+            <div id="bulkPreviewName" style="margin-top:10px;font-size:13px;color:var(--white);font-weight:700;word-break:break-all;"></div>
+            <div id="bulkPreviewSize" style="font-size:11px;color:var(--grey);margin-top:2px;"></div>
+            <button type="button" onclick="event.stopPropagation();bulkClearFile()" style="margin-top:10px;background:transparent;border:1px solid var(--border);color:var(--grey);padding:5px 12px;border-radius:3px;font-size:11px;cursor:pointer;">× Remove</button>
+          </div>
           <input type="file" id="bulkFile" accept=".csv,.tsv,.ics,image/*,text/*" style="display:none;">
         </div>
         <div style="text-align:center;font-size:11px;color:var(--grey);margin:14px 0;">— or —</div>
         <textarea id="bulkPaste" rows="6" placeholder="Paste here. Excel rows (tab-separated): &#10;Aviva Stadium  &#9;  2026-07-15&#10;Bord Gais Theatre  &#9;  2026-08-02"></textarea>
         <div class="modal-actions">
           <button class="btn btn-secondary" onclick="closeBulkModal()" style="font-size:13px;padding:8px 16px;">Cancel</button>
-          <button class="btn btn-primary" onclick="bulkParseInput()" style="font-size:13px;padding:8px 16px;">Parse</button>
+          <button class="btn btn-primary" onclick="bulkParseInput()" style="font-size:13px;padding:8px 16px;">Upload</button>
         </div>
       </div>
       <div id="bulkPreview" style="display:none;">
@@ -4138,7 +4146,9 @@ function openBulkModal() {
   if (!getPasscode()) { openSettingsModal(); toast('Add the team passcode first', 'error'); return; }
   document.getElementById('bulkModal').classList.add('open');
   bulkBackToChoose();
-  // Wire drag/drop + file input
+  bulkClearFile();
+  // Wire drag/drop + file input. Picking a file now SHOWS a preview;
+  // parsing/upload happens when the user taps the Upload button.
   const drop = document.getElementById('bulkDrop');
   const fileInput = document.getElementById('bulkFile');
   drop.onclick = () => fileInput.click();
@@ -4147,14 +4157,48 @@ function openBulkModal() {
   drop.ondrop = (e) => {
     e.preventDefault();
     drop.classList.remove('drag-over');
-    if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; bulkParseInput(); }
+    if (e.dataTransfer.files.length) { fileInput.files = e.dataTransfer.files; bulkShowFilePreview(); }
   };
+  fileInput.onchange = bulkShowFilePreview;
 }
-function closeBulkModal() { document.getElementById('bulkModal').classList.remove('open'); }
+function closeBulkModal() {
+  bulkClearFile();
+  document.getElementById('bulkModal').classList.remove('open');
+}
 function bulkBackToChoose() {
   document.getElementById('bulkChoose').style.display = 'block';
   document.getElementById('bulkPreview').style.display = 'none';
   document.getElementById('bulkProgress').style.display = 'none';
+}
+
+function bulkShowFilePreview() {
+  const fileInput = document.getElementById('bulkFile');
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) { bulkClearFile(); return; }
+  document.getElementById('bulkDropEmpty').style.display = 'none';
+  document.getElementById('bulkDropPreview').style.display = 'block';
+  document.getElementById('bulkPreviewName').textContent = file.name;
+  const sizeKb = file.size < 1024 ? file.size + ' B' : (file.size < 1024 * 1024 ? Math.round(file.size / 1024) + ' KB' : (file.size / 1024 / 1024).toFixed(1) + ' MB');
+  document.getElementById('bulkPreviewSize').textContent = sizeKb + ' · ' + (file.type || 'unknown type');
+  const img = document.getElementById('bulkPreviewImg');
+  if (img.src) { try { URL.revokeObjectURL(img.src); } catch (e) {} }
+  if (/^image\//i.test(file.type)) {
+    img.src = URL.createObjectURL(file);
+    img.style.display = 'block';
+  } else {
+    img.src = '';
+    img.style.display = 'none';
+  }
+}
+function bulkClearFile() {
+  const fileInput = document.getElementById('bulkFile');
+  if (fileInput) fileInput.value = '';
+  const empty = document.getElementById('bulkDropEmpty');
+  const preview = document.getElementById('bulkDropPreview');
+  if (empty) empty.style.display = 'block';
+  if (preview) preview.style.display = 'none';
+  const img = document.getElementById('bulkPreviewImg');
+  if (img && img.src) { try { URL.revokeObjectURL(img.src); } catch (e) {} img.src = ''; img.style.display = 'none'; }
 }
 function bulkParseInput() {
   const file = document.getElementById('bulkFile').files[0];
