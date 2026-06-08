@@ -8916,18 +8916,31 @@ async function renderTodayAndWeek() {
   const weekStartStr = localIso(weekStart);
   const weekEndStr   = localIso(weekEnd);
 
-  const todayEvents = events.filter(ev => eventCoversDate(ev.form, todayStr));
-  const weekEvents = events.filter(ev => {
-    if (eventCoversDate(ev.form, todayStr)) return false; // today is shown above
-    // Pick any event whose primary date or trading window falls in this week
-    const main = getEventDate(ev.form);
-    if (main && main >= weekStartStr && main <= weekEndStr) return true;
-    if (Array.isArray(ev.form._tradingDays)) {
-      return ev.form._tradingDays.some(d => d && d.date && d.date >= weekStartStr && d.date <= weekEndStr);
+  // Expand an event into the list of YYYY-MM-DD days it covers.
+  // Scattered events honour _tradingDays; contiguous events expand
+  // the start→finish range; single-day or older eventDate-only briefs
+  // become a single day. Used for both the filter and the grouping.
+  function expandEventDays(form) {
+    const out = new Set();
+    if (Array.isArray(form._tradingDays) && form._tradingDays.length) {
+      form._tradingDays.forEach(d => { if (d && d.date) out.add(d.date); });
+    } else if (form.eventStartDate) {
+      const s = new Date(form.eventStartDate + 'T00:00:00');
+      const e = new Date((form.eventFinishDate || form.eventStartDate) + 'T00:00:00');
+      const cur = new Date(s);
+      while (cur <= e) { out.add(localIso(cur)); cur.setDate(cur.getDate() + 1); if (out.size > 60) break; }
+    } else if (form.eventDate) {
+      out.add(form.eventDate);
     }
-    return false;
-  });
-  weekEvents.sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+    return [...out];
+  }
+
+  const todayEvents = events.filter(ev => expandEventDays(ev.form).includes(todayStr));
+  // Don't pre-filter for the week — let the day-grouping take any event
+  // with at least one day in this week (excluding today, which lives on
+  // the TODAY card above). A multi-day event starting today still
+  // contributes its remaining days here.
+  const weekEvents = events;
 
   // ─── TODAY ───
   const todayDateLabel = now.toLocaleDateString('en-IE', { weekday: 'short', day: '2-digit', month: 'short' });
@@ -8973,26 +8986,9 @@ async function renderTodayAndWeek() {
   }
 
   // ─── THIS WEEK ───
-  // Expand each event into one row per trading day that falls inside
-  // the current week (today still shows above). Scattered events
-  // honour _tradingDays; contiguous multi-day events expand their
-  // start→finish range; single-day events become a single row.
-  function expandEventDays(form) {
-    const out = new Set();
-    if (Array.isArray(form._tradingDays) && form._tradingDays.length) {
-      form._tradingDays.forEach(d => { if (d && d.date) out.add(d.date); });
-    } else if (form.eventStartDate) {
-      const s = new Date(form.eventStartDate + 'T00:00:00');
-      const e = new Date((form.eventFinishDate || form.eventStartDate) + 'T00:00:00');
-      const cur = new Date(s);
-      while (cur <= e) { out.add(localIso(cur)); cur.setDate(cur.getDate() + 1); if (out.size > 60) break; }
-    } else if (form.eventDate) {
-      out.add(form.eventDate);
-    }
-    return [...out];
-  }
-  // Group rows by date so a 3-day event reads as three short stanzas
-  // under their own day headers instead of three interleaved rows.
+  // Group every event's days into per-date buckets (skipping today,
+  // which lives on the TODAY card). A multi-day event contributes a
+  // row to each day it covers.
   const byDate = {};
   weekEvents.forEach(ev => {
     const days = expandEventDays(ev.form);
