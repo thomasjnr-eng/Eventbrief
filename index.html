@@ -2760,6 +2760,27 @@ body {
   </div>
 </div>
 
+<!-- ─── APPLY THIS SETUP TO MULTIPLE EVENTS MODAL ─── -->
+<div class="modal-overlay" id="applySetupModal" onclick="if(event.target===this) closeApplySetupModal()">
+  <div class="modal-content" style="max-width:720px;">
+    <button class="modal-close" onclick="closeApplySetupModal()">&times;</button>
+    <div class="modal-title">Apply this setup to multiple events</div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--grey);margin-bottom:10px;">Tick every event that should receive the fleet, power, commercial terms, menu, suppliers, safety and notes from <strong id="applySetupSource">this brief</strong>. Their own dates, name, venue, client and ticked state stay untouched.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <button class="btn btn-secondary" style="font-size:11px;padding:6px 10px;" onclick="applySetupSelectAll(true)">Select all</button>
+        <button class="btn btn-secondary" style="font-size:11px;padding:6px 10px;" onclick="applySetupSelectAll(false)">None</button>
+        <span id="applySetupCount" style="font-size:11px;color:var(--text-muted);"></span>
+      </div>
+      <div id="applySetupList" style="max-height:50vh;overflow:auto;border:1px solid var(--border);border-radius:4px;padding:6px 10px;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeApplySetupModal()" style="font-size:13px;padding:8px 16px;">Cancel</button>
+        <button class="btn btn-primary" onclick="runApplySetupToSelected()" style="font-size:13px;padding:8px 16px;">Apply to selected</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- ─── END-OF-DAY SIGN-OFF MODAL ─── -->
@@ -3102,6 +3123,9 @@ body {
       </div>
     </div>
     <div id="copySetupStatus" style="font-size:11px;color:var(--text-muted);"></div>
+    <hr style="border:0;border-top:1px solid var(--border);margin:14px 0;">
+    <p style="font-size:12px;color:var(--grey);margin-bottom:10px;"><strong>Already filled this brief in?</strong> Push the same setup out to every other night in the series in one go.</p>
+    <button type="button" class="btn btn-secondary" onclick="openApplySetupModal()" style="font-size:13px;padding:8px 14px;">→ Apply this setup to multiple events</button>
   </div>
 
   <div class="card">
@@ -11048,6 +11072,117 @@ async function copySetupFromSelected() {
   } catch (e) {
     toast('Copy failed: ' + e.message, 'error');
   }
+}
+
+// Inverse direction: ops lead has filled this brief and wants to push
+// the setup out to every other event in the series in one shot.
+async function openApplySetupModal() {
+  if (!getPasscode()) { openSettingsModal(); toast('Add the team passcode first', 'error'); return; }
+  const eventName = (val('eventName') || '').trim();
+  if (!eventName) { toast('Save the brief first so it has an event name', 'error'); return; }
+  const modal = document.getElementById('applySetupModal');
+  const src = document.getElementById('applySetupSource');
+  if (src) src.textContent = eventName;
+  modal.classList.add('open');
+  await renderApplySetupList();
+}
+function closeApplySetupModal() {
+  document.getElementById('applySetupModal').classList.remove('open');
+}
+
+async function renderApplySetupList() {
+  const host = document.getElementById('applySetupList');
+  if (!host) return;
+  host.innerHTML = '<p style="font-size:12px;color:var(--grey);">Loading…</p>';
+  try {
+    const filenames = (await listEventFilenames()).filter(isEventFile);
+    const events = (await Promise.all(filenames.map(getEventByFilename))).filter(Boolean);
+    const todayStr = localIso(new Date());
+    const currentName = (val('eventName') || '').trim();
+    function latestDate(form) {
+      const dates = [];
+      if (form.eventFinishDate) dates.push(form.eventFinishDate);
+      if (form.eventStartDate) dates.push(form.eventStartDate);
+      if (form.loadOutDate) dates.push(form.loadOutDate);
+      if (Array.isArray(form._tradingDays)) form._tradingDays.forEach(d => { if (d && d.date) dates.push(d.date); });
+      if (!dates.length) return '';
+      return dates.reduce((a, b) => (a > b ? a : b));
+    }
+    const targets = events
+      .filter(ev => (ev.form.eventName || '').trim() !== currentName)
+      .filter(ev => {
+        const latest = latestDate(ev.form);
+        return !latest || latest >= todayStr;
+      })
+      .sort((a, b) => (getEventDate(a.form) || '').localeCompare(getEventDate(b.form) || ''));
+    if (!targets.length) {
+      host.innerHTML = '<p style="font-size:12px;color:var(--grey);font-style:italic;">No other upcoming events on file to apply to.</p>';
+      updateApplySetupCount();
+      return;
+    }
+    host.innerHTML = targets.map(ev => {
+      const f = ev.form;
+      const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
+      const date = getEventDate(f);
+      const dateLabel = date ? formatDate(date) : 'no date';
+      const venue = (f.venueName || '').replace(/</g, '&lt;');
+      const units = (f._fleet || []).length;
+      const unitsTag = units ? units + ' unit' + (units === 1 ? '' : 's') : '<span style="color:#c0392b;">empty</span>';
+      const filenameEsc = (ev._filename || '').replace(/"/g, '&quot;');
+      return '<label style="display:grid;grid-template-columns:24px 1fr;gap:8px;padding:7px 4px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer;">' +
+        '<input type="checkbox" value="' + filenameEsc + '" onchange="updateApplySetupCount()" style="width:18px;height:18px;">' +
+        '<div><div style="color:var(--white);font-weight:700;">' + name + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);">' + dateLabel + (venue ? ' · ' + venue : '') + ' · ' + unitsTag + '</div></div>' +
+      '</label>';
+    }).join('');
+    updateApplySetupCount();
+  } catch (e) {
+    host.innerHTML = '<p style="color:var(--red);font-size:12px;">Could not load events: ' + e.message + '</p>';
+  }
+}
+
+function applySetupSelectAll(checked) {
+  document.querySelectorAll('#applySetupList input[type=checkbox]').forEach(cb => { cb.checked = !!checked; });
+  updateApplySetupCount();
+}
+function updateApplySetupCount() {
+  const checks = [...document.querySelectorAll('#applySetupList input[type=checkbox]:checked')];
+  const total = document.querySelectorAll('#applySetupList input[type=checkbox]').length;
+  const el = document.getElementById('applySetupCount');
+  if (el) el.textContent = checks.length + ' / ' + total + ' selected';
+}
+
+async function runApplySetupToSelected() {
+  const checks = [...document.querySelectorAll('#applySetupList input[type=checkbox]:checked')];
+  if (!checks.length) { toast('Tick at least one event', 'error'); return; }
+  if (!confirm('Apply this brief\'s setup to ' + checks.length + ' event' + (checks.length === 1 ? '' : 's') + '? Their own dates / name / venue / client / ticks stay untouched.')) return;
+  const sourceData = collectFormData();
+  const filenames = checks.map(c => c.value);
+  let okCount = 0, failCount = 0;
+  for (const filename of filenames) {
+    try {
+      if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[filename];
+      const target = await getEventByFilename(filename);
+      if (!target || !target.form) { failCount++; continue; }
+      // Start from source data, then re-apply the target's preserve fields
+      // (its own identity / dates / per-event state) on top.
+      const merged = Object.assign({}, sourceData);
+      COPY_SETUP_PRESERVE_FIELD_IDS.forEach(id => {
+        if (target.form[id] !== undefined) merged[id] = target.form[id];
+      });
+      COPY_SETUP_PRESERVE_INTERNAL_KEYS.forEach(k => {
+        if (target.form[k] !== undefined) merged[k] = target.form[k];
+      });
+      await persistEventForm(filename, { form: merged, _sha: target._sha });
+      okCount++;
+    } catch (e) {
+      console.error('apply setup to', filename, e);
+      failCount++;
+    }
+  }
+  closeApplySetupModal();
+  if (failCount) toast('Applied to ' + okCount + ' · ' + failCount + ' failed', 'error');
+  else toast('Setup applied to ' + okCount + ' event' + (okCount === 1 ? '' : 's') + ' ✓');
 }
 
 async function loadEvent(filename) {
