@@ -3089,6 +3089,21 @@ body {
 
   <div id="doubleBookBanner" style="display:none;"></div>
 
+  <div class="card" id="copySetupCard">
+    <div class="card-title">📋 Copy setup from another event</div>
+    <p style="font-size:12px;color:var(--grey);margin-bottom:12px;">Filling in a concert series or recurring booking? Pick a previously-completed event and we'll copy across the fleet, power, commercial terms, menu, suppliers, safety checks and notes &mdash; keeping the dates, name, venue and client that are already on this brief untouched.</p>
+    <div class="grid-3" style="margin-bottom:10px;">
+      <div class="field" style="grid-column: span 2;">
+        <label>Template event</label>
+        <select id="copySetupSelect"><option value="">— Pick an event —</option></select>
+      </div>
+      <div class="field" style="display:flex;align-items:end;">
+        <button type="button" class="btn btn-primary" onclick="copySetupFromSelected()" style="font-size:13px;padding:10px 14px;width:100%;">Copy setup ✓</button>
+      </div>
+    </div>
+    <div id="copySetupStatus" style="font-size:11px;color:var(--text-muted);"></div>
+  </div>
+
   <div class="card">
     <div class="card-title">Units Deployed</div>
     <p style="font-size:12px;color:var(--grey);margin-bottom:16px;">Select all units attending this event. Power requirement auto-calculates below.</p>
@@ -3719,6 +3734,7 @@ function goStep(n) {
   const stepSelect = document.getElementById('stepSelect');
   if (stepSelect) stepSelect.value = String(n);
   window.scrollTo(0,0);
+  if (n === 2) { populateCopySetupOptions(); }
   if (n === 4) { renderStockOrderRows(); renderStockLoadRows(STOCK_LOAD_ITEMS); renderSupplierDeadlines(); }
   if (n === 5) { renderServiceWindows(); renderMenu(); }
   if (n === 6) { renderCrewRoster(); renderTruckSafetyRows(); }
@@ -10940,6 +10956,97 @@ async function getEventByFilename(name) {
       return cached;
     }
     return null;
+  }
+}
+
+// ─── COPY SETUP FROM ANOTHER EVENT ───────────────────────────
+// Picks all the "recurring" fields out of a template event (fleet,
+// power, commercial, menu, suppliers, staff defaults, safety, notes)
+// and merges them into the current brief — preserving the per-event
+// identity / state fields (name, dates, venue, client, ticks, sign-
+// offs, change log, compliance folders, etc.).
+const COPY_SETUP_PRESERVE_FIELD_IDS = [
+  'eventName', 'briefRef', 'bookingStatus',
+  'eventStartDate', 'eventStartTime',
+  'eventFinishDate', 'eventFinishTime',
+  'loadInDate', 'loadInTime',
+  'loadOutDate', 'loadOutTime',
+  'clientName', 'contactName', 'contactPhone', 'onsiteContact',
+  'venueName', 'venueAddress'
+];
+const COPY_SETUP_PRESERVE_INTERNAL_KEYS = [
+  '_isScattered', '_tradingDays',
+  '_crewChecklists',
+  '_stockLoadItems', '_stockStatuses',
+  '_signatures', '_signOffs', '_clockEntries',
+  '_changeLog', '_complianceFolders'
+];
+
+async function populateCopySetupOptions() {
+  const sel = document.getElementById('copySetupSelect');
+  if (!sel || !getPasscode()) return;
+  sel.disabled = true;
+  sel.innerHTML = '<option value="">Loading…</option>';
+  try {
+    const allFilenames = (await listEventFilenames()).filter(isEventFile);
+    const events = (await Promise.all(allFilenames.map(getEventByFilename))).filter(Boolean);
+    // Only show events with a real fleet picked (no point copying a blank skeleton)
+    const candidates = events.filter(ev => (ev.form._fleet || []).length > 0);
+    // Newest events first so the most recent template is at the top
+    candidates.sort((a, b) => (getEventDate(b.form) || '').localeCompare(getEventDate(a.form) || ''));
+    const currentName = (val('eventName') || '').trim();
+    sel.innerHTML = '<option value="">— Pick an event —</option>' +
+      candidates
+        .filter(ev => (ev.form.eventName || '').trim() !== currentName) // don't list self
+        .map(ev => {
+          const f = ev.form;
+          const date = getEventDate(f);
+          const label = (f.eventName || '(unnamed)') + (date ? ' · ' + formatDate(date) : '') + ' · ' + (f._fleet || []).length + ' units';
+          return '<option value="' + (ev._filename || '').replace(/"/g, '&quot;') + '">' + label.replace(/</g, '&lt;') + '</option>';
+        }).join('');
+    sel.disabled = false;
+    if (sel.options.length <= 1) {
+      const status = document.getElementById('copySetupStatus');
+      if (status) status.textContent = 'No completed events on file to copy from yet.';
+    }
+  } catch (e) {
+    sel.innerHTML = '<option value="">Couldn\'t load events</option>';
+    sel.disabled = false;
+  }
+}
+
+async function copySetupFromSelected() {
+  const sel = document.getElementById('copySetupSelect');
+  const status = document.getElementById('copySetupStatus');
+  if (!sel || !sel.value) { toast('Pick a template event first', 'error'); return; }
+  if (!confirm('Copy fleet, power, commercial, menu, suppliers and safety from "' + sel.options[sel.selectedIndex].text + '" into this brief? Dates, name, venue and client stay as they are.')) return;
+  try {
+    if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[sel.value];
+    const template = await getEventByFilename(sel.value);
+    if (!template || !template.form) { toast('Could not load template event', 'error'); return; }
+    // Snapshot the fields we want to PRESERVE from the current form
+    const preserved = {};
+    COPY_SETUP_PRESERVE_FIELD_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) preserved[id] = el.value;
+    });
+    // Merge: start from template form, overlay preserved DOM fields
+    const merged = Object.assign({}, template.form);
+    Object.keys(preserved).forEach(k => { merged[k] = preserved[k]; });
+    // Strip per-event state from the template before applying
+    COPY_SETUP_PRESERVE_INTERNAL_KEYS.forEach(k => { delete merged[k]; });
+    // Hydrate from the current form too so we don't lose internal state
+    // (trading days, change log, clock entries, etc.) that's only in the
+    // live DOM/globals.
+    const currentInternal = collectFormData();
+    COPY_SETUP_PRESERVE_INTERNAL_KEYS.forEach(k => {
+      if (currentInternal[k] !== undefined) merged[k] = currentInternal[k];
+    });
+    populateForm(merged);
+    if (status) status.innerHTML = '<span style="color:#2d7a49;">✓ Setup copied. Review Steps 2&ndash;6 and save when you\'re happy.</span>';
+    toast('Setup copied from template ✓');
+  } catch (e) {
+    toast('Copy failed: ' + e.message, 'error');
   }
 }
 
