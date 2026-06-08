@@ -7923,6 +7923,20 @@ function collectFormData() {
 
 function populateForm(data) {
   autoSavePaused = true;
+  // Detach from the cached event JSON before mutating. populateForm
+  // runs a slew of in-place migrations (eventDate → eventStartDate,
+  // _staffAllocations → _crewRoster, _crewChecklists phase tagging
+  // via ensureCrewChecklists, stock-load reconciliation, etc.). When
+  // the data came from eventsCache.byName the cached reference would
+  // get mutated in place, and on iOS that's been seen to throw
+  // "Attempted to assign to readonly property" intermittently. A
+  // structural clone gives every populateForm call its own object.
+  try {
+    data = JSON.parse(JSON.stringify(data || {}));
+  } catch (e) {
+    // Cyclic / unserialisable payload — keep the original and hope
+    // for the best; this is recoverable, the toast will surface.
+  }
   // Backwards-compat: pre-2026-05-12 schema used flat date + setup/start/end/breakdown times.
   if (data.eventDate && !data.eventStartDate) data.eventStartDate = data.eventDate;
   if (data.eventDate && !data.loadInDate) data.loadInDate = data.eventDate;
