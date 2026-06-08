@@ -69,6 +69,9 @@ export default {
       if (path === '/extract' && request.method === 'POST') {
         return await extractFromImage(await request.json(), env, origin);
       }
+      if (path === '/extract-menu' && request.method === 'POST') {
+        return await extractMenuFromFile(await request.json(), env, origin);
+      }
       if (path === '/geocode' && (request.method === 'POST' || request.method === 'GET')) {
         let address;
         if (request.method === 'POST') {
@@ -292,6 +295,94 @@ async function extractFromImage(payload, env, origin) {
     return json({ error: 'parse_failed', raw: text }, 502, origin);
   }
   return json({ events: Array.isArray(parsed.events) ? parsed.events : [] }, 200, origin);
+}
+
+// ─── MENU EXTRACTION (image OR PDF) ──────────────────────────
+// Same Claude pattern as /extract but tuned for a menu sheet: returns
+// items with name + ingredients + equipment + notes. Accepts an image
+// OR a PDF (Anthropic's API takes PDF docs natively under the
+// "document" content type). The optional ingredient/equipment hints
+// nudge Claude to reuse the truck's standard kit labels so the
+// frontend's checkbox toggling keeps working.
+async function extractMenuFromFile(payload, env, origin) {
+  if (!env.ANTHROPIC_API_KEY) {
+    return json({ error: 'extraction_disabled', message: "Anthropic API key not configured on the Worker. Add it as the ANTHROPIC_API_KEY secret in Cloudflare." }, 503, origin);
+  }
+  if (!payload || !payload.fileBase64 || !payload.mediaType) {
+    return json({ error: 'fileBase64 and mediaType required' }, 400, origin);
+  }
+  const truck = payload.truckName || 'the unit';
+  const truckCat = payload.truckCategory || '';
+  const ingredientHints = Array.isArray(payload.ingredientHints) ? payload.ingredientHints.slice(0, 30) : [];
+  const equipmentHints  = Array.isArray(payload.equipmentHints)  ? payload.equipmentHints.slice(0, 25) : [];
+
+  const systemPrompt =
+    "You extract a structured menu from a single image or PDF of a food-truck / catering menu sheet. " +
+    "The unit you're extracting for is \"" + truck + "\"" + (truckCat ? " (" + truckCat + ")" : "") + ". " +
+    "Return ONLY valid JSON with the shape " +
+    '{"items":[{"name":string,"ingredients":[string,...],"equipment":[string,...],"notes":string}]}. ' +
+    "Rules:\n" +
+    "- One entry per menu item / dish. Skip section headings.\n" +
+    "- name: the dish as it appears on the menu (e.g. \"Smash burger\").\n" +
+    "- ingredients: a concise list of the foodstuffs / consumables required to make it. " +
+    "Use 2–8 items. Prefer short common labels (e.g. \"Beef patties\", \"Brioche buns\", " +
+    "\"Cheese slices\"). Skip allergen disclaimers and prices.\n" +
+    "- equipment: cooking / serving equipment that would need to be packed (e.g. " +
+    "\"Smash grill\", \"Fryer\", \"Pizza oven\"). 0–4 items per dish.\n" +
+    "- notes: very short extra context only (allergens, vegan/halal flags, " +
+    "preparation note). Empty string if none.\n" +
+    (ingredientHints.length ? "When an ingredient matches one of these standard labels for this truck, reuse the exact label: " + JSON.stringify(ingredientHints) + ".\n" : '') +
+    (equipmentHints.length  ? "Same for equipment, reuse from: " + JSON.stringify(equipmentHints) + ".\n" : '') +
+    "If you cannot find any menu items at all, return {\"items\":[]}. " +
+    "No commentary, no markdown fences — JSON only.";
+
+  // The Anthropic API treats images and PDFs slightly differently:
+  // images use type:"image" with base64 source; PDFs use type:"document"
+  // with base64 source and media_type "application/pdf".
+  const isPdf = /pdf/i.test(payload.mediaType);
+  const fileBlock = isPdf
+    ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: payload.fileBase64 } }
+    : { type: 'image',    source: { type: 'base64', media_type: payload.mediaType,  data: payload.fileBase64 } };
+
+  let res;
+  try {
+    res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 3000,
+        system: systemPrompt,
+        messages: [{
+          role: 'user',
+          content: [
+            fileBlock,
+            { type: 'text', text: 'Extract the menu for ' + truck + '. Return JSON only.' }
+          ]
+        }]
+      })
+    });
+  } catch (e) {
+    return json({ error: 'anthropic_unreachable', detail: e.message }, 502, origin);
+  }
+  if (!res.ok) {
+    const errText = await res.text();
+    return json({ error: 'anthropic_' + res.status, detail: errText }, 502, origin);
+  }
+  const data = await res.json();
+  const text = (data.content && data.content[0] && data.content[0].text) || '';
+  let parsed;
+  try {
+    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim();
+    parsed = JSON.parse(cleaned);
+  } catch (e) {
+    return json({ error: 'parse_failed', raw: text }, 502, origin);
+  }
+  return json({ items: Array.isArray(parsed.items) ? parsed.items : [] }, 200, origin);
 }
 
 // ─── GEOCODING ───────────────────────────────────────────────

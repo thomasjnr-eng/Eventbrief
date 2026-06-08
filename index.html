@@ -5348,21 +5348,120 @@ function renderMenu(preserve) {
   host.innerHTML = selected.map(u => {
     const items = MENU[u.name] || [];
     const escTruck = u.name.replace(/"/g, '&quot;');
+    const escTruckJs = u.name.replace(/'/g, "\\'");
     return '<div class="menu-card" data-truck="' + escTruck + '">' +
       '<div class="menu-card-head">' +
         '<div>' +
           '<div class="mc-name">' + u.name + '</div>' +
           '<div class="mc-cat">' + u.category + ' · ' + items.length + ' item' + (items.length === 1 ? '' : 's') + '</div>' +
         '</div>' +
-        '<button type="button" class="sc-add" onclick="addMenuItem(\'' + u.name.replace(/'/g, "\\'") + '\')">+ Add item</button>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+          '<button type="button" class="sc-add" style="background:#5a4f8c;" onclick="openMenuExtractPicker(\'' + escTruckJs + '\')">📷 Extract from photo / PDF</button>' +
+          '<button type="button" class="sc-add" onclick="addMenuItem(\'' + escTruckJs + '\')">+ Add item</button>' +
+        '</div>' +
       '</div>' +
       '<div class="menu-item-list">' +
         (items.length === 0
-          ? '<div class="roster-empty">No items yet. Tap + Add item.</div>'
+          ? '<div class="roster-empty">No items yet. Tap + Add item, or extract from a menu photo / PDF.</div>'
           : items.map((m, idx) => menuItemHtml(u, m, idx)).join('')) +
       '</div>' +
     '</div>';
   }).join('');
+}
+
+// ─── EXTRACT MENU FROM PHOTO / PDF ─────────────────────────────
+// Per-truck upload that sends a menu image or PDF to Claude via the
+// Worker's /extract-menu route and merges the extracted items into
+// MENU[truck]. Each item comes back with name + ingredients +
+// equipment + notes so the ordering forecast already has structured
+// data to read from.
+let MENU_EXTRACT_PENDING_TRUCK = null;
+
+function openMenuExtractPicker(truck) {
+  if (!getPasscode()) { openSettingsModal(); toast('Add the team passcode first', 'error'); return; }
+  MENU_EXTRACT_PENDING_TRUCK = truck;
+  let inp = document.getElementById('menuExtractFile');
+  if (!inp) {
+    inp = document.createElement('input');
+    inp.type = 'file';
+    inp.id = 'menuExtractFile';
+    inp.accept = 'image/*,application/pdf';
+    inp.style.display = 'none';
+    document.body.appendChild(inp);
+    inp.addEventListener('change', onMenuExtractFilePicked);
+  }
+  inp.value = '';
+  inp.click();
+}
+
+async function onMenuExtractFilePicked(e) {
+  const file = e.target.files && e.target.files[0];
+  const truck = MENU_EXTRACT_PENDING_TRUCK;
+  e.target.value = '';
+  if (!file || !truck) return;
+  toast('Reading menu…');
+  let dataUrl;
+  try {
+    dataUrl = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result); r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+  } catch (err) { toast('Could not read file: ' + err.message, 'error'); return; }
+  const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+  if (!match) { toast('Could not read file', 'error'); return; }
+  const mediaType = match[1];
+  const fileBase64 = match[2];
+  const fleetMap = fleetByName();
+  const unit = fleetMap[truck] || { name: truck, category: '' };
+  const ingredientHints = (typeof ingredientsFor === 'function' ? ingredientsFor(unit) : []).slice(0, 25);
+  const equipmentHints  = (typeof equipmentFor  === 'function' ? equipmentFor(unit)  : []).slice(0, 20);
+
+  toast('Sending menu to Claude…');
+  try {
+    const res = await apiCall('/extract-menu', {
+      method: 'POST',
+      body: JSON.stringify({
+        fileBase64, mediaType,
+        truckName: truck,
+        truckCategory: unit.category || '',
+        ingredientHints,
+        equipmentHints
+      })
+    });
+    if (res.status === 503) {
+      const d = await res.json().catch(() => ({}));
+      toast(d.message || 'Menu extraction needs ANTHROPIC_API_KEY on the Worker', 'error');
+      return;
+    }
+    if (!res.ok) {
+      const t = await res.text().catch(() => '');
+      toast('Menu extract failed (' + res.status + '): ' + t.slice(0, 80), 'error');
+      return;
+    }
+    const data = await res.json();
+    const items = Array.isArray(data.items) ? data.items : [];
+    if (!items.length) { toast('No menu items detected — try a clearer photo', 'error'); return; }
+    MENU[truck] = MENU[truck] || [];
+    const defaultWin = (typeof SERVICE_WINDOWS !== 'undefined' && SERVICE_WINDOWS[0]) ? SERVICE_WINDOWS[0].id : '';
+    items.forEach(it => {
+      MENU[truck].push({
+        name: (it.name || '').toString().trim(),
+        windowId: defaultWin,
+        ingredients: Array.isArray(it.ingredients) ? it.ingredients.filter(Boolean).map(x => String(x).trim()) : [],
+        equipment:   Array.isArray(it.equipment)   ? it.equipment.filter(Boolean).map(x => String(x).trim())   : [],
+        notes: (it.notes || '').toString().trim()
+      });
+    });
+    renderMenu();
+    if (typeof recordChange === 'function') recordChange();
+    toast('Added ' + items.length + ' menu item' + (items.length === 1 ? '' : 's') + ' ✓');
+  } catch (err) {
+    if (err.message === 'NO_PASSCODE') { openSettingsModal(); return; }
+    toast('Menu extract failed: ' + err.message, 'error');
+  } finally {
+    MENU_EXTRACT_PENDING_TRUCK = null;
+  }
 }
 
 function addMenuItem(truck) {
