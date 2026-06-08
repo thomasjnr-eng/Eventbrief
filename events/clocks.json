@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-06-08T06:43:55.494Z",
+  "savedAt": "2026-06-08T06:44:02.280Z",
   "entries": [
     {
       "id": "clk_mpx9726c_bwfp7n",
@@ -371,6 +371,15 @@
       "lat": null,
       "lng": null,
       "accuracy": null
+    },
+    {
+      "id": "clk_mq4uhysn_a35h1c",
+      "user": "Simon O Connor",
+      "type": "in",
+      "timestamp": "2026-06-08T06:44:02.279Z",
+      "lat": 53.28979,
+      "lng": -6.46689,
+      "accuracy": 17
     }
   ]
 }
