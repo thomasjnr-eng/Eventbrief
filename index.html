@@ -2743,6 +2743,17 @@ body {
         </div>
         <div id="forceSignOutList" style="max-height:40vh;overflow:auto;"></div>
       </div>
+
+      <div id="weeklyDigestSection" data-role-min="manager" style="margin-top:22px;">
+        <hr style="border:0;border-top:1px solid var(--border);margin:18px 0;">
+        <p><strong style="color:var(--white);">Weekly Digest Email</strong></p>
+        <p>The Worker emails a "This week's events" rundown to every address in WEEKLY_DIGEST_TO every Monday morning. Preview it any time to see exactly what'll land in their inbox, or send a test to yourself right now.</p>
+        <div class="modal-actions" style="justify-content:flex-start;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="previewWeeklyDigest()">📰 Preview in browser</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="sendDigestTestToMe()">✉ Send test to me…</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="sendDigestNowToList()">📨 Send live now</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -9460,6 +9471,76 @@ async function clearForceSignOutForUser(username) {
 
 // Manager panel inside Settings: list everyone who's clocked in
 // recently (from clocks.json) with a force-out button per user.
+// ─── WEEKLY DIGEST PREVIEW / TEST ─────────────────────────────
+// Settings hooks for the Monday-morning digest. preview opens the
+// rendered HTML in a new tab, test-to-me POSTs /send-digest-now with
+// an override recipient, send-live triggers the real distribution
+// (subject to the same MailChannels setup).
+async function previewWeeklyDigest() {
+  if (!isManager()) { toast('Manager mode required', 'error'); return; }
+  const passcode = getPasscode();
+  if (!passcode) { toast('Set the team passcode first', 'error'); return; }
+  try {
+    // We fetch directly so we can write the HTML straight into a new
+    // tab. apiCall returns a Response that already buffered the body.
+    const res = await fetch(WORKER_URL + '/preview-digest', { headers: { 'X-Auth-Passcode': passcode } });
+    if (res.status === 401) { toast('Passcode rejected', 'error'); return; }
+    if (!res.ok) {
+      const txt = await res.text().catch(() => '');
+      toast('Preview failed (' + res.status + '): ' + txt.slice(0, 80), 'error');
+      return;
+    }
+    const html = await res.text();
+    const w = window.open('', '_blank');
+    if (!w) { toast('Pop-up blocked — allow new tabs for this site', 'error'); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+  } catch (e) {
+    toast('Preview failed: ' + e.message, 'error');
+  }
+}
+
+async function sendDigestTestToMe() {
+  if (!isManager()) { toast('Manager mode required', 'error'); return; }
+  const def = (typeof userEmailHint === 'function') ? userEmailHint() : '';
+  const to = prompt('Send the weekly digest as a one-off test to which email address?', def || 'tom@obrieneventcatering.com');
+  if (!to || !to.trim()) return;
+  try {
+    const res = await apiCall('/send-digest-now', { method: 'POST', body: JSON.stringify({ to: to.trim() }) });
+    if (res.status === 503) {
+      const d = await res.json().catch(() => ({}));
+      toast(d.message || 'Email not configured on the Worker', 'error'); return;
+    }
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({ detail: 'unknown' }));
+      toast('Test send failed: ' + (d.detail || res.status), 'error'); return;
+    }
+    const d = await res.json();
+    toast('Test sent to ' + (d.sentTo || []).join(', ') + ' ✓');
+  } catch (e) {
+    toast('Test send failed: ' + e.message, 'error');
+  }
+}
+
+async function sendDigestNowToList() {
+  if (!isManager()) { toast('Manager mode required', 'error'); return; }
+  if (!confirm('Send the weekly digest LIVE to every address in WEEKLY_DIGEST_TO right now? This skips waiting for Monday morning.')) return;
+  try {
+    const res = await apiCall('/send-digest-now', { method: 'POST', body: JSON.stringify({}) });
+    if (res.status === 503) {
+      const d = await res.json().catch(() => ({}));
+      toast(d.message || 'Email not configured on the Worker', 'error'); return;
+    }
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({ detail: 'unknown' }));
+      toast('Live send failed: ' + (d.detail || res.status), 'error'); return;
+    }
+    const d = await res.json();
+    toast('Digest sent to ' + (d.sentTo || []).length + ' recipient' + (((d.sentTo || []).length) === 1 ? '' : 's') + ' ✓');
+  } catch (e) {
+    toast('Live send failed: ' + e.message, 'error');
+  }
+}
+
 async function renderForceSignOutPanel() {
   const host = document.getElementById('forceSignOutList');
   if (!host) return;
