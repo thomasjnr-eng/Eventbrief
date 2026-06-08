@@ -1,0 +1,9 @@
+name = "obrien-brief-api"
+main = "index.js"
+compatibility_date = "2024-09-01"
+
+# Monday-morning weekly digest. Cron expressions run in UTC.
+# 06:30 UTC every Monday = 07:30 IST (summer) / 06:30 GMT (winter).
+# Tweak if the Ops team wants it earlier or later.
+[triggers]
+crons = ["30 6 * * 1"]

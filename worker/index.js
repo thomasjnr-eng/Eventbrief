@@ -27,6 +27,12 @@
 //                      account to send via MailChannels — see README.
 //                      Without it the route returns 503.
 //   EMAIL_FROM_NAME    (optional) Friendly sender name.
+//   WEEKLY_DIGEST_TO   Comma-separated list of email addresses that
+//                      should receive the Monday-morning "this week"
+//                      digest. Falls back to EMAIL_TO, then to
+//                      operations@obrieneventcatering.com. Triggered by
+//                      the cron trigger configured in wrangler.toml
+//                      (default 06:30 UTC every Monday).
 
 const corsHeaders = (origin) => ({
   'Access-Control-Allow-Origin': origin || '*',
@@ -106,6 +112,15 @@ export default {
     } catch (e) {
       return json({ error: e.message }, 500, origin);
     }
+  },
+
+  // Cron Trigger entry point. Schedule the cron in wrangler.toml:
+  //   [triggers]
+  //   crons = ["30 6 * * 1"]   # 06:30 UTC every Monday
+  // Cloudflare wakes the Worker, invokes scheduled(), and waitUntil
+  // keeps the runtime alive until sendWeeklyDigest finishes.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(sendWeeklyDigest(env));
   }
 };
 
@@ -377,6 +392,165 @@ async function emailPlanViaMailChannels(payload, env, origin) {
     return json({ ok: true }, 200, origin);
   } catch (e) {
     return json({ error: 'email_unreachable', detail: e.message }, 502, origin);
+  }
+}
+
+// ─── WEEKLY DIGEST ────────────────────────────────────────────
+// Cron-triggered Monday morning email. Walks every event file in the
+// repo, picks out the ones touching the current week, and emails a
+// day-by-day summary to every address in WEEKLY_DIGEST_TO (falls back
+// to EMAIL_TO, then operations@obrieneventcatering.com).
+async function sendWeeklyDigest(env) {
+  try {
+    if (!env.EMAIL_FROM) {
+      console.error('weekly digest skipped: EMAIL_FROM not configured');
+      return;
+    }
+    const recips = (env.WEEKLY_DIGEST_TO || env.EMAIL_TO || 'operations@obrieneventcatering.com')
+      .split(',').map(s => s.trim()).filter(Boolean);
+    if (!recips.length) { console.error('weekly digest skipped: no recipients'); return; }
+
+    // Load all event JSON files via the GitHub Contents API
+    const listRes = await githubApi('/contents/events' + (env.GITHUB_BRANCH ? '?ref=' + encodeURIComponent(env.GITHUB_BRANCH) : ''), {}, env);
+    if (!listRes.ok) { console.error('weekly digest list failed:', listRes.status); return; }
+    const items = await listRes.json();
+    const eventFiles = items.filter(f => f.type === 'file' && f.name.endsWith('.json') &&
+      !f.name.startsWith('plan-') &&
+      f.name !== 'clocks.json' && f.name !== 'damage-reports.json' && f.name !== 'force-signouts.json');
+
+    const events = [];
+    for (const f of eventFiles) {
+      try {
+        const r = await githubApi('/contents/events/' + encodeURIComponent(f.name) + (env.GITHUB_BRANCH ? '?ref=' + encodeURIComponent(env.GITHUB_BRANCH) : ''), {}, env);
+        if (!r.ok) continue;
+        const meta = await r.json();
+        const decoded = decodeBase64Utf8(meta.content.replace(/\n/g, ''));
+        const parsed = JSON.parse(decoded);
+        if (parsed && parsed.form) events.push(parsed.form);
+      } catch (e) { /* skip broken file */ }
+    }
+
+    // Compute the Monday→Sunday window in UTC. The cron fires Monday
+    // morning UTC so "today" is the Monday we want.
+    const now = new Date();
+    const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const dow = (monday.getUTCDay() + 6) % 7;
+    monday.setUTCDate(monday.getUTCDate() - dow);
+    const sunday = new Date(monday); sunday.setUTCDate(sunday.getUTCDate() + 6);
+    const fmtIso = (d) => d.toISOString().slice(0, 10);
+    const mondayStr = fmtIso(monday);
+    const sundayStr = fmtIso(sunday);
+
+    // Group events by trading day in this week
+    function expandDays(form) {
+      const out = new Set();
+      if (Array.isArray(form._tradingDays) && form._tradingDays.length) {
+        form._tradingDays.forEach(d => { if (d && d.date) out.add(d.date); });
+      } else if (form.eventStartDate) {
+        const s = new Date(form.eventStartDate + 'T00:00:00Z');
+        const e = new Date((form.eventFinishDate || form.eventStartDate) + 'T00:00:00Z');
+        const cur = new Date(s);
+        let guard = 0;
+        while (cur <= e && guard++ < 60) { out.add(fmtIso(cur)); cur.setUTCDate(cur.getUTCDate() + 1); }
+      } else if (form.eventDate) {
+        out.add(form.eventDate);
+      }
+      return [...out];
+    }
+    const byDay = {};
+    let touched = 0;
+    events.forEach(f => {
+      const days = expandDays(f);
+      let hit = false;
+      days.forEach(d => {
+        if (d >= mondayStr && d <= sundayStr) {
+          hit = true;
+          (byDay[d] = byDay[d] || []).push(f);
+        }
+      });
+      if (hit) touched++;
+    });
+    const sortedDays = Object.keys(byDay).sort();
+
+    const fmtDayLabel = (iso) => {
+      const dt = new Date(iso + 'T00:00:00Z');
+      return dt.toLocaleDateString('en-IE', { weekday: 'long', day: '2-digit', month: 'short', timeZone: 'Europe/Dublin' });
+    };
+    const escape = (s) => (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const weekRangeLabel =
+      new Date(monday + 'T00:00:00').toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) +
+      ' – ' +
+      new Date(sunday + 'T00:00:00').toLocaleDateString('en-IE', { day: '2-digit', month: 'short' });
+
+    let bodyDays;
+    let textLines = ["O'Brien Event Catering — This week's schedule (" + mondayStr + ' to ' + sundayStr + ')', ''];
+    if (!sortedDays.length) {
+      bodyDays = '<p style="color:#555;">Nothing on the calendar this week. Enjoy the quiet.</p>';
+      textLines.push('Nothing on the calendar this week.');
+    } else {
+      bodyDays = sortedDays.map(d => {
+        const dayLabel = fmtDayLabel(d).toUpperCase();
+        textLines.push(dayLabel);
+        const evs = byDay[d].map(f => {
+          const name = f.eventName || '(unnamed)';
+          const venue = f.venueName || '';
+          const fleet = (f._fleet || []).length;
+          const tw = (f.eventStartTime && f.eventFinishTime) ? (f.eventStartTime + '–' + f.eventFinishTime) : '';
+          textLines.push('  • ' + name + (venue ? ' — ' + venue : '') + (tw ? ' (' + tw + ')' : '') + ' · ' + fleet + ' unit' + (fleet === 1 ? '' : 's'));
+          return '<tr>' +
+            '<td style="padding:6px 12px 6px 0;font-weight:700;color:#111;">' + escape(name) + '</td>' +
+            '<td style="padding:6px 12px 6px 0;color:#555;">' + escape(venue || '—') + '</td>' +
+            '<td style="padding:6px 12px 6px 0;color:#555;white-space:nowrap;">' + escape(tw || '—') + '</td>' +
+            '<td style="padding:6px 0;color:#5a7a4f;font-weight:700;">' + fleet + ' unit' + (fleet === 1 ? '' : 's') + '</td>' +
+          '</tr>';
+        }).join('');
+        textLines.push('');
+        return '<h3 style="font-family:\'Bebas Neue\',Arial,sans-serif;font-size:16px;letter-spacing:0.1em;color:#5a7a4f;margin:18px 0 6px;border-bottom:1px solid #e0ddd8;padding-bottom:4px;">' + escape(dayLabel) + '</h3>' +
+          '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
+            '<thead><tr>' +
+              '<th style="text-align:left;padding:4px 12px 4px 0;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#888;">Event</th>' +
+              '<th style="text-align:left;padding:4px 12px 4px 0;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#888;">Venue</th>' +
+              '<th style="text-align:left;padding:4px 12px 4px 0;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#888;">Trade</th>' +
+              '<th style="text-align:left;padding:4px 0;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#888;">Fleet</th>' +
+            '</tr></thead><tbody>' + evs + '</tbody></table>';
+      }).join('');
+    }
+
+    const html = '<div style="font-family:Lato,Helvetica,Arial,sans-serif;color:#111;background:#fff;padding:24px 28px;max-width:760px;">' +
+      '<div style="border-bottom:3px solid #5a7a4f;padding-bottom:10px;margin-bottom:16px;">' +
+        '<div style="font-family:\'Bebas Neue\',Arial,sans-serif;font-size:13px;letter-spacing:0.12em;color:#5a7a4f;">O\'BRIEN EVENT CATERING · WEEKLY DIGEST</div>' +
+        '<div style="font-size:22px;font-weight:700;margin-top:4px;">This week\'s schedule</div>' +
+        '<div style="font-size:13px;color:#555;margin-top:2px;">' + weekRangeLabel + ' · ' + touched + ' event' + (touched === 1 ? '' : 's') + '</div>' +
+      '</div>' +
+      bodyDays +
+      '<div style="margin-top:22px;font-size:11px;color:#aaa;border-top:1px solid #e0ddd8;padding-top:10px;">Sent automatically every Monday morning by the O\'Brien Brief planner. Open ops.obrieneventcatering.com for full briefs and live progress.</div>' +
+    '</div>';
+    const text = textLines.join('\n');
+
+    const personalizations = recips.map(to => ({ to: [{ email: to }] }));
+    const mailReq = {
+      personalizations,
+      from: { email: env.EMAIL_FROM, name: env.EMAIL_FROM_NAME || "O'Brien Brief Planner" },
+      subject: "This week's schedule — " + weekRangeLabel,
+      content: [
+        { type: 'text/plain', value: text },
+        { type: 'text/html', value: html }
+      ]
+    };
+    const r = await fetch('https://api.mailchannels.net/tx/v1/send', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(mailReq)
+    });
+    if (!r.ok) {
+      const errText = await r.text().catch(() => '');
+      console.error('weekly digest send failed', r.status, errText);
+    } else {
+      console.log('weekly digest sent to', recips.join(', '), '·', touched, 'event(s) ·', mondayStr, 'to', sundayStr);
+    }
+  } catch (e) {
+    console.error('weekly digest exception', e && e.message);
   }
 }
 
