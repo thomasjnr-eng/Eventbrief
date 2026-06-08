@@ -8958,17 +8958,44 @@ async function renderTodayAndWeek() {
   }
 
   // ─── THIS WEEK ───
-  if (weekEvents.length) {
+  // Expand each event into one row per trading day that falls inside
+  // the current week (today still shows above). Scattered events
+  // honour _tradingDays; contiguous multi-day events expand their
+  // start→finish range; single-day events become a single row.
+  function expandEventDays(form) {
+    const out = new Set();
+    if (Array.isArray(form._tradingDays) && form._tradingDays.length) {
+      form._tradingDays.forEach(d => { if (d && d.date) out.add(d.date); });
+    } else if (form.eventStartDate) {
+      const s = new Date(form.eventStartDate + 'T00:00:00');
+      const e = new Date((form.eventFinishDate || form.eventStartDate) + 'T00:00:00');
+      const cur = new Date(s);
+      while (cur <= e) { out.add(localIso(cur)); cur.setDate(cur.getDate() + 1); if (out.size > 60) break; }
+    } else if (form.eventDate) {
+      out.add(form.eventDate);
+    }
+    return [...out];
+  }
+  const weekRows = [];
+  weekEvents.forEach(ev => {
+    const days = expandEventDays(ev.form);
+    days.forEach(d => {
+      if (d >= weekStartStr && d <= weekEndStr && d !== todayStr) {
+        weekRows.push({ ev, date: d });
+      }
+    });
+  });
+  weekRows.sort((a, b) => a.date.localeCompare(b.date));
+  if (weekRows.length) {
     weekHost.innerHTML = '<div class="focus-head">' +
       '<div class="focus-title">THIS WEEK <span class="focus-sub">' +
         weekStart.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) + ' – ' +
         weekEnd.toLocaleDateString('en-IE', { day: '2-digit', month: 'short' }) +
       '</span></div>' +
       '</div>' +
-      weekEvents.map(ev => {
+      weekRows.map(({ ev, date: d }) => {
         const f = ev.form || {};
-        const d = getEventDate(f);
-        const dt = d ? new Date(d) : null;
+        const dt = d ? new Date(d + 'T00:00:00') : null;
         const dayLabel = dt ? dt.toLocaleDateString('en-IE', { weekday: 'short', day: '2-digit' }) : '—';
         const name = (f.eventName || '(unnamed)').replace(/</g, '&lt;');
         const venue = (f.venueName || '').replace(/</g, '&lt;');
