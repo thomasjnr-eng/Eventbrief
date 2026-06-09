@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-10-k-pop-forever-tribute",
-  "savedAt": "2026-06-09T10:28:58.711Z",
+  "savedAt": "2026-06-09T10:30:08.102Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -46,7 +46,7 @@
     "dieselResponsible": "",
     "dieselNotes": "",
     "waterSource": "",
-    "waterVolume": "1",
+    "waterVolume": "",
     "wasteDisposal": "",
     "solidWaste": "",
     "waterNotes": "",
@@ -120,7 +120,7 @@
       },
       "step2": {
         "user": "Kamila",
-        "at": "2026-06-09T10:28:50.975Z"
+        "at": "2026-06-09T10:29:08.626Z"
       }
     },
     "_crewChecklists": {},
