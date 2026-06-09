@@ -1,15 +1,22 @@
 {
   "version": 1,
   "id": "2026-06-27-christy-moore",
-  "savedAt": "2026-06-08T19:41:06.125Z",
+  "savedAt": "2026-06-09T17:34:40.227Z",
   "form": {
+    "planTitle": "",
+    "planDate": "",
+    "planStart": "",
+    "planEnd": "",
+    "planLead": "",
+    "planAssigned": "",
+    "planNotes": "",
     "eventName": "Christy Moore",
     "bookingStatus": "Provisional",
     "clientName": "",
     "clientType": "Corporate",
     "contactName": "",
     "contactPhone": "",
-    "contactEmail": "",
+    "contactEmail": "imaoifequalter@gmail.com",
     "onsiteContact": "",
     "loadInDate": "2026-06-27",
     "loadInTime": "",
@@ -24,6 +31,9 @@
     "venueName": "Live at the Marquee, Cork",
     "venueAddress": "",
     "accessNotes": "",
+    "venuePinLabel": "",
+    "venueRadius": "200",
+    "copySetupSelect": "",
     "otherUnits": "",
     "pitchRef": "",
     "pitchSize": "",
@@ -32,6 +42,9 @@
     "pitchNotes": "",
     "cableRun": "",
     "powerNotes": "",
+    "dieselSource": "",
+    "dieselResponsible": "",
+    "dieselNotes": "",
     "waterSource": "",
     "waterVolume": "",
     "wasteDisposal": "",
@@ -55,13 +68,13 @@
     "prePaidNotes": "",
     "voucherDetails": "",
     "posNotes": "",
-    "menuNotes": "",
     "foodCovers": "",
     "coffeeCovers": "",
     "icecreamCovers": "",
     "deliveryDate": "",
     "coldChain": "",
     "stockNotes": "",
+    "menuNotes": "",
     "eventManager": "",
     "opsLead": "",
     "leadChef": "",
@@ -69,14 +82,34 @@
     "clientInstructions": "",
     "opsNotes": "(Bulk-imported skeleton — fill in details)",
     "postEventNotes": "",
-    "_isScattered": false,
-    "_tradingDays": [],
     "_fleet": [],
     "_power": [],
     "_revenue": [],
     "_pos": [],
     "_safety": [],
+    "_isScattered": false,
+    "_tradingDays": [],
+    "_iceVansNeedPower": false,
     "_stockStatuses": [],
+    "_stockLoadItems": {},
+    "_serviceWindows": [
+      {
+        "id": "sw_alotc16",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_apbd5tn",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
+    "_menu": {},
+    "_venuePin": null,
+    "_clockEntries": [],
+    "_crewRoster": {},
     "_staffAllocations": [],
     "_truckSafetyChecks": {},
     "_signatures": [],
@@ -85,7 +118,8 @@
         "user": "TOB",
         "at": "2026-06-08T19:41:05.485Z"
       }
-    }
-  },
-  "_bulkImported": true
+    },
+    "_crewChecklists": {},
+    "_signOffs": []
+  }
 }
