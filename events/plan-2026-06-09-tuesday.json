@@ -2,7 +2,7 @@
   "version": 1,
   "type": "dayplan",
   "id": "2026-06-09-tuesday",
-  "savedAt": "2026-06-09T13:42:25.441Z",
+  "savedAt": "2026-06-09T13:42:33.585Z",
   "savedBy": "SOC",
   "form": {
     "title": "Tuesday",
@@ -39,9 +39,9 @@
         "priority": "medium",
         "dueTime": "10:00",
         "eventLink": "",
-        "done": false,
-        "doneBy": null,
-        "doneAt": null
+        "done": true,
+        "doneBy": "SOC",
+        "doneAt": "2026-06-09T13:42:27.243Z"
       },
       {
         "label": "Gather all Equipment Needed for Beyond The Pale",
