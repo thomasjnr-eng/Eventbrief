@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-17-kevin-bridges",
-  "savedAt": "2026-06-09T17:31:45.064Z",
+  "savedAt": "2026-06-09T17:34:53.130Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -16,7 +16,7 @@
     "clientType": "Corporate",
     "contactName": "",
     "contactPhone": "",
-    "contactEmail": "",
+    "contactEmail": "imaoifequalter@gmail.com",
     "onsiteContact": "",
     "loadInDate": "2026-07-17",
     "loadInTime": "",
@@ -94,13 +94,13 @@
     "_stockLoadItems": {},
     "_serviceWindows": [
       {
-        "id": "sw_omvb7ix",
+        "id": "sw_alotc16",
         "name": "Lunch",
         "start": "12:00",
         "end": "14:30"
       },
       {
-        "id": "sw_7pq911a",
+        "id": "sw_apbd5tn",
         "name": "Dinner",
         "start": "18:00",
         "end": "21:00"
