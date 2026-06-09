@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-12-beyond-the-pale-2026",
-  "savedAt": "2026-06-09T11:27:49.037Z",
+  "savedAt": "2026-06-09T11:41:07.534Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -11,12 +11,12 @@
     "planAssigned": "",
     "planNotes": "",
     "eventName": "Beyond the Pale 2026",
-    "bookingStatus": "Provisional",
-    "clientName": "",
-    "clientType": "Corporate",
-    "contactName": "",
-    "contactPhone": "",
-    "contactEmail": "",
+    "bookingStatus": "Confirmed",
+    "clientName": "Fuel HQ",
+    "clientType": "Private",
+    "contactName": "Aoife Qualter ",
+    "contactPhone": "(086) 373 9680",
+    "contactEmail": "imaoifequalter@gmail.com",
     "onsiteContact": "",
     "loadInDate": "2026-06-10",
     "loadInTime": "",
@@ -25,7 +25,7 @@
     "eventFinishDate": "2026-06-12",
     "eventFinishTime": "",
     "loadOutDate": "2026-06-15",
-    "loadOutTime": "",
+    "loadOutTime": "10:00",
     "loadNotes": "",
     "attendance": "",
     "venueName": "Glendalough Estate, Co. Wicklow",
@@ -134,8 +134,8 @@
     "_signatures": [],
     "_changeLog": {
       "step1": {
-        "user": "TOB",
-        "at": "2026-06-08T20:10:23.609Z"
+        "user": "Kamila",
+        "at": "2026-06-09T11:35:28.133Z"
       }
     },
     "_crewChecklists": {},
