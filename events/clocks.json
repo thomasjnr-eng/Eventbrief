@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-06-09T08:31:57.212Z",
+  "savedAt": "2026-06-09T08:36:57.608Z",
   "entries": [
     {
       "id": "clk_mpx9726c_bwfp7n",
@@ -416,6 +416,15 @@
       "lat": 53.294159,
       "lng": -6.47815,
       "accuracy": 20
+    },
+    {
+      "id": "clk_mq6dz1c8_1tqj2i",
+      "user": "Thomas O'Brien",
+      "type": "in",
+      "timestamp": "2026-06-09T08:36:57.608Z",
+      "lat": null,
+      "lng": null,
+      "accuracy": null
     }
   ]
 }
