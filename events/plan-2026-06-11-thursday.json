@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-06-11-thursday",
+  "savedAt": "2026-06-10T19:15:31.295Z",
+  "savedBy": "Thomas O'Brien",
+  "form": {
+    "title": "Thursday",
+    "planDate": "2026-06-11",
+    "startTime": "09:00",
+    "endTime": "19:00",
+    "lead": "Thomas O'Brien",
+    "assigned": "Robo, Kian, Simon, Anto, Cian",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Camile to BTP",
+        "assignedTo": "Tom ",
+        "priority": "medium",
+        "dueTime": "07:00",
+        "eventLink": "Beyond the Pale 2026 (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Airstream positioned in RDS ",
+        "assignedTo": "Robo, Anto",
+        "priority": "medium",
+        "dueTime": "10:00",
+        "eventLink": "Google Summer Party (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Open Leopardstown (Drinks, Extinguishers)",
+        "assignedTo": "Robo, Anto",
+        "priority": "medium",
+        "dueTime": "13:30",
+        "eventLink": "Leopardstown Racing (11 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Ice Cream Van & Box Fridge at Unit",
+        "assignedTo": "Robo, Anto, Kian",
+        "priority": "medium",
+        "dueTime": "09:00",
+        "eventLink": "Google Summer Party (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Dishwasher & Crockery ",
+        "assignedTo": "Simon, Cian",
+        "priority": "medium",
+        "dueTime": "07:30",
+        "eventLink": "Beyond the Pale 2026 (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Camile Stock & Nisbets in Sprinter Fridge ",
+        "assignedTo": "Kian Mc",
+        "priority": "medium",
+        "dueTime": "10:30",
+        "eventLink": "Google Summer Party (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Build BTP Fridge Van ",
+        "assignedTo": "Kian Mc ",
+        "priority": "medium",
+        "dueTime": "14:30",
+        "eventLink": "Beyond the Pale 2026 (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Setup/Build BTP Camile & Marquee ",
+        "assignedTo": "Simon, Cian, Tom",
+        "priority": "medium",
+        "dueTime": "13:00",
+        "eventLink": "Beyond the Pale 2026 (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "BTP Lunch & Dinner Menu Delivery",
+        "assignedTo": "Anto",
+        "priority": "medium",
+        "dueTime": "11:00",
+        "eventLink": "Beyond the Pale 2026 (12 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
