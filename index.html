@@ -1890,7 +1890,7 @@ body {
 /* ─── DAY PLAN TASKS (Plan Edit view) ─── */
 .plan-task-row {
   display: grid;
-  grid-template-columns: 26px 1fr 100px 90px 130px 32px;
+  grid-template-columns: 26px 1fr 100px 90px 130px 110px 32px;
   grid-auto-rows: auto;
   gap: 6px 8px;
   align-items: center;
@@ -1900,7 +1900,7 @@ body {
   padding-left: 8px;
 }
 .plan-task-row .task-event-link {
-  grid-column: 2 / 6;
+  grid-column: 2 / 7;
   font-size: 11px;
   padding: 5px 9px;
 }
@@ -1952,7 +1952,7 @@ body {
 .plan-task-meta { font-size: 11px; color: var(--grey); margin-top: 2px; padding-left: 42px; }
 @media (max-width: 700px) {
   .plan-task-row { grid-template-columns: 26px 1fr 32px; }
-  .plan-task-row > *:nth-child(n+3):nth-child(-n+5) { grid-column: 2/3; }
+  .plan-task-row > *:nth-child(n+3):nth-child(-n+6) { grid-column: 2/3; }
 }
 
 /* ─── PLAN CARD ON HOME (visual distinction from events) ─── */
@@ -2306,7 +2306,7 @@ body {
 .roster-rows { display: flex; flex-direction: column; gap: 5px; }
 .roster-row {
   display: grid;
-  grid-template-columns: 1.4fr 1.1fr 110px 1.1fr 30px;
+  grid-template-columns: 1.3fr 1fr 100px 1fr 0.9fr 30px;
   gap: 6px;
   align-items: center;
   padding: 4px 0;
@@ -2343,7 +2343,7 @@ body {
 }
 @media (max-width: 700px) {
   .roster-row { grid-template-columns: 1fr 30px; }
-  .roster-row > input:nth-child(n+2):nth-child(-n+4),
+  .roster-row > input:nth-child(n+2):nth-child(-n+5),
   .roster-row > select { grid-column: 1 / 2; }
 }
 
@@ -5599,6 +5599,7 @@ function rosterRowHtml(unit, member, idx) {
       EXPERIENCE_LEVELS.map(l => '<option' + ((member.experience || 'Experienced') === l ? ' selected' : '') + '>' + l + '</option>').join('') +
     '</select>' +
     '<input type="text" data-field="role" list="' + dlId + '" placeholder="Role" value="' + (member.role || '').replace(/"/g, '&quot;') + '" oninput="onRosterEdit()">' +
+    '<input type="text" data-field="van" list="rosterVanList" placeholder="Van" value="' + (member.van || '').replace(/"/g, '&quot;') + '" oninput="onRosterEdit()" onchange="rememberVanName(this.value)" title="Ops van for this crew member">' +
     '<button type="button" class="roster-remove" onclick="removeRosterMember(\'' + unit.name.replace(/'/g, "\\\\'") + '\', ' + idx + ')" title="Remove">&times;</button>' +
     '</div>';
 }
@@ -5624,7 +5625,9 @@ function renderCrewRoster(preserve) {
   const sel = new Set(selected.map(u => u.name));
   Object.keys(CREW_ROSTER).forEach(t => { if (!sel.has(t)) delete CREW_ROSTER[t]; });
 
-  container.innerHTML = selected.map(u => {
+  container.innerHTML =
+    '<datalist id="rosterVanList" class="van-options">' + vanDatalistOptionsHtml() + '</datalist>' +
+    selected.map(u => {
     const roster = CREW_ROSTER[u.name] || [];
     const min = staffMinFor(u.category);
     const under = roster.length < min;
@@ -6992,12 +6995,14 @@ function generateBrief() {
                 '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Contact</th>' +
                 '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Experience</th>' +
                 '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Role</th>' +
+                '<th style="text-align:left;padding:5px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Van</th>' +
                 '</tr></thead><tbody>' +
                 members.map(m => '<tr>' +
                   '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;"><strong>' + (m.name || '—').replace(/</g,'&lt;') + '</strong></td>' +
                   '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;">' + (m.phone ? '<a href="tel:' + m.phone.replace(/\s/g,'') + '" style="color:#5a7a4f;text-decoration:none;">' + m.phone.replace(/</g,'&lt;') + '</a>' : '<span style="color:#888;">—</span>') + '</td>' +
                   '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#555;">' + (m.experience || '—').replace(/</g,'&lt;') + '</td>' +
                   '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#111;">' + (m.role || '—').replace(/</g,'&lt;') + '</td>' +
+                  '<td style="padding:6px 8px;border-bottom:1px solid #e0ddd8;color:#555;">' + (m.van || '—').replace(/</g,'&lt;') + '</td>' +
                 '</tr>').join('') +
                 '</tbody></table>') +
             '</div>';
@@ -7392,6 +7397,35 @@ function roleRank(r) { return Math.max(0, ROLES.indexOf(r || getRole())); }
 function roleAtLeast(min) { return roleRank(getRole()) >= roleRank(min); }
 const DRAFT_KEY = 'obrien_brief_draft';
 const THEME_KEY = 'obrien_brief_theme';
+const VAN_NAMES_KEY = 'obrien_van_names';
+
+function getKnownVanNames() {
+  try {
+    const raw = localStorage.getItem(VAN_NAMES_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr.filter(v => typeof v === 'string') : [];
+  } catch (e) { return []; }
+}
+function rememberVanName(name) {
+  const v = (name || '').trim();
+  if (!v) return;
+  const cur = getKnownVanNames();
+  if (cur.some(x => x.toLowerCase() === v.toLowerCase())) return;
+  cur.push(v);
+  cur.sort((a, b) => a.localeCompare(b));
+  try { localStorage.setItem(VAN_NAMES_KEY, JSON.stringify(cur.slice(0, 50))); } catch (e) {}
+  refreshVanDatalists();
+}
+function vanDatalistOptionsHtml() {
+  return getKnownVanNames()
+    .map(v => '<option value="' + v.replace(/"/g, '&quot;') + '"></option>')
+    .join('');
+}
+function refreshVanDatalists() {
+  document.querySelectorAll('datalist.van-options').forEach(dl => {
+    dl.innerHTML = vanDatalistOptionsHtml();
+  });
+}
 
 // ─── THEME (light / dark) ────────────────────────────────────
 function getTheme() { return localStorage.getItem(THEME_KEY) || 'light'; }
@@ -8114,6 +8148,9 @@ function populateForm(data) {
     CREW_ROSTER = {};
   }
   renderCrewRoster(CREW_ROSTER);
+  Object.values(CREW_ROSTER).forEach(members => {
+    (members || []).forEach(m => { if (m && m.van) rememberVanName(m.van); });
+  });
   renderTruckSafetyRows(data._truckSafetyChecks);
   setSignatures(data._signatures);
   setChangeLog(data._changeLog);
@@ -8344,7 +8381,7 @@ function newPlan() {
   showPlanEdit();
 }
 
-function addPlanTask(label, assignedTo, done, doneBy, doneAt, priority, dueTime, eventLink) {
+function addPlanTask(label, assignedTo, done, doneBy, doneAt, priority, dueTime, eventLink, van) {
   if (!canEditPlans() && arguments.length === 0) {
     toast('Only ops lead / manager can add tasks', 'error');
     return;
@@ -8352,6 +8389,7 @@ function addPlanTask(label, assignedTo, done, doneBy, doneAt, priority, dueTime,
   PLAN_TASKS.push({
     label: label || '',
     assignedTo: assignedTo || '',
+    van: van || '',
     priority: priority || 'medium',
     dueTime: dueTime || '',
     eventLink: eventLink || '',
@@ -8393,10 +8431,13 @@ function renderPlanTasks() {
   const order = sortedPlanTaskIndexes();
   const roAttr = ro ? ' readonly' : '';
   const disAttr = ro ? ' disabled' : '';
-  list.innerHTML = order.map(idx => {
+  list.innerHTML =
+    '<datalist id="planVanList" class="van-options">' + vanDatalistOptionsHtml() + '</datalist>' +
+    order.map(idx => {
     const t = PLAN_TASKS[idx];
     const escLabel = (t.label || '').replace(/"/g, '&quot;');
     const escAssigned = (t.assignedTo || '').replace(/"/g, '&quot;');
+    const escVan = (t.van || '').replace(/"/g, '&quot;');
     const prio = t.priority || 'medium';
     const due = t.dueTime || '';
     const checked = t.done ? 'checked' : '';
@@ -8412,6 +8453,7 @@ function renderPlanTasks() {
       '</select>' +
       '<input type="time" data-field="dueTime" value="' + due + '" title="Due time (optional)"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].dueTime = this.value">' +
       '<input type="text" data-field="assignedTo" value="' + escAssigned + '" placeholder="Assigned to"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].assignedTo = this.value">' +
+      '<input type="text" data-field="van" list="planVanList" value="' + escVan + '" placeholder="Van"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].van = this.value" onchange="rememberVanName(this.value)" title="Ops van for this task">' +
       (ro ? '' : '<button type="button" class="plan-task-remove" onclick="removePlanTask(' + idx + ')" title="Remove">&times;</button>') +
       '<input class="task-event-link" list="upcomingEventsList" data-field="eventLink" value="' + escLink + '" placeholder="Linked event (pick from list) or note — leave blank if neither"' + roAttr + ' oninput="PLAN_TASKS[' + idx + '].eventLink = this.value">' +
       '</div>' + meta;
@@ -8481,8 +8523,9 @@ function planToPrintableHtml(data) {
       '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;font-size:11px;font-weight:700;color:' + prioColor + ';white-space:nowrap;">' + planPriorityLabel(t.priority || 'medium') + '</td>' +
       '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;font-size:12px;color:#555;white-space:nowrap;">' + (t.dueTime ? fmtT(t.dueTime) : '—') + '</td>' +
       '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;font-size:12px;color:#555;">' + (esc(t.assignedTo) || '—') + '</td>' +
+      '<td style="padding:8px;border-bottom:1px solid #e0ddd8;vertical-align:top;font-size:12px;color:#555;white-space:nowrap;">' + (esc(t.van) || '—') + '</td>' +
       '</tr>';
-  }).join('') : '<tr><td colspan="5" style="padding:12px;color:#888;font-style:italic;font-size:12px;">No tasks listed.</td></tr>';
+  }).join('') : '<tr><td colspan="6" style="padding:12px;color:#888;font-style:italic;font-size:12px;">No tasks listed.</td></tr>';
 
   return '<div style="font-family:Lato,Helvetica,Arial,sans-serif;color:#111;background:#fff;padding:28px 32px;max-width:900px;">' +
     '<div style="border-bottom:3px solid #5a7a4f;padding-bottom:12px;margin-bottom:18px;">' +
@@ -8503,6 +8546,7 @@ function planToPrintableHtml(data) {
         '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Priority</th>' +
         '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Due</th>' +
         '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Assigned</th>' +
+        '<th style="text-align:left;padding:6px 8px;background:#f0ece6;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#666;">Van</th>' +
       '</tr></thead><tbody>' + taskRows + '</tbody>' +
     '</table>' +
     (data.notes ? '<div style="margin-top:18px;border:1px solid #e0ddd8;border-left:3px solid #5a7a4f;background:#f9f8f5;padding:12px 14px;border-radius:3px;"><strong style="font-size:12px;">Notes:</strong><br><span style="font-size:13px;color:#333;">' + esc(data.notes).replace(/\n/g, '<br>') + '</span></div>' : '') +
@@ -8759,6 +8803,7 @@ async function loadPlan(filename) {
     document.getElementById('planAssigned').value = f.assigned || '';
     document.getElementById('planNotes').value = f.notes || '';
     PLAN_TASKS = Array.isArray(f.tasks) ? f.tasks.map(t => Object.assign({}, t)) : [];
+    PLAN_TASKS.forEach(t => { if (t && t.van) rememberVanName(t.van); });
     applyPlanReadOnly();
     renderPlanTasks();
     document.getElementById('planDeleteBtn').style.display = (ro ? 'none' : 'inline-flex');
@@ -8953,10 +8998,11 @@ async function renderTodayPlanFocus() {
         const prio = t.priority === 'high' ? '🔴' : (t.priority === 'low' ? '⚪' : '🟠');
         const dueTxt = t.dueTime ? formatTime(t.dueTime) : '';
         const assigned = t.assignedTo ? ' · ' + (t.assignedTo || '').replace(/</g, '&lt;') : '';
+        const van = t.van ? ' · 🚐 ' + (t.van || '').replace(/</g, '&lt;') : '';
         return '<div class="today-plan-task' + (t.done ? ' done' : '') + '">' +
           '<span class="tpt-prio">' + prio + '</span>' +
           '<span>' + (t.label || '').replace(/</g, '&lt;') + '</span>' +
-          '<span class="tpt-meta">' + dueTxt + assigned + '</span>' +
+          '<span class="tpt-meta">' + dueTxt + assigned + van + '</span>' +
           '</div>';
       }).join('') +
       (tasks.length > 6 ? '<div style="font-size:11px;color:var(--text-muted);margin-top:6px;font-style:italic;">+ ' + (tasks.length - 6) + ' more · open plan to see all</div>' : '') +
