@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "damage",
-  "savedAt": "2026-06-11T19:19:56.413Z",
+  "savedAt": "2026-06-11T19:21:31.141Z",
   "reports": [
     {
       "id": "rpt_mpyge24o_v5m6eh",
@@ -24,6 +24,17 @@
       "unit": "Angelo's Pizza & Pasta",
       "severity": "critical",
       "description": "Top oven on pizza pasta not working keeps tripping out ,bottom 1 is ok ,needs looking at ASAP",
+      "photos": [],
+      "status": "new",
+      "updates": []
+    },
+    {
+      "id": "rpt_mq9vvnd0_n07mqz",
+      "reportedBy": "Robert Mahon",
+      "reportedAt": "2026-06-11T19:21:31.141Z",
+      "unit": "Smash Burger 1",
+      "severity": "minor",
+      "description": "Door on the fridge is off hinge broken",
       "photos": [],
       "status": "new",
       "updates": []
