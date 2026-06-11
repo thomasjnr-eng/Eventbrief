@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-18-leopardstown-racing",
-  "savedAt": "2026-06-11T19:16:57.811Z",
+  "savedAt": "2026-06-11T19:18:08.595Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -11,12 +11,12 @@
     "planAssigned": "",
     "planNotes": "",
     "eventName": "Leopardstown Racing",
-    "bookingStatus": "Provisional",
-    "clientName": "",
+    "bookingStatus": "Confirmed",
+    "clientName": "Levy",
     "clientType": "Corporate",
-    "contactName": "",
-    "contactPhone": "",
-    "contactEmail": "",
+    "contactName": "Troon Jack",
+    "contactPhone": "+35383 059 8897",
+    "contactEmail": "troon.jack@levy.ie",
     "onsiteContact": "",
     "loadInDate": "2026-06-18",
     "loadInTime": "",
@@ -115,8 +115,8 @@
     "_signatures": [],
     "_changeLog": {
       "step1": {
-        "user": "Thomas O'Brien",
-        "at": "2026-06-10T17:41:07.023Z"
+        "user": "Kamila",
+        "at": "2026-06-11T19:18:07.414Z"
       }
     },
     "_crewChecklists": {},
