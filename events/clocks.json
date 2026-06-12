@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-06-12T10:29:38.186Z",
+  "savedAt": "2026-06-12T21:00:36.198Z",
   "entries": [
     {
       "id": "clk_mpx9726c_bwfp7n",
@@ -605,6 +605,15 @@
       "lat": 51.890392,
       "lng": -8.500196,
       "accuracy": 14
+    },
+    {
+      "id": "clk_mqbeux9g_x3qe9r",
+      "user": "Robert Mahon",
+      "type": "out",
+      "timestamp": "2026-06-12T21:00:36.196Z",
+      "lat": 53.276731,
+      "lng": -6.388737,
+      "accuracy": 17
     }
   ]
 }
