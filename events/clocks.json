@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-06-12T10:29:26.206Z",
+  "savedAt": "2026-06-12T10:29:38.186Z",
   "entries": [
     {
       "id": "clk_mpx9726c_bwfp7n",
@@ -596,6 +596,15 @@
       "lat": 51.890393,
       "lng": -8.500202,
       "accuracy": 10
+    },
+    {
+      "id": "clk_mqasbhu2_me21di",
+      "user": "Patrick o brien",
+      "type": "out",
+      "timestamp": "2026-06-12T10:29:38.186Z",
+      "lat": 51.890392,
+      "lng": -8.500196,
+      "accuracy": 14
     }
   ]
 }
