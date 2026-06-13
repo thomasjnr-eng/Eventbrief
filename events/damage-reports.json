@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "damage",
-  "savedAt": "2026-06-13T20:18:08.328Z",
+  "savedAt": "2026-06-13T20:19:32.637Z",
   "reports": [
     {
       "id": "rpt_mpyge24o_v5m6eh",
@@ -57,6 +57,17 @@
       "unit": "Thindi",
       "severity": "major",
       "description": "Left side fryer no working \nFloor to dangerous",
+      "photos": [],
+      "status": "new",
+      "updates": []
+    },
+    {
+      "id": "rpt_mqcstz18_ny6e8u",
+      "reportedBy": "Robert Mahon",
+      "reportedAt": "2026-06-13T20:19:32.637Z",
+      "unit": "Caffe Duomo 3",
+      "severity": "minor",
+      "description": "Mangigans burko needs to be fixed to the counter",
       "photos": [],
       "status": "new",
       "updates": []
