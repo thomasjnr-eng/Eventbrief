@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "damage",
-  "savedAt": "2026-06-12T17:01:32.540Z",
+  "savedAt": "2026-06-13T20:18:08.328Z",
   "reports": [
     {
       "id": "rpt_mpyge24o_v5m6eh",
@@ -46,6 +46,17 @@
       "unit": "Camile Thai",
       "severity": "minor",
       "description": "No fire blanket",
+      "photos": [],
+      "status": "new",
+      "updates": []
+    },
+    {
+      "id": "rpt_mqcss5zb_sne5ii",
+      "reportedBy": "Robert Mahon",
+      "reportedAt": "2026-06-13T20:18:08.328Z",
+      "unit": "Thindi",
+      "severity": "major",
+      "description": "Left side fryer no working \nFloor to dangerous",
       "photos": [],
       "status": "new",
       "updates": []
