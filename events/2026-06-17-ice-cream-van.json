@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-06-17-ice-cream-van",
-  "savedAt": "2026-06-11T18:23:11.718Z",
+  "savedAt": "2026-06-15T08:19:27.529Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_dfv9qv8",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_gjg0o3a",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
