@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "damage",
-  "savedAt": "2026-06-13T20:19:32.637Z",
+  "savedAt": "2026-06-15T21:30:13.927Z",
   "reports": [
     {
       "id": "rpt_mpyge24o_v5m6eh",
@@ -68,6 +68,17 @@
       "unit": "Caffe Duomo 3",
       "severity": "minor",
       "description": "Mangigans burko needs to be fixed to the counter",
+      "photos": [],
+      "status": "new",
+      "updates": []
+    },
+    {
+      "id": "rpt_mqfq8kyv_xp1ys0",
+      "reportedBy": "Robert Mahon",
+      "reportedAt": "2026-06-15T21:30:13.927Z",
+      "unit": "Pitt Bros BBQ",
+      "severity": "minor",
+      "description": "Damage on back right of trailers got caught coming out of simmins court on the road, robo was driving",
       "photos": [],
       "status": "new",
       "updates": []
