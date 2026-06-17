@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-04-ice-cream-van",
-  "savedAt": "2026-06-17T08:07:28.125Z",
+  "savedAt": "2026-06-17T08:11:39.363Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -17,7 +17,7 @@
     "contactName": "Martha o'donoghue",
     "contactPhone": "0858417107",
     "contactEmail": "marthaodonoghue@gmail.com",
-    "onsiteContact": "",
+    "onsiteContact": "Brian Mitchell - 0894335016",
     "loadInDate": "",
     "loadInTime": "",
     "eventStartDate": "2026-07-04",
@@ -28,9 +28,9 @@
     "loadOutTime": "",
     "loadNotes": "",
     "attendance": "",
-    "venueName": "",
-    "venueAddress": "30 College Park, Dublin 6W, D6W EF64",
-    "accessNotes": "",
+    "venueName": "Church of the Annunciation",
+    "venueAddress": "Church of the Annunciation / Parish Pastoral Centre, Willbrook Road, Rathfarnham, Dublin 14, D14E803",
+    "accessNotes": "There will be a reserved spot for van on the day. Please check with Brian.",
     "venuePinLabel": "",
     "venueRadius": "200",
     "copySetupSelect": "",
@@ -116,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-06-15T18:44:03.469Z"
+        "at": "2026-06-17T08:11:38.963Z"
       }
     },
     "_crewChecklists": {},
