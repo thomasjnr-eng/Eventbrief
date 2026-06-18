@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-04-ice-cream-van",
-  "savedAt": "2026-06-17T12:53:35.786Z",
+  "savedAt": "2026-06-18T09:03:51.038Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -12,25 +12,25 @@
     "planNotes": "",
     "eventName": "Ice Cream Van",
     "bookingStatus": "Confirmed",
-    "clientName": "BikeRowSki",
+    "clientName": "Martha o'donoghue",
     "clientType": "Private",
-    "contactName": "Stuart Grehan",
-    "contactPhone": "0862413914 ",
-    "contactEmail": "stuart@bikerowski.ie",
-    "onsiteContact": "",
+    "contactName": "Martha o'donoghue",
+    "contactPhone": "0858417107",
+    "contactEmail": "marthaodonoghue@gmail.com",
+    "onsiteContact": "Brian Mitchell - 0894335016",
     "loadInDate": "",
     "loadInTime": "",
     "eventStartDate": "2026-07-04",
-    "eventStartTime": "10:30",
+    "eventStartTime": "14:15",
     "eventFinishDate": "2026-07-04",
-    "eventFinishTime": "14:30",
+    "eventFinishTime": "15:15",
     "loadOutDate": "",
     "loadOutTime": "",
     "loadNotes": "",
-    "attendance": "140",
-    "venueName": "BikeRowSki",
-    "venueAddress": "Unit 16, Kinsealy Business Park, Kinsealy Lane, Co. Dublin - Eircode K36HY53",
-    "accessNotes": "If needed to contact Stuart please whatsapp him in advance of any calls, as he get a lot of calls from sales people.",
+    "attendance": "",
+    "venueName": "Church of the Annunciation",
+    "venueAddress": "church of annunciation Rathfarnham D14E803",
+    "accessNotes": "",
     "venuePinLabel": "",
     "venueRadius": "200",
     "copySetupSelect": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_x0vol5v",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_6yx5ojp",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
@@ -103,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-06-17T12:53:34.942Z"
+        "at": "2026-06-18T09:03:50.552Z"
       }
     },
     "_crewChecklists": {},
