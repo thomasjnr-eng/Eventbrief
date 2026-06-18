@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-04-ice-cream-van",
-  "savedAt": "2026-06-18T09:08:09.785Z",
+  "savedAt": "2026-06-18T09:10:41.960Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -12,24 +12,24 @@
     "planNotes": "",
     "eventName": "Ice Cream Van",
     "bookingStatus": "Confirmed",
-    "clientName": "Martha o'donoghue",
+    "clientName": "BikeRowSki",
     "clientType": "Private",
-    "contactName": "Martha o'donoghue",
-    "contactPhone": "0858417107",
-    "contactEmail": "marthaodonoghue@gmail.com",
-    "onsiteContact": "Brian Mitchell - 0894335016",
+    "contactName": "Stuart Grehan",
+    "contactPhone": "0862413914 ",
+    "contactEmail": "stuart@bikerowski.ie",
+    "onsiteContact": "",
     "loadInDate": "",
     "loadInTime": "",
     "eventStartDate": "2026-07-04",
-    "eventStartTime": "14:15",
+    "eventStartTime": "10:30",
     "eventFinishDate": "2026-07-04",
-    "eventFinishTime": "15:15",
+    "eventFinishTime": "14:30",
     "loadOutDate": "",
     "loadOutTime": "",
     "loadNotes": "",
-    "attendance": "",
-    "venueName": "Church of the Annunciation",
-    "venueAddress": "church of annunciation Rathfarnham D14E803",
+    "attendance": "140",
+    "venueName": "BikeSkiRow",
+    "venueAddress": "Unit 16, Kinsealy Business Park, Kinsealy Lane, Co. Dublin - Eircode K36HY53",
     "accessNotes": "",
     "venuePinLabel": "",
     "venueRadius": "200",
@@ -116,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-06-18T09:03:50.552Z"
+        "at": "2026-06-18T09:10:40.084Z"
       }
     },
     "_crewChecklists": {},
