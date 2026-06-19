@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-06-20-saturday",
+  "savedAt": "2026-06-19T19:10:04.722Z",
+  "savedBy": "TOB Jnr",
+  "form": {
+    "title": "Saturday",
+    "planDate": "2026-06-20",
+    "startTime": "08:30",
+    "endTime": "22:00",
+    "lead": "TOB Jnr",
+    "assigned": "Robo, Oisín, Serg, Tom",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Collect Signage from MPL + Daftbug",
+        "assignedTo": "Tom",
+        "priority": "medium",
+        "dueTime": "09:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Pitt Bros from Aviva : ",
+        "assignedTo": "Robo",
+        "priority": "medium",
+        "dueTime": "10:00",
+        "eventLink": "Belvo Rugby Club (20 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Camile/Thindi ",
+        "assignedTo": "Oisín ",
+        "priority": "medium",
+        "dueTime": "10:00",
+        "eventLink": "Belvo Rugby Club (20 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Musgraves for Rice Cooker + Any other snags",
+        "assignedTo": "Tom",
+        "priority": "medium",
+        "dueTime": "09:30",
+        "eventLink": "Leopardstown – Bollywood Event (20 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Open Belvedere",
+        "assignedTo": "Robo",
+        "priority": "medium",
+        "dueTime": "11:30",
+        "eventLink": "Belvo Rugby Club (20 Jun 2026)",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect small van and Pitt Bros Signs",
+        "assignedTo": "Oisín ",
+        "priority": "medium",
+        "dueTime": "09:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
