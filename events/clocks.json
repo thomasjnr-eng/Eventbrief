@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-06-20T09:11:06.411Z",
+  "savedAt": "2026-06-20T21:01:53.612Z",
   "entries": [
     {
       "id": "clk_mpx9726c_bwfp7n",
@@ -998,6 +998,15 @@
       "user": "Oisín O’Neill",
       "type": "in",
       "timestamp": "2026-06-20T09:11:06.410Z",
+      "lat": null,
+      "lng": null,
+      "accuracy": null
+    },
+    {
+      "id": "clk_mqmufebw_qc73ac",
+      "user": "Oisín O’Neill",
+      "type": "out",
+      "timestamp": "2026-06-20T21:01:53.612Z",
       "lat": null,
       "lng": null,
       "accuracy": null
