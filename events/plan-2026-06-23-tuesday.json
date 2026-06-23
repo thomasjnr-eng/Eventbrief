@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-06-23-tuesday",
+  "savedAt": "2026-06-23T07:44:16.097Z",
+  "savedBy": "TOB Jnr",
+  "form": {
+    "title": "Tuesday",
+    "planDate": "2026-06-23",
+    "startTime": "09:30",
+    "endTime": "23:30",
+    "lead": "TOB Jnr",
+    "assigned": "Anto, Serg, Robo, Simon, Kian, Oisín",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Collect Buses from Sixt North Dublin ",
+        "assignedTo": "Serg, Anto, Tom Snr",
+        "priority": "medium",
+        "dueTime": "10:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Meet at Unit ",
+        "assignedTo": "Serg, Anto, Tom Snr",
+        "priority": "medium",
+        "dueTime": "09:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Take in Pitt Bros Delivery - Warehouse",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "11:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Sam + Crew Arrive at Greenogue",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "11:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Leave Warehouse and Head to Red Cow",
+        "assignedTo": "All 3 Vans",
+        "priority": "medium",
+        "dueTime": "11:45",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Staff ",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "12:20",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Leave Red Cow Luas Stop",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "12:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Transit Crew Cab stops off in Finglas to collect Camile order",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "12:45",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Arrive in Belfast",
+        "assignedTo": "All",
+        "priority": "medium",
+        "dueTime": "15:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect signage from MPL",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "11:40",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
