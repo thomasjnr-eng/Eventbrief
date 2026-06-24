@@ -196,8 +196,26 @@ async function getEvent(id, env, origin) {
   if (res.status === 404) return json({ error: 'not found' }, 404, origin);
   if (!res.ok) return json({ error: 'github ' + res.status }, 502, origin);
   const meta = await res.json();
-  const decoded = decodeBase64Utf8(meta.content.replace(/\n/g, ''));
-  return json({ sha: meta.sha, event: JSON.parse(decoded) }, 200, origin);
+  // GitHub's Contents API only returns `content` for files ≤ 1 MB. Above
+  // that the field is empty and we have to fetch the blob via the Git
+  // Data API (returns base64 content up to 100 MB). damage-reports.json
+  // crosses 1 MB once the team has uploaded a couple dozen photos, so
+  // without this fallback the front-end sees a JSON.parse-on-empty 500.
+  let decoded;
+  if (meta.content) {
+    decoded = decodeBase64Utf8(meta.content.replace(/\n/g, ''));
+  } else if (meta.sha) {
+    const blobRes = await githubApi('/git/blobs/' + meta.sha, {}, env);
+    if (!blobRes.ok) return json({ error: 'github_blob_' + blobRes.status }, 502, origin);
+    const blob = await blobRes.json();
+    decoded = decodeBase64Utf8((blob.content || '').replace(/\n/g, ''));
+  } else {
+    return json({ error: 'unsupported_response' }, 502, origin);
+  }
+  let parsed;
+  try { parsed = JSON.parse(decoded); }
+  catch (e) { return json({ error: 'parse_failed', detail: e.message }, 502, origin); }
+  return json({ sha: meta.sha, event: parsed }, 200, origin);
 }
 
 async function putEvent(id, payload, env, origin) {
