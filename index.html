@@ -2590,6 +2590,164 @@ body {
 .toast.show { opacity: 1; }
 .toast.error { background: var(--red); color: #fff; }
 
+/* ─── FLEET MANAGER ─── */
+.fleet-mgr-wrap { max-width: 1100px; margin: 0 auto; padding: 18px; }
+.fleet-mgr-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.fleet-mgr-head h2 { margin: 0; font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.06em; color: var(--sage); }
+.fleet-mgr-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.fleet-mgr-actions button {
+  background: var(--sage); color: #fff; border: 0; border-radius: 4px;
+  padding: 7px 13px; font-size: 12px; cursor: pointer; font-family: inherit;
+}
+.fleet-mgr-actions button:hover { background: var(--sage-dark); }
+.fleet-mgr-actions button.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.fleet-mgr-summary {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+  font-size: 12px;
+}
+.fmsum-pill {
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center;
+}
+.fmsum-pill .num { font-weight: 700; }
+.fmsum-pill.red { border-color: var(--red); color: var(--red); }
+.fmsum-pill.amber { border-color: #c89a4a; color: #c89a4a; }
+.fmsum-pill.green { border-color: #4a9a5c; color: #4a9a5c; }
+
+.fleet-mgr-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.fmf-chip {
+  font-size: 11px; padding: 5px 11px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--bg-card); cursor: pointer;
+  color: var(--text); font-family: inherit;
+}
+.fmf-chip.active { background: var(--sage); border-color: var(--sage); color: #fff; }
+
+.fm-cat-block { margin-bottom: 20px; }
+.fm-cat-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.14em;
+  color: var(--sage); border-bottom: 1px solid var(--border); padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+.fm-unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.fm-unit-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px;
+  padding: 12px; cursor: pointer; transition: border-color 0.15s, transform 0.1s;
+}
+.fm-unit-card:hover { border-color: var(--sage); transform: translateY(-1px); }
+.fm-unit-name { font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 3px; }
+.fm-unit-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.fm-status-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.fm-status-pill {
+  font-size: 10px; padding: 3px 7px; border-radius: 3px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  background: rgba(74, 154, 92, 0.15); color: #4a9a5c;
+}
+.fm-status-pill.amber { background: rgba(200, 154, 74, 0.18); color: #c89a4a; }
+.fm-status-pill.red { background: rgba(192, 57, 43, 0.18); color: var(--red); }
+.fm-status-pill.grey { background: var(--bg-input); color: var(--grey); }
+
+.fm-detail { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 18px; }
+.fm-detail-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.fm-detail-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; color: var(--text); }
+.fm-detail-cat { font-size: 11px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.fm-back-btn {
+  background: transparent; border: 1px solid var(--border); padding: 6px 12px;
+  border-radius: 4px; cursor: pointer; color: var(--text); font-size: 12px; font-family: inherit;
+}
+.fm-back-btn:hover { border-color: var(--sage); color: var(--sage); }
+.fm-section {
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+}
+.fm-section-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 0.18em;
+  color: var(--sage); margin-bottom: 10px;
+}
+.fm-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.fm-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px 14px; }
+@media (max-width: 700px) {
+  .fm-grid-2, .fm-grid-3 { grid-template-columns: 1fr; }
+}
+.fm-field { display: flex; flex-direction: column; gap: 4px; }
+.fm-field label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.fm-field input, .fm-field select, .fm-field textarea {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 3px;
+  color: var(--field-text); font-family: 'Lato', sans-serif; font-size: 13px;
+  padding: 7px 9px; outline: none;
+}
+.fm-field input:focus, .fm-field select:focus, .fm-field textarea:focus { border-color: var(--sage); }
+.fm-field input[type=checkbox] { width: auto; }
+.fm-field.inline { flex-direction: row; align-items: center; gap: 8px; }
+.fm-field.inline label { margin: 0; }
+
+.fm-cert-row, .fm-cond-row {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.4fr 28px;
+  gap: 6px; align-items: center; padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+@media (max-width: 700px) { .fm-cert-row { grid-template-columns: 1fr 28px; } .fm-cert-row > *:nth-child(n+2):nth-child(-n+4) { grid-column: 1/2; } }
+.fm-cert-row input, .fm-cert-row select {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 3px;
+  color: var(--field-text); font-family: 'Lato', sans-serif; font-size: 12px;
+  padding: 5px 8px; outline: none; width: 100%;
+}
+.fm-remove-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--grey); width: 26px; height: 26px; border-radius: 3px;
+  cursor: pointer; font-size: 14px;
+}
+.fm-remove-btn:hover { border-color: var(--red); color: var(--red); }
+.fm-add-btn {
+  background: transparent; color: var(--sage); border: 1px dashed var(--sage);
+  padding: 5px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;
+  font-family: inherit; margin-top: 6px;
+}
+.fm-add-btn:hover { background: rgba(90,122,79,0.08); }
+
+.fm-cond-entry {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 4px;
+  padding: 10px 12px; margin-bottom: 8px;
+}
+.fm-cond-entry-head {
+  display: flex; justify-content: space-between; gap: 10px; align-items: baseline;
+  font-size: 12px; color: var(--text); margin-bottom: 6px;
+}
+.fm-cond-entry-meta { color: var(--text-muted); font-size: 11px; }
+.fm-cond-entry-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px 14px; font-size: 11px;
+}
+.fm-cond-entry-grid div span { color: var(--text-muted); }
+.fm-cond-entry-grid div strong { color: var(--text); }
+.fm-cond-entry-rating { display: inline-block; padding: 1px 6px; border-radius: 3px; font-weight: 700; }
+.fm-cond-entry-rating.good { background: rgba(74,154,92,0.15); color: #4a9a5c; }
+.fm-cond-entry-rating.fair { background: rgba(200,154,74,0.15); color: #c89a4a; }
+.fm-cond-entry-rating.needs { background: rgba(192,57,43,0.15); color: var(--red); }
+.fm-cond-entry-rating.oos { background: var(--red); color: #fff; }
+.fm-cond-photos { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.fm-cond-photos img { width: 64px; height: 64px; object-fit: cover; border-radius: 3px; border: 1px solid var(--border); cursor: pointer; }
+.fm-cond-notes { font-size: 11px; color: var(--text); margin-top: 6px; font-style: italic; }
+
+.fm-damage-entry {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 4px;
+  padding: 8px 12px; margin-bottom: 6px; font-size: 12px;
+}
+.fm-damage-entry .sev { font-weight: 700; }
+.fm-damage-entry .sev.major { color: var(--red); }
+.fm-damage-entry .sev.minor { color: #c89a4a; }
+.fm-damage-entry .stat { font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 6px; }
+.fm-damage-entry .stat.fixed { background: rgba(74,154,92,0.18); color: #4a9a5c; }
+.fm-damage-entry .stat.new, .fm-damage-entry .stat.in-progress { background: rgba(200,154,74,0.18); color: #c89a4a; }
+
+.fm-empty { font-size: 12px; color: var(--text-muted); font-style: italic; padding: 8px 0; }
+.fm-readonly-note {
+  font-size: 11px; color: var(--text-muted); font-style: italic;
+  margin-top: 4px; padding: 6px 10px; background: var(--bg-input);
+  border-left: 3px solid var(--border); border-radius: 3px;
+}
+
 @media (max-width: 600px) {
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .span-2, .span-3 { grid-column: span 1; }
@@ -2662,6 +2820,7 @@ body {
       </div>
       <button class="header-btn" id="btnEvents" data-role-any="ops_lead,manager" onclick="openEventsModal()">Load Brief</button>
       <button class="header-btn" id="btnBulk" data-role-any="ops_lead,manager" onclick="openBulkModal()">Import</button>
+      <button class="header-btn" id="btnFleet" data-role-any="manager,maintenance_manager,ops_lead" onclick="showFleetManager()">Fleet</button>
       <button class="icon-btn indicator" id="btnSettings" data-role-min="ops_lead" title="Settings" onclick="openSettingsModal()">⚙</button>
     </div>
   </div>
@@ -2673,6 +2832,7 @@ body {
   <button type="button" class="pnav-btn" onclick="navToEvents()"><span class="pnav-ico">📅</span><span class="pnav-label">Events</span></button>
   <button type="button" class="pnav-btn" onclick="navToPlans()"><span class="pnav-ico">📋</span><span class="pnav-label">Day Plans</span></button>
   <button type="button" class="pnav-btn damage" onclick="openReportDamageModal()" title="Report damage or a fault"><span class="pnav-ico">🛠</span><span class="pnav-label">Report Damage</span></button>
+  <button type="button" class="pnav-btn" id="pnavFleet" data-role-any="manager,maintenance_manager,ops_lead" onclick="showFleetManager()" title="Fleet Manager"><span class="pnav-ico">🚚</span><span class="pnav-label">Fleet</span></button>
 </nav>
 
 <!-- ─── SETTINGS MODAL ─── -->
@@ -3070,6 +3230,22 @@ body {
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     FLEET MANAGER VIEW
+══════════════════════════════════════════ -->
+<div id="fleet-manager-view" style="display:none;">
+  <div class="fleet-mgr-wrap">
+    <div class="fleet-mgr-head">
+      <h2>🚚 Fleet Manager</h2>
+      <div class="fleet-mgr-actions">
+        <button type="button" class="ghost" onclick="openAddFleetUnitForm('van')">+ Add Van</button>
+        <button type="button" class="ghost" onclick="openAddFleetUnitForm('equipment')">+ Add Equipment</button>
+        <button type="button" onclick="showHome()">← Done</button>
+      </div>
+    </div>
+    <div id="fleetMgrBody"></div>
+  </div>
+</div>
 <!-- ══════════════════════════════════════════
      BRIEF EDIT VIEW (the 6 numbered steps)
 ══════════════════════════════════════════ -->
@@ -8305,6 +8481,10 @@ async function loadEventToOps(filename) {
 }
 
 // ─── VIEW MANAGEMENT (Home / Edit Brief / Plan Edit / Brief Output) ─────
+function hideFleetMgr() {
+  const fm = document.getElementById('fleet-manager-view');
+  if (fm) fm.style.display = 'none';
+}
 function showHome() {
   document.getElementById('home-view').style.display = 'block';
   document.getElementById('brief-edit-view').style.display = 'none';
@@ -8312,6 +8492,7 @@ function showHome() {
   if (planEdit) planEdit.style.display = 'none';
   const brief = document.getElementById('brief-output');
   if (brief) brief.style.display = 'none';
+  hideFleetMgr();
   document.getElementById('form-app').style.display = 'block';
   document.title = 'Planning - OBEC';
   const ind = document.querySelector('.step-nav-wrap');
@@ -8328,6 +8509,7 @@ function showBriefEdit() {
   if (planEdit) planEdit.style.display = 'none';
   const brief = document.getElementById('brief-output');
   if (brief) brief.style.display = 'none';
+  hideFleetMgr();
   document.getElementById('form-app').style.display = 'block';
   const ind = document.querySelector('.step-nav-wrap');
   if (ind) ind.style.display = 'flex';
@@ -8339,6 +8521,7 @@ function showPlanEdit() {
   document.getElementById('plan-edit-view').style.display = 'block';
   const brief = document.getElementById('brief-output');
   if (brief) brief.style.display = 'none';
+  hideFleetMgr();
   document.getElementById('form-app').style.display = 'block';
   const ind = document.querySelector('.step-nav-wrap');
   if (ind) ind.style.display = 'none';
@@ -9774,6 +9957,600 @@ async function saveDamageReports(reports, sha) {
   });
   if (!res.ok) throw new Error('damage_save_' + res.status);
   return await res.json();
+}
+
+// ─── FLEET MANAGER ────────────────────────────────────────────
+// Per-unit compliance + condition tracking. Hardcoded FLEET stays the
+// seed list; fleet-config.json on the server holds the editable
+// overlay (DOE/tax/insurance/certs/condition log) keyed by unit id +
+// any standalone vans / equipment the team has added.
+const FLEET_CONFIG_FILENAME = 'fleet-config.json';
+const FLEET_RATINGS = ['Good', 'Fair', 'Needs attention', 'Out of service'];
+const FLEET_FUEL_LEVELS = ['Full', '3/4', 'Half', '1/4', 'Empty', 'N/A'];
+let FLEET_CONFIG = { version: 1, units: {}, extraUnits: [] };
+let FLEET_CONFIG_SHA = null;
+let FLEET_MGR_SELECTED = null;   // unit id currently open in the detail view
+let FLEET_MGR_FILTER = 'all';    // 'all' | 'vehicles' | 'equipment' | 'vans'
+let FLEET_MGR_DAMAGE = [];       // cached damage reports keyed by unit name
+let FLEET_COND_PHOTOS = [];      // staged photos for the in-progress condition entry
+let FLEET_ADD_KIND = null;       // 'van' | 'equipment' when the add form is open
+
+function canEditFleetCompliance() {
+  const r = getRole();
+  return r === 'manager' || r === 'maintenance_manager';
+}
+function canSubmitFleetCondition() {
+  // Anyone ops_lead+ (matches the role gate on the nav button).
+  const r = getRole();
+  return r === 'manager' || r === 'maintenance_manager' || r === 'ops_lead';
+}
+
+async function loadFleetConfig() {
+  if (typeof eventsCache !== 'undefined' && eventsCache.byName) delete eventsCache.byName[FLEET_CONFIG_FILENAME];
+  try {
+    const res = await apiCall('/events/' + encodeURIComponent(FLEET_CONFIG_FILENAME));
+    if (res.status === 404) { FLEET_CONFIG = { version: 1, units: {}, extraUnits: [] }; FLEET_CONFIG_SHA = null; return; }
+    if (!res.ok) throw new Error('fleet_config_' + res.status);
+    const meta = await res.json();
+    FLEET_CONFIG_SHA = meta.sha;
+    const cfg = (meta.event && meta.event.config) || meta.event || {};
+    FLEET_CONFIG = {
+      version: cfg.version || 1,
+      units: (cfg.units && typeof cfg.units === 'object') ? cfg.units : {},
+      extraUnits: Array.isArray(cfg.extraUnits) ? cfg.extraUnits : []
+    };
+  } catch (e) {
+    if (e.message === 'NO_PASSCODE' || e.message === 'BAD_PASSCODE') return;
+    throw e;
+  }
+}
+
+async function saveFleetConfig() {
+  const payload = {
+    version: 1, type: 'fleet-config', savedAt: new Date().toISOString(),
+    savedBy: getUser() || null,
+    config: FLEET_CONFIG
+  };
+  const body = { event: payload };
+  if (FLEET_CONFIG_SHA) body.sha = FLEET_CONFIG_SHA;
+  const res = await apiCall('/events/' + encodeURIComponent(FLEET_CONFIG_FILENAME), {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error('fleet_save_' + res.status);
+  const data = await res.json();
+  FLEET_CONFIG_SHA = data.sha || FLEET_CONFIG_SHA;
+}
+
+// Merged view: hardcoded FLEET (kind: 'truck') + any extras the team
+// has added (kind: 'van' | 'equipment'). Each entry gains `.meta`
+// pointing at FLEET_CONFIG.units[id] so render code can read it
+// uniformly.
+function mergedFleetUnits() {
+  const fromFleet = FLEET.map(u => ({
+    id: u.name, name: u.name, category: u.category,
+    kind: u.category === 'Ops Vans' ? 'van' : 'truck',
+    eho: u.eho, dim: u.dim, power: u.power,
+    meta: FLEET_CONFIG.units[u.name] || {}
+  }));
+  const extras = (FLEET_CONFIG.extraUnits || []).map(e => ({
+    id: e.id,
+    name: e.name,
+    category: e.category || (e.kind === 'van' ? 'Ops Vans' : 'Equipment'),
+    kind: e.kind || 'equipment',
+    notes: e.notes || '',
+    meta: FLEET_CONFIG.units[e.id] || {}
+  }));
+  return fromFleet.concat(extras);
+}
+
+function unitMetaFor(unitId) {
+  if (!FLEET_CONFIG.units[unitId]) FLEET_CONFIG.units[unitId] = {};
+  return FLEET_CONFIG.units[unitId];
+}
+
+// Expiry classifier — drives the colour pills in list + detail views.
+// Returns null when no expiry is set.
+function fleetExpiryStatus(expiry) {
+  if (!expiry) return null;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const d = new Date(expiry + 'T00:00:00');
+  if (isNaN(d.getTime())) return null;
+  const days = Math.round((d - today) / 86400000);
+  if (days < 0) return { kind: 'red', label: 'Expired ' + Math.abs(days) + 'd ago', days };
+  if (days <= 14) return { kind: 'red', label: days + 'd left', days };
+  if (days <= 60) return { kind: 'amber', label: days + 'd left', days };
+  return { kind: 'green', label: days + 'd left', days };
+}
+
+function fleetCountStatuses() {
+  let red = 0, amber = 0, green = 0, untracked = 0;
+  mergedFleetUnits().forEach(u => {
+    const m = u.meta;
+    const dates = [];
+    if (m.isRoadRegistered) {
+      ['doeExpiry','taxExpiry','insuranceExpiry'].forEach(k => { if (m[k]) dates.push(m[k]); });
+    }
+    (m.certs || []).forEach(c => { if (c.expiry) dates.push(c.expiry); });
+    if (!dates.length) { untracked++; return; }
+    const worst = dates.map(fleetExpiryStatus).filter(Boolean)
+      .reduce((acc, s) => (!acc || s.days < acc.days) ? s : acc, null);
+    if (!worst) untracked++;
+    else if (worst.kind === 'red') red++;
+    else if (worst.kind === 'amber') amber++;
+    else green++;
+  });
+  return { red, amber, green, untracked };
+}
+
+async function showFleetManager() {
+  if (!canSubmitFleetCondition()) { toast('Fleet Manager is restricted', 'error'); return; }
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('brief-edit-view').style.display = 'none';
+  const planEdit = document.getElementById('plan-edit-view'); if (planEdit) planEdit.style.display = 'none';
+  const brief = document.getElementById('brief-output'); if (brief) brief.style.display = 'none';
+  document.getElementById('fleet-manager-view').style.display = 'block';
+  document.getElementById('form-app').style.display = 'block';
+  const ind = document.querySelector('.step-nav-wrap'); if (ind) ind.style.display = 'none';
+  document.title = 'Fleet - OBEC';
+  // Load config + damage cache in parallel
+  const body = document.getElementById('fleetMgrBody');
+  body.innerHTML = '<div class="fm-empty">Loading fleet…</div>';
+  try {
+    const [, damage] = await Promise.all([
+      loadFleetConfig(),
+      loadDamageReports().then(d => d.reports).catch(() => [])
+    ]);
+    FLEET_MGR_DAMAGE = damage || [];
+  } catch (e) {
+    body.innerHTML = '<div class="fm-empty" style="color:var(--red);">Could not load fleet config: ' + (e.message || e) + '</div>';
+    return;
+  }
+  FLEET_MGR_SELECTED = null;
+  FLEET_ADD_KIND = null;
+  renderFleetManager();
+  window.scrollTo(0, 0);
+}
+
+function renderFleetManager() {
+  const body = document.getElementById('fleetMgrBody');
+  if (!body) return;
+  if (FLEET_ADD_KIND) return renderAddFleetUnitForm();
+  if (FLEET_MGR_SELECTED) return renderFleetUnitDetail();
+  renderFleetUnitList();
+}
+
+function renderFleetUnitList() {
+  const body = document.getElementById('fleetMgrBody');
+  const counts = fleetCountStatuses();
+  let summary = '<div class="fleet-mgr-summary">';
+  if (counts.red)    summary += '<div class="fmsum-pill red">🔴 <span class="num">' + counts.red + '</span> expiring/expired</div>';
+  if (counts.amber)  summary += '<div class="fmsum-pill amber">🟠 <span class="num">' + counts.amber + '</span> due ≤60d</div>';
+  if (counts.green)  summary += '<div class="fmsum-pill green">🟢 <span class="num">' + counts.green + '</span> in date</div>';
+  if (counts.untracked) summary += '<div class="fmsum-pill">⚪ <span class="num">' + counts.untracked + '</span> no dates set</div>';
+  summary += '</div>';
+
+  const filterChip = (key, label) => '<button class="fmf-chip ' + (FLEET_MGR_FILTER === key ? 'active' : '') + '" onclick="setFleetMgrFilter(\'' + key + '\')">' + label + '</button>';
+  const filterBar = '<div class="fleet-mgr-filter">' +
+    filterChip('all', 'All') +
+    filterChip('vehicles', 'Trucks / vehicles') +
+    filterChip('vans', 'Ops vans') +
+    filterChip('equipment', 'Equipment') +
+    '</div>';
+
+  let units = mergedFleetUnits();
+  if (FLEET_MGR_FILTER === 'vehicles') units = units.filter(u => u.kind === 'truck');
+  else if (FLEET_MGR_FILTER === 'vans') units = units.filter(u => u.kind === 'van');
+  else if (FLEET_MGR_FILTER === 'equipment') units = units.filter(u => u.kind === 'equipment');
+
+  const byCat = {};
+  const order = [];
+  units.forEach(u => { if (!byCat[u.category]) { byCat[u.category] = []; order.push(u.category); } byCat[u.category].push(u); });
+
+  const catBlocks = order.map(cat => {
+    const list = byCat[cat].map(u => fleetUnitCardHtml(u)).join('');
+    return '<div class="fm-cat-block">' +
+      '<div class="fm-cat-title">' + cat + ' <span style="color:var(--text-muted);font-weight:400;">(' + byCat[cat].length + ')</span></div>' +
+      '<div class="fm-unit-grid">' + list + '</div></div>';
+  }).join('');
+
+  body.innerHTML = summary + filterBar + (catBlocks || '<div class="fm-empty">No units match this filter.</div>');
+}
+
+function fleetUnitCardHtml(u) {
+  const m = u.meta || {};
+  const pills = [];
+  const escId = (u.id || '').replace(/'/g, "\\'");
+  if (m.isRoadRegistered) {
+    const doe = fleetExpiryStatus(m.doeExpiry);
+    const tax = fleetExpiryStatus(m.taxExpiry);
+    const ins = fleetExpiryStatus(m.insuranceExpiry);
+    if (doe) pills.push('<span class="fm-status-pill ' + doe.kind + '">DOE ' + doe.label + '</span>');
+    else pills.push('<span class="fm-status-pill grey">DOE —</span>');
+    if (tax) pills.push('<span class="fm-status-pill ' + tax.kind + '">Tax ' + tax.label + '</span>');
+    else pills.push('<span class="fm-status-pill grey">Tax —</span>');
+    if (ins) pills.push('<span class="fm-status-pill ' + ins.kind + '">Ins ' + ins.label + '</span>');
+    else pills.push('<span class="fm-status-pill grey">Ins —</span>');
+  }
+  (m.certs || []).forEach(c => {
+    const s = fleetExpiryStatus(c.expiry);
+    if (s && s.kind !== 'green') pills.push('<span class="fm-status-pill ' + s.kind + '">' + (c.type || 'Cert') + ' ' + s.label + '</span>');
+  });
+  const lastCond = (m.conditions && m.conditions.length) ? m.conditions[m.conditions.length - 1] : null;
+  const subBits = [];
+  if (u.kind === 'truck') subBits.push(u.category);
+  if (m.registration) subBits.push('Reg ' + m.registration);
+  if (lastCond) subBits.push('Last check: ' + formatDate(lastCond.date));
+  else subBits.push('No checks yet');
+  const dmgCount = (FLEET_MGR_DAMAGE || []).filter(r => r.unit === u.name && r.status !== 'fixed').length;
+  if (dmgCount) subBits.push('<span style="color:var(--red);">' + dmgCount + ' open damage</span>');
+  return '<div class="fm-unit-card" onclick="openFleetUnitDetail(\'' + escId + '\')">' +
+    '<div class="fm-unit-name">' + (u.name || '').replace(/</g, '&lt;') + '</div>' +
+    '<div class="fm-unit-sub">' + subBits.join(' · ') + '</div>' +
+    (pills.length ? '<div class="fm-status-row">' + pills.join('') + '</div>' : '') +
+    '</div>';
+}
+
+function setFleetMgrFilter(f) { FLEET_MGR_FILTER = f; renderFleetManager(); }
+function openFleetUnitDetail(id) { FLEET_MGR_SELECTED = id; FLEET_ADD_KIND = null; renderFleetManager(); window.scrollTo(0, 0); }
+function backToFleetList() { FLEET_MGR_SELECTED = null; FLEET_ADD_KIND = null; renderFleetManager(); }
+
+function findFleetUnit(id) {
+  return mergedFleetUnits().find(u => u.id === id);
+}
+
+function renderFleetUnitDetail() {
+  const body = document.getElementById('fleetMgrBody');
+  const u = findFleetUnit(FLEET_MGR_SELECTED);
+  if (!u) { body.innerHTML = '<div class="fm-empty">Unit not found.</div><button class="fm-back-btn" onclick="backToFleetList()">← Back</button>'; return; }
+  const m = unitMetaFor(u.id);
+  const editable = canEditFleetCompliance();
+  const ro = editable ? '' : 'disabled';
+  const isExtra = u.kind !== 'truck';
+  const certsHtml = (m.certs || []).map((c, i) => fleetCertRowHtml(c, i, editable)).join('') ||
+    '<div class="fm-empty">No certifications recorded.</div>';
+  const condEntries = (m.conditions || []).slice().reverse().map(c => fleetConditionEntryHtml(c)).join('') ||
+    '<div class="fm-empty">No condition checks logged yet.</div>';
+  const dmg = (FLEET_MGR_DAMAGE || []).filter(r => r.unit === u.name)
+    .sort((a, b) => (b.reportedAt || '').localeCompare(a.reportedAt || ''));
+  const dmgHtml = dmg.length ? dmg.map(r => fleetDamageEntryHtml(r)).join('') :
+    '<div class="fm-empty">No damage reports for this unit.</div>';
+
+  body.innerHTML =
+    '<button class="fm-back-btn" onclick="backToFleetList()">← Back to fleet</button>' +
+    '<div class="fm-detail" style="margin-top:10px;">' +
+      '<div class="fm-detail-head">' +
+        '<div>' +
+          '<div class="fm-detail-title">' + (u.name || '').replace(/</g, '&lt;') + '</div>' +
+          '<div class="fm-detail-cat">' + u.category + (u.kind === 'truck' && u.power ? ' · ' + u.power : '') + '</div>' +
+        '</div>' +
+        (isExtra && editable ? '<button class="fm-back-btn" style="border-color:var(--red);color:var(--red);" onclick="removeFleetExtra(\'' + u.id.replace(/'/g, "\\'") + '\')">Remove unit</button>' : '') +
+      '</div>' +
+
+      (!editable ? '<div class="fm-readonly-note">View-only — compliance edits are restricted to manager / maintenance manager. You can still log monthly condition checks below.</div>' : '') +
+
+      '<div class="fm-section">' +
+        '<div class="fm-section-title">Compliance · road registration</div>' +
+        '<div class="fm-field inline">' +
+          '<input type="checkbox" id="fmRoadReg" ' + (m.isRoadRegistered ? 'checked' : '') + ' ' + ro + ' onchange="updateFleetMeta(\'isRoadRegistered\', this.checked); renderFleetManager();">' +
+          '<label for="fmRoadReg">Road-registered vehicle (needs DOE / tax / insurance)</label>' +
+        '</div>' +
+        (m.isRoadRegistered ? (
+          '<div class="fm-grid-3" style="margin-top:10px;">' +
+            fleetField('Registration', 'text', 'registration', m.registration, ro) +
+            fleetField('DOE expiry', 'date', 'doeExpiry', m.doeExpiry, ro) +
+            fleetField('DOE last done', 'date', 'doeLastDone', m.doeLastDone, ro) +
+            fleetField('Tax expiry', 'date', 'taxExpiry', m.taxExpiry, ro) +
+            fleetField('Insurance expiry', 'date', 'insuranceExpiry', m.insuranceExpiry, ro) +
+            fleetField('Insurance policy #', 'text', 'insurancePolicyNumber', m.insurancePolicyNumber, ro) +
+          '</div>' +
+          '<div class="fm-grid-3" style="margin-top:10px;">' +
+            fleetField('Service next due', 'date', 'serviceNextDue', m.serviceNextDue, ro) +
+            fleetField('Last service date', 'date', 'serviceLastDate', m.serviceLastDate, ro) +
+            fleetField('Last service mileage', 'number', 'serviceLastMileage', m.serviceLastMileage, ro) +
+          '</div>'
+        ) : '') +
+      '</div>' +
+
+      '<div class="fm-section">' +
+        '<div class="fm-section-title">Certifications · gas / PAT / calibration etc</div>' +
+        '<div id="fmCertsList">' + certsHtml + '</div>' +
+        (editable ? '<button class="fm-add-btn" onclick="addFleetCert()">+ Add cert</button>' : '') +
+      '</div>' +
+
+      '<div class="fm-section">' +
+        '<div class="fm-section-title">Monthly condition check' + (canSubmitFleetCondition() ? '' : ' (view only)') + '</div>' +
+        '<div id="fmCondLog">' + condEntries + '</div>' +
+        (canSubmitFleetCondition() ? '<button class="fm-add-btn" onclick="openFleetConditionForm()">+ New condition check</button>' : '') +
+        '<div id="fmCondFormSlot"></div>' +
+      '</div>' +
+
+      '<div class="fm-section">' +
+        '<div class="fm-section-title">Damage history</div>' +
+        dmgHtml +
+        '<div class="fm-readonly-note" style="margin-top:8px;">Logged from the Report Damage button on the home nav. Updates are made from the damage reports panel on the home dashboard.</div>' +
+      '</div>' +
+
+      (editable ? '<div class="fm-section">' +
+        '<button class="fm-add-btn" style="border-color:var(--sage);background:var(--sage);color:#fff;" onclick="commitFleetConfig()">💾 Save all changes</button>' +
+        '<span id="fmSaveStatus" style="margin-left:10px;font-size:11px;color:var(--text-muted);"></span>' +
+      '</div>' : '') +
+    '</div>';
+}
+
+function fleetField(label, type, key, val, ro) {
+  const esc = (val == null ? '' : String(val)).replace(/"/g, '&quot;');
+  return '<div class="fm-field">' +
+    '<label>' + label + '</label>' +
+    '<input type="' + type + '" value="' + esc + '" ' + ro + ' oninput="updateFleetMeta(\'' + key + '\', this.value)">' +
+    '</div>';
+}
+
+function fleetCertRowHtml(c, idx, editable) {
+  const ro = editable ? '' : 'disabled';
+  const status = fleetExpiryStatus(c.expiry);
+  const pill = status ? '<span class="fm-status-pill ' + status.kind + '" style="margin-left:6px;">' + status.label + '</span>' : '';
+  return '<div class="fm-cert-row" data-idx="' + idx + '">' +
+    '<input type="text" placeholder="Cert type (Gas safety, PAT…)" value="' + (c.type || '').replace(/"/g, '&quot;') + '" ' + ro + ' oninput="updateFleetCert(' + idx + ', \'type\', this.value)">' +
+    '<input type="date" value="' + (c.expiry || '') + '" ' + ro + ' oninput="updateFleetCert(' + idx + ', \'expiry\', this.value); renderFleetManager();">' +
+    '<input type="text" placeholder="Issuer" value="' + (c.issuer || '').replace(/"/g, '&quot;') + '" ' + ro + ' oninput="updateFleetCert(' + idx + ', \'issuer\', this.value)">' +
+    '<input type="text" placeholder="Notes" value="' + (c.notes || '').replace(/"/g, '&quot;') + '" ' + ro + ' oninput="updateFleetCert(' + idx + ', \'notes\', this.value)">' +
+    (editable ? '<button class="fm-remove-btn" onclick="removeFleetCert(' + idx + ')" title="Remove">&times;</button>' : '<span>' + pill + '</span>') +
+    '</div>';
+}
+
+function fleetConditionEntryHtml(c) {
+  const grid = [];
+  if (c.mileage) grid.push('<div><span>Mileage</span><br><strong>' + c.mileage + '</strong></div>');
+  const rate = (label, val) => {
+    if (!val) return '';
+    const cls = val === 'Good' ? 'good' : val === 'Fair' ? 'fair' : val === 'Out of service' ? 'oos' : 'needs';
+    return '<div><span>' + label + '</span><br><span class="fm-cond-entry-rating ' + cls + '">' + val + '</span></div>';
+  };
+  grid.push(rate('Tyres', c.tyres));
+  grid.push(rate('Lights', c.lights));
+  grid.push(rate('Bodywork', c.body));
+  grid.push(rate('Cleanliness', c.cleanliness));
+  if (c.fuelLevel) grid.push('<div><span>Fuel / AdBlue</span><br><strong>' + c.fuelLevel + '</strong></div>');
+  if (c.gasBottleTest) grid.push('<div><span>Gas bottle test</span><br><strong>' + formatDate(c.gasBottleTest) + '</strong></div>');
+  if (c.fireExtCheck) grid.push('<div><span>Fire ext. check</span><br><strong>' + formatDate(c.fireExtCheck) + '</strong></div>');
+  const photos = (c.photos || []).map((p, i) => '<img src="' + p + '" alt="cond photo ' + (i + 1) + '" onclick="window.open(this.src)">').join('');
+  return '<div class="fm-cond-entry">' +
+    '<div class="fm-cond-entry-head">' +
+      '<strong>' + formatDate(c.date) + '</strong>' +
+      '<span class="fm-cond-entry-meta">' + (c.by || '—').replace(/</g, '&lt;') + '</span>' +
+    '</div>' +
+    '<div class="fm-cond-entry-grid">' + grid.filter(Boolean).join('') + '</div>' +
+    (c.notes ? '<div class="fm-cond-notes">' + c.notes.replace(/</g, '&lt;') + '</div>' : '') +
+    (photos ? '<div class="fm-cond-photos">' + photos + '</div>' : '') +
+    '</div>';
+}
+
+function fleetDamageEntryHtml(r) {
+  const at = r.reportedAt ? formatDate(r.reportedAt.slice(0, 10)) : '—';
+  return '<div class="fm-damage-entry">' +
+    '<strong>' + at + '</strong> · ' +
+    '<span class="sev ' + (r.severity || '') + '">' + (r.severity || 'minor') + '</span>' +
+    '<span class="stat ' + (r.status || 'new') + '">' + (r.status || 'new') + '</span><br>' +
+    (r.description || '').replace(/</g, '&lt;') +
+    (r.reportedBy ? '<div style="color:var(--text-muted);font-size:11px;margin-top:3px;">By ' + (r.reportedBy || '').replace(/</g, '&lt;') + '</div>' : '') +
+    '</div>';
+}
+
+function updateFleetMeta(key, val) {
+  if (!canEditFleetCompliance()) return;
+  const m = unitMetaFor(FLEET_MGR_SELECTED);
+  m[key] = val;
+  flagFleetDirty();
+}
+
+function addFleetCert() {
+  if (!canEditFleetCompliance()) return;
+  const m = unitMetaFor(FLEET_MGR_SELECTED);
+  if (!Array.isArray(m.certs)) m.certs = [];
+  m.certs.push({ type: '', expiry: '', issuer: '', notes: '' });
+  flagFleetDirty();
+  renderFleetManager();
+}
+function updateFleetCert(idx, key, val) {
+  if (!canEditFleetCompliance()) return;
+  const m = unitMetaFor(FLEET_MGR_SELECTED);
+  if (!m.certs || !m.certs[idx]) return;
+  m.certs[idx][key] = val;
+  flagFleetDirty();
+}
+function removeFleetCert(idx) {
+  if (!canEditFleetCompliance()) return;
+  const m = unitMetaFor(FLEET_MGR_SELECTED);
+  if (!m.certs) return;
+  m.certs.splice(idx, 1);
+  flagFleetDirty();
+  renderFleetManager();
+}
+
+let fleetSaveDebounce = null;
+function flagFleetDirty() {
+  const el = document.getElementById('fmSaveStatus');
+  if (el) el.textContent = '● Saving…';
+  clearTimeout(fleetSaveDebounce);
+  fleetSaveDebounce = setTimeout(async () => {
+    try {
+      await saveFleetConfig();
+      const el2 = document.getElementById('fmSaveStatus');
+      if (el2) el2.textContent = '✓ Auto-saved ' + new Date().toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+    } catch (e) {
+      const el2 = document.getElementById('fmSaveStatus');
+      if (el2) el2.textContent = '✗ Auto-save failed — use Save button';
+    }
+  }, 1500);
+}
+
+async function commitFleetConfig() {
+  const status = document.getElementById('fmSaveStatus');
+  if (status) status.textContent = 'Saving…';
+  try {
+    await saveFleetConfig();
+    if (status) status.textContent = '✓ Saved ' + new Date().toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+    toast('Fleet config saved');
+  } catch (e) {
+    if (status) status.textContent = '✗ Save failed: ' + e.message;
+    toast('Fleet save failed: ' + e.message, 'error');
+  }
+}
+
+// ── Condition check form ─────────────────────────────────────
+function openFleetConditionForm() {
+  if (!canSubmitFleetCondition()) return;
+  FLEET_COND_PHOTOS = [];
+  const slot = document.getElementById('fmCondFormSlot');
+  if (!slot) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const ratingOpts = (sel) => ['', ...FLEET_RATINGS].map(r => '<option value="' + r + '"' + (sel === r ? ' selected' : '') + '>' + (r || '—') + '</option>').join('');
+  const fuelOpts = (sel) => ['', ...FLEET_FUEL_LEVELS].map(r => '<option value="' + r + '"' + (sel === r ? ' selected' : '') + '>' + (r || '—') + '</option>').join('');
+  slot.innerHTML =
+    '<div class="fm-detail" style="margin-top:10px;padding:14px;border-color:var(--sage);">' +
+      '<div class="fm-section-title" style="margin-top:0;">New condition check</div>' +
+      '<div class="fm-grid-3">' +
+        '<div class="fm-field"><label>Date</label><input type="date" id="fmcDate" value="' + today + '"></div>' +
+        '<div class="fm-field"><label>Checked by</label><input type="text" id="fmcBy" value="' + (getUser() || '').replace(/"/g, '&quot;') + '"></div>' +
+        '<div class="fm-field"><label>Mileage</label><input type="number" id="fmcMileage" placeholder="e.g. 85234"></div>' +
+      '</div>' +
+      '<div class="fm-grid-3" style="margin-top:10px;">' +
+        '<div class="fm-field"><label>Tyres</label><select id="fmcTyres">' + ratingOpts() + '</select></div>' +
+        '<div class="fm-field"><label>Lights</label><select id="fmcLights">' + ratingOpts() + '</select></div>' +
+        '<div class="fm-field"><label>Bodywork</label><select id="fmcBody">' + ratingOpts() + '</select></div>' +
+        '<div class="fm-field"><label>Cleanliness</label><select id="fmcClean">' + ratingOpts() + '</select></div>' +
+        '<div class="fm-field"><label>Fuel / AdBlue level</label><select id="fmcFuel">' + fuelOpts() + '</select></div>' +
+        '<div class="fm-field"><label>Gas bottle test date</label><input type="date" id="fmcGas"></div>' +
+        '<div class="fm-field"><label>Fire extinguisher check</label><input type="date" id="fmcFire"></div>' +
+      '</div>' +
+      '<div class="fm-field" style="margin-top:10px;">' +
+        '<label>Notes</label>' +
+        '<textarea id="fmcNotes" rows="3" placeholder="Anything else worth flagging…"></textarea>' +
+      '</div>' +
+      '<div class="fm-field" style="margin-top:10px;">' +
+        '<label>Photos</label>' +
+        '<input type="file" id="fmcPhotos" accept="image/*" multiple onchange="onFleetCondPhotos(event)">' +
+        '<div id="fmcPhotoPreview" class="fm-cond-photos" style="margin-top:6px;"></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;margin-top:14px;">' +
+        '<button class="fm-add-btn" style="border-color:var(--sage);background:var(--sage);color:#fff;" onclick="submitFleetCondition()">Save check</button>' +
+        '<button class="fm-add-btn" onclick="closeFleetConditionForm()">Cancel</button>' +
+      '</div>' +
+    '</div>';
+}
+function closeFleetConditionForm() {
+  FLEET_COND_PHOTOS = [];
+  const slot = document.getElementById('fmCondFormSlot');
+  if (slot) slot.innerHTML = '';
+}
+async function onFleetCondPhotos(ev) {
+  const files = [...(ev.target.files || [])];
+  for (const f of files) {
+    try {
+      const dataUrl = await compressImageFile(f, 1280, 0.7);
+      FLEET_COND_PHOTOS.push(dataUrl);
+    } catch (e) { toast('Photo skipped: ' + (e.message || e), 'error'); }
+  }
+  const prev = document.getElementById('fmcPhotoPreview');
+  if (prev) prev.innerHTML = FLEET_COND_PHOTOS.map(p => '<img src="' + p + '" alt="preview">').join('');
+}
+async function submitFleetCondition() {
+  if (!canSubmitFleetCondition()) return;
+  const m = unitMetaFor(FLEET_MGR_SELECTED);
+  if (!Array.isArray(m.conditions)) m.conditions = [];
+  const entry = {
+    id: 'cond-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+    date: document.getElementById('fmcDate').value || new Date().toISOString().slice(0, 10),
+    by: document.getElementById('fmcBy').value || (getUser() || ''),
+    mileage: document.getElementById('fmcMileage').value || '',
+    tyres: document.getElementById('fmcTyres').value || '',
+    lights: document.getElementById('fmcLights').value || '',
+    body: document.getElementById('fmcBody').value || '',
+    cleanliness: document.getElementById('fmcClean').value || '',
+    fuelLevel: document.getElementById('fmcFuel').value || '',
+    gasBottleTest: document.getElementById('fmcGas').value || '',
+    fireExtCheck: document.getElementById('fmcFire').value || '',
+    notes: document.getElementById('fmcNotes').value || '',
+    photos: FLEET_COND_PHOTOS.slice()
+  };
+  m.conditions.push(entry);
+  FLEET_COND_PHOTOS = [];
+  try {
+    await saveFleetConfig();
+    toast('Condition check saved');
+    renderFleetManager();
+  } catch (e) {
+    // Roll back local push on save failure
+    m.conditions.pop();
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+// ── Add van / equipment ──────────────────────────────────────
+function openAddFleetUnitForm(kind) {
+  if (!canEditFleetCompliance()) { toast('Adding units is restricted to manager / maintenance manager', 'error'); return; }
+  FLEET_ADD_KIND = kind;
+  FLEET_MGR_SELECTED = null;
+  renderFleetManager();
+}
+function renderAddFleetUnitForm() {
+  const body = document.getElementById('fleetMgrBody');
+  const kind = FLEET_ADD_KIND;
+  const isVan = kind === 'van';
+  body.innerHTML =
+    '<button class="fm-back-btn" onclick="backToFleetList()">← Back to fleet</button>' +
+    '<div class="fm-detail" style="margin-top:10px;">' +
+      '<div class="fm-section-title" style="margin-top:0;">Add ' + (isVan ? 'ops van' : 'equipment') + '</div>' +
+      '<div class="fm-grid-2">' +
+        '<div class="fm-field"><label>Name</label><input type="text" id="fmAddName" placeholder="' + (isVan ? 'e.g. Van 1, Sprinter, etc' : 'e.g. 5kVA Honda Generator') + '"></div>' +
+        '<div class="fm-field"><label>Category</label><input type="text" id="fmAddCat" value="' + (isVan ? 'Ops Vans' : 'Equipment') + '"></div>' +
+      '</div>' +
+      '<div class="fm-field" style="margin-top:10px;">' +
+        '<label>Notes (optional)</label>' +
+        '<textarea id="fmAddNotes" rows="3" placeholder="Anything worth knowing about this unit"></textarea>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;margin-top:14px;">' +
+        '<button class="fm-add-btn" style="border-color:var(--sage);background:var(--sage);color:#fff;" onclick="submitNewFleetExtra()">Add ' + (isVan ? 'van' : 'equipment') + '</button>' +
+        '<button class="fm-add-btn" onclick="backToFleetList()">Cancel</button>' +
+      '</div>' +
+    '</div>';
+}
+async function submitNewFleetExtra() {
+  const name = (document.getElementById('fmAddName').value || '').trim();
+  if (!name) { toast('Name required', 'error'); return; }
+  const cat = (document.getElementById('fmAddCat').value || '').trim() || (FLEET_ADD_KIND === 'van' ? 'Ops Vans' : 'Equipment');
+  const notes = document.getElementById('fmAddNotes').value || '';
+  const id = 'extra-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+  FLEET_CONFIG.extraUnits = FLEET_CONFIG.extraUnits || [];
+  FLEET_CONFIG.extraUnits.push({ id, name, category: cat, kind: FLEET_ADD_KIND, notes });
+  // Vans added here also seed the autocomplete pool used by plans + briefs.
+  if (FLEET_ADD_KIND === 'van' && typeof rememberVanName === 'function') rememberVanName(name);
+  try {
+    await saveFleetConfig();
+    toast('Added ' + name);
+    FLEET_ADD_KIND = null;
+    FLEET_MGR_SELECTED = id;
+    renderFleetManager();
+  } catch (e) {
+    FLEET_CONFIG.extraUnits.pop();
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+async function removeFleetExtra(id) {
+  if (!canEditFleetCompliance()) return;
+  if (!confirm('Remove this unit from the fleet? Its condition history will be deleted too.')) return;
+  const before = FLEET_CONFIG.extraUnits;
+  FLEET_CONFIG.extraUnits = (FLEET_CONFIG.extraUnits || []).filter(e => e.id !== id);
+  delete FLEET_CONFIG.units[id];
+  try {
+    await saveFleetConfig();
+    toast('Unit removed');
+    backToFleetList();
+  } catch (e) {
+    FLEET_CONFIG.extraUnits = before;
+    toast('Remove failed: ' + e.message, 'error');
+  }
 }
 
 // Client-side photo compression: shrink to ≤1280px on the long side at
