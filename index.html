@@ -4787,12 +4787,18 @@ async function bulkImport() {
   document.getElementById('bulkChoose').style.display = 'none';
   document.getElementById('bulkPreview').style.display = 'none';
   document.getElementById('bulkProgress').style.display = 'block';
+  // Pre-fetch the existing filename list so every row in the batch can
+  // uniqueify against (a) what's already on the server and (b) what
+  // earlier rows in this same batch just created.
+  let usedFilenames = new Set();
+  try { usedFilenames = new Set(await listEventFilenames()); }
+  catch (e) { /* fall through with empty set — still better than silent overwrite */ }
   let success = 0, fail = 0;
   for (let i = 0; i < valid.length; i++) {
     const pct = Math.round((i / valid.length) * 100);
     document.getElementById('bulkProgressBar').style.width = pct + '%';
     document.getElementById('bulkProgressText').textContent = 'Importing ' + (i+1) + ' of ' + valid.length + ' — ' + valid[i].eventName;
-    try { await bulkSaveOne(valid[i]); success++; }
+    try { await bulkSaveOne(valid[i], usedFilenames); success++; }
     catch (e) { console.error('bulk import row failed:', valid[i], e); fail++; }
   }
   document.getElementById('bulkProgressBar').style.width = '100%';
@@ -4803,7 +4809,7 @@ async function bulkImport() {
   renderDashboard(); renderOpsTracker();
 }
 
-async function bulkSaveOne(ev) {
+async function bulkSaveOne(ev, usedFilenames) {
   const formData = {
     eventName: ev.eventName,
     bookingStatus: 'Provisional',
@@ -4834,16 +4840,21 @@ async function bulkSaveOne(ev) {
     _stockStatuses: [], _staffAllocations: [], _truckSafetyChecks: {},
     _signatures: [], _changeLog: { step1: { user: getUser() || 'Bulk import', at: new Date().toISOString() } }
   };
-  const id = eventIdFor(formData);
-  const filename = id + '.json';
-  let sha = null;
-  try {
-    const existing = await apiCall('/events/' + encodeURIComponent(filename));
-    if (existing.ok) sha = (await existing.json()).sha;
-  } catch (e) {}
+  // Uniqueify: don't clobber an existing event with the same name+date
+  // on the server, and don't clobber a sibling row from this same
+  // import batch either.
+  const base = eventIdFor(formData);
+  let filename = base + '.json';
+  if (usedFilenames && usedFilenames.has(filename)) {
+    for (let n = 2; n < 1000; n++) {
+      const cand = base + '-' + n + '.json';
+      if (!usedFilenames.has(cand)) { filename = cand; break; }
+    }
+  }
+  if (usedFilenames) usedFilenames.add(filename);
+  const id = filename.replace(/\.json$/, '');
   const payload = { version: 1, id, savedAt: new Date().toISOString(), form: formData, _bulkImported: true };
   const body = { event: payload };
-  if (sha) body.sha = sha;
   const res = await apiCall('/events/' + encodeURIComponent(filename), { method: 'PUT', body: JSON.stringify(body) });
   if (!res.ok) throw new Error('save failed: ' + res.status);
 }
@@ -7654,6 +7665,9 @@ function newBrief() {
   const cur = collectFormData();
   const hasContent = !!(cur.eventName || cur.clientName || cur.venueName || (cur._fleet || []).length || (cur._signatures || []).length);
   if (hasContent && !confirm('Discard the current brief and start a new one? Any unsaved changes will be lost.')) return;
+  // Detach from any previously loaded event so the next save creates a
+  // fresh file (and uniqueifies it if name+date collide).
+  CURRENT_EVENT_FILENAME = null;
   // Clear form inputs
   document.querySelectorAll('#form-app input, #form-app textarea, #form-app select').forEach(el => {
     if (!el.id || el.type === 'button') return;
@@ -8274,6 +8288,7 @@ async function loadEventToOps(filename) {
   try {
     const ev = await getEventByFilename(filename);
     if (!ev) { toast('Could not load event', 'error'); return; }
+    CURRENT_EVENT_FILENAME = filename;
     autoSavePaused = true;
     populateForm(ev.form);
     clearDraft();
@@ -11538,7 +11553,30 @@ function eventIdFor(data) {
   return date + '-' + (slug || 'unnamed');
 }
 
+// Returns a .json filename that is guaranteed not to collide with any
+// existing event on the server. When the natural name+date filename is
+// already taken by a different event, suffixes -2, -3, … so a second
+// "Ice Cream Van" on 2026-06-24 lands as
+// 2026-06-24-ice-cream-van-2.json instead of silently overwriting the
+// first one. CURRENT_EVENT_FILENAME callers should bypass this when
+// editing — only NEW briefs need a fresh unique name.
+async function uniqueEventFilenameFor(data) {
+  const base = eventIdFor(data);
+  const first = base + '.json';
+  let filenames;
+  try { filenames = await listEventFilenames(); }
+  catch (e) { return first; }
+  const taken = new Set(filenames || []);
+  if (!taken.has(first)) return first;
+  for (let n = 2; n < 1000; n++) {
+    const cand = base + '-' + n + '.json';
+    if (!taken.has(cand)) return cand;
+  }
+  return base + '-' + Date.now() + '.json';
+}
+
 // ─── SAVE / LOAD / DELETE ─────────────────────────────────────
+let CURRENT_EVENT_FILENAME = null;
 let autoSaveInFlight = false;
 async function autoSave() {
   if (autoSaveInFlight) return;
@@ -11565,8 +11603,13 @@ async function saveEvent(opts) {
     toast('Add the team passcode to save events', 'error');
     return;
   }
-  const id = eventIdFor(data);
-  const filename = id + '.json';
+  // Editing an event the user already loaded? Reuse its filename so
+  // renames don't clobber another event. Brand-new brief? Derive a
+  // collision-free filename — eventIdFor alone would happily overwrite
+  // an existing event with the same name+date (e.g. two "Ice Cream
+  // Van" bookings on the same day both resolving to one file).
+  const filename = CURRENT_EVENT_FILENAME || (await uniqueEventFilenameFor(data));
+  const id = filename.replace(/\.json$/, '');
   // Check existing for SHA so we update vs create
   let sha = null;
   try {
@@ -11592,6 +11635,7 @@ async function saveEvent(opts) {
       if (!silent) { toast('Save failed (' + res.status + ')', 'error'); console.error(err); }
       return;
     }
+    CURRENT_EVENT_FILENAME = filename;
     eventsCache.filenames = null;
     eventsCache.byName = {};
     clearDraft();
@@ -11875,6 +11919,7 @@ async function loadEvent(filename) {
   try {
     const ev = await getEventByFilename(filename);
     if (!ev) { toast('Could not load event', 'error'); return; }
+    CURRENT_EVENT_FILENAME = filename;
     populateForm(ev.form);
     clearDraft();
     setBriefState('continued');
@@ -11894,6 +11939,7 @@ async function loadEventToBrief(filename) {
   try {
     const ev = await getEventByFilename(filename);
     if (!ev) { toast('Could not load event', 'error'); return; }
+    CURRENT_EVENT_FILENAME = filename;
     populateForm(ev.form);
     clearDraft();
     setBriefState('continued');
@@ -11918,6 +11964,7 @@ async function deleteEventConfirm(filename, name) {
     if (!res.ok) { toast('Delete failed', 'error'); return; }
     eventsCache.filenames = null;
     delete eventsCache.byName[filename];
+    if (CURRENT_EVENT_FILENAME === filename) CURRENT_EVENT_FILENAME = null;
     openEventsModal();
     renderDashboard(); renderOpsTracker();
     toast('Deleted ' + name);
