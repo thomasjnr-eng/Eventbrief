@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-04-the-circus-live",
-  "savedAt": "2026-06-11T12:00:37.483Z",
+  "savedAt": "2026-06-29T13:41:53.967Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_d615rpi",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_b1zbi3j",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
@@ -102,8 +115,8 @@
     "_signatures": [],
     "_changeLog": {
       "step1": {
-        "user": "Kamila",
-        "at": "2026-06-11T12:00:33.466Z"
+        "user": "Tob",
+        "at": "2026-06-29T13:41:29.438Z"
       }
     },
     "_crewChecklists": {},
