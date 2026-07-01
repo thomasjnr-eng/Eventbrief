@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "type": "dayplan",
+  "id": "2026-07-02-thursday",
+  "savedAt": "2026-07-01T19:30:44.641Z",
+  "savedBy": "TOB Jnr",
+  "form": {
+    "title": "Thursday",
+    "planDate": "2026-07-02",
+    "startTime": "09:00",
+    "endTime": "",
+    "lead": "TOB Jnr",
+    "assigned": "",
+    "notes": "",
+    "tasks": [
+      {
+        "label": "Collect Thindi/Camile - Finglas",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "11:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Take in Pitt Bros/Chicken - Unit",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "12:00",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Collect Signage and Bring to Iveagh",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "12:30",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Bring + Position Ice Cream Vans - Kaleidoscope ",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Camile Stock (including crispy chicken) brought to Kaleidoscope ",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Crispy Chicken to RDS",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Fire Extinguishers to Iveagh",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      },
+      {
+        "label": "Pitt Bros + Toasty to RDS ",
+        "assignedTo": "",
+        "priority": "medium",
+        "dueTime": "",
+        "eventLink": "",
+        "done": false,
+        "doneBy": null,
+        "doneAt": null
+      }
+    ]
+  }
+}
