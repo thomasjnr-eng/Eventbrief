@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-07-06T08:30:31.950Z",
+  "savedAt": "2026-07-06T17:11:11.510Z",
   "entries": [
     {
       "id": "clk_mpx9726c_bwfp7n",
@@ -1448,6 +1448,15 @@
       "user": "Ae",
       "type": "in",
       "timestamp": "2026-07-06T08:30:31.950Z",
+      "lat": null,
+      "lng": null,
+      "accuracy": null
+    },
+    {
+      "id": "clk_mr9h8cd1_j2yx1s",
+      "user": "Ae",
+      "type": "out",
+      "timestamp": "2026-07-06T17:11:11.509Z",
       "lat": null,
       "lng": null,
       "accuracy": null
