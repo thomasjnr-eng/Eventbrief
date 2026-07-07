@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "damage",
-  "savedAt": "2026-06-26T00:00:00.000Z",
+  "savedAt": "2026-07-07T12:31:49.848Z",
   "reports": [
     {
       "id": "rpt_mpyge24o_v5m6eh",
@@ -94,6 +94,17 @@
       "updates": [],
       "photosArchivedAt": "2026-06-26T00:00:00.000Z",
       "photosArchivedCount": 1
+    },
+    {
+      "id": "rpt_mramoxnc_7fpp8k",
+      "reportedBy": "Janet",
+      "reportedAt": "2026-07-07T12:31:49.848Z",
+      "unit": "Camile Thai 2.0",
+      "severity": "minor",
+      "description": "Fridge door not closing properly \nDrinks fridge glass cracked",
+      "photos": [],
+      "status": "new",
+      "updates": []
     }
   ]
 }
