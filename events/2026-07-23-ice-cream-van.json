@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-23-ice-cream-van",
-  "savedAt": "2026-07-16T13:51:37.249Z",
+  "savedAt": "2026-07-16T13:52:28.453Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -50,7 +50,7 @@
     "wasteDisposal": "",
     "solidWaste": "",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Other (specify in notes)",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
@@ -66,8 +66,8 @@
     "minSpend": "",
     "prePaidMenu": "",
     "prePaidNotes": "",
-    "voucherDetails": "",
-    "posNotes": "",
+    "voucherDetails": "Invoice to be issued once final number/quote is confirmed and to be paid in advance ",
+    "posNotes": "€400 for 120, and €500 for 150 ",
     "foodCovers": "",
     "coffeeCovers": "",
     "icecreamCovers": "",
@@ -85,7 +85,9 @@
     "_fleet": [],
     "_power": [],
     "_revenue": [],
-    "_pos": [],
+    "_pos": [
+      "Our own POS system"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -104,6 +106,10 @@
       "step1": {
         "user": "Kamila",
         "at": "2026-07-16T13:49:26.505Z"
+      },
+      "step3": {
+        "user": "Kamila",
+        "at": "2026-07-16T13:52:28.062Z"
       }
     },
     "_crewChecklists": {},
