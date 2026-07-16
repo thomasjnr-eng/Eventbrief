@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-16-ice-cream-van-2",
-  "savedAt": "2026-07-16T10:40:32.283Z",
+  "savedAt": "2026-07-16T11:20:31.083Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -10,7 +10,7 @@
     "planLead": "",
     "planAssigned": "",
     "planNotes": "",
-    "eventName": "Ice Cream Van ",
+    "eventName": "CANCELLED Ice Cream Van ",
     "bookingStatus": "Confirmed",
     "clientName": "Durkan Residential",
     "clientType": "Private",
@@ -116,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-07-16T10:40:31.899Z"
+        "at": "2026-07-16T11:20:30.704Z"
       }
     },
     "_crewChecklists": {},
