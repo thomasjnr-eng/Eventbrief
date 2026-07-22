@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-30-all-together-now",
-  "savedAt": "2026-07-22T17:48:00.909Z",
+  "savedAt": "2026-07-22T17:53:36.099Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -29,7 +29,7 @@
     "loadNotes": "",
     "attendance": "",
     "venueName": "",
-    "venueAddress": "",
+    "venueAddress": "Curraghmore Estate in Portlaw, County Waterford, Ireland",
     "accessNotes": "",
     "venuePinLabel": "",
     "venueRadius": "200",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_6zn2omw",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_ruopbgv",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
@@ -103,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-07-22T17:47:52.967Z"
+        "at": "2026-07-22T17:53:35.687Z"
       }
     },
     "_crewChecklists": {},
