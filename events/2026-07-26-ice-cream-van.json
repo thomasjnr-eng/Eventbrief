@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-07-26-ice-cream-van",
-  "savedAt": "2026-07-24T12:47:44.851Z",
+  "savedAt": "2026-07-24T12:47:58.005Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -50,7 +50,7 @@
     "wasteDisposal": "",
     "solidWaste": "",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Other (specify in notes)",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
@@ -67,7 +67,7 @@
     "prePaidMenu": "",
     "prePaidNotes": "",
     "voucherDetails": "",
-    "posNotes": "",
+    "posNotes": "Payment on the day",
     "foodCovers": "",
     "coffeeCovers": "",
     "icecreamCovers": "",
@@ -85,7 +85,9 @@
     "_fleet": [],
     "_power": [],
     "_revenue": [],
-    "_pos": [],
+    "_pos": [
+      "Cash & card"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -117,6 +119,10 @@
       "step1": {
         "user": "Kamila",
         "at": "2026-07-23T12:16:11.124Z"
+      },
+      "step3": {
+        "user": "Kamila",
+        "at": "2026-07-24T12:47:57.717Z"
       }
     },
     "_crewChecklists": {},
