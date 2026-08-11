@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-09-12-leopardstown-racing-champions",
-  "savedAt": "2026-08-04T10:54:11.674Z",
+  "savedAt": "2026-08-11T15:16:08.835Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_0trrrr3",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_v9uqe6o",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
