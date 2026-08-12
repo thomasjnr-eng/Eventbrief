@@ -1,7 +1,7 @@
 {
   "version": 1,
   "type": "clocks",
-  "savedAt": "2026-08-10T18:28:58.144Z",
+  "savedAt": "2026-08-12T18:43:03.136Z",
   "entries": [
     {
       "id": "clk_mpx9726c_bwfp7n",
@@ -1964,6 +1964,15 @@
       "lat": null,
       "lng": null,
       "accuracy": null
+    },
+    {
+      "id": "clk_msqfsztr_4ix9us",
+      "user": "TOB Jnr",
+      "type": "in",
+      "timestamp": "2026-08-12T18:43:03.135Z",
+      "lat": 53.282222,
+      "lng": -6.43105,
+      "accuracy": 14
     }
   ]
 }
