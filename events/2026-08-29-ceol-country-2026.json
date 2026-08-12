@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-08-29-ceol-country-2026",
-  "savedAt": "2026-08-12T08:56:42.611Z",
+  "savedAt": "2026-08-12T08:57:04.690Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -50,7 +50,7 @@
     "wasteDisposal": "",
     "solidWaste": "",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Other (specify in notes)",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
@@ -66,7 +66,7 @@
     "minSpend": "",
     "prePaidMenu": "",
     "prePaidNotes": "",
-    "voucherDetails": "",
+    "voucherDetails": "Please note discounted prices to be used ",
     "posNotes": "",
     "foodCovers": "",
     "coffeeCovers": "",
@@ -84,7 +84,9 @@
     "postEventNotes": "",
     "_fleet": [],
     "_power": [],
-    "_revenue": [],
+    "_revenue": [
+      "Cash / card trading"
+    ],
     "_pos": [],
     "_safety": [],
     "_isScattered": false,
@@ -104,6 +106,10 @@
       "step1": {
         "user": "Kamila",
         "at": "2026-08-12T08:56:35.389Z"
+      },
+      "step3": {
+        "user": "Kamila",
+        "at": "2026-08-12T08:57:03.766Z"
       }
     },
     "_crewChecklists": {},
