@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-09-11-burger-loaded-fries-truck-breakfast-service",
-  "savedAt": "2026-08-25T13:59:41.861Z",
+  "savedAt": "2026-08-25T13:59:58.006Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -85,7 +85,9 @@
     "_fleet": [],
     "_power": [],
     "_revenue": [],
-    "_pos": [],
+    "_pos": [
+      "Our own POS system"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -117,6 +119,10 @@
       "step1": {
         "user": "Kamila",
         "at": "2026-08-25T13:59:37.314Z"
+      },
+      "step3": {
+        "user": "Kamila",
+        "at": "2026-08-25T13:59:51.513Z"
       }
     },
     "_crewChecklists": {},
