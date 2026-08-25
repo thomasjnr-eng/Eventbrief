@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-09-11-burger-loaded-fries-truck-breakfast-service",
-  "savedAt": "2026-08-21T15:54:57.356Z",
+  "savedAt": "2026-08-25T13:59:37.940Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -17,17 +17,17 @@
     "contactName": "Sandra Ryan",
     "contactPhone": "01- 4533335",
     "contactEmail": "sandra@tmccann.ie",
-    "onsiteContact": "",
+    "onsiteContact": "Paul  087-6890165",
     "loadInDate": "2026-09-10",
-    "loadInTime": "16:00",
+    "loadInTime": "13:00",
     "eventStartDate": "2026-09-11",
     "eventStartTime": "07:30",
     "eventFinishDate": "2026-09-11",
     "eventFinishTime": "15:00",
     "loadOutDate": "2026-09-11",
     "loadOutTime": "15:15",
-    "loadNotes": "Set up of marquee, tables, chairs and breakfast service station (table, tea, coffee, cups, napkins & plates) to be done day before.\nOn the day from 7:30-11:30 there will be breakfast service, we need to provide 70 fresh pastries.\nfrom 11:30-15 burger & loaded fries truck for 100ppl",
-    "attendance": "100",
+    "loadNotes": "Set up of marquee, tables, chairs and breakfast service station (table, tea, coffee, cups, napkins & plates) to be done day before between 7:30-4pm.\nOn the day from 7:30-11:30 there will be breakfast service, we need to provide 70 fresh pastries.\nfrom 11:30-15 burger & loaded fries truck for 100ppl",
+    "attendance": "150",
     "venueName": "",
     "venueAddress": "136 South Circular Road, Dublin 8",
     "accessNotes": "The space they have is in their yard which is locked at night with 2 sets of large steel gates and is monitored by cctv.",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_03ylng7",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_f6xlbqe",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
@@ -103,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-08-21T15:54:56.968Z"
+        "at": "2026-08-25T13:59:37.314Z"
       }
     },
     "_crewChecklists": {},
