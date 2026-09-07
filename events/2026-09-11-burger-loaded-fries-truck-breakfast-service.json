@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-09-11-burger-loaded-fries-truck-breakfast-service",
-  "savedAt": "2026-08-25T13:59:58.006Z",
+  "savedAt": "2026-09-07T09:28:31.164Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -19,14 +19,14 @@
     "contactEmail": "sandra@tmccann.ie",
     "onsiteContact": "Paul  087-6890165",
     "loadInDate": "2026-09-10",
-    "loadInTime": "13:00",
+    "loadInTime": "15:00",
     "eventStartDate": "2026-09-11",
     "eventStartTime": "07:30",
     "eventFinishDate": "2026-09-11",
     "eventFinishTime": "15:00",
     "loadOutDate": "2026-09-11",
     "loadOutTime": "15:15",
-    "loadNotes": "Set up of marquee, tables, chairs and breakfast service station (table, tea, coffee, cups, napkins & plates) to be done day before between 7:30-4pm.\nOn the day from 7:30-11:30 there will be breakfast service, we need to provide 70 fresh pastries.\nfrom 11:30-15 burger & loaded fries truck for 100ppl",
+    "loadNotes": "Set up of marquee, tables, chairs and breakfast service station (table, tea, coffee, cups, napkins & plates) to be done day before agreed 3pm.\nOn the day from 7:30-11:30 there will be breakfast service, we need to provide 70 fresh pastries.\nAgreed to deliver pastries for 8am\nfrom 11:30-15 burger & loaded fries truck for 100ppl",
     "attendance": "150",
     "venueName": "",
     "venueAddress": "136 South Circular Road, Dublin 8",
@@ -118,7 +118,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-08-25T13:59:37.314Z"
+        "at": "2026-09-07T09:28:30.616Z"
       },
       "step3": {
         "user": "Kamila",
