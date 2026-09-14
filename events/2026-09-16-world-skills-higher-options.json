@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-09-16-world-skills-higher-options",
-  "savedAt": "2026-09-14T12:12:40.834Z",
+  "savedAt": "2026-09-14T12:15:23.060Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -21,13 +21,13 @@
     "loadInDate": "",
     "loadInTime": "",
     "eventStartDate": "2026-09-16",
-    "eventStartTime": "",
+    "eventStartTime": "09:00",
     "eventFinishDate": "2026-09-18",
-    "eventFinishTime": "",
+    "eventFinishTime": "15:30",
     "loadOutDate": "",
     "loadOutTime": "",
     "loadNotes": "\n",
-    "attendance": "",
+    "attendance": "30000",
     "venueName": "",
     "venueAddress": "",
     "accessNotes": "",
@@ -116,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-09-14T12:11:12.714Z"
+        "at": "2026-09-14T12:13:46.116Z"
       }
     },
     "_crewChecklists": {},
