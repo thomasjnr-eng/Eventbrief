@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-09-16-world-skills-higher-options",
-  "savedAt": "2026-09-07T13:56:41.012Z",
+  "savedAt": "2026-09-14T12:11:20.665Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -10,12 +10,12 @@
     "planLead": "",
     "planAssigned": "",
     "planNotes": "",
-    "eventName": "World Skills & Higher Options",
+    "eventName": "World Skills & Higher Options Simmonscourt ",
     "bookingStatus": "Confirmed",
     "clientName": "Levy",
     "clientType": "Corporate",
     "contactName": "Gary Brennan",
-    "contactPhone": "",
+    "contactPhone": "87 406 8984 ",
     "contactEmail": "gary.brenner@levy.ie",
     "onsiteContact": "",
     "loadInDate": "",
@@ -26,7 +26,7 @@
     "eventFinishTime": "",
     "loadOutDate": "",
     "loadOutTime": "",
-    "loadNotes": "DETAILS TO FOLLOW",
+    "loadNotes": "\n",
     "attendance": "",
     "venueName": "",
     "venueAddress": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_w44dah4",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_ui7mr95",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
@@ -103,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-09-07T13:56:39.171Z"
+        "at": "2026-09-14T12:11:12.714Z"
       }
     },
     "_crewChecklists": {},
