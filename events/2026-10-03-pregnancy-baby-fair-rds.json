@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-10-03-pregnancy-baby-fair-rds",
-  "savedAt": "2026-09-28T09:47:27.731Z",
+  "savedAt": "2026-09-30T10:05:25.475Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_r8v5tc1",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_6y92du6",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
