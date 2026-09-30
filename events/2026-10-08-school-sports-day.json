@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-10-08-school-sports-day",
-  "savedAt": "2026-09-30T13:06:44.089Z",
+  "savedAt": "2026-09-30T13:47:17.164Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_b0f2ydp",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_mf2b93m",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
