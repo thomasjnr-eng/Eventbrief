@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-10-10-laura-lynn-charity-walk-leopardstown",
-  "savedAt": "2026-09-28T09:53:41.302Z",
+  "savedAt": "2026-10-07T12:54:53.619Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -14,9 +14,9 @@
     "bookingStatus": "Confirmed",
     "clientName": "",
     "clientType": "Contracted Venue",
-    "contactName": "",
+    "contactName": "shay Cooney",
     "contactPhone": "",
-    "contactEmail": "",
+    "contactEmail": "shay.cooney@levy.ie",
     "onsiteContact": "",
     "loadInDate": "",
     "loadInTime": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_vb63qb2",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_033mlwu",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
@@ -103,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-09-28T09:53:30.866Z"
+        "at": "2026-10-07T12:46:18.463Z"
       }
     },
     "_crewChecklists": {},
