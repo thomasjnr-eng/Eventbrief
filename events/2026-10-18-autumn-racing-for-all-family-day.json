@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-10-18-autumn-racing-for-all-family-day",
-  "savedAt": "2026-10-07T13:03:21.158Z",
+  "savedAt": "2026-10-09T10:40:52.268Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -18,15 +18,15 @@
     "contactPhone": "",
     "contactEmail": "shay.cooney@levy.ie",
     "onsiteContact": "",
-    "loadInDate": "",
-    "loadInTime": "",
+    "loadInDate": "2026-10-18",
+    "loadInTime": "11:00",
     "eventStartDate": "2026-10-18",
     "eventStartTime": "12:00",
     "eventFinishDate": "2026-10-18",
     "eventFinishTime": "18:00",
     "loadOutDate": "",
     "loadOutTime": "",
-    "loadNotes": "In tunnel beside Hurricances - TBC please check with Shay",
+    "loadNotes": "In tunnel beside Hurricances - TBC please check with Shay \nload in before 11am",
     "attendance": "4000",
     "venueName": "Leopardstown",
     "venueAddress": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_x8kyk3e",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_asusxgt",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
@@ -103,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-10-07T13:02:42.962Z"
+        "at": "2026-10-09T10:40:51.903Z"
       }
     },
     "_crewChecklists": {},
