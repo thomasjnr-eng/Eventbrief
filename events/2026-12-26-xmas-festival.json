@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-12-26-xmas-festival",
-  "savedAt": "2026-10-09T11:45:42.684Z",
+  "savedAt": "2026-10-09T11:46:00.854Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -50,7 +50,7 @@
     "wasteDisposal": "",
     "solidWaste": "",
     "waterNotes": "",
-    "commercialClient": "",
+    "commercialClient": "Levy",
     "commercialClientRef": "",
     "pitchFeeAmount": "",
     "pitchFeeType": "",
@@ -84,8 +84,12 @@
     "postEventNotes": "",
     "_fleet": [],
     "_power": [],
-    "_revenue": [],
-    "_pos": [],
+    "_revenue": [
+      "Revenue share / percentage"
+    ],
+    "_pos": [
+      "Client / venue POS system"
+    ],
     "_safety": [],
     "_isScattered": false,
     "_tradingDays": [],
@@ -104,6 +108,10 @@
       "step1": {
         "user": "Kamila",
         "at": "2026-10-09T11:45:42.144Z"
+      },
+      "step3": {
+        "user": "Kamila",
+        "at": "2026-10-09T11:45:58.028Z"
       }
     },
     "_crewChecklists": {},
