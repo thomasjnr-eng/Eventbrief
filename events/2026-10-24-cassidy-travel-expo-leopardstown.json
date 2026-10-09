@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-10-24-cassidy-travel-expo-leopardstown",
-  "savedAt": "2026-10-07T13:05:24.010Z",
+  "savedAt": "2026-10-09T10:39:48.757Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -18,15 +18,15 @@
     "contactPhone": "",
     "contactEmail": "",
     "onsiteContact": "",
-    "loadInDate": "",
-    "loadInTime": "",
+    "loadInDate": "2026-10-18",
+    "loadInTime": "10:00",
     "eventStartDate": "2026-10-24",
     "eventStartTime": "11:30",
     "eventFinishDate": "2026-10-24",
     "eventFinishTime": "18:00",
     "loadOutDate": "",
     "loadOutTime": "",
-    "loadNotes": "Outside Pavillion ",
+    "loadNotes": "Outside Pavillion - load in before 11am",
     "attendance": "2000",
     "venueName": "Leopardstown racecourse",
     "venueAddress": "",
@@ -116,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-10-07T13:05:14.716Z"
+        "at": "2026-10-09T10:39:48.270Z"
       }
     },
     "_crewChecklists": {},
