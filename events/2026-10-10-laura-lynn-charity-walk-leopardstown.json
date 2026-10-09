@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-10-10-laura-lynn-charity-walk-leopardstown",
-  "savedAt": "2026-10-07T12:56:27.225Z",
+  "savedAt": "2026-10-09T10:38:01.103Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -18,15 +18,15 @@
     "contactPhone": "",
     "contactEmail": "shay.cooney@levy.ie",
     "onsiteContact": "",
-    "loadInDate": "",
-    "loadInTime": "",
+    "loadInDate": "2026-10-09",
+    "loadInTime": "14:00",
     "eventStartDate": "2026-10-10",
     "eventStartTime": "09:00",
     "eventFinishDate": "2026-10-10",
     "eventFinishTime": "14:00",
     "loadOutDate": "",
     "loadOutTime": "",
-    "loadNotes": "",
+    "loadNotes": "before 3pm",
     "attendance": "1200",
     "venueName": "Leopardstown",
     "venueAddress": "",
@@ -116,7 +116,7 @@
     "_changeLog": {
       "step1": {
         "user": "Kamila",
-        "at": "2026-10-07T12:46:18.463Z"
+        "at": "2026-10-09T10:38:00.702Z"
       }
     },
     "_crewChecklists": {},
