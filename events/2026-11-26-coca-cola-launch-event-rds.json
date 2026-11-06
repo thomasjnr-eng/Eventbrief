@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-11-26-coca-cola-launch-event-rds",
-  "savedAt": "2026-11-06T11:37:40.294Z",
+  "savedAt": "2026-11-06T11:38:20.749Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -34,7 +34,7 @@
     "venuePinLabel": "",
     "venueRadius": "200",
     "copySetupSelect": "",
-    "otherUnits": "",
+    "otherUnits": "Caffe Duomo & Waffles :D ",
     "pitchRef": "",
     "pitchSize": "",
     "groundSurface": "",
@@ -104,6 +104,10 @@
       "step1": {
         "user": "Kamila",
         "at": "2026-11-06T11:37:39.735Z"
+      },
+      "step2": {
+        "user": "Kamila",
+        "at": "2026-11-06T11:38:20.335Z"
       }
     },
     "_crewChecklists": {},
