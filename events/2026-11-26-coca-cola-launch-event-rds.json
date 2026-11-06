@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-11-26-coca-cola-launch-event-rds",
-  "savedAt": "2026-11-06T11:38:39.833Z",
+  "savedAt": "2026-11-06T11:38:44.996Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -96,7 +96,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_2ab4zga",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_u9ky9i9",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
