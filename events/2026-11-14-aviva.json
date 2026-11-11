@@ -1,7 +1,7 @@
 {
   "version": 1,
   "id": "2026-11-14-aviva",
-  "savedAt": "2026-11-11T13:38:13.134Z",
+  "savedAt": "2026-11-11T14:22:48.381Z",
   "form": {
     "planTitle": "",
     "planDate": "",
@@ -92,7 +92,20 @@
     "_iceVansNeedPower": false,
     "_stockStatuses": [],
     "_stockLoadItems": {},
-    "_serviceWindows": [],
+    "_serviceWindows": [
+      {
+        "id": "sw_7k9coyq",
+        "name": "Lunch",
+        "start": "12:00",
+        "end": "14:30"
+      },
+      {
+        "id": "sw_0b7bnmn",
+        "name": "Dinner",
+        "start": "18:00",
+        "end": "21:00"
+      }
+    ],
     "_menu": {},
     "_venuePin": null,
     "_clockEntries": [],
